@@ -31,6 +31,7 @@ type FunnelConfig = {
   licenseIssuingReady?: boolean;
   customerPortalReady?: boolean;
   stripeWebhooksReady?: boolean;
+  stripeMode?: "live" | "test" | "missing";
   freeTrialDays?: number | null;
   freeTrialDaysByPlan?: Record<PlanId, number | null>;
   planPrices: Record<PlanId, boolean>;
@@ -268,9 +269,14 @@ export function CommandClient({ products, featuredProductIds, config, checkoutPr
   const resultProofReadyCount = publicOffers.filter(({ product }) => getProofState(product.id).primaryVideo?.mode === "result-proof").length;
   const tutorialReadyCount = publicOffers.filter(({ product }) => getProofState(product.id).primaryVideo?.mode === "full-walkthrough").length;
   const demoCount = demoReadyOffers.length;
-  const configuredPlanCount = plans.filter((plan) => config.planPrices[plan.id]).length;
-  const paymentConfigValue = configuredPlanCount ? `${configuredPlanCount}/${plans.length}` : "Missing";
-  const paymentConfigTone = configuredPlanCount ? "good" : "warn";
+  const checkoutPlans = plans.filter((plan) => plan.primaryAction === "checkout");
+  const configuredPlanCount = checkoutPlans.filter((plan) => config.planPrices[plan.id]).length;
+  const paymentConfigValue = configuredPlanCount
+    ? config.subscriptionsReady
+      ? `${configuredPlanCount}/${checkoutPlans.length}${config.stripeMode === "test" ? " test" : ""}`
+      : `Key missing ${configuredPlanCount}/${checkoutPlans.length}`
+    : "Missing";
+  const paymentConfigTone = configuredPlanCount && config.subscriptionsReady && config.stripeMode !== "test" ? "good" : "warn";
   const planHasWorkingProducts = (planId: PlanId) =>
     workingOffers.some((offer) => offer.plan.funnelPlanId === planId || (planId === "suite" && offer.plan.funnelPlanId === "agency"));
   const checkoutPlanAvailable = plans.some(

@@ -57,6 +57,11 @@ export function requireEnv(value: string, name: string) {
 }
 
 export function getConfigurationStatus() {
+  const stripeMode: "live" | "test" | "missing" = env.stripeSecretKey.startsWith("sk_live_")
+    ? "live"
+    : env.stripeSecretKey.startsWith("sk_test_")
+      ? "test"
+      : "missing";
   const planPrices = {
     core: Boolean(env.stripePriceCoreId),
     studio: Boolean(env.stripePriceStudioId),
@@ -68,6 +73,7 @@ export function getConfigurationStatus() {
   return {
     subscriptionsReady: Boolean(env.stripeSecretKey && Object.values(planPrices).some(Boolean)),
     stripeWebhooksReady: Boolean(env.stripeSecretKey && env.stripeWebhookSecret),
+    stripeMode,
     customerPortalReady: Boolean(env.stripeSecretKey && env.checkoutSessionSecret),
     licenseIssuingReady: Boolean(env.adminApiKey && env.licenseSigningSecret),
     manualLicenseValidationReady: Boolean(env.masterLicenseKey || env.licenseKeys),

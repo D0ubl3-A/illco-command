@@ -115,6 +115,7 @@ export function GlobalAuthHeader() {
       <nav className="globalAuthNav" aria-label="Primary links">
         <a href="/tools">ILLCO Tools</a>
         <a href="/commander#apps">Apps</a>
+        <a href="/master-agent">Agent</a>
         <a href="/blog">Blog</a>
         <a className={masterUnlocked ? "globalAuthMasterLink isUnlocked" : "globalAuthMasterLink"} href="/account#master-access">
           {masterUnlocked ? `Master Unlocked (${masterAccess?.unlockedCount || 0})` : "Master Key"}

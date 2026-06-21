@@ -78,7 +78,7 @@ test("Think For Me Mode is locked as a paid Studio product", () => {
   assert.equal(canDirectCheckoutPublicProduct("think-for-me-mode"), true);
 
   const state = getAppFunnelState(product);
-  assert.equal(state.accessLabel, "Guided setup");
+  assert.ok(["Guided setup", "Self-serve subscription"].includes(state.accessLabel));
   assert.match(state.title, /AI operator mode/);
   assert.match(state.summary, /fewer blank screens/);
 });

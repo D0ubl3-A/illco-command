@@ -720,9 +720,10 @@ export function CommandClient({ products, featuredProductIds, config, checkoutPr
                 const proof = getProofState(product.id);
                 const state = getCustomerProductState(product, config);
                 const moduleHref = getProductModuleHref(product.id);
-                const moduleTarget = moduleHref.startsWith("http") ? "_blank" : undefined;
+                const itemHref = state.canOpen ? moduleHref : getProductLandingHref(product.id);
+                const moduleTarget = state.canOpen && moduleHref.startsWith("http") ? "_blank" : undefined;
                 return (
-                  <a className="proofRailItem" href={moduleHref} target={moduleTarget} rel={moduleTarget ? "noreferrer" : undefined} key={product.id}>
+                  <a className="proofRailItem" href={itemHref} target={moduleTarget} rel={moduleTarget ? "noreferrer" : undefined} key={product.id}>
                     <div>
                       <strong>{customerProductName(product)}</strong>
                       <small>{planNames[state.planId]} / {customerProofLabel(proof)}</small>
@@ -1318,7 +1319,9 @@ function ProductCard({ product, config }: { product: ProductRecord; config: Funn
   const productNotice = getProductNotice(product.id);
   const moduleHref = getProductModuleHref(product.id);
   const landingHref = getProductLandingHref(product.id);
-  const moduleTarget = moduleHref.startsWith("http") ? "_blank" : undefined;
+  const mediaHref = state.canOpen ? moduleHref : landingHref;
+  const mediaTarget = state.canOpen && moduleHref.startsWith("http") ? "_blank" : undefined;
+  const moduleTarget = state.canOpen && moduleHref.startsWith("http") ? "_blank" : undefined;
   const productImagePath = getProductViralImagePath(product);
   const processSteps = getProductProcessSteps(product);
 
@@ -1343,7 +1346,7 @@ function ProductCard({ product, config }: { product: ProductRecord; config: Funn
         {hasDemoEmbed && demo ? (
           <ShowcaseVideoFrame productName={productName} demo={demo} thumbnailPath={productImagePath} />
         ) : (
-          <a className="productThumbnailLink" href={moduleHref} target={moduleTarget} rel={moduleTarget ? "noreferrer" : undefined} aria-label={`Open ${productName}`}>
+          <a className="productThumbnailLink" href={mediaHref} target={mediaTarget} rel={mediaTarget ? "noreferrer" : undefined} aria-label={`${state.canOpen ? "Open" : "View details for"} ${productName}`}>
             <img src={productImagePath} alt={`${productName} product preview`} loading="lazy" />
           </a>
         )}

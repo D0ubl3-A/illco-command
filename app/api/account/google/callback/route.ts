@@ -8,7 +8,7 @@ import {
   GOOGLE_OAUTH_VERIFIER_COOKIE,
   exchangeGoogleAuthorizationCode,
   fetchGoogleAccountProfile,
-  getGoogleOAuthCookiePath,
+  getGoogleOAuthCookiePaths,
   isGoogleOAuthConfigured,
 } from "@/lib/google-oauth";
 import { createUserSessionCookieValue, setUserSessionCookieOnResponse } from "@/lib/user-session-cookie";
@@ -19,16 +19,18 @@ function accountUrl(request: Request, state: string) {
 }
 
 function clearOauthCookies(response: NextResponse) {
-  const options = {
-    httpOnly: true,
-    maxAge: 0,
-    path: getGoogleOAuthCookiePath(),
-    sameSite: "lax" as const,
-    secure: process.env.NODE_ENV === "production",
-  };
-  response.cookies.set(GOOGLE_OAUTH_STATE_COOKIE, "", options);
-  response.cookies.set(GOOGLE_OAUTH_VERIFIER_COOKIE, "", options);
-  response.cookies.set(GOOGLE_OAUTH_RETURN_COOKIE, "", options);
+  for (const path of getGoogleOAuthCookiePaths()) {
+    const options = {
+      httpOnly: true,
+      maxAge: 0,
+      path,
+      sameSite: "lax" as const,
+      secure: process.env.NODE_ENV === "production",
+    };
+    response.cookies.set(GOOGLE_OAUTH_STATE_COOKIE, "", options);
+    response.cookies.set(GOOGLE_OAUTH_VERIFIER_COOKIE, "", options);
+    response.cookies.set(GOOGLE_OAUTH_RETURN_COOKIE, "", options);
+  }
 }
 
 function redirectWithClearedCookies(request: Request, state: string) {

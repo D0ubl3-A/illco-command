@@ -1298,6 +1298,211 @@ select:focus-visible {
   border: 0;
 }
 
+.masterAgentPage {
+  align-items: stretch;
+}
+
+.masterAgentShell {
+  width: min(100%, 1440px);
+  max-width: 1440px;
+  display: grid;
+  gap: 18px;
+}
+
+.masterAgentHero {
+  display: grid;
+  grid-template-columns: minmax(0, 1.2fr) minmax(280px, 0.8fr);
+  gap: 18px;
+  overflow: hidden;
+  position: relative;
+}
+
+.masterAgentHero::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(120deg, rgba(68, 215, 255, 0.12), transparent 44%),
+    linear-gradient(280deg, rgba(255, 51, 85, 0.14), transparent 38%);
+  pointer-events: none;
+}
+
+.masterAgentHero > * {
+  position: relative;
+}
+
+.masterAgentHero h1 {
+  margin: 10px 0 12px;
+  font-size: clamp(2.5rem, 6vw, 5.8rem);
+  line-height: 0.9;
+  overflow-wrap: anywhere;
+}
+
+.masterAgentHero p {
+  max-width: 780px;
+  margin: 0;
+  color: var(--muted);
+  line-height: 1.6;
+}
+
+.masterAgentSystemCard,
+.masterAgentSummary {
+  display: grid;
+  gap: 8px;
+  border: 1px solid rgba(68, 215, 255, 0.18);
+  border-radius: var(--radius);
+  background: rgba(4, 12, 22, 0.74);
+  padding: 16px;
+}
+
+.masterAgentSystemCard strong,
+.masterAgentSummary strong {
+  color: #ffffff;
+}
+
+.masterAgentSystemCard span,
+.masterAgentSummary span {
+  color: var(--muted);
+  line-height: 1.5;
+}
+
+.masterAgentConsole {
+  display: grid;
+  grid-template-columns: minmax(280px, 0.42fr) minmax(0, 1fr);
+  gap: 18px;
+  align-items: start;
+}
+
+.masterAgentForm,
+.masterAgentOutput,
+.masterAgentGuidance {
+  display: grid;
+  gap: 14px;
+}
+
+.masterAgentForm textarea {
+  min-height: 170px;
+  resize: vertical;
+}
+
+.masterAgentModes {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.masterAgentModes label {
+  position: relative;
+  min-width: 0;
+}
+
+.masterAgentModes input {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.masterAgentModes span {
+  min-height: 38px;
+  display: grid;
+  place-items: center;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: var(--radius);
+  background: rgba(255, 255, 255, 0.04);
+  color: var(--muted);
+  font-size: 0.82rem;
+  font-weight: 850;
+}
+
+.masterAgentModes input:checked + span {
+  border-color: rgba(68, 215, 255, 0.38);
+  background: rgba(68, 215, 255, 0.12);
+  color: #dff6ff;
+}
+
+.masterAgentStats {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.masterAgentActions,
+.masterAgentCardActions,
+.masterAgentEvidence,
+.masterAgentCardFacts {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: center;
+}
+
+.masterAgentRecommendations {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px;
+}
+
+.masterAgentCard {
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: var(--radius);
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.06), rgba(255, 255, 255, 0.025)),
+    rgba(5, 9, 15, 0.88);
+}
+
+.masterAgentCard img {
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  display: block;
+  object-fit: cover;
+  background: #03060c;
+}
+
+.masterAgentCardBody {
+  display: grid;
+  gap: 10px;
+  padding: 14px;
+}
+
+.masterAgentCardBody > span,
+.masterAgentEvidence span,
+.masterAgentCardFacts small {
+  width: fit-content;
+  border: 1px solid rgba(68, 215, 255, 0.16);
+  border-radius: var(--radius);
+  background: rgba(68, 215, 255, 0.07);
+  color: #dff6ff;
+  padding: 6px 8px;
+  font-size: 0.72rem;
+  font-weight: 850;
+}
+
+.masterAgentCardBody strong {
+  color: #ffffff;
+  font-size: 1.06rem;
+  line-height: 1.2;
+}
+
+.masterAgentCardBody p {
+  margin: 0;
+  color: var(--muted);
+  line-height: 1.55;
+}
+
+.masterAgentCardBody em {
+  color: #efffc8;
+  font-style: normal;
+  line-height: 1.45;
+}
+
+.masterAgentEvidence span,
+.masterAgentCardFacts small {
+  border-color: rgba(255, 255, 255, 0.12);
+  background: rgba(255, 255, 255, 0.045);
+  color: rgba(230, 238, 248, 0.82);
+}
+
 .blogPage {
   align-items: stretch;
 }
@@ -3507,6 +3712,8 @@ td a {
   .accountHeroPanel,
   .appLandingHero,
   .appLandingGrid,
+  .masterAgentHero,
+  .masterAgentConsole,
   .blogHero,
   .blogClusterGrid,
   .blogArticleHeader,
@@ -3684,6 +3891,8 @@ td a {
   .contentGuardrails,
   .serviceFocusFacts,
   .appLandingFacts,
+  .masterAgentStats,
+  .masterAgentRecommendations,
   .blogCardGrid,
   .blogIntentPanel,
   .blogInternalLinks > div,

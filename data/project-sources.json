@@ -5,14 +5,14 @@
     "aaronalltonai-ship-it"
   ],
   "summary": {
-    "checked": 118,
-    "liveProductionUrls": 112,
-    "complete": 64,
+    "checked": 119,
+    "liveProductionUrls": 113,
+    "complete": 65,
     "needsRepair": 30,
     "needsSource": 15,
     "needsDeploy": 5,
     "missingSource": 4,
-    "localSource": 69,
+    "localSource": 70,
     "githubSource": 45
   },
   "projects": {
@@ -396,6 +396,34 @@
       },
       "aliases": [
         "think-for-me-mode",
+        "illco-command"
+      ],
+      "localPaths": [
+        {
+          "path": "D:\\workspace\\illco-command",
+          "name": "illco-command",
+          "matchType": "exact",
+          "alias": "illco-command"
+        }
+      ],
+      "githubRepos": []
+    },
+    "lyric-video-forge": {
+      "id": "lyric-video-forge",
+      "name": "lyric-video-forge",
+      "displayName": "Lyric Video Forge",
+      "productionUrl": "https://illco-command.vercel.app/tools/lyric-video-forge",
+      "completionStatus": "complete",
+      "sourceStatus": "local-only",
+      "health": {
+        "status": "healthy",
+        "statusCode": 200,
+        "checkedAt": "2026-06-21T16:02:55.000Z",
+        "title": "Lyric Video Forge | ILLCO AI",
+        "error": null
+      },
+      "aliases": [
+        "lyric-video-forge",
         "illco-command"
       ],
       "localPaths": [

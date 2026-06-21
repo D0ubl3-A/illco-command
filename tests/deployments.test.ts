@@ -15,8 +15,8 @@ test("YouTube Ops is promoted into the public subscription catalog", () => {
   assert(monetization);
   assert.equal(monetization.publicInFunnel, true);
   assert.equal(monetization.healthGate.behavior, "allow-checkout");
-  assert.equal(monetization.routeAfterPurchase.type, "production-url");
-  assert.equal(monetization.routeAfterPurchase.href, "https://youtubeopsvercel.vercel.app");
+  assert.equal(monetization.routeAfterPurchase.type, "command-center");
+  assert.equal(monetization.routeAfterPurchase.href, "/apps/youtube-ops-vercel");
 });
 
 test("Viral Stitch AI is registered for Command-issued license validation", () => {

@@ -84,16 +84,22 @@ export function getGoogleOAuthRedirectUri() {
   if (configured) {
     try {
       const url = new URL(configured);
-      if (url.pathname === "/api/auth/oauth/callback") {
-        url.pathname = "/api/account/google/callback";
-        return url.toString();
-      }
       return url.toString();
     } catch {
       // Fall through to the canonical app-account callback.
     }
   }
   return new URL("/api/account/google/callback", env.appBaseUrl).toString();
+}
+
+export function getGoogleOAuthCookiePaths() {
+  const paths = new Set(["/api/account/google/callback", "/api/auth/oauth/callback"]);
+  try {
+    paths.add(new URL(getGoogleOAuthRedirectUri()).pathname || "/");
+  } catch {
+    paths.add("/");
+  }
+  return [...paths];
 }
 
 export function getGoogleOAuthCookiePath() {

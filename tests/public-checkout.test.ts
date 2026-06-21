@@ -3,6 +3,7 @@ import test from "node:test";
 
 import { getAppFunnelState } from "../lib/app-funnel";
 import { getProductById } from "../lib/deployments";
+import { getConfigurationStatus } from "../lib/env";
 import { getMonetizationPlan, monetizationPlan } from "../lib/monetization";
 import { canDirectCheckoutPublicPlan, canDirectCheckoutPublicProduct } from "../lib/public-checkout";
 
@@ -57,7 +58,9 @@ test("separated companion products are present and locked independently", () => 
   }
 });
 
-test("app landing launch links remain available for healthy public apps", () => {
-  assert.equal(appState("uap-ai-lab").canOpen, true);
-  assert.equal(appState("youtube-ops-vercel").canOpen, true);
+test("app landing launch links follow direct-checkout readiness", () => {
+  const uapState = appState("uap-ai-lab");
+  const config = getConfigurationStatus();
+  assert.equal(uapState.canOpen, Boolean(config.subscriptionsReady && config.planPrices[uapState.planId]));
+  assert.equal(appState("youtube-ops-vercel").canOpen, false);
 });

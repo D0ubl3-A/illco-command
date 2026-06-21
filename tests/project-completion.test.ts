@@ -44,7 +44,7 @@ test("completed apps have product listing images", () => {
   for (const product of completedProducts) {
     assert.match(
       getProductViralImagePath(product) || "",
-      /^\/(apps\/.+\/viral-image\.svg|products\/.+\.svg)$/,
+      /^\/(apps\/.+\/viral-image\.svg|products\/.+\.(svg|jpg))$/,
       `${product.id} needs a share-ready product image`,
     );
   }

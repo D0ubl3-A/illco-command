@@ -2,6 +2,7 @@ import type { MetadataRoute } from "next";
 
 import { blogPosts } from "@/lib/blog-posts";
 import { products } from "@/lib/deployments";
+import { legalPages } from "@/lib/legal-pages";
 
 const siteUrl = "https://illcoai.tech";
 const lastModified = new Date();
@@ -54,5 +55,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
     priority: post.slug === "best-ai-automation-tools-for-small-business" ? 0.95 : 0.86,
   }));
 
-  return [...staticRoutes, ...blogRoutes, ...appRoutes];
+  const legalRoutes = legalPages.map((page) => ({
+    url: `${siteUrl}/${page.slug}`,
+    lastModified,
+    changeFrequency: "monthly" as const,
+    priority: 0.55,
+  }));
+
+  return [...staticRoutes, ...legalRoutes, ...blogRoutes, ...appRoutes];
 }

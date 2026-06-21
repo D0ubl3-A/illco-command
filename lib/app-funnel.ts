@@ -99,7 +99,6 @@ export function getAppFunnelState(product: ProductRecord): AppFunnelState {
       config.subscriptionsReady &&
       config.planPrices[planId],
   );
-  const publicWorking = Boolean(monetization?.publicInFunnel && monetization.healthGate.behavior === "allow-checkout");
   const setupAvailable = Boolean(
     monetization?.publicInFunnel &&
       (monetization.healthGate.behavior === "allow-checkout-with-warning" ||
@@ -126,7 +125,7 @@ export function getAppFunnelState(product: ProductRecord): AppFunnelState {
     proofLabel: proofLabelFor(product.id),
     planId,
     canCheckout,
-    canOpen: Boolean(publicWorking),
+    canOpen: canCheckout,
     safeUrl: getProductModuleHref(product.id),
   };
 }

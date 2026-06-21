@@ -80,7 +80,20 @@ export function isGoogleOAuthConfigured() {
 }
 
 export function getGoogleOAuthRedirectUri() {
-  return env.googleRedirectUri || new URL("/api/account/google/callback", env.appBaseUrl).toString();
+  const configured = env.googleRedirectUri;
+  if (configured) {
+    try {
+      const url = new URL(configured);
+      if (url.pathname === "/api/auth/oauth/callback") {
+        url.pathname = "/api/account/google/callback";
+        return url.toString();
+      }
+      return url.toString();
+    } catch {
+      // Fall through to the canonical app-account callback.
+    }
+  }
+  return new URL("/api/account/google/callback", env.appBaseUrl).toString();
 }
 
 export function getGoogleOAuthCookiePath() {

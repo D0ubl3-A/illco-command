@@ -23,7 +23,7 @@ export default function BlogIndexPage() {
   const clusterPosts = blogPosts.slice(1);
 
   return (
-    <main className="fallbackPage blogPage">
+    <main id="main-content" className="fallbackPage blogPage">
       <div className="workspace blogWorkspace">
         <nav className="appLandingNav" aria-label="Blog navigation">
           <a className="brandBlock" href="/">

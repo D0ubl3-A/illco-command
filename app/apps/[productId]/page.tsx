@@ -155,7 +155,7 @@ export default async function AppLandingPage({ params }: AppLandingPageProps) {
   const productNotice = getProductNotice(product.id);
   const moduleTarget = state.safeUrl?.startsWith("http") ? "_blank" : undefined;
   const landingHref = `/apps/${encodeURIComponent(product.id)}`;
-  const hasSeparateProductHref = Boolean(state.safeUrl && state.safeUrl !== landingHref);
+  const hasSeparateProductHref = Boolean((masterUnlocked || state.canOpen) && state.safeUrl && state.safeUrl !== landingHref);
   const processSteps = getAppLandingProcess(product);
 
   return (

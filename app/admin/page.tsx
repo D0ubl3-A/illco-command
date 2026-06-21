@@ -60,7 +60,7 @@ function AdminLoginGate({
 
   return (
     <div className="fallbackPage">
-      <main className="workspace">
+      <main id="main-content" className="workspace">
         <section className="panel accountHeroPanel">
           <div className="accountHeroCopy">
             <span className="readinessPill neutral">Protected access</span>

@@ -508,7 +508,7 @@ export function CommandClient({ products, featuredProductIds, config, checkoutPr
         </nav>
       </aside>
 
-      <main className="workspace landingWorkspace">
+      <main id="main-content" className="workspace landingWorkspace">
         <section id="offer" className="posterHero" aria-label="ILLCO AI operating surface">
           <video
             className="posterHeroVideoBackdrop"
@@ -1373,9 +1373,15 @@ function ProductCard({ product, config }: { product: ProductRecord; config: Funn
       </div>
 
       <div className="productActions">
-        <a className="button primary" href={moduleHref} target={moduleTarget} rel={moduleTarget ? "noreferrer" : undefined}>
-          Open Product
-        </a>
+        {state.canOpen ? (
+          <a className="button primary" href={moduleHref} target={moduleTarget} rel={moduleTarget ? "noreferrer" : undefined}>
+            Open Product
+          </a>
+        ) : (
+          <span className="button primary" aria-disabled="true" title={state.openGateNote || "Module access is locked."}>
+            {state.title === "Manual review locked" ? "Manual Review Locked" : state.customerStatus === "soon" ? "Coming Soon" : "Locked"}
+          </span>
+        )}
         <a className="button secondary" href={landingHref}>
           Details
         </a>
@@ -1390,11 +1396,6 @@ function ProductCard({ product, config }: { product: ProductRecord; config: Funn
         ) : (
           <a className="button secondary" href="#request">Request Enterprise Setup</a>
         )}
-        {!state.canOpen && !product.productionUrl ? (
-          <span className="button secondary" aria-disabled="true" title={state.openGateNote || "Module access is locked."}>
-            {state.title === "Manual review locked" ? "Manual Review Locked" : "Coming Soon"}
-          </span>
-        ) : null}
         {tutorial?.youtubeUrl ? (
           <a className="button secondary" href={tutorial.youtubeUrl} target="_blank" rel="noreferrer">
             {videoActionLabel(tutorial)}

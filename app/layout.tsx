@@ -45,8 +45,23 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
   return (
     <html lang="en">
       <body>
+        <a className="skipLink" href="#main-content">Skip to content</a>
         <GlobalAuthHeader />
         {children}
+        <footer className="siteFooter" aria-label="Site footer">
+          <div>
+            <strong>ILLCO AI</strong>
+            <span>Working AI tools, subscriptions, and custom automation systems.</span>
+          </div>
+          <nav aria-label="Legal and support links">
+            <a href="/privacy">Privacy</a>
+            <a href="/terms">Terms</a>
+            <a href="/refunds">Refunds</a>
+            <a href="/accessibility">Accessibility</a>
+            <a href="/cookies">Cookies</a>
+            <a href="mailto:admin@illcoai.tech">Contact</a>
+          </nav>
+        </footer>
       </body>
     </html>
   );

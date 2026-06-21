@@ -109,7 +109,7 @@ export default async function BlogArticlePage({ params }: BlogArticlePageProps) 
   const processSteps = extractProcessSteps(post);
 
   return (
-    <main className="fallbackPage blogPage">
+    <main id="main-content" className="fallbackPage blogPage">
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(articleJsonLd) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }} />

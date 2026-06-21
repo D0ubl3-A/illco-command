@@ -103,7 +103,8 @@ export function GlobalAuthHeader() {
   const isAuthenticated = Boolean(session?.authenticated && session.user);
   const masterUnlocked = Boolean(masterAccess?.unlocked);
   const accountHref = session?.accountUrl || "/account";
-  const accountRole = session?.user?.admin ? "Admin" : "User";
+  const isAdmin = Boolean(session?.user?.admin);
+  const accountRole = isAdmin ? "Admin" : "User";
 
   return (
     <header className="globalAuthHeader" aria-label="Global account navigation">
@@ -118,7 +119,9 @@ export function GlobalAuthHeader() {
         <a className={masterUnlocked ? "globalAuthMasterLink isUnlocked" : "globalAuthMasterLink"} href="/account#master-access">
           {masterUnlocked ? `Master Unlocked (${masterAccess?.unlockedCount || 0})` : "Master Key"}
         </a>
-        <a className="globalAuthAdminLink" href="/admin">Admin Login</a>
+        {isAdmin ? (
+          <a className="globalAuthAdminLink" href="/admin">Admin</a>
+        ) : null}
       </nav>
       <div className="globalAuthActions">
         {isAuthenticated ? (

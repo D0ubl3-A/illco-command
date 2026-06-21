@@ -1,19 +1,17 @@
 import { categoryLabels, customerProductName } from "@/lib/app-funnel";
 import type { ProductRecord } from "@/lib/deployments";
+import { getPreferredShowcaseVideo } from "@/lib/demo-videos";
 import { getProductDisplayHref } from "@/lib/product-routes";
 import { getProjectCompletionRecord } from "@/lib/project-completion";
 
 const customProductImages: Record<string, string> = {
-  "think-for-me-mode": "/products/think-for-me-mode.svg",
   "lyric-video-forge": "/images/lyric-video-forge-credits.png",
-  "vault-select-exclusive-trap-beat": "/products/vault-select-exclusive-trap-beat.svg",
-  "barz-beat-shop": "/products/vault-select-exclusive-trap-beat.svg",
 };
 
 export function getProductViralImagePath(product: ProductRecord) {
   const customImage = customProductImages[product.id];
   if (customImage) return customImage;
-  return `/apps/${product.id}/viral-image.svg`;
+  return `/products/generated/${product.id}.jpg`;
 }
 
 export function getProductListingKicker(product: ProductRecord) {
@@ -35,8 +33,17 @@ export function getProductViralImageSvg(product: ProductRecord) {
   const source = completion?.sourceStatus ? completion.sourceStatus.replace(/-/g, " ").toUpperCase() : "SOURCE TRACKED";
   const url = getProductDisplayHref(product.id);
   const theme = themeForProduct(product);
-  const titleLines = splitSvgTitle(name, 22, 3);
-  const titleSize = titleLines.length > 2 ? 68 : titleLines.length > 1 ? 78 : name.length > 24 ? 82 : 94;
+  const titleLines = splitSvgTitle(name, 14, 4);
+  const titleSize =
+    titleLines.length > 3
+      ? 52
+      : titleLines.length > 2
+        ? 58
+        : titleLines.length > 1
+          ? 68
+          : name.length > 14
+            ? 76
+            : 88;
   const titleMarkup = titleLines
     .map(
       (line, index) =>
@@ -45,6 +52,8 @@ export function getProductViralImageSvg(product: ProductRecord) {
     .join("");
   const subtitleY = titleLines.length * (titleSize + 8) + 16;
   const deviceTone = product.category === "media" ? "VIDEO ENGINE" : product.category === "automation" ? "AGENT ENGINE" : product.category === "commerce" ? "SALES ENGINE" : "APP ENGINE";
+  const demoVideo = getPreferredShowcaseVideo(product.id);
+  const demoFrameMarkup = demoVideo?.youtubeVideoId ? getDemoVideoFrameMarkup(demoVideo.youtubeVideoId, theme) : getFallbackDeviceFrameMarkup(theme);
 
   return `<?xml version="1.0" encoding="UTF-8"?>
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" role="img" aria-labelledby="title desc">
@@ -88,9 +97,7 @@ export function getProductViralImageSvg(product: ProductRecord) {
   <g transform="translate(952 116)" filter="url(#softShadow)">
     <rect x="0" y="0" width="548" height="656" rx="54" fill="#080d16" stroke="#ffffff" stroke-opacity=".16"/>
     <rect x="28" y="28" width="492" height="600" rx="38" fill="#101722" stroke="url(#accent)" stroke-opacity=".44"/>
-    <rect x="58" y="66" width="432" height="248" rx="28" fill="#03060c"/>
-    <path d="M86 286 186 122 282 250 346 166 464 286Z" fill="url(#accent)" opacity=".92"/>
-    <circle cx="406" cy="124" r="34" fill="${theme.accentB}" opacity=".84"/>
+    ${demoFrameMarkup}
     <g transform="translate(62 360)">
       <rect width="184" height="20" rx="10" fill="#ffffff" opacity=".18"/>
       <rect y="48" width="358" height="18" rx="9" fill="${theme.accentA}" opacity=".72"/>
@@ -130,6 +137,32 @@ export function getProductViralImageSvg(product: ProductRecord) {
   </g>
   <rect x="42" y="42" width="1516" height="816" rx="48" fill="none" stroke="#ffffff" stroke-opacity=".08"/>
 </svg>`;
+}
+
+function getDemoVideoFrameMarkup(youtubeVideoId: string, theme: ReturnType<typeof themeForProduct>) {
+  const thumbnailUrl = `https://i.ytimg.com/vi/${encodeURIComponent(youtubeVideoId)}/hqdefault.jpg`;
+  return `<g>
+      <clipPath id="demoFrameClip">
+        <rect x="58" y="66" width="432" height="248" rx="28"/>
+      </clipPath>
+      <rect x="58" y="66" width="432" height="248" rx="28" fill="#03060c"/>
+      <image x="58" y="66" width="432" height="248" href="${thumbnailUrl}" preserveAspectRatio="xMidYMid slice" clip-path="url(#demoFrameClip)"/>
+      <rect x="58" y="66" width="432" height="248" rx="28" fill="#02040a" opacity=".18"/>
+      <circle cx="274" cy="190" r="48" fill="#050914" opacity=".72" stroke="${theme.accentA}" stroke-opacity=".72" stroke-width="3"/>
+      <path d="M260 164 260 216 306 190Z" fill="#ffffff"/>
+      <rect x="82" y="88" width="154" height="34" rx="17" fill="#050914" opacity=".78" stroke="${theme.accentB}" stroke-opacity=".48"/>
+      <text x="101" y="111" fill="#ffffff" font-family="Inter, Arial, sans-serif" font-size="17" font-weight="900" letter-spacing="2">DEMO VIDEO</text>
+      <rect x="78" y="268" width="388" height="20" rx="10" fill="#050914" opacity=".74"/>
+      <rect x="78" y="268" width="236" height="20" rx="10" fill="${theme.accentA}" opacity=".86"/>
+    </g>`;
+}
+
+function getFallbackDeviceFrameMarkup(theme: ReturnType<typeof themeForProduct>) {
+  return `<g>
+      <rect x="58" y="66" width="432" height="248" rx="28" fill="#03060c"/>
+      <path d="M86 286 186 122 282 250 346 166 464 286Z" fill="url(#accent)" opacity=".92"/>
+      <circle cx="406" cy="124" r="34" fill="${theme.accentB}" opacity=".84"/>
+    </g>`;
 }
 
 function getMusicPopProductSvg(product: ProductRecord) {

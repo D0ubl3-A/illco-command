@@ -18,6 +18,7 @@
     "proof:record": "tsx scripts/record-demo-videos.ts",
     "proof:upload": "tsx scripts/upload-demo-videos.ts",
     "proof:upload-result": "tsx scripts/upload-result-proof-video.ts",
+    "images:products": "tsx scripts/generate-product-images.ts",
     "tutorial:record": "tsx scripts/record-tutorial-videos.ts",
     "tutorial:upload": "tsx scripts/upload-tutorial-videos.ts",
     "groq:env": "tsx scripts/sync-groq-env.ts"

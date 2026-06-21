@@ -1,51 +1,32 @@
 {
-  "name": "illco-command",
-  "version": "0.1.0",
+  "name": "live-control-plane-mvp",
+  "version": "1.0.0",
   "private": true,
   "scripts": {
-    "dev": "next dev",
-    "build": "next build --webpack",
-    "start": "next start",
-    "test": "tsx --test tests/**/*.test.ts",
-    "audit:health": "tsx scripts/audit-project-health.ts",
-    "audit:sources": "tsx scripts/audit-project-sources.ts",
-    "readiness:ledger": "tsx scripts/write-readiness-ledger.ts",
-    "db:setup": "tsx scripts/setup-db.ts",
-    "monetization:sync": "tsx scripts/sync-monetization-plan.ts",
-    "youtube:search-demos": "tsx scripts/search-youtube-demos.ts",
-    "demo:record": "tsx scripts/record-tutorial-videos.ts",
-    "demo:upload": "tsx scripts/upload-tutorial-videos.ts",
-    "proof:record": "tsx scripts/record-demo-videos.ts",
-    "proof:upload": "tsx scripts/upload-demo-videos.ts",
-    "proof:upload-result": "tsx scripts/upload-result-proof-video.ts",
-    "images:products": "tsx scripts/generate-product-images.ts",
-    "tutorial:record": "tsx scripts/record-tutorial-videos.ts",
-    "tutorial:upload": "tsx scripts/upload-tutorial-videos.ts",
-    "groq:env": "tsx scripts/sync-groq-env.ts"
+    "dev": "tsx watch src/index.ts",
+    "build": "tsc -p tsconfig.json",
+    "start": "node dist/index.js"
   },
   "dependencies": {
-    "@aws/aurora-dsql-node-postgres-connector": "^0.1.9",
-    "@neondatabase/serverless": "^1.1.0",
-    "@openai/agents": "^0.11.7",
-    "@openai/codex-sdk": "^0.133.0",
-    "@types/pg": "^8.20.0",
-    "@vercel/functions": "^3.7.1",
-    "@vercel/oidc-aws-credentials-provider": "^3.1.4",
-    "next": "^16.2.6",
-    "pg": "^8.21.0",
-    "react": "19.2.5",
-    "react-dom": "19.2.5",
-    "stripe": "^22.1.1"
-  },
-  "overrides": {
-    "postcss": "^8.5.15"
+    "axios": "^1.7.3",
+    "bullmq": "^5.16.2",
+    "@socket.io/redis-adapter": "^8.3.0",
+    "dotenv": "^16.4.5",
+    "express": "^4.19.2",
+    "ioredis": "^5.4.1",
+    "jsonwebtoken": "^9.0.2",
+    "pg": "^8.11.5",
+    "redis": "^5.0.0",
+    "socket.io": "^4.7.5",
+    "uuid": "^10.0.0",
+    "zod": "^3.23.8"
   },
   "devDependencies": {
-    "@types/node": "^24.10.1",
-    "@types/react": "^19.2.4",
-    "@types/react-dom": "^19.2.3",
-    "playwright": "^1.60.0",
-    "tsx": "^4.21.0",
-    "typescript": "^6.0.3"
+    "@types/express": "^4.17.21",
+    "@types/jsonwebtoken": "^9.0.6",
+    "@types/node": "^22.13.5",
+    "@types/pg": "^8.11.6",
+    "tsx": "^4.19.1",
+    "typescript": "^5.5.4"
   }
 }

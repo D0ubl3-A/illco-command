@@ -1,0 +1,43 @@
+version: "3.9"
+services:
+  redis:
+    image: redis:7
+    container_name: live-control-redis
+    ports:
+      - "6379:6379"
+
+  postgres:
+    image: postgres:16
+    container_name: live-control-postgres
+    environment:
+      POSTGRES_DB: live_control
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+  app:
+    image: node:22-alpine
+    container_name: live-control-app
+    working_dir: /app
+    command: sh -c "npm ci && npm run dev"
+    environment:
+      REDIS_URL: redis://redis:6379
+      DATABASE_URL: postgres://postgres:postgres@postgres:5432/live_control
+      PRODUCER_TOKEN_SECRET: secret_replace_in_prod
+      INTERNAL_EVENT_SECRET: internal_secret_replace_in_prod
+      PRODUCER_BASE_URL: http://localhost:4000
+      CORS_ORIGIN: "*"
+    volumes:
+      - ./:/app
+      - /app/node_modules
+    ports:
+      - "4000:4000"
+    depends_on:
+      - redis
+      - postgres
+
+volumes:
+  pgdata:

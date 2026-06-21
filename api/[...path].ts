@@ -19,11 +19,17 @@ interface CurrentTurn {
 
 let redis: Redis | null = null;
 let storageInit: Promise<void> | null = null;
+let redisUnavailableMessage: string | null = null;
 const ai = new AIService();
 
 function redisClient() {
   if (!redis) {
-    redis = new Redis(config.redisUrl);
+    redis = new Redis(config.redisUrl, {
+      lazyConnect: true,
+      maxRetriesPerRequest: 1,
+      enableOfflineQueue: false,
+      connectTimeout: 2000,
+    });
   }
   return redis;
 }
@@ -33,16 +39,31 @@ function redisConfigured() {
   return Boolean(value) && !/^redis:\/\/(127\.0\.0\.1|localhost)(:|\/|$)/i.test(value);
 }
 
-function requireRedis(res: express.Response) {
+async function requireRedis(res: express.Response) {
   if (redisConfigured()) {
-    return true;
+    const client = redisClient();
+    try {
+      await client.ping();
+      redisUnavailableMessage = null;
+      return client;
+    } catch (error) {
+      redisUnavailableMessage = String((error as Error)?.message || error);
+      console.error("redis unavailable", redisUnavailableMessage);
+      redis = null;
+      res.status(503).json({
+        error: "redis_unavailable",
+        message: "Redis is not reachable. Check REDIS_URL connectivity and credentials.",
+        detail: redisUnavailableMessage,
+      });
+      return null;
+    }
   }
 
   res.status(503).json({
     error: "missing_redis_url",
     message: "Set REDIS_URL in Vercel before using queue, producer, control, or channel health endpoints.",
   });
-  return false;
+  return null;
 }
 
 async function ensureStorage() {
@@ -126,8 +147,7 @@ function baseUrlFor(req: express.Request) {
   return `${proto}://${req.headers.host}`;
 }
 
-async function getCurrentTurn(channelId: string): Promise<CurrentTurn | null> {
-  const client = redisClient();
+async function getCurrentTurn(channelId: string, client: Redis): Promise<CurrentTurn | null> {
   const raw = await client.get(currentKey(channelId));
   if (!raw) {
     return null;
@@ -155,11 +175,12 @@ async function getCurrentTurn(channelId: string): Promise<CurrentTurn | null> {
 }
 
 async function saveCurrentTurn(turn: CurrentTurn) {
-  await redisClient().set(currentKey(turn.job.channelId), JSON.stringify(turn));
+  const client = redisClient();
+  await client.set(currentKey(turn.job.channelId), JSON.stringify(turn));
 }
 
-async function failCurrentTurn(channelId: string, reason: string) {
-  const turn = await getCurrentTurn(channelId);
+async function failCurrentTurn(channelId: string, reason: string, client: Redis) {
+  const turn = await getCurrentTurn(channelId, client);
   if (!turn) {
     return { channelId, skipped: false, messageId: null };
   }
@@ -169,7 +190,7 @@ async function failCurrentTurn(channelId: string, reason: string) {
     finalStatus: "failed",
     reason,
   });
-  await redisClient().del(currentKey(channelId));
+  await client.del(currentKey(channelId));
   return { channelId, skipped: true, messageId: turn.job.messageId };
 }
 
@@ -225,12 +246,12 @@ app.get("/api/channels/:channelId/producer-token", asyncRoute(async (req, res) =
 
 app.get("/api/channels/:channelId/health", asyncRoute(async (req, res) => {
   await ensureStorage();
-  if (!requireRedis(res)) {
+  const client = await requireRedis(res);
+  if (!client) {
     return;
   }
   const { channelId } = req.params;
-  const client = redisClient();
-  const current = await getCurrentTurn(channelId);
+  const current = await getCurrentTurn(channelId, client);
   const muted = await client.get(muteKey(channelId));
 
   res.json({
@@ -260,7 +281,8 @@ const messageSchema = z.object({
 
 app.post("/api/channels/:channelId/messages", asyncRoute(async (req, res) => {
   await ensureStorage();
-  if (!requireRedis(res)) {
+  const client = await requireRedis(res);
+  if (!client) {
     return;
   }
   const { channelId } = req.params;
@@ -270,7 +292,6 @@ app.post("/api/channels/:channelId/messages", asyncRoute(async (req, res) => {
   }
 
   const input = parse.data as ViewerMessageInput;
-  const client = redisClient();
   const limiter = new FixedWindowRateLimiter(client, 60);
   let messageId: string = randomUUID();
   const createdAt = new Date().toISOString();
@@ -344,7 +365,7 @@ app.post("/api/channels/:channelId/messages", asyncRoute(async (req, res) => {
   }
 
   const waiting = await client.llen(queueKey(channelId));
-  const current = await getCurrentTurn(channelId);
+  const current = await getCurrentTurn(channelId, client);
   if (waiting + (current ? 1 : 0) >= config.queueMaxLen) {
     await setMessageState(messageId, channelId, input.viewerId, input.message, "failed", {
       reason: "queue_full",
@@ -377,7 +398,8 @@ app.post("/api/channels/:channelId/messages", asyncRoute(async (req, res) => {
 
 app.get("/api/producers/:channelId/next", asyncRoute(async (req, res) => {
   await ensureStorage();
-  if (!requireRedis(res)) {
+  const client = await requireRedis(res);
+  if (!client) {
     return;
   }
   const { channelId } = req.params;
@@ -385,14 +407,13 @@ app.get("/api/producers/:channelId/next", asyncRoute(async (req, res) => {
     return res.status(401).json({ error: "invalid_producer_token" });
   }
 
-  const client = redisClient();
   await client.set(`channel:${channelId}:producer-heartbeat`, String(Date.now()), "EX", config.producerHeartbeatTtlSec);
 
   if (await client.get(muteKey(channelId))) {
     return res.status(204).end();
   }
 
-  const current = await getCurrentTurn(channelId);
+  const current = await getCurrentTurn(channelId, client);
   if (current) {
     return res.json({ command: current.command });
   }
@@ -431,7 +452,8 @@ app.get("/api/producers/:channelId/next", asyncRoute(async (req, res) => {
 
 app.post("/api/producers/:channelId/events", asyncRoute(async (req, res) => {
   await ensureStorage();
-  if (!requireRedis(res)) {
+  const client = await requireRedis(res);
+  if (!client) {
     return;
   }
   const { channelId } = req.params;
@@ -444,7 +466,7 @@ app.post("/api/producers/:channelId/events", asyncRoute(async (req, res) => {
     return res.status(400).json({ error: "invalid_event_payload" });
   }
 
-  const turn = await getCurrentTurn(channelId);
+  const turn = await getCurrentTurn(channelId, client);
   if (!turn || turn.job.messageId !== event.messageId) {
     return res.json({ ok: true, ignored: true });
   }
@@ -481,7 +503,7 @@ app.post("/api/producers/:channelId/events", asyncRoute(async (req, res) => {
     await setMessageState(turn.job.messageId, channelId, turn.job.viewerId, turn.job.message, "archived", {
       finalStatus: "done",
     });
-    await redisClient().del(currentKey(channelId));
+    await client.del(currentKey(channelId));
     return res.json({ ok: true });
   }
 
@@ -510,7 +532,7 @@ app.post("/api/producers/:channelId/events", asyncRoute(async (req, res) => {
     finalStatus: "failed",
     reason: event.detail || "avatar_error",
   });
-  await redisClient().del(currentKey(channelId));
+  await client.del(currentKey(channelId));
   return res.json({ ok: true });
 }));
 
@@ -521,7 +543,8 @@ const controlSchema = z.object({
 
 app.post("/api/channels/:channelId/control", asyncRoute(async (req, res) => {
   await ensureStorage();
-  if (!requireRedis(res)) {
+  const client = await requireRedis(res);
+  if (!client) {
     return;
   }
   if (!isAdminAuthorized(req)) {
@@ -534,7 +557,6 @@ app.post("/api/channels/:channelId/control", asyncRoute(async (req, res) => {
     return res.status(400).json({ error: "invalid_payload", details: parse.error.flatten() });
   }
 
-  const client = redisClient();
   const reason = parse.data.reason || `host_${parse.data.command}`;
 
   if (parse.data.command === "mute") {
@@ -549,11 +571,11 @@ app.post("/api/channels/:channelId/control", asyncRoute(async (req, res) => {
 
   if (parse.data.command === "stop") {
     await client.set(muteKey(channelId), reason);
-    const skipped = await failCurrentTurn(channelId, reason);
+    const skipped = await failCurrentTurn(channelId, reason, client);
     return res.json({ channelId, muted: true, skipped });
   }
 
-  return res.json(await failCurrentTurn(channelId, reason));
+  return res.json(await failCurrentTurn(channelId, reason, client));
 }));
 
 app.use((error: unknown, _req: express.Request, res: express.Response, _next: express.NextFunction) => {

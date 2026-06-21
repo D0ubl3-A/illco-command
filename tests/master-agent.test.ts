@@ -1,7 +1,9 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 
-import { runMasterAgent } from "../lib/master-agent";
+import { checkoutProducts } from "../lib/checkout-products";
+import { products } from "../lib/deployments";
+import { getMasterAgentCatalogItems, runMasterAgent } from "../lib/master-agent";
 
 test("master agent maps sales offer names to gated app landing routes", () => {
   const result = runMasterAgent({
@@ -28,4 +30,18 @@ test("master agent includes account actions for login and subscription support",
   assert.ok(result.actions.some((action) => action.href === "/account"));
   assert.ok(result.nextSteps.some((step) => /sign in/i.test(step)));
   assert.ok(result.guardrails.some((guardrail) => /external app launch/i.test(guardrail)));
+});
+
+test("master agent catalog covers every app and checkout offer", () => {
+  const catalog = getMasterAgentCatalogItems();
+  const productIds = new Set(catalog.map((item) => item.productId));
+  const offerIds = new Set(catalog.map((item) => item.offerId).filter(Boolean));
+
+  for (const product of products) {
+    assert.ok(productIds.has(product.id), `${product.id} is missing from the master agent catalog`);
+  }
+
+  for (const offer of checkoutProducts) {
+    assert.ok(offerIds.has(offer.id), `${offer.id} is missing from the master agent catalog`);
+  }
 });

@@ -127,6 +127,24 @@ function sourceCatalogItems(): CatalogSourceItem[] {
   return [...offerItems, ...appItems];
 }
 
+export function getMasterAgentCatalogItems(): MasterAgentCatalogItem[] {
+  return sourceCatalogItems().map(({ searchableText: _searchableText, ...item }) => ({
+    ...item,
+    reason: item.canCheckout
+      ? "Checkout and access gates are active."
+      : item.canOpen
+        ? "Safe open route is available."
+        : item.offerId
+          ? "Sales offer is available for setup routing."
+          : "App route is available for setup routing.",
+    score: 0,
+    evidence: [
+      item.offerId ? `Offer ${item.offerId}` : `App ${item.productId}`,
+      item.canOpen ? "Open gate active" : "Open gate locked",
+    ],
+  }));
+}
+
 function buildCatalogSourceItem(
   product: ProductRecord,
   offer: (typeof checkoutProducts)[number] | null,

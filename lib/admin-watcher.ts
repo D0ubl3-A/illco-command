@@ -21,7 +21,7 @@ export function getAdminWatcherSnapshot() {
     proofAudit.summary.proofPending ? `${proofAudit.summary.proofPending} public offers still need proof/tutorial evidence.` : "",
     config.subscriptionsReady ? "" : "Subscription checkout is not fully configured.",
     config.licenseIssuingReady ? "" : "License issuing is not fully configured.",
-    config.leadCaptureReady ? "" : "Lead capture has no database or webhook target.",
+    config.leadCaptureReady ? "" : "Lead capture has no spreadsheet webhook or admin notification target.",
     config.codexSdkReady ? "" : "Codex SDK provider is locked until CODEX_API_KEY or OPENAI_API_KEY is configured.",
     monetizationCoverage.complete ? "" : "Monetization coverage is incomplete.",
   ].filter(Boolean);

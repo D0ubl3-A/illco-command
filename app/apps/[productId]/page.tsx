@@ -14,6 +14,7 @@ import {
 import { isMasterAccessUnlocked, isMasterUnlockableProduct } from "@/lib/master-access";
 import { getProductListingKicker, getProductViralImagePath } from "@/lib/product-marketing";
 import { getProductNotice } from "@/lib/product-notices";
+import { type ProductRecord } from "@/lib/deployments";
 
 type AppLandingPageProps = {
   params: Promise<{ productId: string }>;
@@ -49,6 +50,62 @@ const illcoAiVideoShowcase = [
     note: "Second local Sora pass for creative direction.",
   },
 ];
+
+const appLandingProcessByCategory: Record<ProductRecord["category"], string[]> = {
+  command: [
+    "Open the app and confirm the active module state.",
+    "Choose one user-facing goal and input source.",
+    "Run the first validation pass for setup and access.",
+    "Review results against expected output and safety checks.",
+    "Share next steps with the team in one short handoff.",
+  ],
+  media: [
+    "Load the source assets and brief.",
+    "Set the output format, quality target, and destination.",
+    "Generate or edit until the first pass passes review.",
+    "Export with metadata and delivery notes.",
+    "Distribute or handoff the final output to next step.",
+  ],
+  automation: [
+    "Collect trigger inputs and desired result fields.",
+    "Define owners, escalation, and failure handling.",
+    "Connect channels and validate each integration.",
+    "Run the workflow once with sample traffic.",
+    "Review logs and adjust rules for reliability.",
+  ],
+  commerce: [
+    "Define offer, price, and checkout journey.",
+    "Run a test purchase or lead funnel path.",
+    "Confirm payment, confirmation, and receipt generation.",
+    "Validate post-purchase automation and notifications.",
+    "Measure close rate, objections, and completion.",
+  ],
+  realEstate: [
+    "Collect the listing or service input with context.",
+    "Assign lead source, owner, and required follow-ups.",
+    "Schedule tours or discovery steps and track status.",
+    "Deliver documents and communication in one lane.",
+    "Close, recycle, or escalate each opportunity.",
+  ],
+  backend: [
+    "Map required endpoint shape and error contracts.",
+    "Connect secrets, permissions, and auth checks.",
+    "Validate payloads through healthy request flows.",
+    "Monitor response behavior and retry paths.",
+    "Ship fixes with clear rollback and test evidence.",
+  ],
+  experimental: [
+    "Define hypothesis and measurable success criterion.",
+    "Build a minimal test path with explicit limits.",
+    "Collect feedback and document known limitations.",
+    "Run acceptance checks and log failures.",
+    "Iterate quickly and harden only proven paths.",
+  ],
+};
+
+function getAppLandingProcess(product: ProductRecord) {
+  return appLandingProcessByCategory[product.category];
+}
 
 export async function generateMetadata({ params }: AppLandingPageProps): Promise<Metadata> {
   const { productId } = await params;
@@ -99,6 +156,7 @@ export default async function AppLandingPage({ params }: AppLandingPageProps) {
   const moduleTarget = state.safeUrl?.startsWith("http") ? "_blank" : undefined;
   const landingHref = `/apps/${encodeURIComponent(product.id)}`;
   const hasSeparateProductHref = Boolean(state.safeUrl && state.safeUrl !== landingHref);
+  const processSteps = getAppLandingProcess(product);
 
   return (
     <div className="fallbackPage appLandingPage">
@@ -250,6 +308,22 @@ export default async function AppLandingPage({ params }: AppLandingPageProps) {
                 <span>Request setup for a guided walkthrough and access details.</span>
               </div>
             )}
+          </article>
+
+          <article className="panel appLandingCard">
+            <div className="panelHeader">
+              <div>
+                <h2>Suggested process</h2>
+                <p>Use this default operating path when setting up and testing this app.</p>
+              </div>
+            </div>
+            <div className="accountNote">
+              <ol>
+                {processSteps.map((step, index) => (
+                  <li key={`${product.id}-process-${index}`}>{step}</li>
+                ))}
+              </ol>
+            </div>
           </article>
         </section>
 

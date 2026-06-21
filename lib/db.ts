@@ -10,16 +10,17 @@ let cachedPool: AuroraDSQLPool | null = null;
 let cachedSql: SqlClient | null = null;
 
 export function getDatabaseUrl() {
-  return (process.env.DATABASE_URL || process.env.POSTGRES_URL || "").trim();
+  const databaseUrl = (process.env.DATABASE_URL || process.env.POSTGRES_URL || process.env.db_url_DATABASE_URL || "").trim();
+  return databaseUrl;
 }
 
 export function getDsqlConfig() {
-  const host = (process.env.STORAGE_PGHOST || "").trim();
-  const region = (process.env.STORAGE_AWS_REGION || "").trim();
-  const user = (process.env.STORAGE_PGUSER || "admin").trim();
-  const database = (process.env.STORAGE_PGDATABASE || "postgres").trim();
-  const port = Number(process.env.STORAGE_PGPORT || 5432);
-  const roleArn = (process.env.STORAGE_AWS_ROLE_ARN || "").trim();
+  const host = (process.env.STORAGE_PGHOST || process.env.db_url_PGHOST || "").trim();
+  const region = (process.env.STORAGE_AWS_REGION || process.env.db_url_AWS_REGION || "").trim();
+  const user = (process.env.STORAGE_PGUSER || process.env.db_url_PGUSER || "admin").trim();
+  const database = (process.env.STORAGE_PGDATABASE || process.env.db_url_PGDATABASE || "postgres").trim();
+  const port = Number(process.env.STORAGE_PGPORT || process.env.db_url_PGPORT || 5432);
+  const roleArn = (process.env.STORAGE_AWS_ROLE_ARN || process.env.db_url_AWS_ROLE_ARN || "").trim();
 
   return { host, region, user, database, port, roleArn };
 }
@@ -48,7 +49,7 @@ export function getSql() {
 
   const config = getDsqlConfig();
   if (!config.host || !config.region) {
-    throw new Error("DATABASE_URL, POSTGRES_URL, or STORAGE_PGHOST/STORAGE_AWS_REGION is required.");
+    throw new Error("DATABASE_URL, POSTGRES_URL, db_url_DATABASE_URL or STORAGE_PGHOST/db_url_PGHOST + STORAGE_AWS_REGION/db_url_AWS_REGION is required.");
   }
 
   const databaseKey = `dsql:${config.host}:${config.region}:${config.user}:${config.database}:${config.port}`;
@@ -61,7 +62,7 @@ export function getSql() {
       user: config.user,
       database: config.database,
       port: config.port,
-      ssl: process.env.STORAGE_PGSSLMODE === "disable" ? false : { rejectUnauthorized: true },
+      ssl: (process.env.STORAGE_PGSSLMODE || process.env.db_url_PGSSLMODE) === "disable" ? false : { rejectUnauthorized: true },
       ...(usesVercelOidc
         ? {
             customCredentialsProvider: awsCredentialsProvider({

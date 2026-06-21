@@ -37,6 +37,7 @@ export type BlogPost = {
   heroMetrics: string[];
   takeaways: string[];
   sections: BlogSection[];
+  workflow?: string[];
   faqs: Array<{
     question: string;
     answer: string;

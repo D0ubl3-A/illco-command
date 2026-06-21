@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 
-import { blogPosts, blogSiteUrl, getBlogPost, getRelatedPosts, headingId } from "@/lib/blog-posts";
+import { type BlogPost, blogPosts, blogSiteUrl, getBlogPost, getRelatedPosts, headingId } from "@/lib/blog-posts";
 
 type BlogArticlePageProps = {
   params: Promise<{ slug: string }>;
@@ -106,6 +106,7 @@ export default async function BlogArticlePage({ params }: BlogArticlePageProps) 
       },
     })),
   };
+  const processSteps = extractProcessSteps(post);
 
   return (
     <main className="fallbackPage blogPage">
@@ -174,14 +175,15 @@ export default async function BlogArticlePage({ params }: BlogArticlePageProps) 
           </section>
 
           <div className="blogArticleLayout">
-            <aside className="blogToc" aria-label="Table of contents">
-              <strong>On this page</strong>
-              {post.sections.map((section) => (
-                <a href={`#${headingId(section.heading)}`} key={section.heading}>{section.heading}</a>
-              ))}
-              <a href="#faq">FAQ</a>
-              <a href="#sources">Sources</a>
-            </aside>
+          <aside className="blogToc" aria-label="Table of contents">
+            <strong>On this page</strong>
+            {post.sections.map((section) => (
+              <a href={`#${headingId(section.heading)}`} key={section.heading}>{section.heading}</a>
+            ))}
+            {processSteps.length ? <a href="#process">Process</a> : null}
+            <a href="#faq">FAQ</a>
+            <a href="#sources">Sources</a>
+          </aside>
 
             <div className="blogArticleBody">
               {post.sections.map((section) => (
@@ -201,6 +203,16 @@ export default async function BlogArticlePage({ params }: BlogArticlePageProps) 
                   {section.callout ? <div className="blogCallout">{section.callout}</div> : null}
                 </section>
               ))}
+              {processSteps.length ? (
+                <section id="process" className="blogTakeaways">
+                  <h2>Process</h2>
+                  <ol>
+                    {processSteps.map((step, index) => (
+                      <li key={`${step}-${index}`}>{step}</li>
+                    ))}
+                  </ol>
+                </section>
+              ) : null}
 
               <section id="faq" className="blogFaq">
                 <h2>FAQ</h2>
@@ -258,4 +270,23 @@ export default async function BlogArticlePage({ params }: BlogArticlePageProps) 
       </div>
     </main>
   );
+}
+
+function extractProcessSteps(post: BlogPost) {
+  if (post.workflow && post.workflow.length) return post.workflow;
+
+  const workflowSection = post.sections.find((section) => {
+    const heading = section.heading.toLowerCase();
+    const eyebrow = section.eyebrow?.toLowerCase() || "";
+    return heading.includes("workflow") || heading.includes("process") || eyebrow.includes("workflow") || eyebrow.includes("process");
+  });
+  if (workflowSection?.bullets?.length) return workflowSection.bullets;
+
+  const explicitStepSection = post.sections.find((section) => section.heading.toLowerCase().includes("step"));
+  if (explicitStepSection?.bullets?.length) return explicitStepSection.bullets;
+
+  const fallbackSection = post.sections.find((section) => section.bullets?.length);
+  if (fallbackSection?.bullets?.length) return fallbackSection.bullets;
+
+  return post.takeaways.slice(0, 5);
 }

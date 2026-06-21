@@ -5,6 +5,7 @@ import { createHash, createHmac, timingSafeEqual } from "node:crypto";
 import { cookies } from "next/headers";
 
 import { isTrustedAdminEmail } from "@/lib/admin-identities";
+import { env } from "@/lib/env";
 import { getCurrentUser } from "@/lib/user-accounts";
 
 export const ADMIN_SESSION_COOKIE = "illco_admin_session";
@@ -13,7 +14,7 @@ export const ADMIN_SESSION_TTL_SECONDS = 60 * 60 * 8;
 const SESSION_VERSION = "v1";
 
 export function getAdminKey() {
-  const adminKey = process.env.ADMIN_API_KEY;
+  const adminKey = env.adminApiKey;
   return adminKey && adminKey.length > 0 ? adminKey : null;
 }
 

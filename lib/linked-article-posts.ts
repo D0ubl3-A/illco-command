@@ -1155,6 +1155,7 @@ function createArticlePost(seed: LinkedArticleSeed, index: number): BlogPost {
     audience: seed.audience,
     primaryKeyword: seed.primaryKeyword,
     secondaryKeywords: seed.secondaryKeywords,
+    workflow: seed.workflow,
     serpIntent:
       `Searchers looking for ${seed.primaryKeyword} want more than a pitch. They need the workflow, the limits, the proof, and the next page to use if the idea fits their business.`,
     rankAngle:

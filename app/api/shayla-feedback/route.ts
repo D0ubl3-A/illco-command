@@ -2,6 +2,7 @@ import { Agent, run } from "@openai/agents";
 import { NextResponse } from "next/server";
 
 import { addShaylaFeedback, getShaylaFeedbackSnapshot } from "@/lib/shayla-feedback";
+import { env } from "@/lib/env";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -40,7 +41,7 @@ export async function POST(request: Request) {
   }
 
   let agentReply = "";
-  if (process.env.OPENAI_API_KEY) {
+  if (env.codexApiKey) {
     const result = await run(
       shaylaAgent,
       [
@@ -70,3 +71,4 @@ export async function POST(request: Request) {
 
   return NextResponse.json({ item, snapshot: getShaylaFeedbackSnapshot() });
 }
+

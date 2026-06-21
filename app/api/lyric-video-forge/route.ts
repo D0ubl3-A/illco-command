@@ -1,6 +1,6 @@
-﻿import { Agent, run } from "@openai/agents";
+import { Agent, run } from "@openai/agents";
 import { NextResponse } from "next/server";
-
+import { env } from "@/lib/env";
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
@@ -174,7 +174,7 @@ async function transcribeUploadedAudio(audioFile: File | null) {
   if (!audioFile) {
     return { status: "missing-audio", detail: "Upload an audio file before transcription." };
   }
-  if (!process.env.OPENAI_API_KEY) {
+  if (!env.codexApiKey) {
     return {
       status: "blocked-no-key",
       detail: "OPENAI_API_KEY is required for hosted transcription.",
@@ -193,7 +193,7 @@ async function transcribeUploadedAudio(audioFile: File | null) {
 
   const response = await fetch("https://api.openai.com/v1/audio/transcriptions", {
     method: "POST",
-    headers: { Authorization: `Bearer ${process.env.OPENAI_API_KEY}` },
+    headers: { Authorization: `Bearer ${env.codexApiKey}` },
     body: formData,
   });
   const result = await response.json().catch(() => ({}));
@@ -272,7 +272,7 @@ export async function POST(request: Request) {
   const images = imageGenerationPlan(payload, Boolean(characterReference));
 
   let brief = "";
-  if (process.env.OPENAI_API_KEY) {
+  if (env.codexApiKey) {
     const result = await run(
       lyricVideoForgeAgent,
       [
@@ -298,7 +298,7 @@ export async function POST(request: Request) {
 
   return NextResponse.json({
     brief,
-    usedAgentSdk: Boolean(process.env.OPENAI_API_KEY),
+    usedAgentSdk: Boolean(env.codexApiKey),
     modelDefaults: {
       agent: defaultAgentModel,
       image: defaultImageModel,
@@ -322,3 +322,5 @@ export async function POST(request: Request) {
     payload,
   });
 }
+
+

@@ -92,6 +92,103 @@ const planNames: Record<PlanId, string> = {
   enterprise: "Enterprise",
 };
 
+const productProcessById: Record<string, string[]> = {
+  "think-for-me-mode": [
+    "Pick the first request and choose one measurable output.",
+    "Let the helper assemble a short plan and required command.",
+    "Review commands for safety before execution.",
+    "Run the approved command and capture the result.",
+    "Adjust and repeat using one clear next action.",
+  ],
+  "ai-companion-conversational-intake": [
+    "Capture the user context and source lane.",
+    "Normalize the request into an internal ticket format.",
+    "Route the ticket to the right workflow in one pass.",
+    "Keep follow-up notes and proof in one dashboard.",
+    "Escalate only when confidence is low or risk is high.",
+  ],
+  "ai-companion-prompt-studio": [
+    "Draft the campaign or task brief.",
+    "Apply approved prompt structure and constraints.",
+    "Generate first-pass output with versioning.",
+    "Review against examples and brand guardrails.",
+    "Ship the chosen draft to the right workspace.",
+  ],
+  "ai-companion-content-production": [
+    "Choose topic, keyword intent, and asset format.",
+    "Generate source brief and production schedule.",
+    "Create draft, caption, and distribution variants.",
+    "Run quality checks before publishing.",
+    "Track conversion and move to the next piece.",
+  ],
+  "ai-companion-sales-agent-handoff": [
+    "Collect inbound lead details and source.",
+    "Assign service category and ownership.",
+    "Draft response with confidence boundaries.",
+    "Escalate edge cases to a human review step.",
+    "Close each lead in a tracked follow-up lane.",
+  ],
+  "ai-companion-command-routing": [
+    "Unify user requests across products and services.",
+    "Map each request to a destination module.",
+    "Apply gating rules before execution.",
+    "Track completion, blockers, and reopen triggers.",
+    "Report back with the next best action.",
+  ],
+};
+
+const productProcessByCategory: Record<ProductRecord["category"], string[]> = {
+  command: [
+    "Open the command surface and confirm the active module.",
+    "Collect the operating goal and scope in one sentence.",
+    "Route the job to the right app or agent.",
+    "Verify outcome against the stated goal.",
+    "Close with the next decision or follow-up action.",
+  ],
+  media: [
+    "Collect source assets, style notes, and output requirement.",
+    "Generate or edit content with version checkpoints.",
+    "Review visual/audio quality and brand consistency.",
+    "Export and package final assets with metadata.",
+    "Publish or handoff with source and delivery notes.",
+  ],
+  automation: [
+    "Map the trigger, input, and expected output.",
+    "Define ownership, approval, and failure states.",
+    "Connect channels, tools, and status tracking.",
+    "Run the first repeatable loop and verify results.",
+    "Improve rules and reduce manual intervention.",
+  ],
+  commerce: [
+    "Define product, offer, and customer entry path.",
+    "Validate pricing, taxes, and checkout requirements.",
+    "Run a test flow end-to-end with proof logging.",
+    "Automate confirmation and receipt routing.",
+    "Track conversion and retention metrics.",
+  ],
+  realEstate: [
+    "Collect property info and lead source.",
+    "Assign lead to workflow status and owner.",
+    "Coordinate tours, media, and document handoff.",
+    "Confirm communication cadence and updates.",
+    "Track outcomes through close or recycle loop.",
+  ],
+  backend: [
+    "Create reliable endpoint contracts and expected payloads.",
+    "Add authentication, validation, and fallback behavior.",
+    "Publish interfaces for downstream services.",
+    "Monitor logs for latency and failures.",
+    "Iterate against load and observed edge cases.",
+  ],
+  experimental: [
+    "Document the intended behavior and risks.",
+    "Build a minimal viable workflow before polish.",
+    "Capture manual overrides and known limitations.",
+    "Run acceptance checks with real traffic where possible.",
+    "Improve and harden only after baseline passes.",
+  ],
+};
+
 const plans: Array<{
   id: PlanId;
   name: string;
@@ -1223,6 +1320,7 @@ function ProductCard({ product, config }: { product: ProductRecord; config: Funn
   const landingHref = getProductLandingHref(product.id);
   const moduleTarget = moduleHref.startsWith("http") ? "_blank" : undefined;
   const productImagePath = getProductViralImagePath(product);
+  const processSteps = getProductProcessSteps(product);
 
   return (
     <article className={`productCard ${state.customerStatus}`}>
@@ -1265,6 +1363,15 @@ function ProductCard({ product, config }: { product: ProductRecord; config: Funn
         </div>
       ) : null}
 
+      <div className="accountNote">
+        <strong>Suggested process</strong>
+        <ol>
+          {processSteps.map((step, index) => (
+            <li key={`${product.id}-process-${index}`}>{step}</li>
+          ))}
+        </ol>
+      </div>
+
       <div className="productActions">
         <a className="button primary" href={moduleHref} target={moduleTarget} rel={moduleTarget ? "noreferrer" : undefined}>
           Open Product
@@ -1301,6 +1408,12 @@ function ProductCard({ product, config }: { product: ProductRecord; config: Funn
       </div>
     </article>
   );
+}
+
+function getProductProcessSteps(product: ProductRecord) {
+  const override = productProcessById[product.id];
+  if (override) return override;
+  return productProcessByCategory[product.category];
 }
 
 function Signal({ label, value }: { label: string; value: string }) {

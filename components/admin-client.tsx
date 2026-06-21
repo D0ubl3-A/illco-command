@@ -565,7 +565,11 @@ export function AdminClient({ products, config, proofAudit }: Props) {
             <ConfigItem label="CHECKOUT_SESSION_SECRET" ready={Boolean(config.customerPortalReady)} />
             <ConfigItem label="ADMIN_API_KEY + LICENSE_SIGNING_SECRET" ready={config.licenseIssuingReady} />
             <ConfigItem label="MASTER_LICENSE_KEY or LICENSE_KEYS" ready={config.manualLicenseValidationReady} />
-            <ConfigItem label="DATABASE_URL / POSTGRES_URL / LEAD_WEBHOOK_URL (or BETA_SIGNUP_WEBHOOK_URL)" ready={config.leadCaptureReady} />
+            <ConfigItem
+              label="DATABASE_URL / POSTGRES_URL / LEAD_SPREADSHEET_WEBHOOK_URL"
+              ready={config.leadCaptureReady}
+              detail={config.leadCaptureReady ? "Lead capture and admin notification targets are configured." : "No lead target configured"}
+            />
             <ConfigItem label="CODEX_API_KEY or OPENAI_API_KEY" ready={Boolean(config.codexSdkReady)} />
             {Object.entries(config.planPrices).map(([planId, ready]) => (
               <ConfigItem

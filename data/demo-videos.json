@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-05-21T02:22:19.428Z",
+  "generatedAt": "2026-06-21T07:49:44.973Z",
   "projects": {
     "epstein-files-desk": {
       "title": "Epstein Files Desk demo | ILLCO Command",
@@ -154,12 +154,12 @@
     "youtube-ops-vercel": {
       "title": "Youtube Ops Vercel demo | ILLCO Command",
       "source": "manual",
-      "updatedAt": "2026-05-20T18:31:06.909Z",
+      "updatedAt": "2026-06-21T07:45:58.444Z",
       "projectId": "youtube-ops-vercel",
       "productionUrl": "https://youtubeopsvercel.vercel.app",
-      "localVideoPath": "C:\\Users\\aaron\\.barz\\apps\\illco_command\\artifacts\\demo-videos\\youtube-ops-vercel.webm",
-      "localVideoBytes": 1357160,
-      "localVideoRecordedAt": "2026-05-20T18:31:06.909Z"
+      "localVideoPath": "D:\\workspace\\illco-command\\artifacts\\demo-videos\\youtube-ops-vercel.webm",
+      "localVideoBytes": 1343845,
+      "localVideoRecordedAt": "2026-06-21T07:35:38.836Z"
     },
     "visual-voice-board": {
       "title": "Visual Voice Board demo | ILLCO Command",
@@ -368,62 +368,62 @@
     "radio-edit-studio": {
       "title": "Radio Edit Studio demo | ILLCO Command",
       "source": "manual",
-      "updatedAt": "2026-05-20T19:31:48.097Z",
+      "updatedAt": "2026-06-21T07:45:58.449Z",
       "projectId": "radio-edit-studio",
       "productionUrl": "https://radio-edit-studio.vercel.app",
-      "localVideoPath": "C:\\Users\\aaron\\.barz\\apps\\illco_command\\artifacts\\demo-videos\\radio-edit-studio.webm",
-      "localVideoBytes": 1180539,
-      "localVideoRecordedAt": "2026-05-20T19:31:48.095Z"
+      "localVideoPath": "D:\\workspace\\illco-command\\artifacts\\demo-videos\\radio-edit-studio.webm",
+      "localVideoBytes": 1310147,
+      "localVideoRecordedAt": "2026-06-21T07:35:50.427Z"
     },
     "sora2-petition": {
       "title": "Sora2 Petition demo | ILLCO Command",
       "source": "manual",
-      "updatedAt": "2026-05-20T19:32:03.038Z",
+      "updatedAt": "2026-06-21T07:45:58.453Z",
       "projectId": "sora2-petition",
       "productionUrl": "https://sora2-petition.vercel.app",
-      "localVideoPath": "C:\\Users\\aaron\\.barz\\apps\\illco_command\\artifacts\\demo-videos\\sora2-petition.webm",
-      "localVideoBytes": 1444990,
-      "localVideoRecordedAt": "2026-05-20T19:32:03.038Z"
+      "localVideoPath": "D:\\workspace\\illco-command\\artifacts\\demo-videos\\sora2-petition.webm",
+      "localVideoBytes": 1632495,
+      "localVideoRecordedAt": "2026-06-21T07:36:03.571Z"
     },
     "lvl-up-agency": {
       "title": "Lvl Up Agency demo | ILLCO Command",
       "source": "manual",
-      "updatedAt": "2026-05-20T19:32:25.380Z",
+      "updatedAt": "2026-06-21T07:45:58.457Z",
       "projectId": "lvl-up-agency",
       "productionUrl": "https://lvl-up-agency.vercel.app",
-      "localVideoPath": "C:\\Users\\aaron\\.barz\\apps\\illco_command\\artifacts\\demo-videos\\lvl-up-agency.webm",
-      "localVideoBytes": 1338010,
-      "localVideoRecordedAt": "2026-05-20T19:32:25.380Z"
+      "localVideoPath": "D:\\workspace\\illco-command\\artifacts\\demo-videos\\lvl-up-agency.webm",
+      "localVideoBytes": 882050,
+      "localVideoRecordedAt": "2026-06-21T07:36:15.771Z"
     },
     "automateflow": {
       "title": "Automateflow demo | ILLCO Command",
       "source": "manual",
-      "updatedAt": "2026-05-20T19:32:39.765Z",
+      "updatedAt": "2026-06-21T07:45:58.461Z",
       "projectId": "automateflow",
       "productionUrl": "https://automateflow-eta.vercel.app",
-      "localVideoPath": "C:\\Users\\aaron\\.barz\\apps\\illco_command\\artifacts\\demo-videos\\automateflow.webm",
-      "localVideoBytes": 1909722,
-      "localVideoRecordedAt": "2026-05-20T19:32:39.765Z"
+      "localVideoPath": "D:\\workspace\\illco-command\\artifacts\\demo-videos\\automateflow.webm",
+      "localVideoBytes": 1300670,
+      "localVideoRecordedAt": "2026-06-21T07:36:30.883Z"
     },
     "illcoappiverse": {
       "title": "Illcoappiverse demo | ILLCO Command",
       "source": "manual",
-      "updatedAt": "2026-05-20T19:32:54.129Z",
+      "updatedAt": "2026-06-21T07:45:58.466Z",
       "projectId": "illcoappiverse",
       "productionUrl": "https://illcoappiverse.vercel.app",
-      "localVideoPath": "C:\\Users\\aaron\\.barz\\apps\\illco_command\\artifacts\\demo-videos\\illcoappiverse.webm",
-      "localVideoBytes": 317786,
-      "localVideoRecordedAt": "2026-05-20T19:32:54.129Z"
+      "localVideoPath": "D:\\workspace\\illco-command\\artifacts\\demo-videos\\illcoappiverse.webm",
+      "localVideoBytes": 1115016,
+      "localVideoRecordedAt": "2026-06-21T07:36:42.927Z"
     },
     "music-video-clip-site": {
       "title": "Music Video Clip Site demo | ILLCO Command",
       "source": "manual",
-      "updatedAt": "2026-05-20T19:33:06.827Z",
+      "updatedAt": "2026-06-21T07:45:58.470Z",
       "projectId": "music-video-clip-site",
       "productionUrl": "https://music-video-clip-site.vercel.app",
-      "localVideoPath": "C:\\Users\\aaron\\.barz\\apps\\illco_command\\artifacts\\demo-videos\\music-video-clip-site.webm",
-      "localVideoBytes": 563820,
-      "localVideoRecordedAt": "2026-05-20T19:33:06.827Z"
+      "localVideoPath": "D:\\workspace\\illco-command\\artifacts\\demo-videos\\music-video-clip-site.webm",
+      "localVideoBytes": 479043,
+      "localVideoRecordedAt": "2026-06-21T07:36:56.443Z"
     },
     "online-store-radio-edit": {
       "title": "Online Store Radio Edit demo | ILLCO Command",
@@ -444,12 +444,235 @@
     "nexus-workstation": {
       "title": "Nexus Workstation demo | ILLCO Command",
       "source": "manual",
-      "updatedAt": "2026-05-20T19:33:31.540Z",
+      "updatedAt": "2026-06-21T07:45:58.473Z",
       "projectId": "nexus-workstation",
       "productionUrl": "https://nexus-workstation.vercel.app",
-      "localVideoPath": "C:\\Users\\aaron\\.barz\\apps\\illco_command\\artifacts\\demo-videos\\nexus-workstation.webm",
-      "localVideoBytes": 562157,
-      "localVideoRecordedAt": "2026-05-20T19:33:31.540Z"
+      "localVideoPath": "D:\\workspace\\illco-command\\artifacts\\demo-videos\\nexus-workstation.webm",
+      "localVideoBytes": 569374,
+      "localVideoRecordedAt": "2026-06-21T07:37:07.415Z"
+    },
+    "illcoflow": {
+      "title": "Illcoflow demo | ILLCO Command",
+      "source": "manual",
+      "updatedAt": "2026-06-21T07:45:58.478Z",
+      "projectId": "illcoflow",
+      "productionUrl": "https://illcoflow.vercel.app",
+      "localVideoPath": "D:\\workspace\\illco-command\\artifacts\\demo-videos\\illcoflow.webm",
+      "localVideoBytes": 1309819,
+      "localVideoRecordedAt": "2026-06-21T07:37:21.701Z"
+    },
+    "ai-companions-recovered": {
+      "title": "ILLCO Tools demo | ILLCO Command",
+      "source": "manual",
+      "updatedAt": "2026-06-21T07:49:44.785Z",
+      "projectId": "ai-companions-recovered",
+      "productionUrl": "https://illco-command.vercel.app",
+      "localVideoPath": "D:\\workspace\\illco-command\\artifacts\\demo-videos\\ai-companions-recovered.webm",
+      "localVideoBytes": 1953802,
+      "localVideoRecordedAt": "2026-06-21T07:38:06.731Z",
+      "tutorialTitle": "ILLCO Tools full tutorial | ILLCO Command",
+      "tutorialLocalVideoPath": "D:\\workspace\\illco-command\\artifacts\\tutorial-videos\\ai-companions-recovered\\ai-companions-recovered.tutorial.mp4",
+      "tutorialTranscriptPath": "D:\\workspace\\illco-command\\artifacts\\tutorial-videos\\ai-companions-recovered\\ai-companions-recovered.narration.txt",
+      "tutorialCaptionPath": "D:\\workspace\\illco-command\\artifacts\\tutorial-videos\\ai-companions-recovered\\ai-companions-recovered.captions.srt",
+      "tutorialManifestPath": "D:\\workspace\\illco-command\\artifacts\\tutorial-videos\\ai-companions-recovered\\ai-companions-recovered.tutorial.json",
+      "tutorialDurationSeconds": 142,
+      "tutorialUpdatedAt": "2026-06-21T07:49:44.785Z",
+      "tutorialIncludesCaptions": true,
+      "tutorialIncludesHighlights": true,
+      "tutorialIncludesNarration": true,
+      "tutorialPacing": "slow",
+      "tutorialSceneCount": 5,
+      "tutorialPacingFloorSeconds": 16
+    },
+    "lipsync-app": {
+      "title": "Lipsync App demo | ILLCO Command",
+      "source": "manual",
+      "updatedAt": "2026-06-21T07:46:13.042Z",
+      "projectId": "lipsync-app",
+      "productionUrl": "https://lipsync-app-ten.vercel.app",
+      "localVideoPath": "D:\\workspace\\illco-command\\artifacts\\demo-videos\\lipsync-app.webm",
+      "localVideoBytes": 1354960,
+      "localVideoRecordedAt": "2026-06-21T07:46:13.042Z"
+    },
+    "sbl-sora-battle-league": {
+      "title": "SBL Sora Battle League demo | ILLCO Command",
+      "source": "manual",
+      "updatedAt": "2026-06-21T07:46:23.437Z",
+      "projectId": "sbl-sora-battle-league",
+      "productionUrl": "https://sbl-sora-battle-league.vercel.app",
+      "localVideoPath": "D:\\workspace\\illco-command\\artifacts\\demo-videos\\sbl-sora-battle-league.webm",
+      "localVideoBytes": 1179595,
+      "localVideoRecordedAt": "2026-06-21T07:46:23.437Z"
+    },
+    "gardening-site": {
+      "title": "Gardening Site demo | ILLCO Command",
+      "source": "manual",
+      "updatedAt": "2026-06-21T07:46:33.236Z",
+      "projectId": "gardening-site",
+      "productionUrl": "https://gardening-site-seven.vercel.app",
+      "localVideoPath": "D:\\workspace\\illco-command\\artifacts\\demo-videos\\gardening-site.webm",
+      "localVideoBytes": 1242518,
+      "localVideoRecordedAt": "2026-06-21T07:46:33.236Z"
+    },
+    "gardening-site-grqp": {
+      "title": "Gardening Site Grqp demo | ILLCO Command",
+      "source": "manual",
+      "updatedAt": "2026-06-21T07:46:43.255Z",
+      "projectId": "gardening-site-grqp",
+      "productionUrl": "https://gardening-site-grqp.vercel.app",
+      "localVideoPath": "D:\\workspace\\illco-command\\artifacts\\demo-videos\\gardening-site-grqp.webm",
+      "localVideoBytes": 1086782,
+      "localVideoRecordedAt": "2026-06-21T07:46:43.255Z"
+    },
+    "ghetto-bird-robot": {
+      "title": "Ghetto Bird Robot demo | ILLCO Command",
+      "source": "manual",
+      "updatedAt": "2026-06-21T07:46:53.034Z",
+      "projectId": "ghetto-bird-robot",
+      "productionUrl": "https://ghetto-bird-robot.vercel.app",
+      "localVideoPath": "D:\\workspace\\illco-command\\artifacts\\demo-videos\\ghetto-bird-robot.webm",
+      "localVideoBytes": 220576,
+      "localVideoRecordedAt": "2026-06-21T07:46:53.034Z"
+    },
+    "vercel-ai-gateway-demo": {
+      "title": "Vercel AI Gateway Demo demo | ILLCO Command",
+      "source": "manual",
+      "updatedAt": "2026-06-21T07:47:04.538Z",
+      "projectId": "vercel-ai-gateway-demo",
+      "productionUrl": "https://vercel-ai-gateway-demo-illcoai.vercel.app",
+      "localVideoPath": "D:\\workspace\\illco-command\\artifacts\\demo-videos\\vercel-ai-gateway-demo.webm",
+      "localVideoBytes": 257679,
+      "localVideoRecordedAt": "2026-06-21T07:47:04.538Z"
+    },
+    "aaron-gateway": {
+      "title": "Aaron Gateway demo | ILLCO Command",
+      "source": "manual",
+      "updatedAt": "2026-06-21T07:47:17.239Z",
+      "projectId": "aaron-gateway",
+      "productionUrl": "https://aaron-gateway.vercel.app",
+      "localVideoPath": "D:\\workspace\\illco-command\\artifacts\\demo-videos\\aaron-gateway.webm",
+      "localVideoBytes": 322551,
+      "localVideoRecordedAt": "2026-06-21T07:47:17.239Z"
+    },
+    "illcoai-video-generator-deploy": {
+      "title": "ILLCO AI Video Generator Deploy demo | ILLCO Command",
+      "source": "manual",
+      "updatedAt": "2026-06-21T07:47:28.669Z",
+      "projectId": "illcoai-video-generator-deploy",
+      "productionUrl": "https://illcoai-video-generator-deploy.vercel.app",
+      "localVideoPath": "D:\\workspace\\illco-command\\artifacts\\demo-videos\\illcoai-video-generator-deploy.webm",
+      "localVideoBytes": 1240768,
+      "localVideoRecordedAt": "2026-06-21T07:47:28.669Z"
+    },
+    "whatsapp-ai-bot": {
+      "title": "Whatsapp AI Bot demo | ILLCO Command",
+      "source": "manual",
+      "updatedAt": "2026-06-21T07:47:39.324Z",
+      "projectId": "whatsapp-ai-bot",
+      "productionUrl": "https://whatsapp-ai-bot-beta.vercel.app",
+      "localVideoPath": "D:\\workspace\\illco-command\\artifacts\\demo-videos\\whatsapp-ai-bot.webm",
+      "localVideoBytes": 1340529,
+      "localVideoRecordedAt": "2026-06-21T07:47:39.324Z"
+    },
+    "arc-agentic-commerce-hackathon-2026": {
+      "title": "Arc Agentic Commerce Hackathon 2026 demo | ILLCO Command",
+      "source": "manual",
+      "updatedAt": "2026-06-21T07:47:50.284Z",
+      "projectId": "arc-agentic-commerce-hackathon-2026",
+      "productionUrl": "https://arc-agentic-commerce-hackathon-2026.vercel.app",
+      "localVideoPath": "D:\\workspace\\illco-command\\artifacts\\demo-videos\\arc-agentic-commerce-hackathon-2026.webm",
+      "localVideoBytes": 1443228,
+      "localVideoRecordedAt": "2026-06-21T07:47:50.284Z"
+    },
+    "workstation": {
+      "title": "Workstation demo | ILLCO Command",
+      "source": "manual",
+      "updatedAt": "2026-06-21T07:48:00.607Z",
+      "projectId": "workstation",
+      "productionUrl": "https://workstation-orpin.vercel.app",
+      "localVideoPath": "D:\\workspace\\illco-command\\artifacts\\demo-videos\\workstation.webm",
+      "localVideoBytes": 510591,
+      "localVideoRecordedAt": "2026-06-21T07:48:00.607Z"
+    },
+    "whatsapp-bot-app": {
+      "title": "Whatsapp Bot App demo | ILLCO Command",
+      "source": "manual",
+      "updatedAt": "2026-06-21T07:48:15.022Z",
+      "projectId": "whatsapp-bot-app",
+      "productionUrl": "https://whatsapp-bot-app-one.vercel.app",
+      "localVideoPath": "D:\\workspace\\illco-command\\artifacts\\demo-videos\\whatsapp-bot-app.webm",
+      "localVideoBytes": 299120,
+      "localVideoRecordedAt": "2026-06-21T07:48:15.022Z"
+    },
+    "godmode-ui": {
+      "title": "Godmode Ui demo | ILLCO Command",
+      "source": "manual",
+      "updatedAt": "2026-06-21T07:48:25.620Z",
+      "projectId": "godmode-ui",
+      "productionUrl": "https://godmode-ui.vercel.app",
+      "localVideoPath": "D:\\workspace\\illco-command\\artifacts\\demo-videos\\godmode-ui.webm",
+      "localVideoBytes": 1096517,
+      "localVideoRecordedAt": "2026-06-21T07:48:25.620Z"
+    },
+    "songanalyzer-deploy": {
+      "title": "Songanalyzer Deploy demo | ILLCO Command",
+      "source": "manual",
+      "updatedAt": "2026-06-21T07:48:38.909Z",
+      "projectId": "songanalyzer-deploy",
+      "productionUrl": "https://songanalyzer-deploy.vercel.app",
+      "localVideoPath": "D:\\workspace\\illco-command\\artifacts\\demo-videos\\songanalyzer-deploy.webm",
+      "localVideoBytes": 272690,
+      "localVideoRecordedAt": "2026-06-21T07:48:38.909Z"
+    },
+    "lyricflow-ai": {
+      "title": "Lyricflow AI demo | ILLCO Command",
+      "source": "manual",
+      "updatedAt": "2026-06-21T07:48:53.208Z",
+      "projectId": "lyricflow-ai",
+      "productionUrl": "https://lyricflow-ai-blue.vercel.app",
+      "localVideoPath": "D:\\workspace\\illco-command\\artifacts\\demo-videos\\lyricflow-ai.webm",
+      "localVideoBytes": 277301,
+      "localVideoRecordedAt": "2026-06-21T07:48:53.208Z"
+    },
+    "serato": {
+      "title": "Serato demo | ILLCO Command",
+      "source": "manual",
+      "updatedAt": "2026-06-21T07:49:03.471Z",
+      "projectId": "serato",
+      "productionUrl": "https://serato.vercel.app",
+      "localVideoPath": "D:\\workspace\\illco-command\\artifacts\\demo-videos\\serato.webm",
+      "localVideoBytes": 575148,
+      "localVideoRecordedAt": "2026-06-21T07:49:03.471Z"
+    },
+    "master-slideshow": {
+      "title": "Master Slideshow demo | ILLCO Command",
+      "source": "manual",
+      "updatedAt": "2026-06-21T07:49:13.389Z",
+      "projectId": "master-slideshow",
+      "productionUrl": "https://master-slideshow.vercel.app",
+      "localVideoPath": "D:\\workspace\\illco-command\\artifacts\\demo-videos\\master-slideshow.webm",
+      "localVideoBytes": 905099,
+      "localVideoRecordedAt": "2026-06-21T07:49:13.389Z"
+    },
+    "license-validation-api": {
+      "title": "License Validation API demo | ILLCO Command",
+      "source": "manual",
+      "updatedAt": "2026-06-21T07:49:23.619Z",
+      "projectId": "license-validation-api",
+      "productionUrl": "https://license-validation-api-tawny.vercel.app",
+      "localVideoPath": "D:\\workspace\\illco-command\\artifacts\\demo-videos\\license-validation-api.webm",
+      "localVideoBytes": 1566717,
+      "localVideoRecordedAt": "2026-06-21T07:49:23.619Z"
+    },
+    "ghetto-bird-voice-ai": {
+      "title": "Ghetto Bird Voice AI demo | ILLCO Command",
+      "source": "manual",
+      "updatedAt": "2026-06-21T07:49:36.916Z",
+      "projectId": "ghetto-bird-voice-ai",
+      "productionUrl": "https://ghetto-bird-voice-ai.vercel.app",
+      "localVideoPath": "D:\\workspace\\illco-command\\artifacts\\demo-videos\\ghetto-bird-voice-ai.webm",
+      "localVideoBytes": 1508387,
+      "localVideoRecordedAt": "2026-06-21T07:49:36.916Z"
     }
   }
 }

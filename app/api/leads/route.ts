@@ -10,6 +10,7 @@ type LeadPayload = {
   company?: string;
   planId?: string;
   message?: string;
+  website?: string;
 };
 
 function clean(value: unknown, maxLength = 500) {
@@ -34,7 +35,11 @@ function webhookFailureDetail(error: unknown) {
   return "Lead webhook request failed.";
 }
 
-async function deliverWebhook(webhookUrl: string, lead: FunnelLead, storedLead: StoredLead | null) {
+async function deliverWebhook(
+  webhookUrl: string,
+  payload: Record<string, unknown>,
+  leadWebhookSecret: string,
+) {
   const controller = new AbortController();
   const timeout = setTimeout(() => controller.abort(), 8000);
 
@@ -43,9 +48,9 @@ async function deliverWebhook(webhookUrl: string, lead: FunnelLead, storedLead: 
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        ...(env.leadWebhookSecret ? { Authorization: `Bearer ${env.leadWebhookSecret}` } : {}),
+        ...(leadWebhookSecret ? { Authorization: `Bearer ${leadWebhookSecret}` } : {}),
       },
-      body: JSON.stringify(storedLead ? { ...lead, leadId: storedLead.id } : lead),
+      body: JSON.stringify(payload),
       signal: controller.signal,
     });
 
@@ -59,17 +64,19 @@ async function deliverWebhook(webhookUrl: string, lead: FunnelLead, storedLead: 
 
 export async function POST(request: Request) {
   const databaseConfigured = hasDatabase();
-  const webhookUrl = env.leadWebhookUrl.trim();
-  const webhookConfigured = Boolean(webhookUrl);
+  const spreadsheetWebhookUrl = env.leadSpreadsheetWebhookUrl.trim();
+  const adminNotificationWebhookUrl = env.leadAdminNotificationWebhookUrl.trim();
+  const spreadsheetConfigured = Boolean(spreadsheetWebhookUrl);
+  const adminNotificationConfigured = Boolean(adminNotificationWebhookUrl);
 
-  if (!databaseConfigured && !webhookConfigured) {
+  if (!spreadsheetConfigured && !adminNotificationConfigured) {
     return NextResponse.json(
-      { detail: "Request capture is temporarily unavailable. Please try again shortly." },
+      { detail: "Request capture is temporarily unavailable. Configure a spreadsheet webhook or admin notification webhook." },
       { status: 503 },
     );
   }
 
-  const body = (await request.json().catch(() => ({}))) as LeadPayload & { website?: string };
+  const body = (await request.json().catch(() => ({}))) as LeadPayload;
   if (body.website) {
     return NextResponse.json({ ok: true });
   }
@@ -100,15 +107,50 @@ export async function POST(request: Request) {
     }
   }
 
-  if (webhookConfigured) {
+  const leadBasePayload: Record<string, unknown> = {
+    ...lead,
+    ...(storedLead ? { leadId: storedLead.id } : {}),
+  };
+
+  if (spreadsheetConfigured) {
+    const spreadsheetPayload: Record<string, unknown> = {
+      ...leadBasePayload,
+      adminEmails: env.leadAdminEmails,
+      deliveryTarget: "spreadsheet",
+    };
+
     try {
-      await deliverWebhook(webhookUrl, lead, storedLead);
+      await deliverWebhook(spreadsheetWebhookUrl, spreadsheetPayload, env.leadWebhookSecret);
     } catch (error) {
       return NextResponse.json(
         {
           detail: storedLead
-            ? `Lead stored, but webhook delivery failed. ${webhookFailureDetail(error)}`
-            : webhookFailureDetail(error),
+            ? `Lead stored, but spreadsheet webhook delivery failed. ${webhookFailureDetail(error)}`
+            : `Lead spreadsheet webhook delivery failed. ${webhookFailureDetail(error)}`,
+          ...(storedLead ? { leadId: storedLead.id } : {}),
+        },
+        { status: 502 },
+      );
+    }
+  }
+
+  if (adminNotificationConfigured) {
+    const adminNotificationPayload: Record<string, unknown> = {
+      ...leadBasePayload,
+      adminEmails: env.leadAdminEmails,
+      deliveryTarget: "admin-notification",
+      alert: true,
+      fromSpreadsheet: !spreadsheetConfigured,
+    };
+
+    try {
+      await deliverWebhook(adminNotificationWebhookUrl, adminNotificationPayload, env.leadWebhookSecret);
+    } catch (error) {
+      return NextResponse.json(
+        {
+          detail: storedLead
+            ? `Lead stored, but admin notification webhook delivery failed. ${webhookFailureDetail(error)}`
+            : `Lead admin notification webhook delivery failed. ${webhookFailureDetail(error)}`,
           ...(storedLead ? { leadId: storedLead.id } : {}),
         },
         { status: 502 },

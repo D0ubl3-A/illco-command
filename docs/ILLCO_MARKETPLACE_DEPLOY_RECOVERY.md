@@ -75,6 +75,20 @@ Error: No existing credentials found. Please run `vercel login` or pass "--token
 
 This means the remaining deployment issue is external to the code: either restore Vercel CLI auth with a token/login, or reconnect the Vercel project Git integration so pushes to `D0ubl3-A/illco-command` `main` trigger builds.
 
+A manual GitHub Actions deploy path now exists at:
+
+```text
+.github/workflows/vercel-production.yml
+```
+
+It requires these repository secrets before it can deploy:
+
+```text
+VERCEL_TOKEN
+VERCEL_ORG_ID
+VERCEL_PROJECT_ID
+```
+
 ## Verification Commands
 
 Run from `D:\workspace\illco-command`:
@@ -123,6 +137,12 @@ If using a non-interactive token:
 ```powershell
 cd D:\workspace\illco-command
 vercel --prod --yes --token $env:VERCEL_TOKEN
+```
+
+Or use GitHub Actions after adding the required repository secrets:
+
+```text
+GitHub -> D0ubl3-A/illco-command -> Actions -> Deploy ILLCO Command to Vercel -> Run workflow
 ```
 
 Do not overwrite Stripe keys or shared production secrets. Vercel production env should remain the source of truth for live secrets.

@@ -199,6 +199,7 @@ function asyncRoute(handler: express.RequestHandler): express.RequestHandler {
 }
 
 const app = express();
+const jsonParser = express.json({ limit: "1mb" });
 
 app.use((req, res, next) => {
   res.setHeader("access-control-allow-origin", config.corsOrigin);
@@ -213,7 +214,20 @@ app.use((req, res, next) => {
   return next();
 });
 
-app.use(express.json({ limit: "1mb" }));
+app.use((req, res, next) => {
+  jsonParser(req, res, (error) => {
+    if (!error) {
+      return next();
+    }
+    if (error instanceof SyntaxError && String(error.status) === "400") {
+      return res.status(400).json({
+        error: "invalid_json",
+        message: "Request body must be valid JSON.",
+      });
+    }
+    return next(error);
+  });
+});
 
 app.get("/api/health", asyncRoute(async (_req, res) => {
   await ensureStorage();
@@ -580,6 +594,9 @@ app.post("/api/channels/:channelId/control", asyncRoute(async (req, res) => {
 
 app.use((error: unknown, _req: express.Request, res: express.Response, _next: express.NextFunction) => {
   console.error("api error", String((error as Error)?.message || error));
+  if (res.headersSent) {
+    return;
+  }
   res.status(500).json({ error: "internal_error" });
 });
 

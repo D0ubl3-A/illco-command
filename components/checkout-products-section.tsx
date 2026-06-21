@@ -133,6 +133,7 @@ export function CheckoutProductsSection({
                   const appProduct = getProductById(product.appProductId);
                   const plan = appProduct ? getMonetizationPlan(appProduct.id) : null;
                   const moduleHref = appProduct ? getProductModuleHref(appProduct.id) : "/#request";
+                  const appLandingHref = appProduct ? `/apps/${encodeURIComponent(appProduct.id)}` : "/#request";
                   const moduleTarget = moduleHref.startsWith("http") ? "_blank" : undefined;
                   const imagePath = appProduct ? getProductViralImagePath(appProduct) : "/brand/illco-global-brand.png";
                   const productReady = Boolean(appProduct && canDirectCheckoutPublicProduct(appProduct.id));
@@ -164,9 +165,15 @@ export function CheckoutProductsSection({
                         </div>
                       ) : null}
                       <div className="checkoutProductActions">
-                        <a className="button secondary" href={moduleHref} target={moduleTarget} rel={moduleTarget ? "noreferrer" : undefined}>
-                          Open Product
-                        </a>
+                        {checkoutReady ? (
+                          <a className="button secondary" href={moduleHref} target={moduleTarget} rel={moduleTarget ? "noreferrer" : undefined}>
+                            Open Product
+                          </a>
+                        ) : (
+                          <a className="button secondary" href={appLandingHref}>
+                            Details
+                          </a>
+                        )}
                         {checkoutReady && plan && appProduct ? (
                           <form action="/api/subscriptions/checkout" method="post" className="inlineCheckoutForm">
                             <input type="hidden" name="planId" value={plan.funnelPlanId} />
@@ -177,7 +184,7 @@ export function CheckoutProductsSection({
                             </button>
                           </form>
                         ) : (
-                          <a className="button primary" href={`${moduleHref}#request`}>
+                          <a className="button primary" href={`${appLandingHref}#request`}>
                             {productReady ? "Setup Payment" : "Request"}
                           </a>
                         )}

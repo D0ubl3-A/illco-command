@@ -1,0 +1,4240 @@
+{
+  "generatedAt": "2026-06-17T03:30:31.612Z",
+  "githubOwners": [
+    "D0ubl3-A",
+    "aaronalltonai-ship-it"
+  ],
+  "summary": {
+    "checked": 119,
+    "liveProductionUrls": 113,
+    "complete": 65,
+    "needsRepair": 30,
+    "needsSource": 15,
+    "needsDeploy": 5,
+    "missingSource": 4,
+    "localSource": 70,
+    "githubSource": 45
+  },
+  "projects": {
+    "ai-companions-recovered": {
+      "id": "ai-companions-recovered",
+      "name": "ai-companions-recovered",
+      "displayName": "ILLCO Tools",
+      "productionUrl": "https://illco-command.vercel.app",
+      "completionStatus": "complete",
+      "sourceStatus": "local-only",
+      "health": {
+        "status": "healthy",
+        "statusCode": 200,
+        "checkedAt": "2026-05-25T12:54:26.085Z",
+        "title": "ILLCO Command",
+        "error": null
+      },
+      "aliases": [
+        "ai-companions-recovered",
+        "illco-command"
+      ],
+      "localPaths": [
+        {
+          "path": "D:\\workspace\\illco-command",
+          "name": "illco-command",
+          "matchType": "exact",
+          "alias": "illco-command"
+        },
+        {
+          "path": "D:\\demo-artifacts\\illco-command-demos",
+          "name": "illco-command-demos",
+          "matchType": "prefix",
+          "alias": "illco-command"
+        },
+        {
+          "path": "D:\\illco-command-machine-asset-backup",
+          "name": "illco-command-machine-asset-backup",
+          "matchType": "prefix",
+          "alias": "illco-command"
+        },
+        {
+          "path": "D:\\Relocated\\illco-command-machine-backup",
+          "name": "illco-command-machine-backup",
+          "matchType": "prefix",
+          "alias": "illco-command"
+        },
+        {
+          "path": "C:\\Users\\aaron\\OneDrive\\Videos\\illco-command-machine",
+          "name": "illco-command-machine",
+          "matchType": "prefix",
+          "alias": "illco-command"
+        }
+      ],
+      "githubRepos": []
+    },
+    "ai-companion-conversational-intake": {
+      "id": "ai-companion-conversational-intake",
+      "name": "ai-companion-conversational-intake",
+      "displayName": "AI Companion: Conversational Intake",
+      "productionUrl": "https://illco-command.vercel.app/apps/ai-companion-conversational-intake",
+      "completionStatus": "complete",
+      "sourceStatus": "local-only",
+      "health": {
+        "status": "healthy",
+        "statusCode": 200,
+        "checkedAt": "2026-05-25T12:54:26.003Z",
+        "title": "AI Companion: Conversational Intake Landing Page | ILLCO Command",
+        "error": null
+      },
+      "aliases": [
+        "ai-companion-conversational-intake",
+        "illco-command"
+      ],
+      "localPaths": [
+        {
+          "path": "D:\\workspace\\illco-command",
+          "name": "illco-command",
+          "matchType": "exact",
+          "alias": "illco-command"
+        },
+        {
+          "path": "D:\\demo-artifacts\\illco-command-demos",
+          "name": "illco-command-demos",
+          "matchType": "prefix",
+          "alias": "illco-command"
+        },
+        {
+          "path": "D:\\illco-command-machine-asset-backup",
+          "name": "illco-command-machine-asset-backup",
+          "matchType": "prefix",
+          "alias": "illco-command"
+        },
+        {
+          "path": "D:\\Relocated\\illco-command-machine-backup",
+          "name": "illco-command-machine-backup",
+          "matchType": "prefix",
+          "alias": "illco-command"
+        },
+        {
+          "path": "C:\\Users\\aaron\\OneDrive\\Videos\\illco-command-machine",
+          "name": "illco-command-machine",
+          "matchType": "prefix",
+          "alias": "illco-command"
+        }
+      ],
+      "githubRepos": []
+    },
+    "ai-companion-prompt-studio": {
+      "id": "ai-companion-prompt-studio",
+      "name": "ai-companion-prompt-studio",
+      "displayName": "AI Companion: Prompt Studio",
+      "productionUrl": "https://illco-command.vercel.app/apps/ai-companion-prompt-studio",
+      "completionStatus": "complete",
+      "sourceStatus": "local-only",
+      "health": {
+        "status": "healthy",
+        "statusCode": 200,
+        "checkedAt": "2026-05-25T12:54:25.887Z",
+        "title": "AI Companion: Prompt Studio Landing Page | ILLCO Command",
+        "error": null
+      },
+      "aliases": [
+        "ai-companion-prompt-studio",
+        "illco-command"
+      ],
+      "localPaths": [
+        {
+          "path": "D:\\workspace\\illco-command",
+          "name": "illco-command",
+          "matchType": "exact",
+          "alias": "illco-command"
+        },
+        {
+          "path": "D:\\demo-artifacts\\illco-command-demos",
+          "name": "illco-command-demos",
+          "matchType": "prefix",
+          "alias": "illco-command"
+        },
+        {
+          "path": "D:\\illco-command-machine-asset-backup",
+          "name": "illco-command-machine-asset-backup",
+          "matchType": "prefix",
+          "alias": "illco-command"
+        },
+        {
+          "path": "D:\\Relocated\\illco-command-machine-backup",
+          "name": "illco-command-machine-backup",
+          "matchType": "prefix",
+          "alias": "illco-command"
+        },
+        {
+          "path": "C:\\Users\\aaron\\OneDrive\\Videos\\illco-command-machine",
+          "name": "illco-command-machine",
+          "matchType": "prefix",
+          "alias": "illco-command"
+        }
+      ],
+      "githubRepos": []
+    },
+    "ai-companion-content-production": {
+      "id": "ai-companion-content-production",
+      "name": "ai-companion-content-production",
+      "displayName": "AI Companion: Content Production",
+      "productionUrl": "https://illco-command.vercel.app/apps/ai-companion-content-production",
+      "completionStatus": "complete",
+      "sourceStatus": "local-only",
+      "health": {
+        "status": "healthy",
+        "statusCode": 200,
+        "checkedAt": "2026-05-25T12:54:25.942Z",
+        "title": "AI Companion: Content Production Landing Page | ILLCO Command",
+        "error": null
+      },
+      "aliases": [
+        "ai-companion-content-production",
+        "illco-command"
+      ],
+      "localPaths": [
+        {
+          "path": "D:\\workspace\\illco-command",
+          "name": "illco-command",
+          "matchType": "exact",
+          "alias": "illco-command"
+        },
+        {
+          "path": "D:\\demo-artifacts\\illco-command-demos",
+          "name": "illco-command-demos",
+          "matchType": "prefix",
+          "alias": "illco-command"
+        },
+        {
+          "path": "D:\\illco-command-machine-asset-backup",
+          "name": "illco-command-machine-asset-backup",
+          "matchType": "prefix",
+          "alias": "illco-command"
+        },
+        {
+          "path": "D:\\Relocated\\illco-command-machine-backup",
+          "name": "illco-command-machine-backup",
+          "matchType": "prefix",
+          "alias": "illco-command"
+        },
+        {
+          "path": "C:\\Users\\aaron\\OneDrive\\Videos\\illco-command-machine",
+          "name": "illco-command-machine",
+          "matchType": "prefix",
+          "alias": "illco-command"
+        }
+      ],
+      "githubRepos": []
+    },
+    "ai-companion-sales-agent-handoff": {
+      "id": "ai-companion-sales-agent-handoff",
+      "name": "ai-companion-sales-agent-handoff",
+      "displayName": "AI Companion: Sales Agent Hand-off",
+      "productionUrl": "https://illco-command.vercel.app/apps/ai-companion-sales-agent-handoff",
+      "completionStatus": "complete",
+      "sourceStatus": "local-only",
+      "health": {
+        "status": "healthy",
+        "statusCode": 200,
+        "checkedAt": "2026-05-25T12:54:26.497Z",
+        "title": "AI Companion: Sales Agent Hand-off Landing Page | ILLCO Command",
+        "error": null
+      },
+      "aliases": [
+        "ai-companion-sales-agent-handoff",
+        "illco-command"
+      ],
+      "localPaths": [
+        {
+          "path": "D:\\workspace\\illco-command",
+          "name": "illco-command",
+          "matchType": "exact",
+          "alias": "illco-command"
+        },
+        {
+          "path": "D:\\demo-artifacts\\illco-command-demos",
+          "name": "illco-command-demos",
+          "matchType": "prefix",
+          "alias": "illco-command"
+        },
+        {
+          "path": "D:\\illco-command-machine-asset-backup",
+          "name": "illco-command-machine-asset-backup",
+          "matchType": "prefix",
+          "alias": "illco-command"
+        },
+        {
+          "path": "D:\\Relocated\\illco-command-machine-backup",
+          "name": "illco-command-machine-backup",
+          "matchType": "prefix",
+          "alias": "illco-command"
+        },
+        {
+          "path": "C:\\Users\\aaron\\OneDrive\\Videos\\illco-command-machine",
+          "name": "illco-command-machine",
+          "matchType": "prefix",
+          "alias": "illco-command"
+        }
+      ],
+      "githubRepos": []
+    },
+    "ai-companion-command-routing": {
+      "id": "ai-companion-command-routing",
+      "name": "ai-companion-command-routing",
+      "displayName": "AI Companion: Multi-App Command Routing",
+      "productionUrl": "https://illco-command.vercel.app/apps/ai-companion-command-routing",
+      "completionStatus": "complete",
+      "sourceStatus": "local-only",
+      "health": {
+        "status": "healthy",
+        "statusCode": 200,
+        "checkedAt": "2026-05-25T12:54:25.938Z",
+        "title": "AI Companion: Multi-App Command Routing Landing Page | ILLCO Command",
+        "error": null
+      },
+      "aliases": [
+        "ai-companion-command-routing",
+        "illco-command"
+      ],
+      "localPaths": [
+        {
+          "path": "D:\\workspace\\illco-command",
+          "name": "illco-command",
+          "matchType": "exact",
+          "alias": "illco-command"
+        },
+        {
+          "path": "D:\\demo-artifacts\\illco-command-demos",
+          "name": "illco-command-demos",
+          "matchType": "prefix",
+          "alias": "illco-command"
+        },
+        {
+          "path": "D:\\illco-command-machine-asset-backup",
+          "name": "illco-command-machine-asset-backup",
+          "matchType": "prefix",
+          "alias": "illco-command"
+        },
+        {
+          "path": "D:\\Relocated\\illco-command-machine-backup",
+          "name": "illco-command-machine-backup",
+          "matchType": "prefix",
+          "alias": "illco-command"
+        },
+        {
+          "path": "C:\\Users\\aaron\\OneDrive\\Videos\\illco-command-machine",
+          "name": "illco-command-machine",
+          "matchType": "prefix",
+          "alias": "illco-command"
+        }
+      ],
+      "githubRepos": []
+    },
+    "ai-companion-workspace-access": {
+      "id": "ai-companion-workspace-access",
+      "name": "ai-companion-workspace-access",
+      "displayName": "AI Companion: Unified Workspace Access",
+      "productionUrl": "https://illco-command.vercel.app/apps/ai-companion-workspace-access",
+      "completionStatus": "complete",
+      "sourceStatus": "local-only",
+      "health": {
+        "status": "healthy",
+        "statusCode": 200,
+        "checkedAt": "2026-05-25T12:54:25.954Z",
+        "title": "AI Companion: Unified Workspace Access Landing Page | ILLCO Command",
+        "error": null
+      },
+      "aliases": [
+        "ai-companion-workspace-access",
+        "illco-command"
+      ],
+      "localPaths": [
+        {
+          "path": "D:\\workspace\\illco-command",
+          "name": "illco-command",
+          "matchType": "exact",
+          "alias": "illco-command"
+        },
+        {
+          "path": "D:\\demo-artifacts\\illco-command-demos",
+          "name": "illco-command-demos",
+          "matchType": "prefix",
+          "alias": "illco-command"
+        },
+        {
+          "path": "D:\\illco-command-machine-asset-backup",
+          "name": "illco-command-machine-asset-backup",
+          "matchType": "prefix",
+          "alias": "illco-command"
+        },
+        {
+          "path": "D:\\Relocated\\illco-command-machine-backup",
+          "name": "illco-command-machine-backup",
+          "matchType": "prefix",
+          "alias": "illco-command"
+        },
+        {
+          "path": "C:\\Users\\aaron\\OneDrive\\Videos\\illco-command-machine",
+          "name": "illco-command-machine",
+          "matchType": "prefix",
+          "alias": "illco-command"
+        }
+      ],
+      "githubRepos": []
+    },
+    "think-for-me-mode": {
+      "id": "think-for-me-mode",
+      "name": "think-for-me-mode",
+      "displayName": "Think For Me Mode",
+      "productionUrl": "https://illco-command.vercel.app/tools/think-for-me-mode",
+      "completionStatus": "complete",
+      "sourceStatus": "local-only",
+      "health": {
+        "status": "healthy",
+        "statusCode": 200,
+        "checkedAt": "2026-06-17T08:48:24.651Z",
+        "title": "Think For Me Mode | ILLCO AI",
+        "error": null
+      },
+      "aliases": [
+        "think-for-me-mode",
+        "illco-command"
+      ],
+      "localPaths": [
+        {
+          "path": "D:\\workspace\\illco-command",
+          "name": "illco-command",
+          "matchType": "exact",
+          "alias": "illco-command"
+        }
+      ],
+      "githubRepos": []
+    },
+    "lyric-video-forge": {
+      "id": "lyric-video-forge",
+      "name": "lyric-video-forge",
+      "displayName": "Lyric Video Forge",
+      "productionUrl": "https://illco-command.vercel.app/tools/lyric-video-forge",
+      "completionStatus": "complete",
+      "sourceStatus": "local-only",
+      "health": {
+        "status": "healthy",
+        "statusCode": 200,
+        "checkedAt": "2026-06-21T16:02:55.000Z",
+        "title": "Lyric Video Forge | ILLCO AI",
+        "error": null
+      },
+      "aliases": [
+        "lyric-video-forge",
+        "illco-command"
+      ],
+      "localPaths": [
+        {
+          "path": "D:\\workspace\\illco-command",
+          "name": "illco-command",
+          "matchType": "exact",
+          "alias": "illco-command"
+        }
+      ],
+      "githubRepos": []
+    },
+    "viral-stitch-ai": {
+      "id": "viral-stitch-ai",
+      "name": "viral-stitch-ai",
+      "displayName": "Viral Stitch AI",
+      "productionUrl": null,
+      "completionStatus": "needs-deploy",
+      "sourceStatus": "local-and-github",
+      "health": {
+        "status": "offline",
+        "statusCode": null,
+        "checkedAt": "2026-05-25T12:54:25.568Z",
+        "title": null,
+        "error": "No production URL assigned."
+      },
+      "aliases": [
+        "viral-stitch-ai"
+      ],
+      "localPaths": [
+        {
+          "path": "D:\\pnpm-virtual-store\\viral-stitch-ai",
+          "name": "viral-stitch-ai",
+          "matchType": "exact",
+          "alias": "viral-stitch-ai"
+        },
+        {
+          "path": "D:\\Videos\\viral-stitch-ai",
+          "name": "viral-stitch-ai",
+          "matchType": "exact",
+          "alias": "viral-stitch-ai"
+        },
+        {
+          "path": "D:\\viral-stitch-ai-generated",
+          "name": "viral-stitch-ai-generated",
+          "matchType": "prefix",
+          "alias": "viral-stitch-ai"
+        },
+        {
+          "path": "D:\\viral-stitch-ai-node_modules",
+          "name": "viral-stitch-ai-node_modules",
+          "matchType": "prefix",
+          "alias": "viral-stitch-ai"
+        },
+        {
+          "path": "C:\\Users\\aaron\\OneDrive\\Videos\\viral-stitch-ai",
+          "name": "viral-stitch-ai",
+          "matchType": "exact",
+          "alias": "viral-stitch-ai"
+        }
+      ],
+      "githubRepos": [
+        {
+          "owner": "D0ubl3-A",
+          "name": "viral-stitch-ai",
+          "url": "https://github.com/D0ubl3-A/viral-stitch-ai",
+          "updatedAt": "2026-05-20T05:59:30Z",
+          "isPrivate": true,
+          "defaultBranch": "main",
+          "matchType": "exact",
+          "alias": "viral-stitch-ai"
+        }
+      ]
+    },
+    "barz-web-studio": {
+      "id": "barz-web-studio",
+      "name": "barz-web-studio",
+      "displayName": "Barz Web Studio",
+      "productionUrl": null,
+      "completionStatus": "missing-source",
+      "sourceStatus": "not-found",
+      "health": null,
+      "aliases": [
+        "barz-web-studio"
+      ],
+      "localPaths": [],
+      "githubRepos": []
+    },
+    "barz": {
+      "id": "barz",
+      "name": ".barz",
+      "displayName": ".Barz",
+      "productionUrl": null,
+      "completionStatus": "needs-deploy",
+      "sourceStatus": "local-only",
+      "health": {
+        "status": "offline",
+        "statusCode": null,
+        "checkedAt": "2026-05-25T12:54:25.570Z",
+        "title": null,
+        "error": "No production URL assigned."
+      },
+      "aliases": [
+        "barz"
+      ],
+      "localPaths": [
+        {
+          "path": "D:\\.barz",
+          "name": ".barz",
+          "matchType": "exact",
+          "alias": "barz"
+        },
+        {
+          "path": "D:\\Barz",
+          "name": "Barz",
+          "matchType": "exact",
+          "alias": "barz"
+        }
+      ],
+      "githubRepos": []
+    },
+    "epstein-files-desk": {
+      "id": "epstein-files-desk",
+      "name": "epstein-files-desk",
+      "displayName": "Epstein Files Desk",
+      "productionUrl": null,
+      "completionStatus": "needs-deploy",
+      "sourceStatus": "local-only",
+      "health": {
+        "status": "offline",
+        "statusCode": null,
+        "checkedAt": "2026-05-25T12:54:25.570Z",
+        "title": null,
+        "error": "No production URL assigned."
+      },
+      "aliases": [
+        "epstein-files-desk"
+      ],
+      "localPaths": [
+        {
+          "path": "D:\\workspace\\epstein-files-desk",
+          "name": "epstein-files-desk",
+          "matchType": "exact",
+          "alias": "epstein-files-desk"
+        }
+      ],
+      "githubRepos": []
+    },
+    "uap-ai-lab": {
+      "id": "uap-ai-lab",
+      "name": "uap-ai-lab",
+      "displayName": "UAP AI Lab",
+      "productionUrl": "https://uap-ai-lab.vercel.app",
+      "completionStatus": "complete",
+      "sourceStatus": "local-only",
+      "health": {
+        "status": "healthy",
+        "statusCode": 200,
+        "checkedAt": "2026-05-25T12:54:25.796Z",
+        "title": "PURSUE AI Lab",
+        "error": null
+      },
+      "aliases": [
+        "uap-ai-lab"
+      ],
+      "localPaths": [
+        {
+          "path": "D:\\workspace\\uap-ai-lab",
+          "name": "uap-ai-lab",
+          "matchType": "exact",
+          "alias": "uap-ai-lab"
+        }
+      ],
+      "githubRepos": []
+    },
+    "why-not-me-ai": {
+      "id": "why-not-me-ai",
+      "name": "why-not-me-ai",
+      "displayName": "Why Not Me AI",
+      "productionUrl": "https://why-not-me-ai.vercel.app",
+      "completionStatus": "complete",
+      "sourceStatus": "local-and-github",
+      "health": {
+        "status": "healthy",
+        "statusCode": 200,
+        "checkedAt": "2026-05-25T12:54:25.992Z",
+        "title": "WhyNotMe.ai | Local AI Visibility Grader",
+        "error": null
+      },
+      "aliases": [
+        "why-not-me-ai"
+      ],
+      "localPaths": [
+        {
+          "path": "C:\\Users\\aaron\\OneDrive\\Videos\\why-not-me-ai",
+          "name": "why-not-me-ai",
+          "matchType": "exact",
+          "alias": "why-not-me-ai"
+        }
+      ],
+      "githubRepos": [
+        {
+          "owner": "D0ubl3-A",
+          "name": "why-not-me-ai",
+          "url": "https://github.com/D0ubl3-A/why-not-me-ai",
+          "updatedAt": "2026-05-20T05:59:19Z",
+          "isPrivate": true,
+          "defaultBranch": "main",
+          "matchType": "exact",
+          "alias": "why-not-me-ai"
+        }
+      ]
+    },
+    "video-margin-ai": {
+      "id": "video-margin-ai",
+      "name": "video-margin-ai",
+      "displayName": "Video Margin AI",
+      "productionUrl": "https://video-margin-ai.vercel.app",
+      "completionStatus": "complete",
+      "sourceStatus": "github-only",
+      "health": {
+        "status": "healthy",
+        "statusCode": 200,
+        "checkedAt": "2026-05-25T12:54:26.162Z",
+        "title": "VideoMargin.ai | AI Video API Cost and SaaS Margin Calculator",
+        "error": null
+      },
+      "aliases": [
+        "video-margin-ai"
+      ],
+      "localPaths": [],
+      "githubRepos": [
+        {
+          "owner": "D0ubl3-A",
+          "name": "video-margin-ai",
+          "url": "https://github.com/D0ubl3-A/video-margin-ai",
+          "updatedAt": "2026-05-20T05:59:06Z",
+          "isPrivate": true,
+          "defaultBranch": "main",
+          "matchType": "exact",
+          "alias": "video-margin-ai"
+        }
+      ]
+    },
+    "vercel-reporter": {
+      "id": "vercel-reporter",
+      "name": "vercel-reporter",
+      "displayName": "Vercel Reporter",
+      "productionUrl": "https://vercel-reporter.vercel.app",
+      "completionStatus": "complete",
+      "sourceStatus": "local-only",
+      "health": {
+        "status": "healthy",
+        "statusCode": 200,
+        "checkedAt": "2026-05-25T12:54:26.154Z",
+        "title": "BIGO Reporter Webhook",
+        "error": null
+      },
+      "aliases": [
+        "vercel-reporter"
+      ],
+      "localPaths": [
+        {
+          "path": "D:\\workspace\\bigo-watcher\\vercel-reporter",
+          "name": "vercel-reporter",
+          "matchType": "exact",
+          "alias": "vercel-reporter"
+        }
+      ],
+      "githubRepos": []
+    },
+    "mastering-studio-platform": {
+      "id": "mastering-studio-platform",
+      "name": "mastering-studio-platform",
+      "displayName": "Mastering Studio Platform",
+      "productionUrl": "https://mastering-studio-platform.vercel.app",
+      "completionStatus": "complete",
+      "sourceStatus": "local-only",
+      "health": {
+        "status": "healthy",
+        "statusCode": 200,
+        "checkedAt": "2026-05-25T12:54:26.170Z",
+        "title": "Mastering Studio Platform",
+        "error": null
+      },
+      "aliases": [
+        "mastering-studio-platform"
+      ],
+      "localPaths": [
+        {
+          "path": "D:\\workspace\\mastering-studio-platform",
+          "name": "mastering-studio-platform",
+          "matchType": "exact",
+          "alias": "mastering-studio-platform"
+        }
+      ],
+      "githubRepos": []
+    },
+    "youtube-ops-vercel": {
+      "id": "youtube-ops-vercel",
+      "name": "youtube_ops_vercel",
+      "displayName": "YouTube Ops",
+      "productionUrl": "https://youtubeopsvercel.vercel.app",
+      "completionStatus": "complete",
+      "sourceStatus": "local-only",
+      "health": {
+        "status": "healthy",
+        "statusCode": 200,
+        "checkedAt": "2026-05-25T12:54:26.311Z",
+        "title": "YouTube Ops",
+        "error": null
+      },
+      "aliases": [
+        "youtube-ops-vercel",
+        "youtube-ops",
+        "youtubeopsvercel"
+      ],
+      "localPaths": [
+        {
+          "path": "D:\\workspace\\youtube_ops_android",
+          "name": "youtube_ops_android",
+          "matchType": "prefix",
+          "alias": "youtube-ops"
+        },
+        {
+          "path": "D:\\barz-runtime\\youtube_ops_vercel",
+          "name": "youtube_ops_vercel",
+          "matchType": "exact",
+          "alias": "youtube-ops-vercel"
+        },
+        {
+          "path": "D:\\youtube",
+          "name": "youtube",
+          "matchType": "prefix",
+          "alias": "youtube-ops-vercel"
+        },
+        {
+          "path": "D:\\youtube_ops_vercel_node_modules",
+          "name": "youtube_ops_vercel_node_modules",
+          "matchType": "prefix",
+          "alias": "youtube-ops-vercel"
+        }
+      ],
+      "githubRepos": []
+    },
+    "visual-voice-board": {
+      "id": "visual-voice-board",
+      "name": "visual-voice-board",
+      "displayName": "Visual Voice Board",
+      "productionUrl": "https://visual-voice-board.vercel.app",
+      "completionStatus": "complete",
+      "sourceStatus": "local-and-github",
+      "health": {
+        "status": "healthy",
+        "statusCode": 200,
+        "checkedAt": "2026-05-25T12:54:26.200Z",
+        "title": "Visual Voice Board",
+        "error": null
+      },
+      "aliases": [
+        "visual-voice-board"
+      ],
+      "localPaths": [
+        {
+          "path": "D:\\workspace\\visual-voice-board-recording",
+          "name": "visual-voice-board-recording",
+          "matchType": "prefix",
+          "alias": "visual-voice-board"
+        },
+        {
+          "path": "D:\\workspace\\visual-voice-board-youtube-demo",
+          "name": "visual-voice-board-youtube-demo",
+          "matchType": "prefix",
+          "alias": "visual-voice-board"
+        },
+        {
+          "path": "D:\\Downloads\\visual_voice_board_images (1)",
+          "name": "visual_voice_board_images (1)",
+          "matchType": "prefix",
+          "alias": "visual-voice-board"
+        }
+      ],
+      "githubRepos": [
+        {
+          "owner": "D0ubl3-A",
+          "name": "visual-voice-board",
+          "url": "https://github.com/D0ubl3-A/visual-voice-board",
+          "updatedAt": "2026-05-19T06:43:12Z",
+          "isPrivate": true,
+          "defaultBranch": "main",
+          "matchType": "exact",
+          "alias": "visual-voice-board"
+        }
+      ]
+    },
+    "codexgroq": {
+      "id": "codexgroq",
+      "name": "codexgroq",
+      "displayName": "Codexgroq",
+      "productionUrl": "https://codexgroq.vercel.app",
+      "completionStatus": "complete",
+      "sourceStatus": "github-only",
+      "health": {
+        "status": "healthy",
+        "statusCode": 200,
+        "checkedAt": "2026-05-25T12:54:26.189Z",
+        "title": "Groq Realty Control",
+        "error": null
+      },
+      "aliases": [
+        "codexgroq"
+      ],
+      "localPaths": [],
+      "githubRepos": [
+        {
+          "owner": "D0ubl3-A",
+          "name": "codexgroq",
+          "url": "https://github.com/D0ubl3-A/codexgroq",
+          "updatedAt": "2026-05-19T05:00:37Z",
+          "isPrivate": true,
+          "defaultBranch": "main",
+          "matchType": "exact",
+          "alias": "codexgroq"
+        }
+      ]
+    },
+    "sora-catalog-vercel-preview": {
+      "id": "sora-catalog-vercel-preview",
+      "name": "sora-catalog-vercel-preview",
+      "displayName": "Sora Catalog Vercel Preview",
+      "productionUrl": null,
+      "completionStatus": "needs-deploy",
+      "sourceStatus": "local-only",
+      "health": {
+        "status": "offline",
+        "statusCode": null,
+        "checkedAt": "2026-05-25T12:54:26.085Z",
+        "title": null,
+        "error": "No production URL assigned."
+      },
+      "aliases": [
+        "sora-catalog-vercel-preview",
+        "sora-catalog-vercel"
+      ],
+      "localPaths": [
+        {
+          "path": "D:\\challenge-work\\sora-catalog-vercel-preview",
+          "name": "sora-catalog-vercel-preview",
+          "matchType": "exact",
+          "alias": "sora-catalog-vercel-preview"
+        }
+      ],
+      "githubRepos": []
+    },
+    "sora-vault-cloud": {
+      "id": "sora-vault-cloud",
+      "name": "sora_vault_cloud",
+      "displayName": "Sora Vault Cloud",
+      "productionUrl": "https://soravaultcloud.vercel.app",
+      "completionStatus": "complete",
+      "sourceStatus": "github-only",
+      "health": {
+        "status": "healthy",
+        "statusCode": 200,
+        "checkedAt": "2026-05-25T12:54:26.405Z",
+        "title": "Sora Vault Cloud",
+        "error": null
+      },
+      "aliases": [
+        "sora-vault-cloud",
+        "sora-vault",
+        "soravaultcloud"
+      ],
+      "localPaths": [],
+      "githubRepos": [
+        {
+          "owner": "D0ubl3-A",
+          "name": "sora-vault-gemma4-good",
+          "url": "https://github.com/D0ubl3-A/sora-vault-gemma4-good",
+          "updatedAt": "2026-05-18T23:32:51Z",
+          "isPrivate": false,
+          "defaultBranch": "main",
+          "matchType": "prefix",
+          "alias": "sora-vault"
+        }
+      ]
+    },
+    "rap-lyric-generator": {
+      "id": "rap-lyric-generator",
+      "name": "rap-lyric-generator",
+      "displayName": "Rap Lyric Generator",
+      "productionUrl": "https://rap-lyric-generator.vercel.app",
+      "completionStatus": "complete",
+      "sourceStatus": "github-only",
+      "health": {
+        "status": "healthy",
+        "statusCode": 200,
+        "checkedAt": "2026-05-25T12:54:26.354Z",
+        "title": "Barz | The Worlds Best Rap Generator",
+        "error": null
+      },
+      "aliases": [
+        "rap-lyric-generator"
+      ],
+      "localPaths": [],
+      "githubRepos": [
+        {
+          "owner": "D0ubl3-A",
+          "name": "rap-lyric-generator",
+          "url": "https://github.com/D0ubl3-A/rap-lyric-generator",
+          "updatedAt": "2026-05-19T05:00:49Z",
+          "isPrivate": true,
+          "defaultBranch": "main",
+          "matchType": "exact",
+          "alias": "rap-lyric-generator"
+        }
+      ]
+    },
+    "voice-book-tool": {
+      "id": "voice-book-tool",
+      "name": "voice-book-tool",
+      "displayName": "Voice Book Tool",
+      "productionUrl": "https://voice-book-tool-illcoai.vercel.app",
+      "completionStatus": "complete",
+      "sourceStatus": "local-and-github",
+      "health": {
+        "status": "healthy",
+        "statusCode": 200,
+        "checkedAt": "2026-05-25T12:54:26.403Z",
+        "title": "VoiceBook OS",
+        "error": null
+      },
+      "aliases": [
+        "voice-book-tool",
+        "voice-book-tool-illcoai"
+      ],
+      "localPaths": [
+        {
+          "path": "D:\\tmp\\voice-book-tool-deploy",
+          "name": "voice-book-tool-deploy",
+          "matchType": "prefix",
+          "alias": "voice-book-tool"
+        },
+        {
+          "path": "D:\\voice-book-tool",
+          "name": "voice-book-tool",
+          "matchType": "exact",
+          "alias": "voice-book-tool"
+        }
+      ],
+      "githubRepos": [
+        {
+          "owner": "D0ubl3-A",
+          "name": "voice-book-tool",
+          "url": "https://github.com/D0ubl3-A/voice-book-tool",
+          "updatedAt": "2026-06-11T08:15:35Z",
+          "isPrivate": true,
+          "defaultBranch": "main",
+          "matchType": "exact",
+          "alias": "voice-book-tool"
+        }
+      ]
+    },
+    "illco-ai-video": {
+      "id": "illco-ai-video",
+      "name": "illco-ai-video",
+      "displayName": "ILLCO AI Video",
+      "productionUrl": "https://illco-ai-video.vercel.app",
+      "completionStatus": "complete",
+      "sourceStatus": "local-only",
+      "health": {
+        "status": "healthy",
+        "statusCode": 200,
+        "checkedAt": "2026-05-25T12:54:26.416Z",
+        "title": "iLLCO AI | AI Video Production Systems",
+        "error": null
+      },
+      "aliases": [
+        "illco-ai-video"
+      ],
+      "localPaths": [
+        {
+          "path": "D:\\workspace\\illco-ai-video",
+          "name": "illco-ai-video",
+          "matchType": "exact",
+          "alias": "illco-ai-video"
+        }
+      ],
+      "githubRepos": []
+    },
+    "illco-ai-funnel": {
+      "id": "illco-ai-funnel",
+      "name": "illco-ai-funnel",
+      "displayName": "ILLCO AI Funnel",
+      "productionUrl": "https://illco-ai-funnel.vercel.app",
+      "completionStatus": "complete",
+      "sourceStatus": "local-only",
+      "health": {
+        "status": "healthy",
+        "statusCode": 200,
+        "checkedAt": "2026-05-25T12:54:26.409Z",
+        "title": "iLLCO AI | Autonomous Product Sprints",
+        "error": null
+      },
+      "aliases": [
+        "illco-ai-funnel"
+      ],
+      "localPaths": [
+        {
+          "path": "D:\\workspace\\illco-ai-funnel",
+          "name": "illco-ai-funnel",
+          "matchType": "exact",
+          "alias": "illco-ai-funnel"
+        }
+      ],
+      "githubRepos": []
+    },
+    "ai-dev-co-funnel": {
+      "id": "ai-dev-co-funnel",
+      "name": "ai-dev-co-funnel",
+      "displayName": "AI Dev Co Funnel",
+      "productionUrl": "https://ai-dev-co-funnel.vercel.app",
+      "completionStatus": "complete",
+      "sourceStatus": "local-only",
+      "health": {
+        "status": "healthy",
+        "statusCode": 200,
+        "checkedAt": "2026-05-25T12:54:26.470Z",
+        "title": "AI Dev Co | Autonomous Product Sprints",
+        "error": null
+      },
+      "aliases": [
+        "ai-dev-co-funnel"
+      ],
+      "localPaths": [
+        {
+          "path": "D:\\workspace\\ai-dev-co-funnel",
+          "name": "ai-dev-co-funnel",
+          "matchType": "exact",
+          "alias": "ai-dev-co-funnel"
+        }
+      ],
+      "githubRepos": []
+    },
+    "ship-fast-test": {
+      "id": "ship-fast-test",
+      "name": "ship-fast-test",
+      "displayName": "Ship Fast Test",
+      "productionUrl": "https://ship-fast-test-illcoai.vercel.app",
+      "completionStatus": "missing-source",
+      "sourceStatus": "not-found",
+      "health": {
+        "status": "offline",
+        "statusCode": 404,
+        "checkedAt": "2026-05-25T12:54:26.541Z",
+        "title": null,
+        "error": null
+      },
+      "aliases": [
+        "ship-fast-test",
+        "ship-fast-test-illcoai"
+      ],
+      "localPaths": [],
+      "githubRepos": []
+    },
+    "nexus-lab": {
+      "id": "nexus-lab",
+      "name": "nexus-lab",
+      "displayName": "Nexus Lab",
+      "productionUrl": "https://nexus-lab-eta.vercel.app",
+      "completionStatus": "needs-source",
+      "sourceStatus": "not-found",
+      "health": {
+        "status": "healthy",
+        "statusCode": 200,
+        "checkedAt": "2026-05-25T12:54:26.544Z",
+        "title": "Nexus Lab",
+        "error": null
+      },
+      "aliases": [
+        "nexus-lab",
+        "nexus-lab-eta"
+      ],
+      "localPaths": [],
+      "githubRepos": []
+    },
+    "tshirtworkshop": {
+      "id": "tshirtworkshop",
+      "name": "tshirtworkshop",
+      "displayName": "Tshirtworkshop",
+      "productionUrl": "https://tshirtworkshop.vercel.app",
+      "completionStatus": "complete",
+      "sourceStatus": "local-and-github",
+      "health": {
+        "status": "healthy",
+        "statusCode": 200,
+        "checkedAt": "2026-05-25T12:54:26.760Z",
+        "title": "T-Shirt Workshop",
+        "error": null
+      },
+      "aliases": [
+        "tshirtworkshop"
+      ],
+      "localPaths": [
+        {
+          "path": "D:\\tshirtworkshop",
+          "name": "tshirtworkshop",
+          "matchType": "exact",
+          "alias": "tshirtworkshop"
+        }
+      ],
+      "githubRepos": [
+        {
+          "owner": "aaronalltonai-ship-it",
+          "name": "tshirtworkshop",
+          "url": "https://github.com/aaronalltonai-ship-it/tshirtworkshop",
+          "updatedAt": "2026-04-18T10:01:24Z",
+          "isPrivate": false,
+          "defaultBranch": "main",
+          "matchType": "exact",
+          "alias": "tshirtworkshop"
+        }
+      ]
+    },
+    "bigostreets": {
+      "id": "bigostreets",
+      "name": "bigostreets",
+      "displayName": "Bigostreets",
+      "productionUrl": "https://bigostreets.vercel.app",
+      "completionStatus": "needs-source",
+      "sourceStatus": "not-found",
+      "health": {
+        "status": "healthy",
+        "statusCode": 200,
+        "checkedAt": "2026-05-25T12:54:26.624Z",
+        "title": "Bigo Live Newswire",
+        "error": null
+      },
+      "aliases": [
+        "bigostreets"
+      ],
+      "localPaths": [],
+      "githubRepos": []
+    },
+    "green-gator-pools": {
+      "id": "green-gator-pools",
+      "name": "green-gator-pools",
+      "displayName": "Green Gator Pools",
+      "productionUrl": "https://green-gator-pools.vercel.app",
+      "completionStatus": "complete",
+      "sourceStatus": "local-only",
+      "health": {
+        "status": "healthy",
+        "statusCode": 200,
+        "checkedAt": "2026-05-25T12:54:26.631Z",
+        "title": "Henderson Pool Cleaning Service | Green Gator Pools",
+        "error": null
+      },
+      "aliases": [
+        "green-gator-pools",
+        "green-gator-pool-cleaning"
+      ],
+      "localPaths": [
+        {
+          "path": "D:\\workspace\\green-gator-pool-cleaning",
+          "name": "green-gator-pool-cleaning",
+          "matchType": "exact",
+          "alias": "green-gator-pool-cleaning"
+        }
+      ],
+      "githubRepos": []
+    },
+    "battle-rap-ai": {
+      "id": "battle-rap-ai",
+      "name": "battle-rap-ai",
+      "displayName": "Battle Rap AI",
+      "productionUrl": "https://battle-rap-ai.vercel.app",
+      "completionStatus": "complete",
+      "sourceStatus": "local-and-github",
+      "health": {
+        "status": "healthy",
+        "statusCode": 200,
+        "checkedAt": "2026-05-25T12:54:26.683Z",
+        "title": "Battle Rap AI - Epic Voice-Powered Rap Battles Against AI",
+        "error": null
+      },
+      "aliases": [
+        "battle-rap-ai"
+      ],
+      "localPaths": [
+        {
+          "path": "D:\\arcathin\\BATTLE-RAP-AI",
+          "name": "BATTLE-RAP-AI",
+          "matchType": "exact",
+          "alias": "battle-rap-ai"
+        },
+        {
+          "path": "D:\\BATTLE-RAP-AI",
+          "name": "BATTLE-RAP-AI",
+          "matchType": "exact",
+          "alias": "battle-rap-ai"
+        },
+        {
+          "path": "D:\\workspace\\01-projects\\experiments\\AI-creative-experiments\\BATTLE-RAP-AI",
+          "name": "BATTLE-RAP-AI",
+          "matchType": "exact",
+          "alias": "battle-rap-ai"
+        }
+      ],
+      "githubRepos": [
+        {
+          "owner": "D0ubl3-A",
+          "name": "BATTLE-RAP-AI",
+          "url": "https://github.com/D0ubl3-A/BATTLE-RAP-AI",
+          "updatedAt": "2026-01-20T03:08:32Z",
+          "isPrivate": false,
+          "defaultBranch": "main",
+          "matchType": "exact",
+          "alias": "battle-rap-ai"
+        }
+      ]
+    },
+    "diss-track-site": {
+      "id": "diss-track-site",
+      "name": "diss-track-site",
+      "displayName": "Diss Track Site",
+      "productionUrl": "https://diss-track-site.vercel.app",
+      "completionStatus": "complete",
+      "sourceStatus": "local-only",
+      "health": {
+        "status": "healthy",
+        "statusCode": 200,
+        "checkedAt": "2026-05-25T12:54:26.699Z",
+        "title": "Diss Track Vault",
+        "error": null
+      },
+      "aliases": [
+        "diss-track-site",
+        "diss-track"
+      ],
+      "localPaths": [
+        {
+          "path": "D:\\workspace\\diss-track-site",
+          "name": "diss-track-site",
+          "matchType": "exact",
+          "alias": "diss-track-site"
+        }
+      ],
+      "githubRepos": []
+    },
+    "debate-league-jcld": {
+      "id": "debate-league-jcld",
+      "name": "debate-league-jcld",
+      "displayName": "Debate League Jcld",
+      "productionUrl": "https://debate-league-jcld-illcoai.vercel.app",
+      "completionStatus": "needs-repair",
+      "sourceStatus": "github-only",
+      "health": {
+        "status": "offline",
+        "statusCode": 404,
+        "checkedAt": "2026-05-25T12:54:26.688Z",
+        "title": null,
+        "error": null
+      },
+      "aliases": [
+        "debate-league-jcld",
+        "debate-league-jcld-illcoai"
+      ],
+      "localPaths": [],
+      "githubRepos": [
+        {
+          "owner": "D0ubl3-A",
+          "name": "Debate-League",
+          "url": "https://github.com/D0ubl3-A/Debate-League",
+          "updatedAt": "2025-12-28T09:29:48Z",
+          "isPrivate": false,
+          "defaultBranch": "main",
+          "matchType": "prefix",
+          "alias": "debate-league-jcld"
+        },
+        {
+          "owner": "aaronalltonai-ship-it",
+          "name": "Debate-League",
+          "url": "https://github.com/aaronalltonai-ship-it/Debate-League",
+          "updatedAt": "2026-01-25T00:04:38Z",
+          "isPrivate": false,
+          "defaultBranch": "main",
+          "matchType": "prefix",
+          "alias": "debate-league-jcld"
+        }
+      ]
+    },
+    "bigo-live-news": {
+      "id": "bigo-live-news",
+      "name": "bigo-live-news",
+      "displayName": "Bigo Live News",
+      "productionUrl": "https://bigo-live-news.vercel.app",
+      "completionStatus": "needs-source",
+      "sourceStatus": "not-found",
+      "health": {
+        "status": "healthy",
+        "statusCode": 200,
+        "checkedAt": "2026-05-25T12:54:26.722Z",
+        "title": "Bigo Live Newswire",
+        "error": null
+      },
+      "aliases": [
+        "bigo-live-news"
+      ],
+      "localPaths": [],
+      "githubRepos": []
+    },
+    "radio-edit-studio": {
+      "id": "radio-edit-studio",
+      "name": "radio-edit-studio",
+      "displayName": "Radio Edit Studio",
+      "productionUrl": "https://radio-edit-studio.vercel.app",
+      "completionStatus": "complete",
+      "sourceStatus": "local-only",
+      "health": {
+        "status": "healthy",
+        "statusCode": 200,
+        "checkedAt": "2026-05-25T12:54:26.815Z",
+        "title": "Radio Edit Studio",
+        "error": null
+      },
+      "aliases": [
+        "radio-edit-studio"
+      ],
+      "localPaths": [
+        {
+          "path": "D:\\radio-edit-studio",
+          "name": "radio-edit-studio",
+          "matchType": "exact",
+          "alias": "radio-edit-studio"
+        }
+      ],
+      "githubRepos": []
+    },
+    "assets": {
+      "id": "assets",
+      "name": "assets",
+      "displayName": "Assets",
+      "productionUrl": "https://assets-eta-two.vercel.app",
+      "completionStatus": "complete",
+      "sourceStatus": "local-only",
+      "health": {
+        "status": "healthy",
+        "statusCode": 200,
+        "checkedAt": "2026-05-25T12:54:26.827Z",
+        "title": "NilsasElementalArt | Rare Crystal & Stone Adornments",
+        "error": null
+      },
+      "aliases": [
+        "assets",
+        "assets-eta-two",
+        "assets-eta"
+      ],
+      "localPaths": [
+        {
+          "path": "D:\\workspace\\ai-dev-co-funnel\\assets",
+          "name": "assets",
+          "matchType": "exact",
+          "alias": "assets"
+        },
+        {
+          "path": "D:\\workspace\\ComfyUI\\app\\assets",
+          "name": "assets",
+          "matchType": "exact",
+          "alias": "assets"
+        },
+        {
+          "path": "D:\\workspace\\ComfyUI-official\\app\\assets",
+          "name": "assets",
+          "matchType": "exact",
+          "alias": "assets"
+        },
+        {
+          "path": "D:\\workspace\\green-gator-pool-cleaning\\assets",
+          "name": "assets",
+          "matchType": "exact",
+          "alias": "assets"
+        },
+        {
+          "path": "D:\\workspace\\illco-ai-funnel\\assets",
+          "name": "assets",
+          "matchType": "exact",
+          "alias": "assets"
+        },
+        {
+          "path": "D:\\workspace\\illco-ai-video\\assets",
+          "name": "assets",
+          "matchType": "exact",
+          "alias": "assets"
+        },
+        {
+          "path": "D:\\workspace\\illcoflow\\dist\\assets",
+          "name": "assets",
+          "matchType": "exact",
+          "alias": "assets"
+        },
+        {
+          "path": "D:\\workspace\\nexus-workstation\\dist\\assets",
+          "name": "assets",
+          "matchType": "exact",
+          "alias": "assets"
+        }
+      ],
+      "githubRepos": []
+    },
+    "sora2-petition": {
+      "id": "sora2-petition",
+      "name": "sora2-petition",
+      "displayName": "Sora2 Petition",
+      "productionUrl": "https://sora2-petition.vercel.app",
+      "completionStatus": "needs-source",
+      "sourceStatus": "not-found",
+      "health": {
+        "status": "healthy",
+        "statusCode": 200,
+        "checkedAt": "2026-05-25T12:54:26.836Z",
+        "title": "Keep Sora 2 Live - Public Petition",
+        "error": null
+      },
+      "aliases": [
+        "sora2-petition"
+      ],
+      "localPaths": [],
+      "githubRepos": []
+    },
+    "aaron": {
+      "id": "aaron",
+      "name": "aaron",
+      "displayName": "Aaron",
+      "productionUrl": null,
+      "completionStatus": "needs-deploy",
+      "sourceStatus": "local-only",
+      "health": {
+        "status": "offline",
+        "statusCode": null,
+        "checkedAt": "2026-05-25T12:54:26.683Z",
+        "title": null,
+        "error": "No production URL assigned."
+      },
+      "aliases": [
+        "aaron"
+      ],
+      "localPaths": [
+        {
+          "path": "D:\\aaron",
+          "name": "aaron",
+          "matchType": "exact",
+          "alias": "aaron"
+        },
+        {
+          "path": "D:\\Relocated\\aaron",
+          "name": "aaron",
+          "matchType": "exact",
+          "alias": "aaron"
+        }
+      ],
+      "githubRepos": []
+    },
+    "ltb-tool-payments": {
+      "id": "ltb-tool-payments",
+      "name": "ltb-tool-payments",
+      "displayName": "LTB Tool Payments",
+      "productionUrl": "https://ltb-tool-payments.vercel.app",
+      "completionStatus": "needs-repair",
+      "sourceStatus": "github-only",
+      "health": {
+        "status": "offline",
+        "statusCode": 404,
+        "checkedAt": "2026-05-25T12:54:26.903Z",
+        "title": null,
+        "error": null
+      },
+      "aliases": [
+        "ltb-tool-payments"
+      ],
+      "localPaths": [],
+      "githubRepos": [
+        {
+          "owner": "D0ubl3-A",
+          "name": "ltb-tool-payments",
+          "url": "https://github.com/D0ubl3-A/ltb-tool-payments",
+          "updatedAt": "2025-12-22T11:56:23Z",
+          "isPrivate": true,
+          "defaultBranch": "main",
+          "matchType": "exact",
+          "alias": "ltb-tool-payments"
+        },
+        {
+          "owner": "aaronalltonai-ship-it",
+          "name": "ltb-tool-payments",
+          "url": "https://github.com/aaronalltonai-ship-it/ltb-tool-payments",
+          "updatedAt": "2025-12-22T11:53:39Z",
+          "isPrivate": false,
+          "defaultBranch": "main",
+          "matchType": "exact",
+          "alias": "ltb-tool-payments"
+        }
+      ]
+    },
+    "lvl-up-agency": {
+      "id": "lvl-up-agency",
+      "name": "lvl-up-agency",
+      "displayName": "Lvl Up Agency",
+      "productionUrl": "https://lvl-up-agency.vercel.app",
+      "completionStatus": "complete",
+      "sourceStatus": "local-and-github",
+      "health": {
+        "status": "healthy",
+        "statusCode": 200,
+        "checkedAt": "2026-05-25T12:54:26.911Z",
+        "title": "Level Up Agency - BIGO Live Host Management & AI Coaching Platform",
+        "error": null
+      },
+      "aliases": [
+        "lvl-up-agency"
+      ],
+      "localPaths": [
+        {
+          "path": "D:\\workspace\\lvl-up-agency",
+          "name": "lvl-up-agency",
+          "matchType": "exact",
+          "alias": "lvl-up-agency"
+        },
+        {
+          "path": "D:\\aaron\\lvl-up-agency",
+          "name": "lvl-up-agency",
+          "matchType": "exact",
+          "alias": "lvl-up-agency"
+        },
+        {
+          "path": "D:\\New folder\\lvl-up-agency",
+          "name": "lvl-up-agency",
+          "matchType": "exact",
+          "alias": "lvl-up-agency"
+        }
+      ],
+      "githubRepos": [
+        {
+          "owner": "D0ubl3-A",
+          "name": "lvl-up-agency",
+          "url": "https://github.com/D0ubl3-A/lvl-up-agency",
+          "updatedAt": "2025-12-19T10:19:50Z",
+          "isPrivate": false,
+          "defaultBranch": "main",
+          "matchType": "exact",
+          "alias": "lvl-up-agency"
+        }
+      ]
+    },
+    "automateflow": {
+      "id": "automateflow",
+      "name": "automateflow",
+      "displayName": "Automateflow",
+      "productionUrl": "https://automateflow-eta.vercel.app",
+      "completionStatus": "needs-source",
+      "sourceStatus": "not-found",
+      "health": {
+        "status": "healthy",
+        "statusCode": 200,
+        "checkedAt": "2026-05-25T12:54:26.957Z",
+        "title": "Base44 APP",
+        "error": null
+      },
+      "aliases": [
+        "automateflow",
+        "automateflow-eta"
+      ],
+      "localPaths": [],
+      "githubRepos": []
+    },
+    "ill-motion-ai": {
+      "id": "ill-motion-ai",
+      "name": "ill-motion-ai",
+      "displayName": "Ill Motion AI",
+      "productionUrl": "https://ill-motion-ai.vercel.app",
+      "completionStatus": "complete",
+      "sourceStatus": "local-only",
+      "health": {
+        "status": "healthy",
+        "statusCode": 200,
+        "checkedAt": "2026-05-25T12:54:26.970Z",
+        "title": "iLL-Motion Ai | Phenomenal Video Generation",
+        "error": null
+      },
+      "aliases": [
+        "ill-motion-ai"
+      ],
+      "localPaths": [
+        {
+          "path": "D:\\ill-motion-ai",
+          "name": "ill-motion-ai",
+          "matchType": "exact",
+          "alias": "ill-motion-ai"
+        }
+      ],
+      "githubRepos": []
+    },
+    "brii-baby": {
+      "id": "brii-baby",
+      "name": "brii-baby",
+      "displayName": "Brii Baby",
+      "productionUrl": "https://brii-baby.vercel.app",
+      "completionStatus": "complete",
+      "sourceStatus": "local-only",
+      "health": {
+        "status": "healthy",
+        "statusCode": 200,
+        "checkedAt": "2026-05-25T12:54:26.960Z",
+        "title": "Brii Baby",
+        "error": null
+      },
+      "aliases": [
+        "brii-baby"
+      ],
+      "localPaths": [
+        {
+          "path": "D:\\Downloads\\Brii Baby - YouTube_files",
+          "name": "Brii Baby - YouTube_files",
+          "matchType": "prefix",
+          "alias": "brii-baby"
+        }
+      ],
+      "githubRepos": []
+    },
+    "cortex-intelligence": {
+      "id": "cortex-intelligence",
+      "name": "cortex-intelligence",
+      "displayName": "Cortex Intelligence",
+      "productionUrl": "https://cortex-intelligence-gamma.vercel.app",
+      "completionStatus": "complete",
+      "sourceStatus": "local-only",
+      "health": {
+        "status": "healthy",
+        "statusCode": 200,
+        "checkedAt": "2026-05-25T12:54:27.034Z",
+        "title": "Cortex Intelligence \u2013 Iran Drone Alert",
+        "error": null
+      },
+      "aliases": [
+        "cortex-intelligence",
+        "cortex-intelligence-gamma"
+      ],
+      "localPaths": [
+        {
+          "path": "D:\\Downloads\\cortex-intelligence",
+          "name": "cortex-intelligence",
+          "matchType": "exact",
+          "alias": "cortex-intelligence"
+        }
+      ],
+      "githubRepos": []
+    },
+    "illcoappiverse": {
+      "id": "illcoappiverse",
+      "name": "illcoappiverse",
+      "displayName": "Illcoappiverse",
+      "productionUrl": "https://illcoappiverse.vercel.app",
+      "completionStatus": "complete",
+      "sourceStatus": "local-only",
+      "health": {
+        "status": "healthy",
+        "statusCode": 200,
+        "checkedAt": "2026-05-25T12:54:27.037Z",
+        "title": "ILLCOAPPIVERSE - Privacy Policies",
+        "error": null
+      },
+      "aliases": [
+        "illcoappiverse"
+      ],
+      "localPaths": [
+        {
+          "path": "D:\\aaron\\ILLCOAPPIVERSE",
+          "name": "ILLCOAPPIVERSE",
+          "matchType": "exact",
+          "alias": "illcoappiverse"
+        }
+      ],
+      "githubRepos": []
+    },
+    "backend": {
+      "id": "backend",
+      "name": "backend",
+      "displayName": "Backend",
+      "productionUrl": "https://backend-illcoai.vercel.app",
+      "completionStatus": "complete",
+      "sourceStatus": "local-only",
+      "health": {
+        "status": "healthy",
+        "statusCode": 200,
+        "checkedAt": "2026-05-25T12:54:27.224Z",
+        "title": null,
+        "error": null
+      },
+      "aliases": [
+        "backend",
+        "backend-illcoai"
+      ],
+      "localPaths": [
+        {
+          "path": "D:\\workspace\\lvl-up-agency\\backend",
+          "name": "backend",
+          "matchType": "exact",
+          "alias": "backend"
+        },
+        {
+          "path": "D:\\workspace\\lvl-up-agency\\backend-node",
+          "name": "backend-node",
+          "matchType": "prefix",
+          "alias": "backend"
+        },
+        {
+          "path": "D:\\workspace\\voicebox\\backend",
+          "name": "backend",
+          "matchType": "exact",
+          "alias": "backend"
+        },
+        {
+          "path": "D:\\lottery-pattern-analyzer\\backend",
+          "name": "backend",
+          "matchType": "exact",
+          "alias": "backend"
+        },
+        {
+          "path": "D:\\ter\\backend",
+          "name": "backend",
+          "matchType": "exact",
+          "alias": "backend"
+        }
+      ],
+      "githubRepos": []
+    },
+    "ghettobirddemo": {
+      "id": "ghettobirddemo",
+      "name": "ghettobirddemo",
+      "displayName": "Ghettobirddemo",
+      "productionUrl": "https://ghettobirddemo.vercel.app",
+      "completionStatus": "complete",
+      "sourceStatus": "local-and-github",
+      "health": {
+        "status": "healthy",
+        "statusCode": 200,
+        "checkedAt": "2026-05-25T12:54:27.188Z",
+        "title": "GBird Voice AI",
+        "error": null
+      },
+      "aliases": [
+        "ghettobirddemo"
+      ],
+      "localPaths": [
+        {
+          "path": "D:\\ghettobirddemo",
+          "name": "ghettobirddemo",
+          "matchType": "exact",
+          "alias": "ghettobirddemo"
+        }
+      ],
+      "githubRepos": [
+        {
+          "owner": "aaronalltonai-ship-it",
+          "name": "ghettobirddemo",
+          "url": "https://github.com/aaronalltonai-ship-it/ghettobirddemo",
+          "updatedAt": "2026-02-15T00:51:25Z",
+          "isPrivate": false,
+          "defaultBranch": "master",
+          "matchType": "exact",
+          "alias": "ghettobirddemo"
+        }
+      ]
+    },
+    "music-video-clip-site": {
+      "id": "music-video-clip-site",
+      "name": "music-video-clip-site",
+      "displayName": "Music Video Clip Site",
+      "productionUrl": "https://music-video-clip-site.vercel.app",
+      "completionStatus": "needs-source",
+      "sourceStatus": "not-found",
+      "health": {
+        "status": "healthy",
+        "statusCode": 200,
+        "checkedAt": "2026-05-25T12:54:27.163Z",
+        "title": "Neon Performance Clip",
+        "error": null
+      },
+      "aliases": [
+        "music-video-clip-site",
+        "music-video-clip"
+      ],
+      "localPaths": [],
+      "githubRepos": []
+    },
+    "online-store-radio-edit": {
+      "id": "online-store-radio-edit",
+      "name": "online-store-radio-edit",
+      "displayName": "Online Store Radio Edit",
+      "productionUrl": "https://online-store-radio-edit.vercel.app",
+      "completionStatus": "complete",
+      "sourceStatus": "local-only",
+      "health": {
+        "status": "healthy",
+        "statusCode": 200,
+        "checkedAt": "2026-05-25T12:54:27.197Z",
+        "title": "iLLco Workspace",
+        "error": null
+      },
+      "aliases": [
+        "online-store-radio-edit"
+      ],
+      "localPaths": [
+        {
+          "path": "D:\\online-store",
+          "name": "online-store",
+          "matchType": "prefix",
+          "alias": "online-store-radio-edit"
+        }
+      ],
+      "githubRepos": []
+    },
+    "nexus-workstation": {
+      "id": "nexus-workstation",
+      "name": "nexus-workstation",
+      "displayName": "Nexus Workstation",
+      "productionUrl": "https://nexus-workstation.vercel.app",
+      "completionStatus": "complete",
+      "sourceStatus": "local-only",
+      "health": {
+        "status": "healthy",
+        "statusCode": 200,
+        "checkedAt": "2026-05-25T12:54:27.202Z",
+        "title": "My Google AI Studio App",
+        "error": null
+      },
+      "aliases": [
+        "nexus-workstation"
+      ],
+      "localPaths": [
+        {
+          "path": "D:\\workspace\\nexus-workstation",
+          "name": "nexus-workstation",
+          "matchType": "exact",
+          "alias": "nexus-workstation"
+        }
+      ],
+      "githubRepos": []
+    },
+    "lottery-pattern-analyzer": {
+      "id": "lottery-pattern-analyzer",
+      "name": "lottery-pattern-analyzer",
+      "displayName": "Lottery Pattern Analyzer",
+      "productionUrl": "https://lottery-pattern-analyzer.vercel.app",
+      "completionStatus": "needs-repair",
+      "sourceStatus": "local-only",
+      "health": {
+        "status": "offline",
+        "statusCode": 404,
+        "checkedAt": "2026-05-25T12:54:27.220Z",
+        "title": null,
+        "error": null
+      },
+      "aliases": [
+        "lottery-pattern-analyzer"
+      ],
+      "localPaths": [
+        {
+          "path": "D:\\lottery-pattern-analyzer",
+          "name": "lottery-pattern-analyzer",
+          "matchType": "exact",
+          "alias": "lottery-pattern-analyzer"
+        }
+      ],
+      "githubRepos": []
+    },
+    "backend-node": {
+      "id": "backend-node",
+      "name": "backend-node",
+      "displayName": "Backend Node",
+      "productionUrl": "https://backend-node-rust.vercel.app",
+      "completionStatus": "needs-repair",
+      "sourceStatus": "local-only",
+      "health": {
+        "status": "offline",
+        "statusCode": 404,
+        "checkedAt": "2026-05-25T12:54:27.357Z",
+        "title": "Error",
+        "error": null
+      },
+      "aliases": [
+        "backend-node",
+        "backend",
+        "backend-node-rust"
+      ],
+      "localPaths": [
+        {
+          "path": "D:\\workspace\\lvl-up-agency\\backend",
+          "name": "backend",
+          "matchType": "prefix",
+          "alias": "backend-node"
+        },
+        {
+          "path": "D:\\workspace\\lvl-up-agency\\backend-node",
+          "name": "backend-node",
+          "matchType": "exact",
+          "alias": "backend-node"
+        },
+        {
+          "path": "D:\\workspace\\voicebox\\backend",
+          "name": "backend",
+          "matchType": "prefix",
+          "alias": "backend-node"
+        },
+        {
+          "path": "D:\\lottery-pattern-analyzer\\backend",
+          "name": "backend",
+          "matchType": "prefix",
+          "alias": "backend-node"
+        },
+        {
+          "path": "D:\\ter\\backend",
+          "name": "backend",
+          "matchType": "prefix",
+          "alias": "backend-node"
+        }
+      ],
+      "githubRepos": []
+    },
+    "frontend": {
+      "id": "frontend",
+      "name": "frontend",
+      "displayName": "Frontend",
+      "productionUrl": "https://frontend-illcoai.vercel.app",
+      "completionStatus": "needs-repair",
+      "sourceStatus": "local-only",
+      "health": {
+        "status": "degraded",
+        "statusCode": 401,
+        "checkedAt": "2026-05-25T12:54:27.234Z",
+        "title": "Authentication Required",
+        "error": null
+      },
+      "aliases": [
+        "frontend",
+        "frontend-illcoai"
+      ],
+      "localPaths": [
+        {
+          "path": "D:\\workspace\\lvl-up-agency\\frontend",
+          "name": "frontend",
+          "matchType": "exact",
+          "alias": "frontend"
+        },
+        {
+          "path": "D:\\debate-league-platform\\frontend",
+          "name": "frontend",
+          "matchType": "exact",
+          "alias": "frontend"
+        },
+        {
+          "path": "D:\\lottery-pattern-analyzer\\frontend",
+          "name": "frontend",
+          "matchType": "exact",
+          "alias": "frontend"
+        },
+        {
+          "path": "D:\\ter\\frontend",
+          "name": "frontend",
+          "matchType": "exact",
+          "alias": "frontend"
+        }
+      ],
+      "githubRepos": []
+    },
+    "illcoflow": {
+      "id": "illcoflow",
+      "name": "illcoflow",
+      "displayName": "Illcoflow",
+      "productionUrl": "https://illcoflow.vercel.app",
+      "completionStatus": "complete",
+      "sourceStatus": "local-only",
+      "health": {
+        "status": "healthy",
+        "statusCode": 200,
+        "checkedAt": "2026-05-25T12:54:27.367Z",
+        "title": "Base44 APP",
+        "error": null
+      },
+      "aliases": [
+        "illcoflow"
+      ],
+      "localPaths": [
+        {
+          "path": "D:\\workspace\\illcoflow",
+          "name": "illcoflow",
+          "matchType": "exact",
+          "alias": "illcoflow"
+        }
+      ],
+      "githubRepos": []
+    },
+    "codex-agent-app": {
+      "id": "codex-agent-app",
+      "name": "codex-agent-app",
+      "displayName": "Codex Agent App",
+      "productionUrl": "https://codex-agent-app.vercel.app",
+      "completionStatus": "complete",
+      "sourceStatus": "github-only",
+      "health": {
+        "status": "healthy",
+        "statusCode": 200,
+        "checkedAt": "2026-05-25T12:54:27.360Z",
+        "title": "Codex Agent App",
+        "error": null
+      },
+      "aliases": [
+        "codex-agent-app",
+        "codex-agent"
+      ],
+      "localPaths": [],
+      "githubRepos": [
+        {
+          "owner": "aaronalltonai-ship-it",
+          "name": "codex-agent-app",
+          "url": "https://github.com/aaronalltonai-ship-it/codex-agent-app",
+          "updatedAt": "2026-02-13T05:32:04Z",
+          "isPrivate": false,
+          "defaultBranch": "main",
+          "matchType": "exact",
+          "alias": "codex-agent-app"
+        }
+      ]
+    },
+    "lipsync-app": {
+      "id": "lipsync-app",
+      "name": "lipsync-app",
+      "displayName": "Lipsync App",
+      "productionUrl": "https://lipsync-app-ten.vercel.app",
+      "completionStatus": "complete",
+      "sourceStatus": "local-only",
+      "health": {
+        "status": "healthy",
+        "statusCode": 200,
+        "checkedAt": "2026-05-25T12:54:27.442Z",
+        "title": "iLLco Workspace",
+        "error": null
+      },
+      "aliases": [
+        "lipsync-app",
+        "lipsync",
+        "lipsync-app-ten"
+      ],
+      "localPaths": [
+        {
+          "path": "D:\\workspace\\lipsync-gradio",
+          "name": "lipsync-gradio",
+          "matchType": "prefix",
+          "alias": "lipsync"
+        },
+        {
+          "path": "D:\\workspace\\lipsync-ui",
+          "name": "lipsync-ui",
+          "matchType": "prefix",
+          "alias": "lipsync"
+        },
+        {
+          "path": "D:\\aaron\\lipsync-standalone",
+          "name": "lipsync-standalone",
+          "matchType": "prefix",
+          "alias": "lipsync"
+        },
+        {
+          "path": "D:\\lipsync-app",
+          "name": "lipsync-app",
+          "matchType": "exact",
+          "alias": "lipsync-app"
+        },
+        {
+          "path": "D:\\lipsync_out",
+          "name": "lipsync_out",
+          "matchType": "prefix",
+          "alias": "lipsync"
+        },
+        {
+          "path": "D:\\projects\\lipsync-api",
+          "name": "lipsync-api",
+          "matchType": "prefix",
+          "alias": "lipsync"
+        }
+      ],
+      "githubRepos": []
+    },
+    "illcoai-tools": {
+      "id": "illcoai-tools",
+      "name": "illcoai-tools",
+      "displayName": "ILLCO AI Tools",
+      "productionUrl": "https://illcoai-tools.vercel.app",
+      "completionStatus": "needs-repair",
+      "sourceStatus": "local-and-github",
+      "health": {
+        "status": "offline",
+        "statusCode": 404,
+        "checkedAt": "2026-05-25T12:54:27.421Z",
+        "title": null,
+        "error": null
+      },
+      "aliases": [
+        "illcoai-tools"
+      ],
+      "localPaths": [
+        {
+          "path": "D:\\workspace\\01-projects\\tooling\\Utility-tooling-repos\\illcoai-tools",
+          "name": "illcoai-tools",
+          "matchType": "exact",
+          "alias": "illcoai-tools"
+        }
+      ],
+      "githubRepos": [
+        {
+          "owner": "aaronalltonai-ship-it",
+          "name": "illcoai",
+          "url": "https://github.com/aaronalltonai-ship-it/illcoai",
+          "updatedAt": "2026-01-28T11:04:53Z",
+          "isPrivate": false,
+          "defaultBranch": "main",
+          "matchType": "prefix",
+          "alias": "illcoai-tools"
+        }
+      ]
+    },
+    "illco-ai-hq": {
+      "id": "illco-ai-hq",
+      "name": "illco-ai-hq",
+      "displayName": "ILLCO AI HQ",
+      "productionUrl": "https://illco-ai-hq.vercel.app",
+      "completionStatus": "complete",
+      "sourceStatus": "local-only",
+      "health": {
+        "status": "healthy",
+        "statusCode": 200,
+        "checkedAt": "2026-05-25T12:54:27.444Z",
+        "title": null,
+        "error": null
+      },
+      "aliases": [
+        "illco-ai-hq"
+      ],
+      "localPaths": [
+        {
+          "path": "D:\\workspace\\illco-ai-hq",
+          "name": "illco-ai-hq",
+          "matchType": "exact",
+          "alias": "illco-ai-hq"
+        },
+        {
+          "path": "D:\\illco-ai-hq-no-mock-data",
+          "name": "illco-ai-hq-no-mock-data",
+          "matchType": "prefix",
+          "alias": "illco-ai-hq"
+        }
+      ],
+      "githubRepos": []
+    },
+    "notion-webhook": {
+      "id": "notion-webhook",
+      "name": "notion-webhook",
+      "displayName": "Notion Webhook",
+      "productionUrl": "https://notion-webhook-eta.vercel.app",
+      "completionStatus": "complete",
+      "sourceStatus": "local-only",
+      "health": {
+        "status": "healthy",
+        "statusCode": 200,
+        "checkedAt": "2026-05-25T12:54:27.432Z",
+        "title": null,
+        "error": null
+      },
+      "aliases": [
+        "notion-webhook",
+        "notion-webhook-eta"
+      ],
+      "localPaths": [
+        {
+          "path": "D:\\workspace\\notion-webhook",
+          "name": "notion-webhook",
+          "matchType": "exact",
+          "alias": "notion-webhook"
+        },
+        {
+          "path": "D:\\notion-webhook",
+          "name": "notion-webhook",
+          "matchType": "exact",
+          "alias": "notion-webhook"
+        }
+      ],
+      "githubRepos": []
+    },
+    "illcoai-api": {
+      "id": "illcoai-api",
+      "name": "illcoai-api",
+      "displayName": "ILLCO AI API",
+      "productionUrl": "https://illcoai-api.vercel.app",
+      "completionStatus": "needs-repair",
+      "sourceStatus": "local-and-github",
+      "health": {
+        "status": "offline",
+        "statusCode": 500,
+        "checkedAt": "2026-05-25T12:54:27.740Z",
+        "title": null,
+        "error": null
+      },
+      "aliases": [
+        "illcoai-api"
+      ],
+      "localPaths": [
+        {
+          "path": "D:\\workspace\\illcoai-api",
+          "name": "illcoai-api",
+          "matchType": "exact",
+          "alias": "illcoai-api"
+        }
+      ],
+      "githubRepos": [
+        {
+          "owner": "aaronalltonai-ship-it",
+          "name": "illcoai",
+          "url": "https://github.com/aaronalltonai-ship-it/illcoai",
+          "updatedAt": "2026-01-28T11:04:53Z",
+          "isPrivate": false,
+          "defaultBranch": "main",
+          "matchType": "prefix",
+          "alias": "illcoai-api"
+        }
+      ]
+    },
+    "sbl-sora-battle-league": {
+      "id": "sbl-sora-battle-league",
+      "name": "sbl-sora-battle-league",
+      "displayName": "SBL Sora Battle League",
+      "productionUrl": "https://sbl-sora-battle-league.vercel.app",
+      "completionStatus": "complete",
+      "sourceStatus": "local-and-github",
+      "health": {
+        "status": "healthy",
+        "statusCode": 200,
+        "checkedAt": "2026-05-25T12:54:27.590Z",
+        "title": "SBL \u2013 Sora Battle League",
+        "error": null
+      },
+      "aliases": [
+        "sbl-sora-battle-league"
+      ],
+      "localPaths": [
+        {
+          "path": "D:\\workspace\\sbl-sora-battle-league",
+          "name": "sbl-sora-battle-league",
+          "matchType": "exact",
+          "alias": "sbl-sora-battle-league"
+        }
+      ],
+      "githubRepos": [
+        {
+          "owner": "aaronalltonai-ship-it",
+          "name": "sbl-sora-battle-league",
+          "url": "https://github.com/aaronalltonai-ship-it/sbl-sora-battle-league",
+          "updatedAt": "2026-02-10T21:00:32Z",
+          "isPrivate": false,
+          "defaultBranch": "master",
+          "matchType": "exact",
+          "alias": "sbl-sora-battle-league"
+        }
+      ]
+    },
+    "illcoai-offline-v2": {
+      "id": "illcoai-offline-v2",
+      "name": "illcoai-offline-v2",
+      "displayName": "ILLCO AI Offline V2",
+      "productionUrl": "https://illcoai-offline-v2.vercel.app",
+      "completionStatus": "complete",
+      "sourceStatus": "github-only",
+      "health": {
+        "status": "healthy",
+        "statusCode": 200,
+        "checkedAt": "2026-05-25T12:54:27.593Z",
+        "title": null,
+        "error": null
+      },
+      "aliases": [
+        "illcoai-offline-v2"
+      ],
+      "localPaths": [],
+      "githubRepos": [
+        {
+          "owner": "aaronalltonai-ship-it",
+          "name": "illcoai",
+          "url": "https://github.com/aaronalltonai-ship-it/illcoai",
+          "updatedAt": "2026-01-28T11:04:53Z",
+          "isPrivate": false,
+          "defaultBranch": "main",
+          "matchType": "prefix",
+          "alias": "illcoai-offline-v2"
+        }
+      ]
+    },
+    "illcoai-upscale-v2": {
+      "id": "illcoai-upscale-v2",
+      "name": "illcoai-upscale-v2",
+      "displayName": "ILLCO AI Upscale V2",
+      "productionUrl": "https://illcoai-upscale-v2.vercel.app",
+      "completionStatus": "needs-repair",
+      "sourceStatus": "github-only",
+      "health": {
+        "status": "offline",
+        "statusCode": 404,
+        "checkedAt": "2026-05-25T12:54:27.581Z",
+        "title": null,
+        "error": null
+      },
+      "aliases": [
+        "illcoai-upscale-v2"
+      ],
+      "localPaths": [],
+      "githubRepos": [
+        {
+          "owner": "aaronalltonai-ship-it",
+          "name": "illcoai",
+          "url": "https://github.com/aaronalltonai-ship-it/illcoai",
+          "updatedAt": "2026-01-28T11:04:53Z",
+          "isPrivate": false,
+          "defaultBranch": "main",
+          "matchType": "prefix",
+          "alias": "illcoai-upscale-v2"
+        }
+      ]
+    },
+    "powerhouse-app-builder": {
+      "id": "powerhouse-app-builder",
+      "name": "powerhouse-app-builder",
+      "displayName": "Powerhouse App Builder",
+      "productionUrl": "https://blackppleats.com",
+      "completionStatus": "needs-repair",
+      "sourceStatus": "local-only",
+      "health": {
+        "status": "offline",
+        "statusCode": null,
+        "checkedAt": "2026-05-25T12:54:27.453Z",
+        "title": null,
+        "error": "fetch failed"
+      },
+      "aliases": [
+        "powerhouse-app-builder",
+        "blackppleats"
+      ],
+      "localPaths": [
+        {
+          "path": "D:\\workspace\\01-projects\\tooling\\powerhouse-app-builder",
+          "name": "powerhouse-app-builder",
+          "matchType": "exact",
+          "alias": "powerhouse-app-builder"
+        },
+        {
+          "path": "D:\\projects\\us-iran-conflict-stats-android\\workspace\\powerhouse-app-builder",
+          "name": "powerhouse-app-builder",
+          "matchType": "exact",
+          "alias": "powerhouse-app-builder"
+        },
+        {
+          "path": "D:\\workspace\\01-projects\\integrations\\notion-api-webhook-repo\\powerhouse-app-builder.backup-20260120-1",
+          "name": "powerhouse-app-builder.backup-20260120-1",
+          "matchType": "prefix",
+          "alias": "powerhouse-app-builder"
+        },
+        {
+          "path": "D:\\workspace\\01-projects\\misc\\workspace-master\\powerhouse-app-builder.backup-20260120-1",
+          "name": "powerhouse-app-builder.backup-20260120-1",
+          "matchType": "prefix",
+          "alias": "powerhouse-app-builder"
+        },
+        {
+          "path": "D:\\workspace\\01-projects\\tooling\\Utility-tooling-repos\\powerhouse-app-builder",
+          "name": "powerhouse-app-builder",
+          "matchType": "exact",
+          "alias": "powerhouse-app-builder"
+        },
+        {
+          "path": "D:\\workspace\\01-projects\\tooling\\Utility-tooling-repos\\powerhouse-app-builder.backup-20260120-1",
+          "name": "powerhouse-app-builder.backup-20260120-1",
+          "matchType": "prefix",
+          "alias": "powerhouse-app-builder"
+        }
+      ],
+      "githubRepos": []
+    },
+    "notion-api-webhook-repo": {
+      "id": "notion-api-webhook-repo",
+      "name": "notion-api-webhook-repo",
+      "displayName": "Notion API Webhook Repo",
+      "productionUrl": "https://notion-api-webhook-repo.vercel.app",
+      "completionStatus": "complete",
+      "sourceStatus": "local-only",
+      "health": {
+        "status": "healthy",
+        "statusCode": 200,
+        "checkedAt": "2026-05-25T12:54:27.651Z",
+        "title": "Notion API Webhook Repo",
+        "error": null
+      },
+      "aliases": [
+        "notion-api-webhook-repo",
+        "notion-api-webhook"
+      ],
+      "localPaths": [
+        {
+          "path": "D:\\workspace\\01-projects\\integrations\\notion-api-webhook-repo",
+          "name": "notion-api-webhook-repo",
+          "matchType": "exact",
+          "alias": "notion-api-webhook-repo"
+        },
+        {
+          "path": "D:\\workspace\\notion-api-webhook-repo",
+          "name": "notion-api-webhook-repo",
+          "matchType": "exact",
+          "alias": "notion-api-webhook-repo"
+        }
+      ],
+      "githubRepos": []
+    },
+    "ops-bot": {
+      "id": "ops-bot",
+      "name": "ops-bot",
+      "displayName": "Ops Bot",
+      "productionUrl": "https://ops-bot-eight.vercel.app",
+      "completionStatus": "complete",
+      "sourceStatus": "local-and-github",
+      "health": {
+        "status": "healthy",
+        "statusCode": 200,
+        "checkedAt": "2026-05-25T12:54:27.750Z",
+        "title": "Ops Bot - Production Workspace | Vercel",
+        "error": null
+      },
+      "aliases": [
+        "ops-bot",
+        "ops-bot-eight"
+      ],
+      "localPaths": [
+        {
+          "path": "D:\\workspace\\01-projects\\bots\\ops-bot",
+          "name": "ops-bot",
+          "matchType": "exact",
+          "alias": "ops-bot"
+        },
+        {
+          "path": "D:\\workspace\\01-projects\\bots\\ops-bot-godmode-repo",
+          "name": "ops-bot-godmode-repo",
+          "matchType": "prefix",
+          "alias": "ops-bot"
+        },
+        {
+          "path": "D:\\workspace\\codex-business-owner-skills-bundle\\skills\\ops-bot-runbook",
+          "name": "ops-bot-runbook",
+          "matchType": "prefix",
+          "alias": "ops-bot"
+        },
+        {
+          "path": "D:\\workspace\\ops-bot",
+          "name": "ops-bot",
+          "matchType": "exact",
+          "alias": "ops-bot"
+        },
+        {
+          "path": "D:\\workspace\\ops-bot-clone",
+          "name": "ops-bot-clone",
+          "matchType": "prefix",
+          "alias": "ops-bot"
+        },
+        {
+          "path": "D:\\ops-bot-godmode",
+          "name": "ops-bot-godmode",
+          "matchType": "prefix",
+          "alias": "ops-bot"
+        },
+        {
+          "path": "D:\\ops-bot-mcp",
+          "name": "ops-bot-mcp",
+          "matchType": "prefix",
+          "alias": "ops-bot"
+        },
+        {
+          "path": "D:\\ops-bot-mcp-data",
+          "name": "ops-bot-mcp-data",
+          "matchType": "prefix",
+          "alias": "ops-bot"
+        }
+      ],
+      "githubRepos": [
+        {
+          "owner": "aaronalltonai-ship-it",
+          "name": "ops-bot",
+          "url": "https://github.com/aaronalltonai-ship-it/ops-bot",
+          "updatedAt": "2026-02-12T05:14:40Z",
+          "isPrivate": false,
+          "defaultBranch": "main",
+          "matchType": "exact",
+          "alias": "ops-bot"
+        },
+        {
+          "owner": "aaronalltonai-ship-it",
+          "name": "ops-bot-godmode",
+          "url": "https://github.com/aaronalltonai-ship-it/ops-bot-godmode",
+          "updatedAt": "2026-01-29T20:56:05Z",
+          "isPrivate": false,
+          "defaultBranch": "master",
+          "matchType": "prefix",
+          "alias": "ops-bot"
+        }
+      ]
+    },
+    "notion-vercel-backend": {
+      "id": "notion-vercel-backend",
+      "name": "notion-vercel-backend",
+      "displayName": "Notion Vercel Backend",
+      "productionUrl": "https://notion-vercel-backend.vercel.app",
+      "completionStatus": "complete",
+      "sourceStatus": "local-only",
+      "health": {
+        "status": "healthy",
+        "statusCode": 200,
+        "checkedAt": "2026-05-25T12:54:27.720Z",
+        "title": "Notion Vercel Backend",
+        "error": null
+      },
+      "aliases": [
+        "notion-vercel-backend"
+      ],
+      "localPaths": [
+        {
+          "path": "D:\\workspace\\notion-vercel-backend",
+          "name": "notion-vercel-backend",
+          "matchType": "exact",
+          "alias": "notion-vercel-backend"
+        }
+      ],
+      "githubRepos": []
+    },
+    "src": {
+      "id": "src",
+      "name": "src",
+      "displayName": "Src",
+      "productionUrl": "https://src-illcoai.vercel.app",
+      "completionStatus": "needs-repair",
+      "sourceStatus": "local-only",
+      "health": {
+        "status": "degraded",
+        "statusCode": 401,
+        "checkedAt": "2026-05-25T12:54:27.726Z",
+        "title": "Authentication Required",
+        "error": null
+      },
+      "aliases": [
+        "src",
+        "src-illcoai"
+      ],
+      "localPaths": [
+        {
+          "path": "D:\\workspace\\android-mcp-server\\src",
+          "name": "src",
+          "matchType": "exact",
+          "alias": "src"
+        },
+        {
+          "path": "D:\\workspace\\chatEbtApp\\app\\src",
+          "name": "src",
+          "matchType": "exact",
+          "alias": "src"
+        },
+        {
+          "path": "D:\\workspace\\comfy-live-streamer\\web-app\\src",
+          "name": "src",
+          "matchType": "exact",
+          "alias": "src"
+        },
+        {
+          "path": "D:\\workspace\\family-listen\\src",
+          "name": "src",
+          "matchType": "exact",
+          "alias": "src"
+        },
+        {
+          "path": "D:\\workspace\\FISHERMON-GO\\src",
+          "name": "src",
+          "matchType": "exact",
+          "alias": "src"
+        },
+        {
+          "path": "D:\\workspace\\illcoflow\\src",
+          "name": "src",
+          "matchType": "exact",
+          "alias": "src"
+        },
+        {
+          "path": "D:\\workspace\\launch-desk\\client\\src",
+          "name": "src",
+          "matchType": "exact",
+          "alias": "src"
+        },
+        {
+          "path": "D:\\workspace\\launch-desk\\server\\src",
+          "name": "src",
+          "matchType": "exact",
+          "alias": "src"
+        }
+      ],
+      "githubRepos": []
+    },
+    "gardening-site": {
+      "id": "gardening-site",
+      "name": "gardening-site",
+      "displayName": "Gardening Site",
+      "productionUrl": "https://gardening-site-seven.vercel.app",
+      "completionStatus": "complete",
+      "sourceStatus": "github-only",
+      "health": {
+        "status": "healthy",
+        "statusCode": 200,
+        "checkedAt": "2026-05-25T12:54:27.788Z",
+        "title": "Indoor & Small-Space Gardening Authority",
+        "error": null
+      },
+      "aliases": [
+        "gardening-site",
+        "gardening",
+        "gardening-site-seven"
+      ],
+      "localPaths": [],
+      "githubRepos": [
+        {
+          "owner": "aaronalltonai-ship-it",
+          "name": "gardening-site",
+          "url": "https://github.com/aaronalltonai-ship-it/gardening-site",
+          "updatedAt": "2026-02-07T09:19:39Z",
+          "isPrivate": false,
+          "defaultBranch": "main",
+          "matchType": "exact",
+          "alias": "gardening-site"
+        }
+      ]
+    },
+    "gardening-site-grqp": {
+      "id": "gardening-site-grqp",
+      "name": "gardening-site-grqp",
+      "displayName": "Gardening Site Grqp",
+      "productionUrl": "https://gardening-site-grqp.vercel.app",
+      "completionStatus": "complete",
+      "sourceStatus": "github-only",
+      "health": {
+        "status": "healthy",
+        "statusCode": 200,
+        "checkedAt": "2026-05-25T12:54:27.792Z",
+        "title": "Indoor & Small-Space Gardening Authority",
+        "error": null
+      },
+      "aliases": [
+        "gardening-site-grqp"
+      ],
+      "localPaths": [],
+      "githubRepos": [
+        {
+          "owner": "aaronalltonai-ship-it",
+          "name": "gardening-site",
+          "url": "https://github.com/aaronalltonai-ship-it/gardening-site",
+          "updatedAt": "2026-02-07T09:19:39Z",
+          "isPrivate": false,
+          "defaultBranch": "main",
+          "matchType": "prefix",
+          "alias": "gardening-site-grqp"
+        }
+      ]
+    },
+    "web": {
+      "id": "web",
+      "name": "web",
+      "displayName": "Web",
+      "productionUrl": "https://web-illcoai.vercel.app",
+      "completionStatus": "needs-repair",
+      "sourceStatus": "local-only",
+      "health": {
+        "status": "degraded",
+        "statusCode": 401,
+        "checkedAt": "2026-05-25T12:54:27.807Z",
+        "title": "Authentication Required",
+        "error": null
+      },
+      "aliases": [
+        "web",
+        "web-illcoai"
+      ],
+      "localPaths": [
+        {
+          "path": "D:\\workspace\\07-docs\\web",
+          "name": "web",
+          "matchType": "exact",
+          "alias": "web"
+        },
+        {
+          "path": "D:\\workspace\\comfy-live-streamer\\web-app",
+          "name": "web-app",
+          "matchType": "suffix-trim",
+          "alias": "web-illcoai"
+        },
+        {
+          "path": "D:\\workspace\\go-olive-src\\business\\web",
+          "name": "web",
+          "matchType": "exact",
+          "alias": "web"
+        },
+        {
+          "path": "D:\\workspace\\go-olive-src\\foundation\\web",
+          "name": "web",
+          "matchType": "exact",
+          "alias": "web"
+        },
+        {
+          "path": "D:\\workspace\\trendpilot-youtube-growth\\web",
+          "name": "web",
+          "matchType": "exact",
+          "alias": "web"
+        },
+        {
+          "path": "D:\\workspace\\voicebox\\web",
+          "name": "web",
+          "matchType": "exact",
+          "alias": "web"
+        },
+        {
+          "path": "D:\\Barz\\web",
+          "name": "web",
+          "matchType": "exact",
+          "alias": "web"
+        },
+        {
+          "path": "D:\\web-app",
+          "name": "web-app",
+          "matchType": "suffix-trim",
+          "alias": "web-illcoai"
+        }
+      ],
+      "githubRepos": []
+    },
+    "real-estate-ai-workstation": {
+      "id": "real-estate-ai-workstation",
+      "name": "real-estate-ai-workstation",
+      "displayName": "Real Estate AI Workstation",
+      "productionUrl": "https://real-estate-ai-workstation-illcoai.vercel.app",
+      "completionStatus": "needs-repair",
+      "sourceStatus": "local-only",
+      "health": {
+        "status": "offline",
+        "statusCode": 404,
+        "checkedAt": "2026-05-25T12:54:27.819Z",
+        "title": null,
+        "error": null
+      },
+      "aliases": [
+        "real-estate-ai-workstation",
+        "real-estate-ai-workstation-illcoai"
+      ],
+      "localPaths": [
+        {
+          "path": "D:\\real-estate-ai-workstation",
+          "name": "real-estate-ai-workstation",
+          "matchType": "exact",
+          "alias": "real-estate-ai-workstation"
+        }
+      ],
+      "githubRepos": []
+    },
+    "out": {
+      "id": "out",
+      "name": "out",
+      "displayName": "Out",
+      "productionUrl": "https://out-illcoai.vercel.app",
+      "completionStatus": "needs-repair",
+      "sourceStatus": "local-only",
+      "health": {
+        "status": "degraded",
+        "statusCode": 401,
+        "checkedAt": "2026-05-25T12:54:27.928Z",
+        "title": "Authentication Required",
+        "error": null
+      },
+      "aliases": [
+        "out",
+        "out-illcoai"
+      ],
+      "localPaths": [
+        {
+          "path": "D:\\workspace\\bigo-watcher\\out",
+          "name": "out",
+          "matchType": "exact",
+          "alias": "out"
+        },
+        {
+          "path": "D:\\workspace\\ops-bot\\out",
+          "name": "out",
+          "matchType": "exact",
+          "alias": "out"
+        },
+        {
+          "path": "D:\\workspace\\ops-bot-clone\\out",
+          "name": "out",
+          "matchType": "exact",
+          "alias": "out"
+        },
+        {
+          "path": "D:\\ghettobirddemo\\out",
+          "name": "out",
+          "matchType": "exact",
+          "alias": "out"
+        },
+        {
+          "path": "D:\\workspace\\01-projects\\bots\\ops-bot\\out",
+          "name": "out",
+          "matchType": "exact",
+          "alias": "out"
+        }
+      ],
+      "githubRepos": []
+    },
+    "ghetto-bird-robot": {
+      "id": "ghetto-bird-robot",
+      "name": "ghetto-bird-robot",
+      "displayName": "Ghetto Bird Robot",
+      "productionUrl": "https://ghetto-bird-robot.vercel.app",
+      "completionStatus": "complete",
+      "sourceStatus": "local-only",
+      "health": {
+        "status": "healthy",
+        "statusCode": 200,
+        "checkedAt": "2026-05-25T12:54:27.882Z",
+        "title": "GhettoBirdSim WebGL Host",
+        "error": null
+      },
+      "aliases": [
+        "ghetto-bird-robot"
+      ],
+      "localPaths": [
+        {
+          "path": "D:\\ghetto-bird",
+          "name": "ghetto-bird",
+          "matchType": "prefix",
+          "alias": "ghetto-bird-robot"
+        }
+      ],
+      "githubRepos": []
+    },
+    "vercel-ai-gateway-demo": {
+      "id": "vercel-ai-gateway-demo",
+      "name": "vercel-ai-gateway-demo",
+      "displayName": "Vercel AI Gateway Demo",
+      "productionUrl": "https://vercel-ai-gateway-demo-illcoai.vercel.app",
+      "completionStatus": "complete",
+      "sourceStatus": "github-only",
+      "health": {
+        "status": "healthy",
+        "statusCode": 200,
+        "checkedAt": "2026-05-25T12:54:28.110Z",
+        "title": "AI Gateway Demo",
+        "error": null
+      },
+      "aliases": [
+        "vercel-ai-gateway-demo",
+        "vercel-ai-gateway-demo-illcoai"
+      ],
+      "localPaths": [],
+      "githubRepos": [
+        {
+          "owner": "D0ubl3-A",
+          "name": "vercel-ai-gateway-demo",
+          "url": "https://github.com/D0ubl3-A/vercel-ai-gateway-demo",
+          "updatedAt": "2026-01-30T07:59:42Z",
+          "isPrivate": true,
+          "defaultBranch": "main",
+          "matchType": "exact",
+          "alias": "vercel-ai-gateway-demo"
+        }
+      ]
+    },
+    "debate-league": {
+      "id": "debate-league",
+      "name": "debate-league",
+      "displayName": "Debate League",
+      "productionUrl": "https://debate-league-illcoai.vercel.app",
+      "completionStatus": "needs-repair",
+      "sourceStatus": "local-and-github",
+      "health": {
+        "status": "offline",
+        "statusCode": 404,
+        "checkedAt": "2026-05-25T12:54:27.911Z",
+        "title": null,
+        "error": null
+      },
+      "aliases": [
+        "debate-league",
+        "debate-league-illcoai"
+      ],
+      "localPaths": [
+        {
+          "path": "D:\\debate-league-platform",
+          "name": "debate-league-platform",
+          "matchType": "prefix",
+          "alias": "debate-league"
+        }
+      ],
+      "githubRepos": [
+        {
+          "owner": "D0ubl3-A",
+          "name": "Debate-League",
+          "url": "https://github.com/D0ubl3-A/Debate-League",
+          "updatedAt": "2025-12-28T09:29:48Z",
+          "isPrivate": false,
+          "defaultBranch": "main",
+          "matchType": "exact",
+          "alias": "debate-league"
+        },
+        {
+          "owner": "aaronalltonai-ship-it",
+          "name": "Debate-League",
+          "url": "https://github.com/aaronalltonai-ship-it/Debate-League",
+          "updatedAt": "2026-01-25T00:04:38Z",
+          "isPrivate": false,
+          "defaultBranch": "main",
+          "matchType": "exact",
+          "alias": "debate-league"
+        }
+      ]
+    },
+    "ilco-ops2": {
+      "id": "ilco-ops2",
+      "name": "ilco-ops2",
+      "displayName": "Ilco Ops2",
+      "productionUrl": "https://ilco-ops2.vercel.app",
+      "completionStatus": "needs-source",
+      "sourceStatus": "not-found",
+      "health": {
+        "status": "healthy",
+        "statusCode": 200,
+        "checkedAt": "2026-05-25T12:54:27.997Z",
+        "title": "Illco Ops",
+        "error": null
+      },
+      "aliases": [
+        "ilco-ops2"
+      ],
+      "localPaths": [],
+      "githubRepos": []
+    },
+    "online-store": {
+      "id": "online-store",
+      "name": "online-store",
+      "displayName": "Online Store",
+      "productionUrl": "https://online-store-illcoai.vercel.app",
+      "completionStatus": "needs-repair",
+      "sourceStatus": "local-only",
+      "health": {
+        "status": "degraded",
+        "statusCode": 401,
+        "checkedAt": "2026-05-25T12:54:27.980Z",
+        "title": "Authentication Required",
+        "error": null
+      },
+      "aliases": [
+        "online-store",
+        "online-store-illcoai"
+      ],
+      "localPaths": [
+        {
+          "path": "D:\\online-store",
+          "name": "online-store",
+          "matchType": "exact",
+          "alias": "online-store"
+        },
+        {
+          "path": "D:\\online-store-drive",
+          "name": "online-store-drive",
+          "matchType": "prefix",
+          "alias": "online-store"
+        }
+      ],
+      "githubRepos": []
+    },
+    "workspace": {
+      "id": "workspace",
+      "name": "workspace",
+      "displayName": "Workspace",
+      "productionUrl": "https://workspace-illcoai.vercel.app",
+      "completionStatus": "needs-repair",
+      "sourceStatus": "local-and-github",
+      "health": {
+        "status": "offline",
+        "statusCode": 404,
+        "checkedAt": "2026-05-25T12:54:27.984Z",
+        "title": null,
+        "error": null
+      },
+      "aliases": [
+        "workspace",
+        "workspace-illcoai"
+      ],
+      "localPaths": [
+        {
+          "path": "D:\\workspace\\01-projects\\misc\\workspace-master",
+          "name": "workspace-master",
+          "matchType": "prefix",
+          "alias": "workspace"
+        },
+        {
+          "path": "D:\\workspace\\notion-api-webhook-repo\\workspace",
+          "name": "workspace",
+          "matchType": "exact",
+          "alias": "workspace"
+        },
+        {
+          "path": "D:\\aaron\\workspace",
+          "name": "workspace",
+          "matchType": "exact",
+          "alias": "workspace"
+        },
+        {
+          "path": "D:\\book-generator-app\\workspace",
+          "name": "workspace",
+          "matchType": "exact",
+          "alias": "workspace"
+        },
+        {
+          "path": "D:\\code-runs-orchestrator\\workspace",
+          "name": "workspace",
+          "matchType": "exact",
+          "alias": "workspace"
+        },
+        {
+          "path": "D:\\combined-project\\workspace",
+          "name": "workspace",
+          "matchType": "exact",
+          "alias": "workspace"
+        },
+        {
+          "path": "D:\\dating-app\\workspace",
+          "name": "workspace",
+          "matchType": "exact",
+          "alias": "workspace"
+        },
+        {
+          "path": "D:\\debate-league-platform\\workspace",
+          "name": "workspace",
+          "matchType": "exact",
+          "alias": "workspace"
+        }
+      ],
+      "githubRepos": [
+        {
+          "owner": "D0ubl3-A",
+          "name": "WORKSPACE-",
+          "url": "https://github.com/D0ubl3-A/WORKSPACE-",
+          "updatedAt": "2026-01-20T03:09:25Z",
+          "isPrivate": false,
+          "defaultBranch": "main",
+          "matchType": "exact",
+          "alias": "workspace"
+        },
+        {
+          "owner": "aaronalltonai-ship-it",
+          "name": "workspace",
+          "url": "https://github.com/aaronalltonai-ship-it/workspace",
+          "updatedAt": "2026-01-30T16:09:10Z",
+          "isPrivate": false,
+          "defaultBranch": "master",
+          "matchType": "exact",
+          "alias": "workspace"
+        }
+      ]
+    },
+    "aaron-gateway": {
+      "id": "aaron-gateway",
+      "name": "aaron-gateway",
+      "displayName": "Aaron Gateway",
+      "productionUrl": "https://aaron-gateway.vercel.app",
+      "completionStatus": "needs-source",
+      "sourceStatus": "not-found",
+      "health": {
+        "status": "healthy",
+        "statusCode": 200,
+        "checkedAt": "2026-05-25T12:54:28.030Z",
+        "title": "Aaron's Server Hub",
+        "error": null
+      },
+      "aliases": [
+        "aaron-gateway"
+      ],
+      "localPaths": [],
+      "githubRepos": []
+    },
+    "illcoai-homicide-v2": {
+      "id": "illcoai-homicide-v2",
+      "name": "illcoai-homicide-v2",
+      "displayName": "ILLCO AI Homicide V2",
+      "productionUrl": "https://illcoai-homicide-v2.vercel.app",
+      "completionStatus": "needs-repair",
+      "sourceStatus": "github-only",
+      "health": {
+        "status": "offline",
+        "statusCode": 404,
+        "checkedAt": "2026-05-25T12:54:28.140Z",
+        "title": null,
+        "error": null
+      },
+      "aliases": [
+        "illcoai-homicide-v2"
+      ],
+      "localPaths": [],
+      "githubRepos": [
+        {
+          "owner": "aaronalltonai-ship-it",
+          "name": "illcoai",
+          "url": "https://github.com/aaronalltonai-ship-it/illcoai",
+          "updatedAt": "2026-01-28T11:04:53Z",
+          "isPrivate": false,
+          "defaultBranch": "main",
+          "matchType": "prefix",
+          "alias": "illcoai-homicide-v2"
+        }
+      ]
+    },
+    "tmp-deploy": {
+      "id": "tmp-deploy",
+      "name": "tmp-deploy",
+      "displayName": "Tmp Deploy",
+      "productionUrl": "https://tmp-deploy-one.vercel.app",
+      "completionStatus": "complete",
+      "sourceStatus": "local-only",
+      "health": {
+        "status": "healthy",
+        "statusCode": 200,
+        "checkedAt": "2026-05-25T12:54:28.177Z",
+        "title": "Homicide Forecast Lab",
+        "error": null
+      },
+      "aliases": [
+        "tmp-deploy",
+        "tmp",
+        "tmp-deploy-one"
+      ],
+      "localPaths": [
+        {
+          "path": "D:\\workspace\\.codex\\.tmp",
+          "name": ".tmp",
+          "matchType": "exact",
+          "alias": "tmp"
+        },
+        {
+          "path": "D:\\workspace\\.codex\\tmp",
+          "name": "tmp",
+          "matchType": "exact",
+          "alias": "tmp"
+        },
+        {
+          "path": "D:\\workspace\\.gradle\\.tmp",
+          "name": ".tmp",
+          "matchType": "exact",
+          "alias": "tmp"
+        },
+        {
+          "path": "D:\\workspace\\.gradle-cache\\.tmp",
+          "name": ".tmp",
+          "matchType": "exact",
+          "alias": "tmp"
+        },
+        {
+          "path": "D:\\workspace\\.tmp",
+          "name": ".tmp",
+          "matchType": "exact",
+          "alias": "tmp"
+        },
+        {
+          "path": "D:\\workspace\\mastering-backend\\tmp",
+          "name": "tmp",
+          "matchType": "exact",
+          "alias": "tmp"
+        },
+        {
+          "path": "D:\\workspace\\npm-cache-video\\_cacache\\tmp",
+          "name": "tmp",
+          "matchType": "exact",
+          "alias": "tmp"
+        },
+        {
+          "path": "D:\\workspace\\tmp",
+          "name": "tmp",
+          "matchType": "exact",
+          "alias": "tmp"
+        }
+      ],
+      "githubRepos": []
+    },
+    "illcoai-bot-v2": {
+      "id": "illcoai-bot-v2",
+      "name": "illcoai-bot-v2",
+      "displayName": "ILLCO AI Bot V2",
+      "productionUrl": "https://illcoai-bot-v2.vercel.app",
+      "completionStatus": "needs-repair",
+      "sourceStatus": "github-only",
+      "health": {
+        "status": "offline",
+        "statusCode": 404,
+        "checkedAt": "2026-05-25T12:54:28.168Z",
+        "title": null,
+        "error": null
+      },
+      "aliases": [
+        "illcoai-bot-v2"
+      ],
+      "localPaths": [],
+      "githubRepos": [
+        {
+          "owner": "aaronalltonai-ship-it",
+          "name": "illcoai",
+          "url": "https://github.com/aaronalltonai-ship-it/illcoai",
+          "updatedAt": "2026-01-28T11:04:53Z",
+          "isPrivate": false,
+          "defaultBranch": "main",
+          "matchType": "prefix",
+          "alias": "illcoai-bot-v2"
+        }
+      ]
+    },
+    "illcoai-bot-api-v2": {
+      "id": "illcoai-bot-api-v2",
+      "name": "illcoai-bot-api-v2",
+      "displayName": "ILLCO AI Bot API V2",
+      "productionUrl": "https://illcoai-bot-api-v2.vercel.app",
+      "completionStatus": "needs-repair",
+      "sourceStatus": "github-only",
+      "health": {
+        "status": "offline",
+        "statusCode": 404,
+        "checkedAt": "2026-05-25T12:54:28.223Z",
+        "title": null,
+        "error": null
+      },
+      "aliases": [
+        "illcoai-bot-api-v2"
+      ],
+      "localPaths": [],
+      "githubRepos": [
+        {
+          "owner": "aaronalltonai-ship-it",
+          "name": "illcoai",
+          "url": "https://github.com/aaronalltonai-ship-it/illcoai",
+          "updatedAt": "2026-01-28T11:04:53Z",
+          "isPrivate": false,
+          "defaultBranch": "main",
+          "matchType": "prefix",
+          "alias": "illcoai-bot-api-v2"
+        }
+      ]
+    },
+    "illcoai-lipsync-v2": {
+      "id": "illcoai-lipsync-v2",
+      "name": "illcoai-lipsync-v2",
+      "displayName": "ILLCO AI Lipsync V2",
+      "productionUrl": "https://illcoai-lipsync-v2.vercel.app",
+      "completionStatus": "needs-repair",
+      "sourceStatus": "github-only",
+      "health": {
+        "status": "offline",
+        "statusCode": 404,
+        "checkedAt": "2026-05-25T12:54:28.217Z",
+        "title": null,
+        "error": null
+      },
+      "aliases": [
+        "illcoai-lipsync-v2"
+      ],
+      "localPaths": [],
+      "githubRepos": [
+        {
+          "owner": "aaronalltonai-ship-it",
+          "name": "illcoai",
+          "url": "https://github.com/aaronalltonai-ship-it/illcoai",
+          "updatedAt": "2026-01-28T11:04:53Z",
+          "isPrivate": false,
+          "defaultBranch": "main",
+          "matchType": "prefix",
+          "alias": "illcoai-lipsync-v2"
+        }
+      ]
+    },
+    "illcoai-lipsync-api-v2": {
+      "id": "illcoai-lipsync-api-v2",
+      "name": "illcoai-lipsync-api-v2",
+      "displayName": "ILLCO AI Lipsync API V2",
+      "productionUrl": "https://illcoai-lipsync-api-v2.vercel.app",
+      "completionStatus": "needs-repair",
+      "sourceStatus": "github-only",
+      "health": {
+        "status": "offline",
+        "statusCode": 404,
+        "checkedAt": "2026-05-25T12:54:28.253Z",
+        "title": null,
+        "error": null
+      },
+      "aliases": [
+        "illcoai-lipsync-api-v2"
+      ],
+      "localPaths": [],
+      "githubRepos": [
+        {
+          "owner": "aaronalltonai-ship-it",
+          "name": "illcoai",
+          "url": "https://github.com/aaronalltonai-ship-it/illcoai",
+          "updatedAt": "2026-01-28T11:04:53Z",
+          "isPrivate": false,
+          "defaultBranch": "main",
+          "matchType": "prefix",
+          "alias": "illcoai-lipsync-api-v2"
+        }
+      ]
+    },
+    "illcoai-upscale-api-v2": {
+      "id": "illcoai-upscale-api-v2",
+      "name": "illcoai-upscale-api-v2",
+      "displayName": "ILLCO AI Upscale API V2",
+      "productionUrl": "https://illcoai-upscale-api-v2.vercel.app",
+      "completionStatus": "needs-repair",
+      "sourceStatus": "github-only",
+      "health": {
+        "status": "offline",
+        "statusCode": 404,
+        "checkedAt": "2026-05-25T12:54:28.282Z",
+        "title": null,
+        "error": null
+      },
+      "aliases": [
+        "illcoai-upscale-api-v2"
+      ],
+      "localPaths": [],
+      "githubRepos": [
+        {
+          "owner": "aaronalltonai-ship-it",
+          "name": "illcoai",
+          "url": "https://github.com/aaronalltonai-ship-it/illcoai",
+          "updatedAt": "2026-01-28T11:04:53Z",
+          "isPrivate": false,
+          "defaultBranch": "main",
+          "matchType": "prefix",
+          "alias": "illcoai-upscale-api-v2"
+        }
+      ]
+    },
+    "illcoai-book-v2": {
+      "id": "illcoai-book-v2",
+      "name": "illcoai-book-v2",
+      "displayName": "ILLCO AI Book V2",
+      "productionUrl": "https://illcoai-book-v2.vercel.app",
+      "completionStatus": "needs-repair",
+      "sourceStatus": "github-only",
+      "health": {
+        "status": "offline",
+        "statusCode": 404,
+        "checkedAt": "2026-05-25T12:54:28.344Z",
+        "title": null,
+        "error": null
+      },
+      "aliases": [
+        "illcoai-book-v2"
+      ],
+      "localPaths": [],
+      "githubRepos": [
+        {
+          "owner": "aaronalltonai-ship-it",
+          "name": "illcoai",
+          "url": "https://github.com/aaronalltonai-ship-it/illcoai",
+          "updatedAt": "2026-01-28T11:04:53Z",
+          "isPrivate": false,
+          "defaultBranch": "main",
+          "matchType": "prefix",
+          "alias": "illcoai-book-v2"
+        }
+      ]
+    },
+    "illcoai-book-api-v2": {
+      "id": "illcoai-book-api-v2",
+      "name": "illcoai-book-api-v2",
+      "displayName": "ILLCO AI Book API V2",
+      "productionUrl": "https://illcoai-book-api-v2.vercel.app",
+      "completionStatus": "needs-repair",
+      "sourceStatus": "github-only",
+      "health": {
+        "status": "offline",
+        "statusCode": 404,
+        "checkedAt": "2026-05-25T12:54:28.316Z",
+        "title": null,
+        "error": null
+      },
+      "aliases": [
+        "illcoai-book-api-v2"
+      ],
+      "localPaths": [],
+      "githubRepos": [
+        {
+          "owner": "aaronalltonai-ship-it",
+          "name": "illcoai",
+          "url": "https://github.com/aaronalltonai-ship-it/illcoai",
+          "updatedAt": "2026-01-28T11:04:53Z",
+          "isPrivate": false,
+          "defaultBranch": "main",
+          "matchType": "prefix",
+          "alias": "illcoai-book-api-v2"
+        }
+      ]
+    },
+    "illcoai-e2b-api-v2": {
+      "id": "illcoai-e2b-api-v2",
+      "name": "illcoai-e2b-api-v2",
+      "displayName": "ILLCO AI E2B API V2",
+      "productionUrl": "https://illcoai-e2b-api-v2.vercel.app",
+      "completionStatus": "needs-repair",
+      "sourceStatus": "github-only",
+      "health": {
+        "status": "offline",
+        "statusCode": 404,
+        "checkedAt": "2026-05-25T12:54:28.369Z",
+        "title": null,
+        "error": null
+      },
+      "aliases": [
+        "illcoai-e2b-api-v2"
+      ],
+      "localPaths": [],
+      "githubRepos": [
+        {
+          "owner": "aaronalltonai-ship-it",
+          "name": "illcoai",
+          "url": "https://github.com/aaronalltonai-ship-it/illcoai",
+          "updatedAt": "2026-01-28T11:04:53Z",
+          "isPrivate": false,
+          "defaultBranch": "main",
+          "matchType": "prefix",
+          "alias": "illcoai-e2b-api-v2"
+        }
+      ]
+    },
+    "illcoai-e2b-v2": {
+      "id": "illcoai-e2b-v2",
+      "name": "illcoai-e2b-v2",
+      "displayName": "ILLCO AI E2B V2",
+      "productionUrl": "https://illcoai-e2b-v2.vercel.app",
+      "completionStatus": "needs-repair",
+      "sourceStatus": "github-only",
+      "health": {
+        "status": "offline",
+        "statusCode": 404,
+        "checkedAt": "2026-05-25T12:54:28.407Z",
+        "title": null,
+        "error": null
+      },
+      "aliases": [
+        "illcoai-e2b-v2"
+      ],
+      "localPaths": [],
+      "githubRepos": [
+        {
+          "owner": "aaronalltonai-ship-it",
+          "name": "illcoai",
+          "url": "https://github.com/aaronalltonai-ship-it/illcoai",
+          "updatedAt": "2026-01-28T11:04:53Z",
+          "isPrivate": false,
+          "defaultBranch": "main",
+          "matchType": "prefix",
+          "alias": "illcoai-e2b-v2"
+        }
+      ]
+    },
+    "illcoai-airbnb-v2": {
+      "id": "illcoai-airbnb-v2",
+      "name": "illcoai-airbnb-v2",
+      "displayName": "ILLCO AI Airbnb V2",
+      "productionUrl": "https://illcoai-airbnb-v2.vercel.app",
+      "completionStatus": "needs-repair",
+      "sourceStatus": "github-only",
+      "health": {
+        "status": "offline",
+        "statusCode": 404,
+        "checkedAt": "2026-05-25T12:54:28.469Z",
+        "title": null,
+        "error": null
+      },
+      "aliases": [
+        "illcoai-airbnb-v2"
+      ],
+      "localPaths": [],
+      "githubRepos": [
+        {
+          "owner": "aaronalltonai-ship-it",
+          "name": "illcoai",
+          "url": "https://github.com/aaronalltonai-ship-it/illcoai",
+          "updatedAt": "2026-01-28T11:04:53Z",
+          "isPrivate": false,
+          "defaultBranch": "main",
+          "matchType": "prefix",
+          "alias": "illcoai-airbnb-v2"
+        }
+      ]
+    },
+    "illcoai-realtor-workflow-v2": {
+      "id": "illcoai-realtor-workflow-v2",
+      "name": "illcoai-realtor-workflow-v2",
+      "displayName": "ILLCO AI Realtor Workflow V2",
+      "productionUrl": "https://illcoai-realtor-workflow-v2.vercel.app",
+      "completionStatus": "needs-repair",
+      "sourceStatus": "github-only",
+      "health": {
+        "status": "offline",
+        "statusCode": 404,
+        "checkedAt": "2026-05-25T12:54:28.483Z",
+        "title": null,
+        "error": null
+      },
+      "aliases": [
+        "illcoai-realtor-workflow-v2"
+      ],
+      "localPaths": [],
+      "githubRepos": [
+        {
+          "owner": "aaronalltonai-ship-it",
+          "name": "illcoai",
+          "url": "https://github.com/aaronalltonai-ship-it/illcoai",
+          "updatedAt": "2026-01-28T11:04:53Z",
+          "isPrivate": false,
+          "defaultBranch": "main",
+          "matchType": "prefix",
+          "alias": "illcoai-realtor-workflow-v2"
+        }
+      ]
+    },
+    "illcoai-video-generator-deploy": {
+      "id": "illcoai-video-generator-deploy",
+      "name": "illcoai-video-generator-deploy",
+      "displayName": "ILLCO AI Video Generator Deploy",
+      "productionUrl": "https://illcoai-video-generator-deploy.vercel.app",
+      "completionStatus": "complete",
+      "sourceStatus": "github-only",
+      "health": {
+        "status": "healthy",
+        "statusCode": 200,
+        "checkedAt": "2026-05-25T12:54:28.492Z",
+        "title": "iLLCoAi Video Generator",
+        "error": null
+      },
+      "aliases": [
+        "illcoai-video-generator-deploy",
+        "illcoai-video-generator"
+      ],
+      "localPaths": [],
+      "githubRepos": [
+        {
+          "owner": "aaronalltonai-ship-it",
+          "name": "illcoai",
+          "url": "https://github.com/aaronalltonai-ship-it/illcoai",
+          "updatedAt": "2026-01-28T11:04:53Z",
+          "isPrivate": false,
+          "defaultBranch": "main",
+          "matchType": "prefix",
+          "alias": "illcoai-video-generator-deploy"
+        }
+      ]
+    },
+    "illco-ai-hq-no-mock-data": {
+      "id": "illco-ai-hq-no-mock-data",
+      "name": "illco-ai-hq-no-mock-data",
+      "displayName": "ILLCO AI HQ No Mock Data",
+      "productionUrl": "https://illco-ai-hq-no-mock-data.vercel.app",
+      "completionStatus": "complete",
+      "sourceStatus": "local-only",
+      "health": {
+        "status": "healthy",
+        "statusCode": 200,
+        "checkedAt": "2026-05-25T12:54:28.804Z",
+        "title": "iLLCo AI HQ",
+        "error": null
+      },
+      "aliases": [
+        "illco-ai-hq-no-mock-data"
+      ],
+      "localPaths": [
+        {
+          "path": "D:\\workspace\\illco-ai-hq",
+          "name": "illco-ai-hq",
+          "matchType": "prefix",
+          "alias": "illco-ai-hq-no-mock-data"
+        },
+        {
+          "path": "D:\\illco-ai-hq-no-mock-data",
+          "name": "illco-ai-hq-no-mock-data",
+          "matchType": "exact",
+          "alias": "illco-ai-hq-no-mock-data"
+        }
+      ],
+      "githubRepos": []
+    },
+    "whatsapp-ai-bot": {
+      "id": "whatsapp-ai-bot",
+      "name": "whatsapp-ai-bot",
+      "displayName": "Whatsapp AI Bot",
+      "productionUrl": "https://whatsapp-ai-bot-beta.vercel.app",
+      "completionStatus": "needs-source",
+      "sourceStatus": "not-found",
+      "health": {
+        "status": "healthy",
+        "statusCode": 200,
+        "checkedAt": "2026-05-25T12:54:28.519Z",
+        "title": "Lip Sync Studio + Groq File Q&amp;A",
+        "error": null
+      },
+      "aliases": [
+        "whatsapp-ai-bot",
+        "whatsapp-ai-bot-beta"
+      ],
+      "localPaths": [],
+      "githubRepos": []
+    },
+    "arc-agentic-commerce-hackathon-2026": {
+      "id": "arc-agentic-commerce-hackathon-2026",
+      "name": "arc-agentic-commerce-hackathon-2026",
+      "displayName": "Arc Agentic Commerce Hackathon 2026",
+      "productionUrl": "https://arc-agentic-commerce-hackathon-2026.vercel.app",
+      "completionStatus": "complete",
+      "sourceStatus": "local-only",
+      "health": {
+        "status": "healthy",
+        "statusCode": 200,
+        "checkedAt": "2026-05-25T12:54:28.691Z",
+        "title": "Agentic API Spend Guard",
+        "error": null
+      },
+      "aliases": [
+        "arc-agentic-commerce-hackathon-2026"
+      ],
+      "localPaths": [
+        {
+          "path": "D:\\temp\\arc-agentic-commerce-hackathon-2026",
+          "name": "arc-agentic-commerce-hackathon-2026",
+          "matchType": "exact",
+          "alias": "arc-agentic-commerce-hackathon-2026"
+        }
+      ],
+      "githubRepos": []
+    },
+    "workstation": {
+      "id": "workstation",
+      "name": "workstation",
+      "displayName": "Workstation",
+      "productionUrl": "https://workstation-orpin.vercel.app",
+      "completionStatus": "complete",
+      "sourceStatus": "github-only",
+      "health": {
+        "status": "healthy",
+        "statusCode": 200,
+        "checkedAt": "2026-05-25T12:54:28.684Z",
+        "title": "Online Store Dashboard",
+        "error": null
+      },
+      "aliases": [
+        "workstation",
+        "workstation-orpin"
+      ],
+      "localPaths": [],
+      "githubRepos": [
+        {
+          "owner": "D0ubl3-A",
+          "name": "workstation",
+          "url": "https://github.com/D0ubl3-A/workstation",
+          "updatedAt": "2025-12-28T22:04:15Z",
+          "isPrivate": true,
+          "defaultBranch": "main",
+          "matchType": "exact",
+          "alias": "workstation"
+        }
+      ]
+    },
+    "novastream": {
+      "id": "novastream",
+      "name": "novastream",
+      "displayName": "Novastream",
+      "productionUrl": "https://novastream-khaki.vercel.app",
+      "completionStatus": "needs-source",
+      "sourceStatus": "not-found",
+      "health": {
+        "status": "healthy",
+        "statusCode": 200,
+        "checkedAt": "2026-05-25T12:54:28.771Z",
+        "title": "NovaStream | Immersive Live Streaming",
+        "error": null
+      },
+      "aliases": [
+        "novastream",
+        "novastream-khaki"
+      ],
+      "localPaths": [],
+      "githubRepos": []
+    },
+    "whatsapp-bot-app": {
+      "id": "whatsapp-bot-app",
+      "name": "whatsapp-bot-app",
+      "displayName": "Whatsapp Bot App",
+      "productionUrl": "https://whatsapp-bot-app-one.vercel.app",
+      "completionStatus": "needs-source",
+      "sourceStatus": "not-found",
+      "health": {
+        "status": "healthy",
+        "statusCode": 200,
+        "checkedAt": "2026-05-25T12:54:28.695Z",
+        "title": "WhatsApp AI Bot",
+        "error": null
+      },
+      "aliases": [
+        "whatsapp-bot-app",
+        "whatsapp-bot",
+        "whatsapp-bot-app-one"
+      ],
+      "localPaths": [],
+      "githubRepos": []
+    },
+    "whatsapp-bot": {
+      "id": "whatsapp-bot",
+      "name": "whatsapp-bot",
+      "displayName": "Whatsapp Bot",
+      "productionUrl": "https://whatsapp-bot-illcoai.vercel.app",
+      "completionStatus": "missing-source",
+      "sourceStatus": "not-found",
+      "health": {
+        "status": "degraded",
+        "statusCode": 401,
+        "checkedAt": "2026-05-25T12:54:28.778Z",
+        "title": "Authentication Required",
+        "error": null
+      },
+      "aliases": [
+        "whatsapp-bot",
+        "whatsapp-bot-illcoai"
+      ],
+      "localPaths": [],
+      "githubRepos": []
+    },
+    "debate-league-pro": {
+      "id": "debate-league-pro",
+      "name": "debate-league-pro",
+      "displayName": "Debate League Pro",
+      "productionUrl": "https://debate-league-pro.vercel.app",
+      "completionStatus": "complete",
+      "sourceStatus": "github-only",
+      "health": {
+        "status": "healthy",
+        "statusCode": 200,
+        "checkedAt": "2026-05-25T12:54:28.814Z",
+        "title": "Debate League Pro",
+        "error": null
+      },
+      "aliases": [
+        "debate-league-pro"
+      ],
+      "localPaths": [],
+      "githubRepos": [
+        {
+          "owner": "D0ubl3-A",
+          "name": "Debate-League",
+          "url": "https://github.com/D0ubl3-A/Debate-League",
+          "updatedAt": "2025-12-28T09:29:48Z",
+          "isPrivate": false,
+          "defaultBranch": "main",
+          "matchType": "prefix",
+          "alias": "debate-league-pro"
+        },
+        {
+          "owner": "aaronalltonai-ship-it",
+          "name": "Debate-League",
+          "url": "https://github.com/aaronalltonai-ship-it/Debate-League",
+          "updatedAt": "2026-01-25T00:04:38Z",
+          "isPrivate": false,
+          "defaultBranch": "main",
+          "matchType": "prefix",
+          "alias": "debate-league-pro"
+        }
+      ]
+    },
+    "godmode-ui": {
+      "id": "godmode-ui",
+      "name": "godmode-ui",
+      "displayName": "Godmode Ui",
+      "productionUrl": "https://godmode-ui.vercel.app",
+      "completionStatus": "complete",
+      "sourceStatus": "local-only",
+      "health": {
+        "status": "healthy",
+        "statusCode": 200,
+        "checkedAt": "2026-05-25T12:54:28.819Z",
+        "title": "Godmode Console",
+        "error": null
+      },
+      "aliases": [
+        "godmode-ui"
+      ],
+      "localPaths": [
+        {
+          "path": "D:\\workspace\\c_users_aaron_projects\\deliverables\\godmode",
+          "name": "godmode",
+          "matchType": "prefix",
+          "alias": "godmode-ui"
+        },
+        {
+          "path": "D:\\godmode",
+          "name": "godmode",
+          "matchType": "prefix",
+          "alias": "godmode-ui"
+        },
+        {
+          "path": "D:\\godmode\\godmode",
+          "name": "godmode",
+          "matchType": "prefix",
+          "alias": "godmode-ui"
+        },
+        {
+          "path": "D:\\godmode\\godmode-ui",
+          "name": "godmode-ui",
+          "matchType": "exact",
+          "alias": "godmode-ui"
+        }
+      ],
+      "githubRepos": []
+    },
+    "bookie": {
+      "id": "bookie",
+      "name": "bookie",
+      "displayName": "Bookie",
+      "productionUrl": "https://bookie-illcoai.vercel.app",
+      "completionStatus": "missing-source",
+      "sourceStatus": "not-found",
+      "health": {
+        "status": "degraded",
+        "statusCode": 401,
+        "checkedAt": "2026-05-25T12:54:28.898Z",
+        "title": "Authentication Required",
+        "error": null
+      },
+      "aliases": [
+        "bookie",
+        "bookie-illcoai"
+      ],
+      "localPaths": [],
+      "githubRepos": []
+    },
+    "songanalyzer-deploy": {
+      "id": "songanalyzer-deploy",
+      "name": "songanalyzer-deploy",
+      "displayName": "Songanalyzer Deploy",
+      "productionUrl": "https://songanalyzer-deploy.vercel.app",
+      "completionStatus": "complete",
+      "sourceStatus": "local-and-github",
+      "health": {
+        "status": "healthy",
+        "statusCode": 200,
+        "checkedAt": "2026-05-25T12:54:28.918Z",
+        "title": "LyricFlow AI - Professional Audio Transcription",
+        "error": null
+      },
+      "aliases": [
+        "songanalyzer-deploy",
+        "songanalyzer"
+      ],
+      "localPaths": [
+        {
+          "path": "D:\\workspace\\01-projects\\experiments\\AI-creative-experiments\\SongAnalyzer-Improver",
+          "name": "SongAnalyzer-Improver",
+          "matchType": "prefix",
+          "alias": "songanalyzer"
+        }
+      ],
+      "githubRepos": [
+        {
+          "owner": "aaronalltonai-ship-it",
+          "name": "SongAnalyzer-Improver",
+          "url": "https://github.com/aaronalltonai-ship-it/SongAnalyzer-Improver",
+          "updatedAt": "2025-12-27T22:44:47Z",
+          "isPrivate": false,
+          "defaultBranch": "main",
+          "matchType": "prefix",
+          "alias": "songanalyzer"
+        }
+      ]
+    },
+    "stock-outlook": {
+      "id": "stock-outlook",
+      "name": "stock-outlook",
+      "displayName": "Stock Outlook",
+      "productionUrl": "https://stock-outlook.vercel.app",
+      "completionStatus": "complete",
+      "sourceStatus": "local-only",
+      "health": {
+        "status": "healthy",
+        "statusCode": 200,
+        "checkedAt": "2026-05-25T12:54:29.021Z",
+        "title": "Stock Outlook",
+        "error": null
+      },
+      "aliases": [
+        "stock-outlook"
+      ],
+      "localPaths": [
+        {
+          "path": "D:\\stock-outlook",
+          "name": "stock-outlook",
+          "matchType": "exact",
+          "alias": "stock-outlook"
+        }
+      ],
+      "githubRepos": []
+    },
+    "debateit": {
+      "id": "debateit",
+      "name": "debateit",
+      "displayName": "Debateit",
+      "productionUrl": "https://debateit-illcoai.vercel.app",
+      "completionStatus": "needs-repair",
+      "sourceStatus": "github-only",
+      "health": {
+        "status": "offline",
+        "statusCode": 404,
+        "checkedAt": "2026-05-25T12:54:29.015Z",
+        "title": null,
+        "error": null
+      },
+      "aliases": [
+        "debateit",
+        "debateit-illcoai"
+      ],
+      "localPaths": [],
+      "githubRepos": [
+        {
+          "owner": "D0ubl3-A",
+          "name": "debateit",
+          "url": "https://github.com/D0ubl3-A/debateit",
+          "updatedAt": "2026-01-20T03:13:33Z",
+          "isPrivate": true,
+          "defaultBranch": "main",
+          "matchType": "exact",
+          "alias": "debateit"
+        }
+      ]
+    },
+    "debate-league-api": {
+      "id": "debate-league-api",
+      "name": "debate-league-api",
+      "displayName": "Debate League API",
+      "productionUrl": "https://debate-league-api.vercel.app",
+      "completionStatus": "complete",
+      "sourceStatus": "github-only",
+      "health": {
+        "status": "healthy",
+        "statusCode": 200,
+        "checkedAt": "2026-05-25T12:54:29.135Z",
+        "title": null,
+        "error": null
+      },
+      "aliases": [
+        "debate-league-api"
+      ],
+      "localPaths": [],
+      "githubRepos": [
+        {
+          "owner": "D0ubl3-A",
+          "name": "Debate-League",
+          "url": "https://github.com/D0ubl3-A/Debate-League",
+          "updatedAt": "2025-12-28T09:29:48Z",
+          "isPrivate": false,
+          "defaultBranch": "main",
+          "matchType": "prefix",
+          "alias": "debate-league-api"
+        },
+        {
+          "owner": "aaronalltonai-ship-it",
+          "name": "Debate-League",
+          "url": "https://github.com/aaronalltonai-ship-it/Debate-League",
+          "updatedAt": "2026-01-25T00:04:38Z",
+          "isPrivate": false,
+          "defaultBranch": "main",
+          "matchType": "prefix",
+          "alias": "debate-league-api"
+        }
+      ]
+    },
+    "lyricflow-ai": {
+      "id": "lyricflow-ai",
+      "name": "lyricflow-ai",
+      "displayName": "Lyricflow AI",
+      "productionUrl": "https://lyricflow-ai-blue.vercel.app",
+      "completionStatus": "needs-source",
+      "sourceStatus": "not-found",
+      "health": {
+        "status": "healthy",
+        "statusCode": 200,
+        "checkedAt": "2026-05-25T12:54:29.067Z",
+        "title": "LyricFlow AI - Professional Audio Transcription",
+        "error": null
+      },
+      "aliases": [
+        "lyricflow-ai",
+        "lyricflow-ai-blue"
+      ],
+      "localPaths": [],
+      "githubRepos": []
+    },
+    "debate-league-t49t": {
+      "id": "debate-league-t49t",
+      "name": "debate-league-t49t",
+      "displayName": "Debate League T49t",
+      "productionUrl": "https://debate-league-t49t-illcoai.vercel.app",
+      "completionStatus": "needs-repair",
+      "sourceStatus": "github-only",
+      "health": {
+        "status": "offline",
+        "statusCode": 404,
+        "checkedAt": "2026-05-25T12:54:29.069Z",
+        "title": null,
+        "error": null
+      },
+      "aliases": [
+        "debate-league-t49t",
+        "debate-league-t49t-illcoai"
+      ],
+      "localPaths": [],
+      "githubRepos": [
+        {
+          "owner": "D0ubl3-A",
+          "name": "Debate-League",
+          "url": "https://github.com/D0ubl3-A/Debate-League",
+          "updatedAt": "2025-12-28T09:29:48Z",
+          "isPrivate": false,
+          "defaultBranch": "main",
+          "matchType": "prefix",
+          "alias": "debate-league-t49t"
+        },
+        {
+          "owner": "aaronalltonai-ship-it",
+          "name": "Debate-League",
+          "url": "https://github.com/aaronalltonai-ship-it/Debate-League",
+          "updatedAt": "2026-01-25T00:04:38Z",
+          "isPrivate": false,
+          "defaultBranch": "main",
+          "matchType": "prefix",
+          "alias": "debate-league-t49t"
+        }
+      ]
+    },
+    "serato": {
+      "id": "serato",
+      "name": "serato",
+      "displayName": "Serato",
+      "productionUrl": "https://serato.vercel.app",
+      "completionStatus": "complete",
+      "sourceStatus": "local-only",
+      "health": {
+        "status": "healthy",
+        "statusCode": 200,
+        "checkedAt": "2026-05-25T12:54:29.105Z",
+        "title": "Audio Scout",
+        "error": null
+      },
+      "aliases": [
+        "serato"
+      ],
+      "localPaths": [
+        {
+          "path": "D:\\book-generator-app\\Serato",
+          "name": "Serato",
+          "matchType": "exact",
+          "alias": "serato"
+        },
+        {
+          "path": "D:\\online-store\\Serato",
+          "name": "Serato",
+          "matchType": "exact",
+          "alias": "serato"
+        }
+      ],
+      "githubRepos": []
+    },
+    "master-slideshow": {
+      "id": "master-slideshow",
+      "name": "master-slideshow",
+      "displayName": "Master Slideshow",
+      "productionUrl": "https://master-slideshow.vercel.app",
+      "completionStatus": "needs-source",
+      "sourceStatus": "not-found",
+      "health": {
+        "status": "healthy",
+        "statusCode": 200,
+        "checkedAt": "2026-05-25T12:54:29.199Z",
+        "title": "Master PDF Slideshow - Cinematic Presentation",
+        "error": null
+      },
+      "aliases": [
+        "master-slideshow"
+      ],
+      "localPaths": [],
+      "githubRepos": []
+    },
+    "license-validation-api": {
+      "id": "license-validation-api",
+      "name": "license-validation-api",
+      "displayName": "License Validation API",
+      "productionUrl": "https://license-validation-api-tawny.vercel.app",
+      "completionStatus": "needs-source",
+      "sourceStatus": "not-found",
+      "health": {
+        "status": "healthy",
+        "statusCode": 200,
+        "checkedAt": "2026-05-25T12:54:29.198Z",
+        "title": "License Validation API - Vercel",
+        "error": null
+      },
+      "aliases": [
+        "license-validation-api",
+        "license-validation-api-tawny"
+      ],
+      "localPaths": [],
+      "githubRepos": []
+    },
+    "stride-enterprise-platform": {
+      "id": "stride-enterprise-platform",
+      "name": "stride-enterprise-platform",
+      "displayName": "Stride Enterprise Platform",
+      "productionUrl": "https://stride-enterprise-platform.vercel.app",
+      "completionStatus": "needs-source",
+      "sourceStatus": "not-found",
+      "health": {
+        "status": "healthy",
+        "statusCode": 200,
+        "checkedAt": "2026-05-25T12:54:29.316Z",
+        "title": null,
+        "error": null
+      },
+      "aliases": [
+        "stride-enterprise-platform"
+      ],
+      "localPaths": [],
+      "githubRepos": []
+    },
+    "bri-babyy": {
+      "id": "bri-babyy",
+      "name": "bri-babyy",
+      "displayName": "Bri Babyy",
+      "productionUrl": "https://bri-babyy.vercel.app",
+      "completionStatus": "complete",
+      "sourceStatus": "local-only",
+      "health": {
+        "status": "healthy",
+        "statusCode": 200,
+        "checkedAt": "2026-05-25T12:54:29.246Z",
+        "title": "Attraction Trainer",
+        "error": null
+      },
+      "aliases": [
+        "bri-babyy"
+      ],
+      "localPaths": [
+        {
+          "path": "D:\\bri-babyy",
+          "name": "bri-babyy",
+          "matchType": "exact",
+          "alias": "bri-babyy"
+        }
+      ],
+      "githubRepos": []
+    },
+    "ghetto-bird-voice-ai": {
+      "id": "ghetto-bird-voice-ai",
+      "name": "ghetto-bird-voice-ai",
+      "displayName": "Ghetto Bird Voice AI",
+      "productionUrl": "https://ghetto-bird-voice-ai.vercel.app",
+      "completionStatus": "complete",
+      "sourceStatus": "local-only",
+      "health": {
+        "status": "healthy",
+        "statusCode": 200,
+        "checkedAt": "2026-05-25T12:54:29.253Z",
+        "title": "GBird Voice AI",
+        "error": null
+      },
+      "aliases": [
+        "ghetto-bird-voice-ai"
+      ],
+      "localPaths": [
+        {
+          "path": "D:\\ghetto-bird",
+          "name": "ghetto-bird",
+          "matchType": "prefix",
+          "alias": "ghetto-bird-voice-ai"
+        }
+      ],
+      "githubRepos": []
+    }
+  }
+}

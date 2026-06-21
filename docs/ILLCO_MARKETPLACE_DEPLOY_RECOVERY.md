@@ -12,24 +12,18 @@ D:\workspace\illco-command
 
 This app contains the `app/`, `components/`, `data/`, `lib/`, `public/`, and `scripts/` directories that power the ILLCO AI marketplace, account center, legal pages, product listings, and app unlock flow.
 
-## Important Repository Mismatch
+## GitHub Repository State
 
-GitHub `D0ubl3-A/illco-command` currently has a `main` branch shaped like a different API/control-plane app:
+GitHub `D0ubl3-A/illco-command` `main` has been synced back to the Next marketplace app without force-pushing. The merge commit preserves the older API/control-plane history, but the current `main` tree is the marketplace app from:
 
 ```text
-api/
-src/
-public/index.html
-public/producer.html
+D:\workspace\illco-command
 ```
 
-That `main` branch is not the Next marketplace app described by the site audit. Do not force-push or merge over it casually unless the intent is to make the Next marketplace app the repository mainline again.
-
-The Next marketplace fixes are preserved on:
+Current GitHub deployment source commit:
 
 ```text
-branch: illco-command-next-app-fixes
-PR: https://github.com/D0ubl3-A/illco-command/pull/1
+d0f7951 chore: add master agent live verifier
 ```
 
 ## Fixes Already Made On The Next Marketplace Branch
@@ -52,6 +46,34 @@ https://illcoai.tech/api/account/google/callback
 ```
 
 Instead of sending users directly to external Vercel app URLs before unlock/readiness gates are met.
+- `/master-agent` and `/api/master-agent` exist in source and route users across every app and checkout offer through the same gate rules.
+- `GET /api/master-agent?catalog=all` returns the full master-agent catalog.
+
+## Current Deployment Blocker
+
+As of June 21, 2026 at 09:21 PT, the source is ready but `https://illco-command.vercel.app` is still serving an older deployment:
+
+```text
+curl.exe -I https://illco-command.vercel.app/master-agent
+HTTP/1.1 404 Not Found
+```
+
+GitHub has no Vercel deployment records or check runs for the current `main` commit:
+
+```text
+gh api repos/D0ubl3-A/illco-command/commits/d0f7951/status
+state: pending
+total_count: 0
+```
+
+Local Vercel CLI auth is also missing:
+
+```text
+vercel whoami
+Error: No existing credentials found. Please run `vercel login` or pass "--token"
+```
+
+This means the remaining deployment issue is external to the code: either restore Vercel CLI auth with a token/login, or reconnect the Vercel project Git integration so pushes to `D0ubl3-A/illco-command` `main` trigger builds.
 
 ## Verification Commands
 
@@ -59,6 +81,9 @@ Run from `D:\workspace\illco-command`:
 
 ```powershell
 & "D:/workspace/illco-command/node_modules/.bin/tsc.cmd" --noEmit --pretty false
+& "D:/workspace/illco-command/node_modules/.bin/tsx.cmd" --test tests/*.test.ts
+$env:NODE_OPTIONS='--max-old-space-size=4096'; npm run build
+& "D:/workspace/illco-command/node_modules/.bin/tsx.cmd" scripts/verify-master-agent-live.ts https://illco-command.vercel.app
 curl.exe -I --max-time 20 https://illcoai.tech
 curl.exe -I --max-time 20 https://illcoai.tech/account
 curl.exe -I --max-time 20 https://illcoai.tech/privacy
@@ -73,6 +98,9 @@ Expected current evidence:
 - `/privacy` and `/refunds` return `200 OK`.
 - OAuth start returns `307` to Google with `redirect_uri=https://illcoai.tech/api/account/google/callback`.
 - TypeScript returns exit code `0`.
+- Full test suite returns `39/39` passing.
+- Production build includes `/master-agent` and `/api/master-agent`.
+- The live verifier should return JSON with `ok: true`, `catalogItems`, and `offers` after Vercel is deploying the current commit.
 
 ## Deployment Steps
 
@@ -88,6 +116,13 @@ Then deploy the Next marketplace app from the local D: workspace:
 ```powershell
 cd D:\workspace\illco-command
 vercel --prod --yes
+```
+
+If using a non-interactive token:
+
+```powershell
+cd D:\workspace\illco-command
+vercel --prod --yes --token $env:VERCEL_TOKEN
 ```
 
 Do not overwrite Stripe keys or shared production secrets. Vercel production env should remain the source of truth for live secrets.
@@ -112,4 +147,3 @@ Before running ads, production should pass:
 - Coming-soon/setup products do not open external product apps directly.
 - Checkout appears only for products with passing proof/readiness/payment gates.
 - `tsc --noEmit --pretty false` passes.
-

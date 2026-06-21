@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 
 import { CopyPromptBlock } from "@/components/copy-prompt-block";
+import { canDirectCheckoutPublicProduct } from "@/lib/public-checkout";
+import { getProductAccess } from "@/lib/product-access";
 import { thinkForMeSkillMarkdown } from "@/lib/think-for-me-skill";
 
 export const metadata: Metadata = {
@@ -8,6 +10,12 @@ export const metadata: Metadata = {
   description:
     "A beginner-safe ILLCO helper for goals, Plan Mode, CLI execution, OpenAI Agents SDK decisions, and ElevenLabs narration checks.",
 };
+
+export const dynamic = "force-dynamic";
+
+const productId = "think-for-me-mode";
+const productPlanId = "studio";
+const productReturnTo = "/tools/think-for-me-mode";
 
 const starterPrompt =
   "Create a goal for this project. Use Plan Mode first. Keep it simple. Assume most work should run through the CLI. Tell me the first small step, the command to run, and how we verify it.";
@@ -19,7 +27,7 @@ const narrationPrompt =
   "Create an ElevenLabs narration plan for this demo. Write an honest script tied to the visible actions, generate the voiceover, mux it with the video, then verify duration, audio stream, and playback.";
 
 const skillInstallCommand =
-  "$skillDir = 'D:\\workspace\\.codex\\skills\\think-for-me-mode'; New-Item -ItemType Directory -Force -Path $skillDir; Invoke-WebRequest -Uri 'https://illcoai.tech/tools/think-for-me-mode/skill' -OutFile (Join-Path $skillDir 'SKILL.md')";
+  "$skillDir = 'D:\\workspace\\.codex\\skills\\think-for-me-mode'; New-Item -ItemType Directory -Force -Path $skillDir; Invoke-WebRequest -Uri 'https://illcoai.tech/tools/think-for-me-mode/skill' -OutFile (Join-Path $skillDir 'SKILL.md') -UseBasicParsing";
 
 const skillVerifyCommand =
   "$skillPath = 'D:\\workspace\\.codex\\skills\\think-for-me-mode\\SKILL.md'; $text = Get-Content -LiteralPath $skillPath -Raw; if ($text.StartsWith('---') -and $text.Contains('name: think-for-me-mode') -and $text.Contains('## OpenAI Agents SDK View') -and $text.Contains('## ElevenLabs Narration')) { 'Think For Me skill verified' } else { throw 'Think For Me skill is missing required sections' }";
@@ -65,7 +73,12 @@ const narrationRedoRules = [
   "Redo if the final MP4 fails playback or the narration hides important visual proof.",
 ];
 
-export default function ThinkForMeModePage() {
+export default async function ThinkForMeModePage() {
+  const access = await getProductAccess(productId);
+  if (!access.allowed) {
+    return <LockedThinkForMeMode reason={access.reason} signedIn={Boolean(access.user)} checkoutReady={canDirectCheckoutPublicProduct(productId)} />;
+  }
+
   return (
     <div className="fallbackPage appLandingPage">
       <div className="workspace appLandingWorkspace thinkForMeWorkspace">
@@ -88,6 +101,9 @@ export default function ThinkForMeModePage() {
             <p>
               A simple operating mode for messy projects: choose the next best move, use the CLI for evidence, avoid risky changes,
               and verify before calling work done.
+            </p>
+            <p className="thinkForMeAccessNotice">
+              Unlocked for {access.isAdmin ? "admin access" : access.matchingPurchase?.productName || "paid account access"}.
             </p>
             <div className="heroProofBadges" aria-label="Think For Me operating model">
               <span><strong>Goal</strong> destination</span>
@@ -158,6 +174,93 @@ export default function ThinkForMeModePage() {
           <CopyPromptBlock label="Copy install command" prompt={skillInstallCommand} />
           <CopyPromptBlock label="Copy verify command" prompt={skillVerifyCommand} />
           <CopyPromptBlock label="Copy SKILL.md" prompt={thinkForMeSkillMarkdown} />
+        </section>
+      </div>
+    </div>
+  );
+}
+
+function LockedThinkForMeMode({
+  reason,
+  signedIn,
+  checkoutReady,
+}: {
+  reason: string;
+  signedIn: boolean;
+  checkoutReady: boolean;
+}) {
+  return (
+    <div className="fallbackPage appLandingPage">
+      <div className="workspace appLandingWorkspace thinkForMeWorkspace">
+        <nav className="appLandingNav" aria-label="Think For Me locked navigation">
+          <a className="brandBlock" href="/tools">
+            <span className="brandGlyph">IC</span>
+            <strong>ILLCO Tools</strong>
+          </a>
+          <div>
+            <a className="button secondary" href="/tools">Back to Tools</a>
+            <a className="button secondary" href={`/account?returnTo=${encodeURIComponent(productReturnTo)}`}>
+              {signedIn ? "Account" : "Sign in"}
+            </a>
+          </div>
+        </nav>
+
+        <section className="panel thinkForMeLockedHero">
+          <div>
+            <span className="readinessPill pending">Paid Unlock</span>
+            <h1>Think For Me Mode is locked</h1>
+            <p>
+              This is a paid ILLCO workflow product. The prompts, install command, verification command, and `SKILL.md` download stay hidden until a paid Studio subscription is attached to the signed-in account.
+            </p>
+            <div className="heroProofBadges" aria-label="Locked product facts">
+              <span><strong>Product</strong> Think For Me Mode</span>
+              <span><strong>Plan</strong> Studio</span>
+              <span><strong>Access</strong> paid account</span>
+            </div>
+          </div>
+          <div className="thinkForMeLockCard">
+            <span>Access status</span>
+            <strong>Locked until paid</strong>
+            <p>{reason}</p>
+            <div className="thinkForMeLockActions">
+              {checkoutReady ? (
+                <form action="/api/subscriptions/checkout" method="post" className="inlineCheckoutForm">
+                  <input type="hidden" name="planId" value={productPlanId} />
+                  <input type="hidden" name="productId" value={productId} />
+                  <input type="hidden" name="returnTo" value={productReturnTo} />
+                  <button className="button primary" type="submit">
+                    Unlock Studio Access
+                  </button>
+                </form>
+              ) : (
+                <a className="button primary" href="/#request">Request Unlock</a>
+              )}
+              <a className="button secondary" href={`/account?returnTo=${encodeURIComponent(productReturnTo)}`}>
+                {signedIn ? "Check Account Access" : "Sign In First"}
+              </a>
+            </div>
+          </div>
+        </section>
+
+        <section className="thinkForMeGrid">
+          <article className="panel thinkForMeInfoPanel">
+            <h2>What Unlocks</h2>
+            <ul>
+              <li>Starter prompts for project execution.</li>
+              <li>Agent SDK keep-or-redo decision rules.</li>
+              <li>ElevenLabs narration quality rules.</li>
+              <li>Downloadable Codex `SKILL.md` install package.</li>
+            </ul>
+          </article>
+          <article className="panel thinkForMeInfoPanel">
+            <h2>Why It Is Locked</h2>
+            <ul>
+              <li>The page contains the actual product content.</li>
+              <li>The skill file is a deliverable, not a public preview.</li>
+              <li>Paid accounts keep access and receipts together.</li>
+              <li>Admin accounts remain unlocked for support and testing.</li>
+            </ul>
+          </article>
         </section>
       </div>
     </div>

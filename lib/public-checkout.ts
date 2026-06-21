@@ -6,6 +6,7 @@ export function canDirectCheckoutPublicProduct(productId: string) {
   const monetization = getMonetizationPlan(productId);
   if (!monetization?.publicInFunnel) return false;
   if (monetization.healthGate.behavior !== "allow-checkout") return false;
+  if (!monetization.needsDemoVideo) return true;
   return getProofState(productId).ready;
 }
 

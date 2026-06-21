@@ -5178,6 +5178,77 @@ td a {
   line-height: 1.55;
 }
 
+.thinkForMeAccessNotice {
+  width: fit-content;
+  margin-top: 14px;
+  border: 1px solid rgba(66, 217, 120, 0.28);
+  border-radius: 12px;
+  background: rgba(66, 217, 120, 0.1);
+  color: #d7ffe3;
+  padding: 10px 12px;
+  font-size: 0.88rem;
+  font-weight: 760;
+}
+
+.thinkForMeLockedHero {
+  display: grid;
+  grid-template-columns: minmax(0, 1.08fr) minmax(320px, 0.92fr);
+  gap: 20px;
+  align-items: stretch;
+  border-color: rgba(255, 186, 58, 0.24);
+  background:
+    radial-gradient(circle at 18% 10%, rgba(255, 186, 58, 0.18), transparent 34%),
+    radial-gradient(circle at 92% 18%, rgba(154, 203, 255, 0.16), transparent 30%),
+    rgba(5, 12, 27, 0.86);
+}
+
+.thinkForMeLockedHero h1 {
+  margin: 14px 0 12px;
+  color: #ffffff;
+  font-size: clamp(2.5rem, 6vw, 5.2rem);
+  line-height: 0.95;
+}
+
+.thinkForMeLockedHero p {
+  max-width: 780px;
+  color: rgba(232, 239, 252, 0.84);
+  font-size: 1.04rem;
+  line-height: 1.55;
+}
+
+.thinkForMeLockCard {
+  display: grid;
+  align-content: center;
+  gap: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.13);
+  border-radius: 16px;
+  background:
+    linear-gradient(145deg, rgba(255, 255, 255, 0.11), rgba(255, 255, 255, 0.04)),
+    rgba(3, 10, 24, 0.56);
+  box-shadow: 0 26px 70px rgba(0, 0, 0, 0.34);
+  padding: 22px;
+}
+
+.thinkForMeLockCard span {
+  color: #ffda7a;
+  font-size: 0.74rem;
+  font-weight: 850;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.thinkForMeLockCard strong {
+  color: #ffffff;
+  font-size: clamp(1.55rem, 3vw, 2.35rem);
+  line-height: 1.04;
+}
+
+.thinkForMeLockActions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
 .thinkForMePromptBlock {
   display: grid;
   gap: 10px;
@@ -6062,6 +6133,7 @@ td a {
 
 @media (max-width: 980px) {
   .thinkForMeHero,
+  .thinkForMeLockedHero,
   .thinkForMeGrid,
   .thinkForMeSplit {
     grid-template-columns: 1fr;

@@ -2,7 +2,6 @@ import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import test from "node:test";
 
-import { GET } from "../app/tools/think-for-me-mode/skill/route";
 import { getAppFunnelState } from "../lib/app-funnel";
 import { getProductById } from "../lib/deployments";
 import { getMonetizationPlan } from "../lib/monetization";
@@ -11,6 +10,8 @@ import { thinkForMeSkillMarkdown } from "../lib/think-for-me-skill";
 
 const toolsInterfaceSource = readFileSync("components/illco-tools-interface.tsx", "utf8");
 const helperPageSource = readFileSync("app/tools/think-for-me-mode/page.tsx", "utf8");
+const skillRouteSource = readFileSync("app/tools/think-for-me-mode/skill/route.ts", "utf8");
+const productAccessSource = readFileSync("lib/product-access.ts", "utf8");
 const copyPromptSource = readFileSync("components/copy-prompt-block.tsx", "utf8");
 const appLandingSource = readFileSync("app/apps/[productId]/page.tsx", "utf8");
 const sitemapSource = readFileSync("app/sitemap.ts", "utf8");
@@ -39,6 +40,7 @@ test("Think For Me page explains when to keep or redo agent and narration workfl
   assert.match(helperPageSource, /Copy install command/);
   assert.match(helperPageSource, /Copy verify command/);
   assert.match(helperPageSource, /Invoke-WebRequest -Uri 'https:\/\/illcoai\.tech\/tools\/think-for-me-mode\/skill'/);
+  assert.match(helperPageSource, /-UseBasicParsing/);
   assert.match(helperPageSource, /New-Item -ItemType Directory -Force/);
   assert.match(helperPageSource, /Think For Me skill verified/);
   assert.match(helperPageSource, /## OpenAI Agents SDK View/);
@@ -71,9 +73,9 @@ test("Think For Me Mode is locked as a paid Studio product", () => {
   assert.equal(product.productionUrl, "https://illco-command.vercel.app/tools/think-for-me-mode");
   assert.ok(monetization);
   assert.equal(monetization.publicInFunnel, true);
-  assert.equal(monetization.needsDemoVideo, true);
-  assert.equal(monetization.healthGate.behavior, "manual-review");
-  assert.equal(canDirectCheckoutPublicProduct("think-for-me-mode"), false);
+  assert.equal(monetization.needsDemoVideo, false);
+  assert.equal(monetization.healthGate.behavior, "allow-checkout");
+  assert.equal(canDirectCheckoutPublicProduct("think-for-me-mode"), true);
 
   const state = getAppFunnelState(product);
   assert.equal(state.accessLabel, "Guided setup");
@@ -89,9 +91,16 @@ test("Think For Me Mode app landing uses the product image", () => {
   assert.match(productImageSource, /ELEVENLABS/);
 });
 
-test("Think For Me SKILL.md download route serves the shared skill markdown", async () => {
-  const response = GET();
-  assert.equal(response.headers.get("Content-Type"), "text/markdown; charset=utf-8");
-  assert.equal(response.headers.get("Content-Disposition"), 'attachment; filename="SKILL.md"');
-  assert.equal(await response.text(), thinkForMeSkillMarkdown);
+test("Think For Me page and SKILL.md route require paid product access", () => {
+  assert.match(helperPageSource, /getProductAccess\(productId\)/);
+  assert.match(helperPageSource, /LockedThinkForMeMode/);
+  assert.match(helperPageSource, /Locked until paid/);
+  assert.match(helperPageSource, /name="productId" value=\{productId\}/);
+  assert.match(helperPageSource, /name="planId" value=\{productPlanId\}/);
+  assert.match(skillRouteSource, /getProductAccess\(productId\)/);
+  assert.match(skillRouteSource, /NextResponse\.redirect/);
+  assert.match(skillRouteSource, /thinkForMeSkillMarkdown/);
+  assert.match(productAccessSource, /isTrustedAdminEmail/);
+  assert.match(productAccessSource, /purchaseUnlocksProduct/);
+  assert.match(productAccessSource, /paidStatuses/);
 });

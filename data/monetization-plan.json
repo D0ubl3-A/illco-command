@@ -9,11 +9,11 @@
   "summary": {
     "totalProducts": 119,
     "publicInFunnel": 57,
-    "needsDemoVideo": 51,
+    "needsDemoVideo": 50,
     "healthGateBehavior": {
-      "allow-checkout": 46,
+      "allow-checkout": 47,
       "block-checkout": 40,
-      "manual-review": 33
+      "manual-review": 32
     }
   },
   "products": {
@@ -145,12 +145,12 @@
         "type": "command-center",
         "href": "/tools/think-for-me-mode"
       },
-      "needsDemoVideo": true,
+      "needsDemoVideo": false,
       "publicInFunnel": true,
       "healthGate": {
-        "status": "unknown",
-        "behavior": "manual-review",
-        "reason": "No conclusive health signal exists for this live deployment."
+        "status": "healthy",
+        "behavior": "allow-checkout",
+        "reason": "Finished downloadable workflow product; access is locked behind paid account entitlement."
       }
     },
     "lyric-video-forge": {

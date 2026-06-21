@@ -1,0 +1,9 @@
+artifacts/
+artifacts-*.png
+node_modules/
+.next/
+.env*
+!.env.example
+dev-server.log
+next-start-*.log
+next-start-*.err

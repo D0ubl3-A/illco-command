@@ -16,7 +16,7 @@ function appState(productId: string) {
 test("public direct checkout requires proof-ready product coverage", () => {
   assert.equal(canDirectCheckoutPublicProduct("uap-ai-lab"), true);
   assert.equal(canDirectCheckoutPublicProduct("mastering-studio-platform"), true);
-  assert.equal(canDirectCheckoutPublicProduct("youtube-ops-vercel"), false);
+  assert.equal(canDirectCheckoutPublicProduct("youtube-ops-vercel"), true);
 });
 
 test("plan-level public checkout only passes when at least one product is proof ready", () => {
@@ -62,5 +62,5 @@ test("app landing launch links follow direct-checkout readiness", () => {
   const uapState = appState("uap-ai-lab");
   const config = getConfigurationStatus();
   assert.equal(uapState.canOpen, Boolean(config.subscriptionsReady && config.planPrices[uapState.planId]));
-  assert.equal(appState("youtube-ops-vercel").canOpen, false);
+  assert.equal(appState("youtube-ops-vercel").canOpen, Boolean(config.subscriptionsReady && config.planPrices.studio));
 });

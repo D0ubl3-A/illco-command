@@ -1300,20 +1300,33 @@ select:focus-visible {
 
 .masterAgentPage {
   align-items: stretch;
+  background:
+    linear-gradient(180deg, rgba(4, 8, 12, 0.96), rgba(8, 10, 16, 0.98)),
+    #05070b;
 }
 
 .masterAgentShell {
-  width: min(100%, 1440px);
-  max-width: 1440px;
+  width: min(100%, 1480px);
+  max-width: 1480px;
   display: grid;
-  gap: 18px;
+  gap: 16px;
+}
+
+.masterAgentHero,
+.masterAgentWorkbench {
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 8px;
+  background: rgba(7, 11, 18, 0.92);
+  box-shadow: 0 24px 80px rgba(0, 0, 0, 0.28);
 }
 
 .masterAgentHero {
+  min-height: 330px;
   display: grid;
-  grid-template-columns: minmax(0, 1.2fr) minmax(280px, 0.8fr);
+  grid-template-columns: minmax(0, 1.08fr) minmax(340px, 0.92fr);
   gap: 18px;
   overflow: hidden;
+  padding: 22px;
   position: relative;
 }
 
@@ -1322,8 +1335,8 @@ select:focus-visible {
   position: absolute;
   inset: 0;
   background:
-    linear-gradient(120deg, rgba(68, 215, 255, 0.12), transparent 44%),
-    linear-gradient(280deg, rgba(255, 51, 85, 0.14), transparent 38%);
+    linear-gradient(115deg, rgba(68, 215, 255, 0.13), transparent 45%),
+    linear-gradient(250deg, rgba(255, 51, 85, 0.12), transparent 36%);
   pointer-events: none;
 }
 
@@ -1331,57 +1344,107 @@ select:focus-visible {
   position: relative;
 }
 
+.masterAgentHeroCopy {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 18px;
+}
+
 .masterAgentHero h1 {
-  margin: 10px 0 12px;
-  font-size: clamp(2.5rem, 6vw, 5.8rem);
-  line-height: 0.9;
+  margin: 10px 0 10px;
+  color: #ffffff;
+  font-size: 5rem;
+  line-height: 0.92;
   overflow-wrap: anywhere;
 }
 
 .masterAgentHero p {
-  max-width: 780px;
+  max-width: 760px;
   margin: 0;
-  color: var(--muted);
-  line-height: 1.6;
+  color: rgba(230, 238, 248, 0.78);
+  font-size: 1.08rem;
+  line-height: 1.55;
 }
 
-.masterAgentSystemCard,
-.masterAgentSummary {
-  display: grid;
+.masterAgentHeroActions,
+.masterAgentActions,
+.masterAgentCardActions,
+.masterAgentEvidence,
+.masterAgentCardFacts,
+.masterAgentCardTopline {
+  display: flex;
+  flex-wrap: wrap;
   gap: 8px;
-  border: 1px solid rgba(68, 215, 255, 0.18);
-  border-radius: var(--radius);
-  background: rgba(4, 12, 22, 0.74);
-  padding: 16px;
+  align-items: center;
 }
 
-.masterAgentSystemCard strong,
-.masterAgentSummary strong {
-  color: #ffffff;
-}
-
-.masterAgentSystemCard span,
-.masterAgentSummary span {
-  color: var(--muted);
-  line-height: 1.5;
-}
-
-.masterAgentConsole {
+.masterAgentStatusBoard {
   display: grid;
-  grid-template-columns: minmax(280px, 0.42fr) minmax(0, 1fr);
-  gap: 18px;
-  align-items: start;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+  align-content: end;
+}
+
+.masterAgentMiniStat {
+  min-height: 132px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 8px;
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.07), rgba(255, 255, 255, 0.03)),
+    rgba(2, 6, 12, 0.78);
+  padding: 14px;
+}
+
+.masterAgentMiniStat span,
+.masterAgentMeter span,
+.masterAgentCardTopline span,
+.masterAgentCardTopline small,
+.masterAgentCardFacts small,
+.masterAgentEvidence span {
+  color: rgba(230, 238, 248, 0.72);
+  font-size: 0.76rem;
+  font-weight: 800;
+  text-transform: uppercase;
+}
+
+.masterAgentMiniStat strong {
+  color: #ffffff;
+  font-size: 2rem;
+  line-height: 1;
+}
+
+.masterAgentWorkbench {
+  display: grid;
+  grid-template-columns: minmax(320px, 0.38fr) minmax(0, 1fr);
+  gap: 0;
+  align-items: stretch;
+  overflow: hidden;
+}
+
+.masterAgentCommandPanel {
+  display: grid;
+  align-content: start;
+  gap: 14px;
+  border-right: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(3, 7, 13, 0.72);
+  padding: 16px;
 }
 
 .masterAgentForm,
 .masterAgentOutput,
-.masterAgentGuidance {
+.masterAgentGuidance,
+.masterAgentPresetStack {
   display: grid;
   gap: 14px;
 }
 
 .masterAgentForm textarea {
-  min-height: 170px;
+  min-height: 220px;
   resize: vertical;
 }
 
@@ -1403,37 +1466,141 @@ select:focus-visible {
 }
 
 .masterAgentModes span {
-  min-height: 38px;
+  min-height: 58px;
   display: grid;
   place-items: center;
+  gap: 2px;
   border: 1px solid rgba(255, 255, 255, 0.12);
-  border-radius: var(--radius);
-  background: rgba(255, 255, 255, 0.04);
-  color: var(--muted);
-  font-size: 0.82rem;
-  font-weight: 850;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.045);
+  color: rgba(230, 238, 248, 0.78);
+  padding: 8px;
+  text-align: center;
+  cursor: pointer;
+}
+
+.masterAgentModes strong {
+  color: #ffffff;
+  font-size: 0.86rem;
+}
+
+.masterAgentModes small {
+  color: rgba(230, 238, 248, 0.58);
+  font-size: 0.68rem;
 }
 
 .masterAgentModes input:checked + span {
-  border-color: rgba(68, 215, 255, 0.38);
-  background: rgba(68, 215, 255, 0.12);
+  border-color: rgba(68, 215, 255, 0.56);
+  background: rgba(68, 215, 255, 0.14);
   color: #dff6ff;
 }
 
+.masterAgentSubmit {
+  min-height: 48px;
+}
+
+.masterAgentPreset {
+  width: 100%;
+  min-height: 64px;
+  display: grid;
+  grid-template-columns: 42px minmax(0, 1fr);
+  gap: 10px;
+  align-items: center;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.035);
+  color: rgba(230, 238, 248, 0.78);
+  padding: 10px;
+  text-align: left;
+  cursor: pointer;
+}
+
+.masterAgentPreset:hover {
+  border-color: rgba(68, 215, 255, 0.38);
+  background: rgba(68, 215, 255, 0.08);
+}
+
+.masterAgentPreset span {
+  display: grid;
+  place-items: center;
+  width: 34px;
+  height: 34px;
+  border-radius: 8px;
+  background: rgba(255, 51, 85, 0.14);
+  color: #ffd8df;
+  font-weight: 900;
+}
+
+.masterAgentPreset strong {
+  color: rgba(246, 249, 252, 0.9);
+  font-size: 0.86rem;
+  line-height: 1.35;
+}
+
+.masterAgentOutput {
+  min-width: 0;
+  padding: 16px;
+}
+
+.masterAgentResultHeader {
+  display: grid;
+  grid-template-columns: minmax(0, 0.88fr) minmax(340px, 0.72fr);
+  gap: 14px;
+  align-items: stretch;
+}
+
+.masterAgentResultHeader h2 {
+  margin: 8px 0 0;
+  color: #ffffff;
+  font-size: 1.6rem;
+  line-height: 1.15;
+}
+
+.masterAgentHealthGrid,
 .masterAgentStats {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 10px;
 }
 
-.masterAgentActions,
-.masterAgentCardActions,
-.masterAgentEvidence,
-.masterAgentCardFacts {
+.masterAgentMeter {
+  min-height: 112px;
+  display: grid;
+  gap: 10px;
+  align-content: space-between;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.04);
+  padding: 12px;
+}
+
+.masterAgentMeter > div:first-child {
   display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-  align-items: center;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.masterAgentMeter strong {
+  color: #ffffff;
+}
+
+.masterAgentMeter small {
+  color: rgba(230, 238, 248, 0.64);
+}
+
+.masterAgentMeterTrack {
+  height: 8px;
+  overflow: hidden;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.masterAgentMeterTrack span {
+  display: block;
+  height: 100%;
+  border-radius: inherit;
+  background: linear-gradient(90deg, #44d7ff, #ff3355);
 }
 
 .masterAgentRecommendations {
@@ -1443,20 +1610,40 @@ select:focus-visible {
 }
 
 .masterAgentCard {
+  min-width: 0;
   overflow: hidden;
   border: 1px solid rgba(255, 255, 255, 0.12);
-  border-radius: var(--radius);
-  background:
-    linear-gradient(180deg, rgba(255, 255, 255, 0.06), rgba(255, 255, 255, 0.025)),
-    rgba(5, 9, 15, 0.88);
+  border-radius: 8px;
+  background: rgba(5, 9, 15, 0.9);
 }
 
-.masterAgentCard img {
-  width: 100%;
+.masterAgentMediaFrame {
+  position: relative;
   aspect-ratio: 16 / 9;
+  overflow: hidden;
+  background: #03060c;
+}
+
+.masterAgentMediaFrame img {
+  width: 100%;
+  height: 100%;
   display: block;
   object-fit: cover;
-  background: #03060c;
+}
+
+.masterAgentMediaFrame span {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  display: grid;
+  place-items: center;
+  width: 38px;
+  height: 38px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 8px;
+  background: rgba(0, 0, 0, 0.58);
+  color: #ffffff;
+  font-weight: 900;
 }
 
 .masterAgentCardBody {
@@ -1465,28 +1652,49 @@ select:focus-visible {
   padding: 14px;
 }
 
-.masterAgentCardBody > span,
+.masterAgentCardTopline {
+  justify-content: space-between;
+}
+
+.masterAgentCardTopline span,
 .masterAgentEvidence span,
-.masterAgentCardFacts small {
+.masterAgentCardFacts small,
+.masterAgentCardTopline small {
   width: fit-content;
   border: 1px solid rgba(68, 215, 255, 0.16);
-  border-radius: var(--radius);
+  border-radius: 8px;
   background: rgba(68, 215, 255, 0.07);
   color: #dff6ff;
   padding: 6px 8px;
-  font-size: 0.72rem;
-  font-weight: 850;
+}
+
+.masterAgentCardTopline small.isOpen {
+  border-color: rgba(106, 255, 176, 0.28);
+  background: rgba(106, 255, 176, 0.1);
+  color: #c8ffdc;
+}
+
+.masterAgentCardTopline small.isCheckout {
+  border-color: rgba(255, 217, 112, 0.28);
+  background: rgba(255, 217, 112, 0.1);
+  color: #ffe9a8;
+}
+
+.masterAgentCardTopline small.isLocked {
+  border-color: rgba(255, 255, 255, 0.12);
+  background: rgba(255, 255, 255, 0.045);
+  color: rgba(230, 238, 248, 0.7);
 }
 
 .masterAgentCardBody strong {
   color: #ffffff;
-  font-size: 1.06rem;
+  font-size: 1.12rem;
   line-height: 1.2;
 }
 
 .masterAgentCardBody p {
   margin: 0;
-  color: var(--muted);
+  color: rgba(230, 238, 248, 0.7);
   line-height: 1.55;
 }
 
@@ -1501,6 +1709,85 @@ select:focus-visible {
   border-color: rgba(255, 255, 255, 0.12);
   background: rgba(255, 255, 255, 0.045);
   color: rgba(230, 238, 248, 0.82);
+}
+
+.masterAgentIdleState {
+  min-height: 420px;
+  display: grid;
+  place-items: center;
+  gap: 10px;
+  align-content: center;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  background:
+    linear-gradient(135deg, rgba(68, 215, 255, 0.08), rgba(255, 51, 85, 0.06)),
+    rgba(255, 255, 255, 0.025);
+  padding: 24px;
+  text-align: center;
+}
+
+.masterAgentIdleState strong {
+  color: #ffffff;
+  font-size: 1.35rem;
+}
+
+.masterAgentIdleState p {
+  max-width: 560px;
+  margin: 0;
+  color: rgba(230, 238, 248, 0.72);
+  line-height: 1.6;
+}
+
+.masterAgentGuidance {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.masterAgentGuidanceList ol {
+  margin: 8px 0 0;
+  padding-left: 20px;
+}
+
+.masterAgentGuidanceList li {
+  margin: 4px 0;
+  color: rgba(230, 238, 248, 0.74);
+  line-height: 1.45;
+}
+
+@media (max-width: 1080px) {
+  .masterAgentHero,
+  .masterAgentWorkbench,
+  .masterAgentResultHeader,
+  .masterAgentGuidance {
+    grid-template-columns: 1fr;
+  }
+
+  .masterAgentCommandPanel {
+    border-right: 0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  }
+}
+
+@media (max-width: 720px) {
+  .masterAgentHero {
+    min-height: auto;
+    padding: 16px;
+  }
+
+  .masterAgentHero h1 {
+    font-size: 3.2rem;
+  }
+
+  .masterAgentStatusBoard,
+  .masterAgentModes,
+  .masterAgentHealthGrid,
+  .masterAgentStats,
+  .masterAgentRecommendations {
+    grid-template-columns: 1fr;
+  }
+
+  .masterAgentMiniStat {
+    min-height: 96px;
+  }
 }
 
 .blogPage {

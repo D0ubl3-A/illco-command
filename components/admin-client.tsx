@@ -121,6 +121,20 @@ export function AdminClient({ products, config, proofAudit }: Props) {
   const [assistantBusy, setAssistantBusy] = useState(false);
 
   useEffect(() => {
+    const searchParams = new URLSearchParams(window.location.search);
+    if (window.location.hash !== "#watcher" && searchParams.get("panel") !== "watcher") return;
+
+    const scrollToWatcher = () => {
+      document.getElementById("watcher")?.scrollIntoView({ block: "start" });
+    };
+
+    scrollToWatcher();
+    const timeout = window.setTimeout(scrollToWatcher, 120);
+
+    return () => window.clearTimeout(timeout);
+  }, []);
+
+  useEffect(() => {
     let cancelled = false;
 
     async function loadWatcher() {

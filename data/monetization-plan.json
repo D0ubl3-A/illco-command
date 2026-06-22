@@ -332,7 +332,7 @@
         "type": "command-center",
         "href": "/apps/youtube-ops-vercel"
       },
-      "needsDemoVideo": true,
+      "needsDemoVideo": false,
       "publicInFunnel": true,
       "healthGate": {
         "status": "healthy",

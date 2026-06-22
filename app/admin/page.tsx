@@ -15,11 +15,19 @@ function readSearchValue(value: string | string[] | undefined) {
   return Array.isArray(value) ? value[0] || "" : value || "";
 }
 
+function adminPanelReturnTo(panel: string) {
+  return panel === "watcher" ? "/admin?panel=watcher#watcher" : "/admin";
+}
+
 export default async function AdminPage({
   searchParams,
 }: {
   searchParams: Promise<Record<string, string | string[] | undefined>>;
 }) {
+  const resolvedSearchParams = await searchParams;
+  const state = readSearchValue(resolvedSearchParams.state);
+  const panel = readSearchValue(resolvedSearchParams.panel);
+  const returnTo = adminPanelReturnTo(panel);
   const adminKeyConfigured = Boolean(getAdminKey());
   const googleOAuthConfigured = isGoogleOAuthConfigured();
   const authenticated = await isAdminAuthenticated();
@@ -35,20 +43,26 @@ export default async function AdminPage({
     return <AdminClient products={products} config={getConfigurationStatus()} proofAudit={getProofAuditSnapshot()} />;
   }
 
-  const resolvedSearchParams = await searchParams;
-  const state = readSearchValue(resolvedSearchParams.state);
-
-  return <AdminLoginGate adminKeyConfigured={adminKeyConfigured} googleOAuthConfigured={googleOAuthConfigured} state={state} />;
+  return (
+    <AdminLoginGate
+      adminKeyConfigured={adminKeyConfigured}
+      googleOAuthConfigured={googleOAuthConfigured}
+      state={state}
+      returnTo={returnTo}
+    />
+  );
 }
 
 function AdminLoginGate({
   adminKeyConfigured,
   googleOAuthConfigured,
   state,
+  returnTo,
 }: {
   adminKeyConfigured: boolean;
   googleOAuthConfigured: boolean;
   state: string;
+  returnTo: string;
 }) {
   const message = !adminKeyConfigured && !googleOAuthConfigured
     ? "Admin access is unavailable for this deployment."
@@ -72,12 +86,13 @@ function AdminLoginGate({
         <section className="panel accountCard">
           {message ? <div className="resultBox">{message}</div> : null}
           {googleOAuthConfigured ? (
-            <a className="button primary googleButton" href="/api/account/google/start?returnTo=%2Fadmin">
+            <a className="button primary googleButton" href={`/api/account/google/start?returnTo=${encodeURIComponent(returnTo)}`}>
               Continue with Google
             </a>
           ) : null}
           {adminKeyConfigured ? (
             <form action={authenticateAdmin} className="formStack">
+              <input type="hidden" name="returnTo" value={returnTo} />
               <label className="field">
                 <span>Access key</span>
                 <input type="password" name="adminKey" autoComplete="current-password" required maxLength={512} />

@@ -11,8 +11,15 @@ import {
   isSensitiveValueMatch,
 } from "./auth";
 
+type AdminReturnTo = "/admin" | "/admin?panel=watcher#watcher";
+
 function readFormValue(value: FormDataEntryValue | null) {
   return typeof value === "string" ? value : "";
+}
+
+function safeAdminReturnTo(value: FormDataEntryValue | null): AdminReturnTo {
+  const raw = readFormValue(value).trim();
+  return raw === "/admin?panel=watcher#watcher" ? raw : "/admin";
 }
 
 export async function authenticateAdmin(formData: FormData) {
@@ -23,6 +30,7 @@ export async function authenticateAdmin(formData: FormData) {
   }
 
   const submittedKey = readFormValue(formData.get("adminKey"));
+  const returnTo = safeAdminReturnTo(formData.get("returnTo"));
 
   if (!isSensitiveValueMatch(submittedKey, adminKey)) {
     redirect("/admin?state=denied");
@@ -37,5 +45,5 @@ export async function authenticateAdmin(formData: FormData) {
     secure: process.env.NODE_ENV === "production",
   });
 
-  redirect("/admin");
+  redirect(returnTo);
 }

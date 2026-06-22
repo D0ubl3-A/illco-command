@@ -1,9 +1,16 @@
-﻿import { getProductById, products } from "@/lib/deployments";
+import { getProductById, products } from "@/lib/deployments";
+import { YOUTUBE_OPS_APP_URL, YOUTUBE_OPS_PRODUCT_ID } from "@/lib/youtube-ops-integration";
+
+function getAccountBridgeHref(productId: string, returnTo: string) {
+  const params = new URLSearchParams({ productId, returnTo });
+  return `/api/account/bridge/start?${params.toString()}`;
+}
 
 const localToolRoutes: Record<string, string> = {
   "ai-companions-recovered": "/tools",
   "think-for-me-mode": "/tools/think-for-me-mode",
   "lyric-video-forge": "/tools/lyric-video-forge",
+  [YOUTUBE_OPS_PRODUCT_ID]: getAccountBridgeHref(YOUTUBE_OPS_PRODUCT_ID, YOUTUBE_OPS_APP_URL),
 };
 
 export function getProductLandingHref(productId: string) {

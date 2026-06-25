@@ -1,6 +1,6 @@
 "use client";
 
-import { type FormEvent, useMemo, useState } from "react";
+import { type FormEvent, useEffect, useMemo, useState } from "react";
 
 type MasterAgentRecommendation = {
   id: string;
@@ -49,6 +49,15 @@ type MasterAgentResponse = {
   detail?: string;
 };
 
+type MasterAgentPopupState = {
+  title: string;
+  eyebrow: string;
+  description: string;
+  href: string;
+  cta: string;
+  external: boolean;
+};
+
 const modeOptions = [
   { value: "route", label: "Route", note: "Best path" },
   { value: "sell", label: "Sell", note: "Buyer flow" },
@@ -77,6 +86,7 @@ export function MasterAgentPanel() {
   const [result, setResult] = useState<MasterAgentResponse | null>(null);
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [popup, setPopup] = useState<MasterAgentPopupState | null>(null);
 
   const inventory = result?.inventory;
   const recommendations = useMemo(() => result?.recommendations || [], [result]);
@@ -107,6 +117,27 @@ export function MasterAgentPanel() {
     } finally {
       setIsLoading(false);
     }
+  }
+
+  useEffect(() => {
+    if (!popup) return;
+
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        setPopup(null);
+      }
+    };
+
+    window.addEventListener("keydown", onKeyDown);
+    return () => window.removeEventListener("keydown", onKeyDown);
+  }, [popup]);
+
+  function openPopup(popupState: MasterAgentPopupState) {
+    setPopup(popupState);
+  }
+
+  function closePopup() {
+    setPopup(null);
   }
 
   return (
@@ -209,9 +240,23 @@ export function MasterAgentPanel() {
               {result.actions?.length ? (
                 <div className="masterAgentActions">
                   {result.actions.map((action) => (
-                    <a className="button secondary" href={action.href} key={`${action.kind}-${action.href}`}>
+                    <button
+                      className="button secondary"
+                      type="button"
+                      key={`${action.kind}-${action.href}`}
+                      onClick={() =>
+                        openPopup({
+                          title: "Master Agent action",
+                          eyebrow: action.kind,
+                          description: action.label,
+                          href: action.href,
+                          cta: action.label,
+                          external: action.href.startsWith("http"),
+                        })
+                      }
+                    >
                       {action.label}
-                    </a>
+                    </button>
                   ))}
                 </div>
               ) : null}
@@ -246,22 +291,80 @@ export function MasterAgentPanel() {
                       </div>
                       <div className="masterAgentCardActions">
                         {item.openHref ? (
-                          <a className="button primary" href={item.openHref} target={item.openHref.startsWith("http") ? "_blank" : undefined} rel="noreferrer">
+                          <button
+                            className="button primary"
+                            type="button"
+                            onClick={() => {
+                              const openHref = item.openHref || item.detailsHref;
+                              openPopup({
+                                title: item.name,
+                                eyebrow: "Open",
+                                description: item.summary,
+                                href: openHref,
+                                cta: "Open",
+                                external: openHref.startsWith("http"),
+                              });
+                            }}
+                          >
                             Open
-                          </a>
+                          </button>
                         ) : (
-                          <a className="button primary" href={item.detailsHref}>
+                          <button
+                            className="button primary"
+                            type="button"
+                            onClick={() =>
+                              openPopup({
+                                title: item.name,
+                                eyebrow: "Details",
+                                description: item.summary,
+                                href: item.detailsHref,
+                                cta: "Details",
+                                external: item.detailsHref.startsWith("http"),
+                              })
+                            }
+                          >
                             Details
-                          </a>
+                          </button>
                         )}
-                        <a className="button secondary" href={item.requestHref}>
+                        <button
+                          className="button secondary"
+                          type="button"
+                          onClick={() =>
+                            openPopup({
+                              title: item.name,
+                              eyebrow: "Request",
+                              description: item.reason,
+                              href: item.requestHref,
+                              cta: "Request",
+                              external: item.requestHref.startsWith("http"),
+                            })
+                          }
+                        >
                           Request
-                        </a>
+                        </button>
                       </div>
                     </div>
                   </article>
                 ))}
               </div>
+
+              {popup ? (
+                <div className="masterAgentPopupBackdrop" role="presentation" onClick={closePopup}>
+                  <div className="masterAgentPopup" role="dialog" aria-modal="true" aria-labelledby="master-agent-popup-title" aria-describedby="master-agent-popup-copy" onClick={(event) => event.stopPropagation()}>
+                    <span className="readinessPill neutral">{popup.eyebrow}</span>
+                    <h2 id="master-agent-popup-title">{popup.title}</h2>
+                    <p id="master-agent-popup-copy">{popup.description}</p>
+                    <div className="masterAgentPopupActions">
+                      <button className="button secondary" type="button" onClick={closePopup}>
+                        Close
+                      </button>
+                      <a className="button primary" href={popup.href} target={popup.external ? "_blank" : undefined} rel={popup.external ? "noreferrer" : undefined}>
+                        {popup.cta}
+                      </a>
+                    </div>
+                  </div>
+                </div>
+              ) : null}
 
               <div className="masterAgentGuidance">
                 <GuidanceList title="Next steps" items={result.nextSteps || []} />

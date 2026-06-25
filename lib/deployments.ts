@@ -107,6 +107,7 @@ export const deploymentProjects = [
   { name: "debate-league-jcld", productionUrl: "https://debate-league-jcld-illcoai.vercel.app", updated: "43d", nodeVersion: "24.x" },
   { name: "bigo-live-news", productionUrl: "https://bigo-live-news.vercel.app", updated: "43d", nodeVersion: "24.x" },
   { name: "radio-edit-studio", productionUrl: "https://radio-edit-studio.vercel.app", updated: "43d", nodeVersion: "24.x" },
+  { name: "dj-curse-reverse", productionUrl: "https://dj-curse-reverse.vercel.app", updated: "live monetized launch", nodeVersion: "24.x" },
   { name: "assets", productionUrl: "https://assets-eta-two.vercel.app", updated: "44d", nodeVersion: "24.x" },
   { name: "sora2-petition", productionUrl: "https://sora2-petition.vercel.app", updated: "46d", nodeVersion: "24.x" },
   { name: "aaron", productionUrl: null, updated: "46d", nodeVersion: "24.x" },
@@ -263,6 +264,12 @@ const productOverridesByName: Record<string, ProductOverride> = {
     subscriptionTier: "Studio",
     licenseMode: "seat",
   },
+  "dj-curse-reverse": {
+    displayName: "DJ Curse Reverse",
+    category: "media",
+    subscriptionTier: "Core",
+    licenseMode: "subscription",
+  },
 };
 
 function slugify(value: string) {
@@ -330,6 +337,7 @@ export const featuredProductIds = [
   "youtube-ops-vercel",
   "sora-vault-cloud",
   "mastering-studio-platform",
+  "dj-curse-reverse",
   "visual-voice-board",
   "uap-ai-lab",
   "illcoflow",

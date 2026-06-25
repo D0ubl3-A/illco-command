@@ -3,6 +3,7 @@ import { NextResponse } from "next/server";
 import { safeAccountReturnTo } from "@/lib/account-return";
 import {
   GOOGLE_OAUTH_COOKIE_MAX_AGE_SECONDS,
+  GOOGLE_OAUTH_MODE_COOKIE,
   GOOGLE_OAUTH_RETURN_COOKIE,
   GOOGLE_OAUTH_STATE_COOKIE,
   GOOGLE_OAUTH_VERIFIER_COOKIE,
@@ -31,6 +32,7 @@ export async function GET(request: Request) {
   const requestUrl = new URL(request.url);
   const returnTo = safeAccountReturnTo(requestUrl.searchParams.get("returnTo"));
   const loginHint = requestUrl.searchParams.get("loginHint");
+  const mode = requestUrl.searchParams.get("mode") === "signup" ? "signup" : "signin";
   const state = createGoogleOAuthState();
   const verifier = createGooglePkceVerifier();
   const authorizationUrl = buildGoogleAuthorizationUrl({
@@ -57,6 +59,13 @@ export async function GET(request: Request) {
     secure,
   });
   response.cookies.set(GOOGLE_OAUTH_RETURN_COOKIE, returnTo, {
+    httpOnly: true,
+    maxAge: GOOGLE_OAUTH_COOKIE_MAX_AGE_SECONDS,
+    path: cookiePath,
+    sameSite: "lax",
+    secure,
+  });
+  response.cookies.set(GOOGLE_OAUTH_MODE_COOKIE, mode, {
     httpOnly: true,
     maxAge: GOOGLE_OAUTH_COOKIE_MAX_AGE_SECONDS,
     path: cookiePath,

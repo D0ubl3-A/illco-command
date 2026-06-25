@@ -4,12 +4,78 @@ import { getPreferredShowcaseVideo } from "@/lib/demo-videos";
 import { getProductDisplayHref } from "@/lib/product-routes";
 import { getProjectCompletionRecord } from "@/lib/project-completion";
 
-const customProductImages: Record<string, string> = {};
+const customProductImages: Record<string, string> = {
+  automateflow: "/products/custom/instant-lead-rescue-text-back-ai.jpg",
+  "ai-companion-command-routing": "/products/custom/think-for-me-mode-command-center.jpg",
+  "ai-companion-conversational-intake": "/products/custom/instant-lead-rescue-text-back-ai.jpg",
+  "ai-companion-sales-agent-handoff": "/products/custom/instant-lead-rescue-text-back-ai.jpg",
+  "ai-music-mastering-pro": "/products/custom/ill-motion-ai-music-video.jpg",
+  "barz-web-studio": "/products/custom/ill-motion-ai-music-video.jpg",
+  "cinematic-ai-music-video-production": "/products/custom/ill-motion-ai-music-video.jpg",
+  "codex-agent-app": "/products/custom/think-for-me-mode-command-center.jpg",
+  "dj-curse-reverse": "/products/custom/dj-curse-reverse.jpg",
+  "full-hd-lyric-videos": "/products/custom/ill-motion-ai-music-video.jpg",
+  "godmode-ui": "/products/custom/think-for-me-mode-command-center.jpg",
+  "ill-motion-ai": "/products/custom/ill-motion-ai-music-video.jpg",
+  "illco-ai-video": "/products/custom/illcoai-video-generator-dashboard.jpg",
+  "illcoai-video-generator-deploy": "/products/custom/illcoai-video-generator-dashboard.jpg",
+  "lyric-video-forge": "/products/custom/ill-motion-ai-music-video.jpg",
+  "mastering-studio-platform": "/products/custom/ill-motion-ai-music-video.jpg",
+  "music-video-clip-site": "/products/custom/ill-motion-ai-music-video.jpg",
+  "nexus-workstation": "/products/custom/think-for-me-mode-command-center.jpg",
+  "rap-lyric-generator": "/products/custom/ill-motion-ai-music-video.jpg",
+  "sora-catalog-vercel-preview": "/products/custom/illcoai-video-generator-dashboard.jpg",
+  "sora-vault-cloud": "/products/custom/illcoai-video-generator-dashboard.jpg",
+  "testimonial-to-marketing-asset-generator": "/products/custom/illcoai-video-generator-dashboard.jpg",
+  "viral-stitch-ai": "/products/custom/youtube-ops-command-center.jpg",
+  "voice-book-tool": "/products/custom/think-for-me-mode-command-center.jpg",
+  "youtube-ops-vercel": "/products/custom/youtube-ops-command-center.jpg",
+  "youtube-rank-revival-ai-pro": "/products/custom/youtube-ops-command-center.jpg",
+};
 
 export function getProductViralImagePath(product: ProductRecord) {
   const customImage = customProductImages[product.id];
   if (customImage) return customImage;
+
+  const matchedImage = getProductImageFamilyPath(product);
+  if (matchedImage) return matchedImage;
+
   return `/products/generated/${product.id}.jpg`;
+}
+
+function getProductImageFamilyPath(product: ProductRecord) {
+  const key = `${product.id} ${product.name} ${product.displayName}`.toLowerCase();
+
+  if (/(dj|serato|radio-edit|beat|audio|mastering|song|rap|barz)/.test(key)) {
+    return product.id.includes("dj") || /serato|radio-edit|beat/.test(key)
+      ? "/products/custom/dj-curse-reverse.jpg"
+      : "/products/custom/ill-motion-ai-music-video.jpg";
+  }
+
+  if (/(lyric|music-video|ill-motion|lipsync|sora|video|clip|stitch|visual|slideshow|testimonial)/.test(key)) {
+    return /youtube|rank|stitch/.test(key)
+      ? "/products/custom/youtube-ops-command-center.jpg"
+      : "/products/custom/illcoai-video-generator-dashboard.jpg";
+  }
+
+  if (/(youtube|creator|rank|content|publish|thumbnail)/.test(key)) {
+    return "/products/custom/youtube-ops-command-center.jpg";
+  }
+
+  if (/(lead|crm|sales|proposal|gmail|linkedin|reply|whatsapp|intake|bot|flow|automate|funnel|pool|garden|airbnb|realtor|real-estate|rental)/.test(key)) {
+    return "/products/custom/instant-lead-rescue-text-back-ai.jpg";
+  }
+
+  if (/(codex|agent|command|ops|workspace|workstation|nexus|gateway|hq|admin|godmode|tool|appiverse|platform|enterprise)/.test(key)) {
+    return "/products/custom/think-for-me-mode-command-center.jpg";
+  }
+
+  if (product.category === "realEstate") return "/products/custom/instant-lead-rescue-text-back-ai.jpg";
+  if (product.category === "media") return "/products/custom/illcoai-video-generator-dashboard.jpg";
+  if (product.category === "automation" || product.category === "commerce") return "/products/custom/instant-lead-rescue-text-back-ai.jpg";
+  if (product.category === "command" || product.category === "backend" || product.category === "experimental") return "/products/custom/think-for-me-mode-command-center.jpg";
+
+  return null;
 }
 
 export function getProductListingKicker(product: ProductRecord) {
@@ -50,6 +116,11 @@ export function getProductViralImageSvg(product: ProductRecord) {
   const sourceLine = source.length > 28 ? `${source.slice(0, 28)}...` : source;
   const pathLine = url.length > 28 ? `${url.slice(0, 28)}...` : url;
   const demoVideo = getPreferredShowcaseVideo(product.id);
+  const demoStatusLabel = demoVideo?.youtubeVideoId
+    ? "VIDEO DEMO READY"
+    : product.isLive
+      ? "PROOF PENDING"
+      : "SETUP PREVIEW";
   const demoFrameMarkup = demoVideo?.youtubeVideoId
     ? getDemoVideoFrameMarkup(demoVideo.youtubeVideoId, theme)
     : getFallbackDeviceFrameMarkup(theme);
@@ -160,7 +231,7 @@ export function getProductViralImageSvg(product: ProductRecord) {
     </g>
     <g transform="translate(26 444)">
       <rect x="0" y="0" width="352" height="36" rx="16" fill="${theme.accentB}" opacity=".18"/>
-      <text x="16" y="25" fill="#ecddc5" font-family="'Segoe UI', Arial, sans-serif" font-size="20" font-weight="900">VIDEO DEMO READY</text>
+      <text x="16" y="25" fill="#ecddc5" font-family="'Segoe UI', Arial, sans-serif" font-size="20" font-weight="900">${escapeSvg(demoStatusLabel)}</text>
     </g>
   </g>
 

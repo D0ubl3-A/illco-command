@@ -4,6 +4,7 @@ import { NextResponse } from "next/server";
 import { safeAccountReturnTo } from "@/lib/account-return";
 import {
   GOOGLE_OAUTH_RETURN_COOKIE,
+  GOOGLE_OAUTH_MODE_COOKIE,
   GOOGLE_OAUTH_STATE_COOKIE,
   GOOGLE_OAUTH_VERIFIER_COOKIE,
   exchangeGoogleAuthorizationCode,
@@ -30,6 +31,7 @@ function clearOauthCookies(response: NextResponse) {
     response.cookies.set(GOOGLE_OAUTH_STATE_COOKIE, "", options);
     response.cookies.set(GOOGLE_OAUTH_VERIFIER_COOKIE, "", options);
     response.cookies.set(GOOGLE_OAUTH_RETURN_COOKIE, "", options);
+    response.cookies.set(GOOGLE_OAUTH_MODE_COOKIE, "", options);
   }
 }
 
@@ -59,6 +61,7 @@ export async function GET(request: Request) {
   const expectedState = cookieStore.get(GOOGLE_OAUTH_STATE_COOKIE)?.value || "";
   const verifier = cookieStore.get(GOOGLE_OAUTH_VERIFIER_COOKIE)?.value || "";
   const returnTo = safeAccountReturnTo(cookieStore.get(GOOGLE_OAUTH_RETURN_COOKIE)?.value || "");
+  const mode = cookieStore.get(GOOGLE_OAUTH_MODE_COOKIE)?.value === "signup" ? "signup" : "signin";
   if (!code || !state || !expectedState || !verifier || state !== expectedState) {
     return redirectWithClearedCookies(request, "google-failed");
   }
@@ -76,7 +79,7 @@ export async function GET(request: Request) {
       avatarUrl: profile.avatarUrl,
     });
     const sessionToken = await createUserSessionCookieValue(user.id);
-    const response = NextResponse.redirect(returnTo ? new URL(returnTo, request.url) : accountUrl(request, "google-signed-in"));
+    const response = NextResponse.redirect(returnTo ? new URL(returnTo, request.url) : accountUrl(request, mode === "signup" ? "google-created" : "google-signed-in"));
     setUserSessionCookieOnResponse(response, sessionToken);
     clearOauthCookies(response);
     return response;

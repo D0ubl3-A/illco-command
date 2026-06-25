@@ -11,6 +11,7 @@ const GOOGLE_SCOPES = ["openid", "email", "profile"];
 export const GOOGLE_OAUTH_STATE_COOKIE = "illco_google_oauth_state";
 export const GOOGLE_OAUTH_VERIFIER_COOKIE = "illco_google_oauth_verifier";
 export const GOOGLE_OAUTH_RETURN_COOKIE = "illco_google_oauth_return";
+export const GOOGLE_OAUTH_MODE_COOKIE = "illco_google_oauth_mode";
 export const GOOGLE_OAUTH_COOKIE_MAX_AGE_SECONDS = 10 * 60;
 
 type GoogleTokenResponse = {

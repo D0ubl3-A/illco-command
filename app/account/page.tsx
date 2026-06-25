@@ -11,6 +11,7 @@ import {
 import { safeAccountReturnTo } from "@/lib/account-return";
 import { isTrustedAdminEmail } from "@/lib/admin-identities";
 import { hydrateCheckoutSuccess } from "@/lib/checkout-success";
+import { isCommandPaymentUnlockProduct } from "@/lib/command-payment-products";
 import { isGoogleOAuthConfigured } from "@/lib/google-oauth";
 import {
   attachCheckoutSessionToUser,
@@ -35,9 +36,10 @@ function normalizeEmail(value: string | null | undefined) {
   return raw || null;
 }
 
-function googleStartHref(returnTo: string) {
+function googleStartHref(returnTo: string, mode: "signin" | "signup" = "signin") {
   const params = new URLSearchParams();
   if (returnTo) params.set("returnTo", returnTo);
+  if (mode === "signup") params.set("mode", "signup");
   const query = params.toString();
   return `/api/account/google/start${query ? `?${query}` : ""}`;
 }
@@ -123,6 +125,7 @@ export default async function AccountPage({
     );
   const canUseSensitiveCheckoutActions = Boolean(checkoutOwnedByCurrentUser && success?.checkoutComplete);
   const canUseLicenseAndLaunchActions = Boolean((checkoutOwnedByCurrentUser || currentUserIsAdmin) && success?.checkoutComplete);
+  const commandPaymentUnlock = isCommandPaymentUnlockProduct(success?.productId);
   const successLaunchAccess =
     success?.productId && success?.launchHref
       ? resolvePurchaseLaunchAccess(success.productId, success.launchHref, { adminOverride: currentUserIsAdmin })
@@ -132,17 +135,18 @@ export default async function AccountPage({
     success?.checkoutComplete && !canUseLicenseAndLaunchActions
       ? currentUser
         ? normalizedCheckoutEmail
-          ? `This purchase is tied to ${normalizedCheckoutEmail}. Sign in with that email to unlock launch, license, and billing actions.`
+          ? `This purchase is tied to ${normalizedCheckoutEmail}. Sign in with that email to unlock launch and billing actions.`
           : "Purchase verified, but purchaser identity could not be confirmed yet. Sign in with the receipt email to continue."
         : normalizedCheckoutEmail
-          ? `Sign in with ${normalizedCheckoutEmail} to unlock launch, license, and billing actions for this purchase.`
-          : "Sign in with the purchaser email from your receipt to unlock launch, license, and billing actions."
+          ? `Sign in with ${normalizedCheckoutEmail} to unlock launch and billing actions for this purchase.`
+          : "Sign in with the purchaser email from your receipt to unlock launch and billing actions."
       : "";
   const firstName = currentUser?.name.split(" ")[0] || "";
   const authMessage = authState ? authStateMessage(authState) : "";
   const accountFormsEnabled = accountsConfigured && !accountAvailabilityMessage;
   const googleOAuthReady = isGoogleOAuthConfigured();
-  const googleAuthHref = googleOAuthReady ? googleStartHref(returnTo) : "/account?auth=google-unavailable";
+  const googleSignInHref = googleOAuthReady ? googleStartHref(returnTo, "signin") : "/account?auth=google-unavailable";
+  const googleSignUpHref = googleOAuthReady ? googleStartHref(returnTo, "signup") : "/account?auth=google-unavailable";
 
   const title = currentUser
     ? `Welcome back, ${firstName || "there"}`
@@ -189,7 +193,7 @@ export default async function AccountPage({
               </a>
             ) : null}
             {currentUserIsAdmin ? (
-              <a className="button secondary" href="/admin#watcher">
+              <a className="button secondary" href="/admin?panel=watcher#watcher">
                 Open watcher
               </a>
             ) : null}
@@ -246,7 +250,7 @@ export default async function AccountPage({
                   <p>Return to saved purchases, billing help, and app access.</p>
                 </div>
               </div>
-              <a className={`button secondary googleButton${googleOAuthReady ? "" : " isDisabled"}`} href={googleAuthHref} aria-disabled={!googleOAuthReady}>
+              <a className={`button secondary googleButton${googleOAuthReady ? "" : " isDisabled"}`} href={googleSignInHref} aria-disabled={!googleOAuthReady}>
                 Sign in with Google
               </a>
               <form action={signInUserAccount} className="formStack">
@@ -272,8 +276,8 @@ export default async function AccountPage({
                   <p>Save purchase history, app links, and future AI system handoffs.</p>
                 </div>
               </div>
-              <a className={`button secondary googleButton${googleOAuthReady ? "" : " isDisabled"}`} href={googleAuthHref} aria-disabled={!googleOAuthReady}>
-                Create with Google
+              <a className={`button secondary googleButton${googleOAuthReady ? "" : " isDisabled"}`} href={googleSignUpHref} aria-disabled={!googleOAuthReady}>
+                Sign up with Gmail
               </a>
               <form action={registerUserAccount} className="formStack">
                 <input className="honeyField" name="website" tabIndex={-1} autoComplete="off" />
@@ -441,7 +445,16 @@ export default async function AccountPage({
                 <p>Your access details appear here after the purchase is verified.</p>
               </div>
             </div>
-            {canUseLicenseAndLaunchActions && success?.licenseKey ? (
+            {commandPaymentUnlock && success?.checkoutComplete ? (
+              <div className="accountNote">
+                <strong>Command unlock</strong>
+                <span>
+                  {canUseLicenseAndLaunchActions
+                    ? "This product unlocks through your ILLCO Command account and checkout record. No license key is required."
+                    : "Sign in with the purchaser email to attach this Command unlock to your account."}
+                </span>
+              </div>
+            ) : canUseLicenseAndLaunchActions && success?.licenseKey ? (
               <div className="licensePanel">
                 <strong>{success?.productName || "ILLCO Command"} access key</strong>
                 <textarea className="licenseBox" value={success?.licenseKey || ""} readOnly />
@@ -538,6 +551,7 @@ function authStateMessage(state: string) {
     "created": "Account created. You are signed in.",
     "google-denied": "Google sign-in was cancelled.",
     "google-failed": "Google sign-in could not be completed. Check the OAuth redirect URI and try again.",
+    "google-created": "Signed up with Gmail.",
     "google-signed-in": "Signed in with Google.",
     "google-unavailable": "Google sign-in is not configured for this deployment yet.",
     "invalid": "Email or password was not accepted.",

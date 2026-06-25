@@ -1,0 +1,99 @@
+{
+  "reportName": "acquisition_readiness_metrics",
+  "visibility": "internal",
+  "publicEndpoint": false,
+  "generatedAt": "2026-06-23T00:00:00-07:00",
+  "canonicalDomain": "illcoai.tech",
+  "sourceArtifacts": {
+    "readinessLedger": "docs/ALL_APP_READINESS_LEDGER.md",
+    "monetizationPlan": "data/monetization-plan.json",
+    "projectHealth": "data/project-health.json",
+    "demoVideos": "data/demo-videos.json",
+    "projectSources": "data/project-sources.json",
+    "dataProvenanceLedger": "docs/data-provenance-ledger.md",
+    "ipAssignmentLedger": "docs/ip-assignment-ledger.md",
+    "licenseMatrix": "docs/open-source-license-matrix.md",
+    "fallbackPolicy": "docs/confidence-fallback-policy.md",
+    "subscriptionEntitlementProof": "docs/subscription-entitlement-proof.md",
+    "securityPostureSummary": "docs/security-posture-summary.md",
+    "cogsAndMarginModel": "docs/cogs-and-margin-model.md"
+  },
+  "productSnapshot": {
+    "totalProducts": 119,
+    "publicFunnelProducts": 57,
+    "checkoutAllowedProducts": 47,
+    "checkoutBlockedProducts": 40,
+    "manualReviewProducts": 32,
+    "healthCheckedProducts": 119,
+    "healthyProducts": 80,
+    "degradedProducts": 7,
+    "offlineProducts": 32,
+    "demoRecords": 48,
+    "uploadedDemoVideos": 16,
+    "uploadedTutorialVideos": 3
+  },
+  "diligenceStatus": {
+    "strategicClarity": "review_ready",
+    "productMaturity": "in_progress",
+    "aiQuality": "in_progress",
+    "dataProvenance": "missing",
+    "ipAssignment": "missing",
+    "securityPosture": "in_progress",
+    "financialMetrics": "missing",
+    "gtmProof": "in_progress",
+    "legalInventory": "in_progress"
+  },
+  "weeklyBenchmarkMetrics": {
+    "quality_score": null,
+    "false_positive_rate": null,
+    "false_negative_rate": null,
+    "confidence_pass_rate": null,
+    "drift_score": null,
+    "p50_latency_ms": null,
+    "p95_latency_ms": null,
+    "timeout_rate": null,
+    "rollback_rate": null,
+    "cost_per_request_usd": null,
+    "incident_count": null,
+    "status": "pending_first_real_run"
+  },
+  "goldenDatasetBuckets": {
+    "nominal": {
+      "status": "missing",
+      "description": "Expected common successful cases."
+    },
+    "edge": {
+      "status": "missing",
+      "description": "Valid but difficult cases."
+    },
+    "failure_history": {
+      "status": "missing",
+      "description": "Prior failures converted into tests."
+    },
+    "synthetic_hard": {
+      "status": "missing",
+      "description": "Generated stress cases approved by a reviewer."
+    },
+    "adversarial": {
+      "status": "missing",
+      "description": "Prompt injection, malformed inputs, and unsafe requests."
+    }
+  },
+  "stopRules": {
+    "outreachAllowed": false,
+    "reasons": [
+      "IP assignment status is missing.",
+    "Data provenance is not review-ready.",
+      "Benchmark report exists only as a first internal baseline, not a reproducible trend.",
+    "Confidence fallback policy exists but is not yet proven with a real incident or test case."
+    ]
+  },
+  "launchReadinessGaps": [
+    "Normal-user OAuth and active profile creation need a current end-to-end proof.",
+    "Checkout success must visibly create the correct account entitlement and subscription record.",
+    "Subscription cancellation and revocation behavior needs evidence.",
+    "Admin lead and sale notifications to admin@illcoai.tech need a live delivery test.",
+    "Every public paid product needs a working in-app route, customer-safe thumbnail, and proof asset.",
+    "Acquirer-facing claims need one attached source artifact each before outreach."
+  ]
+}

@@ -35,6 +35,24 @@ function webhookFailureDetail(error: unknown) {
   return "Lead webhook request failed.";
 }
 
+function logFallbackLeadCapture(lead: FunnelLead) {
+  const fallbackPayload = {
+    event: "illco.lead.capture_fallback",
+    adminEmails: env.leadAdminEmails,
+    lead: {
+      name: lead.name,
+      email: lead.email,
+      company: lead.company,
+      planId: lead.planId,
+      message: lead.message,
+      source: lead.source,
+      submittedAt: lead.submittedAt,
+    },
+  };
+
+  console.warn(JSON.stringify(fallbackPayload));
+}
+
 async function deliverWebhook(
   webhookUrl: string,
   payload: Record<string, unknown>,
@@ -69,13 +87,6 @@ export async function POST(request: Request) {
   const spreadsheetConfigured = Boolean(spreadsheetWebhookUrl);
   const adminNotificationConfigured = Boolean(adminNotificationWebhookUrl);
 
-  if (!spreadsheetConfigured && !adminNotificationConfigured) {
-    return NextResponse.json(
-      { detail: "Request capture is temporarily unavailable. Configure a spreadsheet webhook or admin notification webhook." },
-      { status: 503 },
-    );
-  }
-
   const body = (await request.json().catch(() => ({}))) as LeadPayload;
   if (body.website) {
     return NextResponse.json({ ok: true });
@@ -95,21 +106,39 @@ export async function POST(request: Request) {
     return NextResponse.json({ detail: "Name and valid email are required." }, { status: 400 });
   }
 
+  if (!databaseConfigured && !spreadsheetConfigured && !adminNotificationConfigured) {
+    logFallbackLeadCapture(lead);
+    return NextResponse.json({
+      ok: true,
+      fallbackCapture: true,
+      detail: "Request received. Admin capture is in fallback mode.",
+      adminEmails: env.leadAdminEmails,
+    });
+  }
+
   let storedLead: StoredLead | null = null;
+  let storageWarning = "";
   if (databaseConfigured) {
     try {
       storedLead = await recordLead(lead);
     } catch (error) {
-      return NextResponse.json(
-        { detail: "Request capture is temporarily unavailable. Please try again shortly." },
-        { status: 502 },
-      );
+      storageWarning = errorMessage(error, "Database lead storage failed.");
+      if (!spreadsheetConfigured && !adminNotificationConfigured) {
+        logFallbackLeadCapture(lead);
+        return NextResponse.json({
+          ok: true,
+          fallbackCapture: true,
+          detail: "Request received. Admin capture is in fallback mode.",
+          adminEmails: env.leadAdminEmails,
+        });
+      }
     }
   }
 
   const leadBasePayload: Record<string, unknown> = {
     ...lead,
     ...(storedLead ? { leadId: storedLead.id } : {}),
+    ...(storageWarning ? { storageWarning } : {}),
   };
 
   if (spreadsheetConfigured) {

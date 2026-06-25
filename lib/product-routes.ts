@@ -8,6 +8,8 @@ function getAccountBridgeHref(productId: string, returnTo: string) {
 
 const localToolRoutes: Record<string, string> = {
   "ai-companions-recovered": "/tools",
+  "illco-ai-video": "/apps/illco-ai-video",
+  "illcoai-video-generator-deploy": "/apps/illcoai-video-generator-deploy",
   "think-for-me-mode": "/tools/think-for-me-mode",
   "lyric-video-forge": "/tools/lyric-video-forge",
   [YOUTUBE_OPS_PRODUCT_ID]: getAccountBridgeHref(YOUTUBE_OPS_PRODUCT_ID, YOUTUBE_OPS_APP_URL),
@@ -46,6 +48,19 @@ function isKnownProductProductionHref(value: string) {
     const productionUrl = product.productionUrl?.trim();
     return Boolean(productionUrl && (value === productionUrl || value.startsWith(`${productionUrl}/`)));
   });
+}
+
+export function isPublicProductLaunchHref(href: string | null | undefined) {
+  const value = String(href || "").trim();
+  if (!value) return false;
+  if (value.startsWith("/")) return true;
+
+  try {
+    const url = new URL(value);
+    return ["illcoai.tech", "www.illcoai.tech", "illco-command.vercel.app"].includes(url.hostname.toLowerCase());
+  } catch {
+    return false;
+  }
 }
 
 export function isInAppProductHref(href: string | null | undefined) {

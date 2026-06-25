@@ -1,23 +1,23 @@
 # All-App Readiness Ledger
 
-Generated: 2026-06-17T03:36:48.986Z
+Generated: 2026-06-23T01:42:24.430Z
 
 ## Snapshot
 
-- Total products: 117
-- Public funnel products: 55
-- Working products: 46
+- Total products: 119
+- Public funnel products: 57
+- Working products: 47
 - Locked products: 40
-- Manual review products: 31
+- Manual review products: 32
 - Products needing demo video: 49
 - Proof-ready products: 17
 - Checkout-warning products: 0
 
 ## Source Freshness
 
-- Monetization snapshot: 2026-05-20T09:24:00-07:00
+- Monetization snapshot: 2026-06-21T00:43:03.811Z
 - Health snapshot: 2026-06-17T03:35:27.512Z
-- Demo snapshot: 2026-05-21T02:22:19.428Z
+- Demo snapshot: 2026-06-21T07:49:44.973Z
 
 ## Health Audit
 
@@ -80,8 +80,8 @@ Each product must end in one of two states:
 | `illco-ai-hq` | healthy | Complete manual review or keep the product request-only. |
 | `illco-ai-hq-no-mock-data` | healthy | Complete manual review or keep the product request-only. |
 | `illcoai-offline-v2` | healthy | Complete manual review or keep the product request-only. |
+| `lyric-video-forge` | unknown | Complete manual review or keep the product request-only. |
 | `notion-api-webhook-repo` | healthy | Complete manual review or keep the product request-only. |
-| `notion-vercel-backend` | healthy | Complete manual review or keep the product request-only. |
 
 ## Top Demo Queue
 
@@ -98,6 +98,7 @@ Gemini-dependent video work remains paused until explicit owner approval.
 | `online-store` | degraded | proof needed |
 | `real-estate-ai-workstation` | offline | proof needed |
 | `whatsapp-bot` | degraded | proof needed |
+| `lyric-video-forge` | unknown | proof needed |
 | `ai-companions-recovered` | healthy | proof needed |
 | `ai-dev-co-funnel` | healthy | proof exists |
 | `arc-agentic-commerce-hackathon-2026` | healthy | proof needed |
@@ -108,7 +109,6 @@ Gemini-dependent video work remains paused until explicit owner approval.
 | `gardening-site` | healthy | proof needed |
 | `gardening-site-grqp` | healthy | proof needed |
 | `ghetto-bird-robot` | healthy | proof needed |
-| `ghetto-bird-voice-ai` | healthy | proof needed |
 
 ## Current Priority Order
 

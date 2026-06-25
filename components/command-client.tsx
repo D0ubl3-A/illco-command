@@ -8,7 +8,7 @@ import { customerProductName } from "@/lib/app-funnel";
 import { getMonetizationPlan, monetizationPlan, type MonetizationPlanEntry } from "@/lib/monetization";
 import { getProductNotice } from "@/lib/product-notices";
 import { getProductViralImagePath } from "@/lib/product-marketing";
-import { getProductLandingHref, getProductModuleHref } from "@/lib/product-routes";
+import { getProductLandingHref, getProductModuleHref, isPublicProductLaunchHref } from "@/lib/product-routes";
 import {
   getGithubProofLinks,
   projectCompletionGeneratedAt,
@@ -130,7 +130,7 @@ const productProcessById: Record<string, string[]> = {
   ],
   "ai-companion-command-routing": [
     "Unify user requests across products and services.",
-    "Map each request to a destination module.",
+    "Map each request to the right tool or service path.",
     "Apply gating rules before execution.",
     "Track completion, blockers, and reopen triggers.",
     "Report back with the next best action.",
@@ -139,7 +139,7 @@ const productProcessById: Record<string, string[]> = {
 
 const productProcessByCategory: Record<ProductRecord["category"], string[]> = {
   command: [
-    "Open the command surface and confirm the active module.",
+    "Open the workspace and confirm the active tool path.",
     "Collect the operating goal and scope in one sentence.",
     "Route the job to the right app or agent.",
     "Verify outcome against the stated goal.",
@@ -202,7 +202,7 @@ const plans: Array<{
     name: "Core",
     price: "$9/mo",
     fit: "Low-cost starter access for one working product path.",
-    access: ["Command hub access", "Working module proof", "Proof video library"],
+    access: ["Account hub access", "Working tool proof", "Proof video library"],
     primaryAction: "checkout",
   },
   {
@@ -240,6 +240,15 @@ const plans: Array<{
 ];
 
 const serviceOffers: ServiceOffer[] = [
+  {
+    id: "credit-recharge",
+    name: "Credit Recharge",
+    price: "from $25",
+    fit: "Add usage credits for generation, exports, automations, or assisted runs without changing your whole plan.",
+    bestFor: "Customers who already have a tool path and need more usage capacity.",
+    turnaround: "Same-account recharge",
+    outcomes: ["Credit top-up", "Usage support", "Account-linked recharge path"],
+  },
   {
     id: "automation-audit-roadmap",
     name: "Automation Audit + 30-Day Roadmap",
@@ -492,19 +501,19 @@ export function CommandClient({ products, featuredProductIds, config, checkoutPr
       <aside className="sideRail landingNav" aria-label="Landing navigation">
         <a className="brandBlock" href="#offer" aria-label="ILLCO AI home">
           <span className="brandGlyph">
-            <img src="/brand/illco-command-logo.svg" alt="ILLCO AI logo" />
+            <img src="/brand/illco-command-logo.png" alt="ILLCO AI logo" />
           </span>
           <strong>ILLCO AI</strong>
         </a>
         <nav className="railNav">
           <a href="#offer">Start</a>
-          <a href="/tools">ILLCO Tools</a>
+          <a href="#checkout-products">Ready Tools</a>
           <a href="#services">Services</a>
           <a href="#demos">Demos</a>
           <a href="#proof">Proof</a>
-          <a href="#apps">App Modules</a>
+          <a href="#apps">Browse Apps</a>
           <a href="/account">Account</a>
-          <a href="#request">Build Request</a>
+          <a href="#request">Request Help</a>
         </nav>
       </aside>
 
@@ -528,68 +537,53 @@ export function CommandClient({ products, featuredProductIds, config, checkoutPr
           </video>
           <header className="landingHeroToolbar">
             <div>
-              <p className="heroEyebrow">ILLCO AI / appiverse command surface</p>
-              <h1>ILLCO AI</h1>
-              <p>One app directory for tools you can buy, test, unlock, and use from the same account.</p>
+              <p className="heroEyebrow">AI tools and custom systems for small teams</p>
+              <h1>Buy ready AI tools or request a custom AI system.</h1>
+              <p>Use ILLCO AI to recover leads, make content, automate follow-up, and turn repeat work into a working app.</p>
             </div>
             <div className="topActions">
-              <label className="appJumpMenu">
-                <span>Apps</span>
-                <select aria-label="Open an app landing page" defaultValue="" onChange={(event) => openAppLanding(event.target.value)}>
-                  <option value="">Browse Illco modules</option>
-                  {appMenuProducts.map((product) => {
-                    const state = getCustomerProductState(product, config);
-                    return (
-                      <option value={product.id} key={product.id}>
-                        {customerProductName(product)} - {customerMenuStatus(state.customerStatus)}
-                      </option>
-                    );
-                  })}
-                </select>
-              </label>
-              <a className="button secondary" href="/tools">Unlock Tools</a>
-              <a className="button secondary" href="#demos">Watch Demos</a>
-              <a className="button secondary" href="/account">Account</a>
-              <a className="button primary" href="#request">Build My System</a>
+              <a className="button primary" href="#request">Request My AI System</a>
+              <a className="button secondary" href="#checkout-products">Buy Ready Tools</a>
+              <a className="button secondary" href="#demos">Request Live Proof</a>
             </div>
           </header>
           <div className="posterPanel posterCopy">
             <div className="posterHeading">
-              <p className="heroEyebrow">One app + paid unlockables</p>
-              <h2>An organized AI app directory for tools you can actually buy, test, and use.</h2>
+              <p className="heroEyebrow">One clear path</p>
+              <h2>Tell us the work you want handled. We match it to a tool or build the system.</h2>
               <p className="posterLead">
-                Browse practical AI apps by category, watch proof before checkout, and keep finished modules attached to one Illco account.
+                Start with a ready product for content, lead follow-up, and automation, or request a custom build when your workflow needs a dedicated agent.
               </p>
             </div>
 
             <div className="heroStatBand">
-              <Fact label="Proof-ready apps" value={String(proofReadyOffers.length)} tone="good" />
-              <Fact label="Result proof" value={String(resultProofReadyCount)} tone={resultProofReadyCount ? "good" : "warn"} />
-              <Fact label="Full tutorials" value={String(tutorialReadyCount)} tone={tutorialReadyCount ? "good" : "warn"} />
-              <Fact label="Guided paths" value={String(setupOffers.length + guidedSetupCount + comingSoonCount)} tone="neutral" />
+              <Fact label="Ready tools" value={String(workingOffers.length)} tone="good" />
+              <Fact label="System proof" value={String(proofReadyOffers.length)} tone={proofReadyOffers.length ? "good" : "neutral"} />
+              <Fact label="Service paths" value={String(serviceOffers.length)} tone="neutral" />
+              <Fact label="Custom builds" value="Available" tone="good" />
             </div>
 
             <div className="heroActionRow">
-              <a className="button primary" href="/tools">Unlock Tools</a>
-              <a className="button secondary" href="#request">Request a Build</a>
-              <a className="button secondary" href="#apps">Browse Modules</a>
+              <a className="button primary" href="#request">Request My AI System</a>
+              <a className="button secondary" href="#checkout-products">Buy Ready Tools</a>
+              <a className="button secondary" href="#demos">Request Live Proof</a>
             </div>
 
             <div className="heroLaneGrid" aria-label="ILLCO operating lanes">
               <div className="heroLane">
                 <span>Buy</span>
-                <strong>Start with working modules that unlock inside the same account.</strong>
-                <p>Use the in-app tool store for current AI products, subscriptions, and credit-ready access.</p>
+                <strong>Start with a ready AI tool.</strong>
+                <p>Choose a product for content, lead handling, or workflow automation.</p>
               </div>
               <div className="heroLane">
                 <span>Build</span>
-                <strong>Turn the right workflow into a specialist AI system.</strong>
-                <p>Single agents, multi-agent ops stacks, publishing systems, and custom workspaces.</p>
+                <strong>Get a custom workflow built.</strong>
+                <p>Use a specialist AI agent when your process needs a custom handoff.</p>
               </div>
               <div className="heroLane">
                 <span>Prove</span>
-                <strong>Lead with video proof before asking people to commit.</strong>
-                <p>The landing page keeps demos, access gates, and checkout paths in one flow.</p>
+                <strong>Ask for live proof before you buy.</strong>
+                <p>Previews and walkthroughs help explain the tool, but real proof must show the system producing the output.</p>
               </div>
             </div>
           </div>
@@ -613,18 +607,18 @@ export function CommandClient({ products, featuredProductIds, config, checkoutPr
               </video>
               <div className="heroHeaderVideoOverlay" aria-hidden="true">
                 <span>{activeProofProduct ? customerProductName(activeProofProduct) : "ILLCO AI"}</span>
-                <strong>{activeProofVideo ? videoActionLabel(activeProofVideo) : "Live proof stage"}</strong>
+                <strong>{activeProofVideo ? videoActionLabel(activeProofVideo) : "Proof preview"}</strong>
               </div>
             </div>
 
             <div className="proofStageMeta">
               <div className="proofStageHeading">
-                <p className="heroEyebrow">Live proof focus</p>
+                <p className="heroEyebrow">Featured proof</p>
                 <h3>{activeProofProduct ? customerProductName(activeProofProduct) : "Featured proof"}</h3>
                 <p>
                   {activeProofState
                     ? customerProofSummary(activeProofState)
-                    : "Working proof, result proof, and guided setup routes surface here first."}
+                    : "Actual output proof appears here when available. Otherwise, request live proof before purchase."}
                 </p>
               </div>
 
@@ -656,7 +650,7 @@ export function CommandClient({ products, featuredProductIds, config, checkoutPr
                 )}
                 {activeProofProduct && activeProofCustomerState?.canOpen ? (
                   <a className="button secondary" href={getProductModuleHref(activeProofProduct.id)}>
-                    Open Illco module
+                    Open Tool
                   </a>
                 ) : null}
                 {activeProofVideo?.youtubeUrl ? (
@@ -690,30 +684,55 @@ export function CommandClient({ products, featuredProductIds, config, checkoutPr
           </div>
         </section>
 
+        <section className="panel leadShortcutPanel" aria-label="Quick AI system request">
+          <div className="leadShortcutCopy">
+            <p className="heroEyebrow">Need help choosing?</p>
+            <h2>Tell us what you want automated.</h2>
+            <p>Send one short note about your workflow. We will point you to a ready tool or a custom AI system path.</p>
+          </div>
+          <form onSubmit={submitLead} className="leadShortcutForm">
+            <input className="honeyField" name="website" tabIndex={-1} autoComplete="off" />
+            <label>
+              Name
+              <input name="name" required />
+            </label>
+            <label>
+              Email
+              <input name="email" type="email" required />
+            </label>
+            <label>
+              What should AI handle first?
+              <input name="message" placeholder="Lead follow-up, content, support, reporting..." />
+            </label>
+            <input type="hidden" name="planId" value={selectedServiceId} />
+            <button className="button primary" type="submit">Request Custom Build</button>
+          </form>
+        </section>
+
         <section className="proofStoryGrid" aria-label="Proof and monetization overview">
           <div className="panel proofStoryPanel">
             <div className="panelHeader">
               <div>
-                <h2>Proof before promise</h2>
-                <p>The funnel now leads with clips that show the route, the tutorial, or the finished result before direct public checkout opens.</p>
+                <h2>Proof means working output</h2>
+                <p>Walkthroughs and previews explain the product. Only videos that show the system producing a real result count as proof.</p>
               </div>
               <div className="planReadinessSummary">
                 <strong>{snapshotLabel}</strong>
-                <span>latest deployment check</span>
+                <span>proof review</span>
               </div>
             </div>
             <div className="proofStoryStats">
-              <Fact label="Working routes" value={String(workingOffers.length)} tone="good" />
-              <Fact label="Public offers" value={String(monetizationPlan.summary.publicInFunnel)} tone="good" />
-              <Fact label="Proof queue" value={String(publicOffers.length - proofReadyOffers.length)} tone={publicOffers.length - proofReadyOffers.length ? "warn" : "good"} />
-              <Fact label="Payment config" value={paymentConfigValue} tone={paymentConfigTone} />
+              <Fact label="Ready tools" value={String(workingOffers.length)} tone="good" />
+              <Fact label="Product paths" value={String(monetizationPlan.summary.publicInFunnel)} tone="good" />
+              <Fact label="System proof" value={String(proofReadyOffers.length)} tone={proofReadyOffers.length ? "good" : "neutral"} />
+              <Fact label="Custom setup" value="Available" tone="neutral" />
             </div>
           </div>
 
           <div className="panel proofRailPanel">
             <div className="proofRailHeader">
-              <span>Live proof rail</span>
-              <strong>{heroProofProducts.length} featured stories</strong>
+              <span>Demo and proof library</span>
+              <strong>{heroProofProducts.length} featured videos</strong>
             </div>
             <div className="proofRailList">
               {heroProofProducts.map((product) => {
@@ -726,7 +745,7 @@ export function CommandClient({ products, featuredProductIds, config, checkoutPr
                   <a className="proofRailItem" href={itemHref} target={moduleTarget} rel={moduleTarget ? "noreferrer" : undefined} key={product.id}>
                     <div>
                       <strong>{customerProductName(product)}</strong>
-                      <small>{planNames[state.planId]} / {customerProofLabel(proof)}</small>
+                      <small>{plainPlanBenefit(state.planId)} / {customerProofLabel(proof)}</small>
                     </div>
                     <CustomerStatusPill state={state.customerStatus} compact />
                   </a>
@@ -739,9 +758,9 @@ export function CommandClient({ products, featuredProductIds, config, checkoutPr
         <section id="proof" className="panel githubProofPanel" aria-labelledby="github-proof-heading">
           <div className="panelHeader">
             <div>
-              <p className="heroEyebrow">Source proof</p>
-              <h2 id="github-proof-heading">GitHub receipts behind the apps</h2>
-              <p>Public source audit links give visitors a concrete way to verify active builds, owners, and shipped product history.</p>
+              <p className="heroEyebrow">Trust proof</p>
+              <h2 id="github-proof-heading">Real build history behind the tools</h2>
+              <p>ILLCO publishes visible product pages, demos, and working-output evidence so buyers can separate previews from real proof.</p>
             </div>
             <div className="githubOwnerLinks" aria-label="GitHub owners">
               {projectCompletionOwners.map((owner) => (
@@ -753,10 +772,10 @@ export function CommandClient({ products, featuredProductIds, config, checkoutPr
           </div>
 
           <div className="githubProofStats">
-            <Fact label="GitHub repos" value={String(projectCompletionSummary.githubSource)} tone="good" />
-            <Fact label="Local sources" value={String(projectCompletionSummary.localSource)} tone="neutral" />
-            <Fact label="Apps checked" value={String(projectCompletionSummary.checked)} tone="neutral" />
-            <Fact label="Audit" value={githubProofSnapshotLabel} tone="neutral" />
+            <Fact label="Verified source" value={String(projectCompletionSummary.githubSource)} tone="good" />
+            <Fact label="Product history" value={String(projectCompletionSummary.checked)} tone="neutral" />
+            <Fact label="Proof review" value={githubProofSnapshotLabel} tone="neutral" />
+            <Fact label="Owner" value="ILLCO AI" tone="good" />
           </div>
 
           <div className="githubProofGrid" aria-label={`GitHub proof links for ${githubProofOwnersLabel}`}>
@@ -838,7 +857,7 @@ export function CommandClient({ products, featuredProductIds, config, checkoutPr
         <section className="stepGrid" aria-label="Subscription steps">
           <Step number="01" title="Map the Work" copy="Start with the workflows, bottlenecks, and outcomes that matter most." />
           <Step number="02" title="Build the System" copy="Create specialist agents, Notion workflows, automation paths, or production systems." />
-          <Step number="03" title="Launch Lean" copy="Ship with working module proof, clear handoff, and a path for ongoing support." />
+          <Step number="03" title="Launch Lean" copy="Ship with working tool proof, clear handoff, and a path for ongoing support." />
         </section>
 
         <section id="content-production" className="panel contentProductionPanel">
@@ -937,11 +956,11 @@ export function CommandClient({ products, featuredProductIds, config, checkoutPr
                 )}
                 {youtubeOpsState.canOpen ? (
                   <a className="button secondary" href={getProductModuleHref(youtubeOpsProduct.id)}>
-                    Open Illco module
+                    Open Tool
                   </a>
                 ) : youtubeOpsProduct.productionUrl ? (
-                  <span className="button secondary" aria-disabled="true" title={youtubeOpsState.openGateNote || "Module access is locked."}>
-                    Module locked
+                    <span className="button secondary" aria-disabled="true" title={youtubeOpsState.openGateNote || "This app is coming soon."}>
+                    Coming Soon
                   </span>
                 ) : null}
                 {youtubeOpsProof.primaryVideo?.youtubeUrl ? (
@@ -965,7 +984,7 @@ export function CommandClient({ products, featuredProductIds, config, checkoutPr
                   <span>
                     {youtubeOpsPlan?.publicInFunnel
                       ? "YouTube Ops is available in this subscription experience."
-                      : "YouTube Ops is available by request through guided setup."}
+                      : "YouTube Ops is coming soon for direct access."}
                   </span>
                 </div>
                 <div className="accountNote">
@@ -977,7 +996,7 @@ export function CommandClient({ products, featuredProductIds, config, checkoutPr
                   <span>{youtubeOpsProofStatus}. {youtubeOpsProofNote}</span>
                 </div>
                 <div className="accountNote">
-                  <strong>Illco module</strong>
+                  <strong>Tool access</strong>
                   <span>{youtubeOpsState.canOpen ? getProductModuleHref(youtubeOpsProduct.id) : (youtubeOpsState.openGateNote || "Guided setup includes access details.")}</span>
                 </div>
               </div>
@@ -988,7 +1007,7 @@ export function CommandClient({ products, featuredProductIds, config, checkoutPr
         <section id="demos" className="panel demoPanel">
           <div className="panelHeader">
             <div>
-              <h2>Full Tutorial Videos</h2>
+              <h2>Walkthrough and Demo Videos</h2>
               <p>
                 Slow walkthroughs lead this view with captions, highlight framing, and narration. Result-focused apps
                 use guided setup when the tutorial still needs to show a finished output.
@@ -996,7 +1015,7 @@ export function CommandClient({ products, featuredProductIds, config, checkoutPr
             </div>
             <div className="demoSummary">
               <strong>{demoCount}</strong>
-              <span>{demoSnapshotLabel === "not generated" ? "tutorials coming" : "tutorial ready"}</span>
+              <span>{demoCount ? "walkthroughs available" : "request live proof"}</span>
             </div>
           </div>
           <div className="demoGrid">
@@ -1014,13 +1033,13 @@ export function CommandClient({ products, featuredProductIds, config, checkoutPr
                       <div className="pendingDemo productPendingDemo">
                         <img src={thumbnailPath} alt="" loading="lazy" aria-hidden="true" />
                         <span>{productName}</span>
-                        <small>Tutorial pending</small>
+                        <small>Request proof</small>
                       </div>
                     )}
                   </div>
                   <div className="demoMeta">
                     <strong>{productName}</strong>
-                    <small>{demo ? "Tutorial ready" : customerProofLabel(proof)}</small>
+                    <small>{demo ? "Walkthrough available" : customerProofLabel(proof)}</small>
                   </div>
                 </article>
               );
@@ -1036,7 +1055,7 @@ export function CommandClient({ products, featuredProductIds, config, checkoutPr
             </div>
             <div className="planReadinessSummary">
               <strong>{paymentConfigValue}</strong>
-              <span>{configuredPlanCount ? "available" : "price IDs needed"}</span>
+              <span>{configuredPlanCount ? "available" : "coming soon"}</span>
             </div>
           </div>
           <div className="planGrid">
@@ -1054,7 +1073,7 @@ export function CommandClient({ products, featuredProductIds, config, checkoutPr
                     <div className="planTitleRow">
                       <h3>{plan.name}</h3>
                       <span className={`planStatus ${checkoutReady ? "ready" : "pending"}`}>
-                        {checkoutReady ? "Working" : "Setup available"}
+                        {checkoutReady ? "Working" : "Coming Soon"}
                       </span>
                     </div>
                     <strong>{plan.price}</strong>
@@ -1070,7 +1089,7 @@ export function CommandClient({ products, featuredProductIds, config, checkoutPr
                   </ul>
                   {requestOnly ? (
                     <a className="button primary" href="#request">
-                      Request Enterprise Setup
+                      Request Setup
                     </a>
                   ) : (
                     <form action="/api/subscriptions/checkout" method="post" className="formStack planForm">
@@ -1089,13 +1108,13 @@ export function CommandClient({ products, featuredProductIds, config, checkoutPr
         <section className="panel creditModelPanel" aria-labelledby="credit-model-title">
           <div className="panelHeader">
             <div>
-              <p className="heroEyebrow">Credit system</p>
-              <h2 id="credit-model-title">Price usage around credits, not unlimited API cost.</h2>
-              <p>The audit recommends a transparent credit model so customers can start small while Illco keeps generation costs tied to revenue.</p>
+              <p className="heroEyebrow">Simple starting point</p>
+              <h2 id="credit-model-title">Recharge credits when you need more usage.</h2>
+              <p>Start with a lower-cost tool path, then add usage credits for generation, exports, automations, or assisted runs.</p>
             </div>
             <div className="planReadinessSummary">
-              <strong>50-100</strong>
-              <span>trial credits target</span>
+              <strong>$25+</strong>
+              <span>credit recharge</span>
             </div>
           </div>
           <div className="creditModelGrid">
@@ -1119,28 +1138,28 @@ export function CommandClient({ products, featuredProductIds, config, checkoutPr
           <div className="panel proofPanel">
             <div className="panelHeader">
               <div>
-                <h2>Working Module Proof</h2>
-                <p>Availability is checked from live deployment data captured {snapshotLabel}.</p>
+              <h2>What You Can Do Here</h2>
+              <p>Choose a ready product, request a custom AI system, recharge credits, or request live proof before you decide.</p>
               </div>
             </div>
             <div className="proofStrip">
-              <Fact label="Products mapped" value={String(monetizationPlan.summary.totalProducts)} tone="neutral" />
-              <Fact label="Working routes" value={String(workingOffers.length)} tone="good" />
-              <Fact label="Public offers" value={String(monetizationPlan.summary.publicInFunnel)} tone="good" />
-              <Fact label="Setup queue" value={String(comingSoonCount + setupOffers.length + guidedSetupCount)} tone="warn" />
+              <Fact label="Ready tools" value={String(workingOffers.length)} tone="good" />
+              <Fact label="Product paths" value={String(monetizationPlan.summary.publicInFunnel)} tone="good" />
+              <Fact label="Services" value={String(serviceOffers.length)} tone="neutral" />
+              <Fact label="Custom help" value="Available" tone="good" />
             </div>
           </div>
           <div className="panel">
             <div className="panelHeader">
               <div>
-                <h2>Access Checks</h2>
-                <p>Checkout is shown only for available subscription routes. Tutorials count when the video is full length, narrated, captioned, and ready to review.</p>
+                <h2>Buyer Paths</h2>
+                <p>Use the path that matches your need: a ready tool, a proof review, or a custom setup request.</p>
               </div>
             </div>
             <div className="configGrid compactConfig">
-              <ConfigItem label="Working" ready detail={`${workingOffers.length} products`} />
-              <ConfigItem label="Tutorials ready" ready={demoCount > 0} detail={`${demoCount} full tutorials available`} />
-              <ConfigItem label="Setup available" ready detail={`${setupOffers.length + guidedSetupCount} setup paths`} />
+              <ConfigItem label="Ready tools" ready detail={`${workingOffers.length} products`} />
+              <ConfigItem label="Live proof" ready={proofReadyOffers.length > 0} detail={`${proofReadyOffers.length} actual proof videos`} />
+              <ConfigItem label="Custom setup" ready detail="Request a workflow review" />
             </div>
           </div>
         </section>
@@ -1148,12 +1167,12 @@ export function CommandClient({ products, featuredProductIds, config, checkoutPr
         <section id="apps" className="panel directoryPanel">
           <div className="panelHeader">
             <div>
-              <h2>All Apps</h2>
-              <p>Browse every app in the portfolio. Checkout remains gated by health and monetization readiness.</p>
+              <h2>Browse AI Tools</h2>
+              <p>Use this directory after you understand the main offer. Start with a ready tool or request a custom system if your workflow is specific.</p>
             </div>
             <div className="filters">
               <input
-                aria-label="Search app modules"
+                aria-label="Search apps"
                 placeholder="Search all apps"
                 value={query}
                 onChange={(event) => {
@@ -1174,7 +1193,7 @@ export function CommandClient({ products, featuredProductIds, config, checkoutPr
                 ))}
               </select>
               <select aria-label="Open app landing page" defaultValue="" onChange={(event) => openAppLanding(event.target.value)}>
-                <option value="">Illco module pages</option>
+                <option value="">Tool pages</option>
                 {appMenuProducts.map((product) => {
                   const state = getCustomerProductState(product, config);
                   return (
@@ -1188,10 +1207,10 @@ export function CommandClient({ products, featuredProductIds, config, checkoutPr
           </div>
 
           <div className="directoryStats" aria-label="Customer-safe app summary">
-            <Fact label="Working" value={String(workingOffers.length)} tone="good" />
-            <Fact label="Tutorials" value={String(demoCount)} tone={demoCount ? "good" : "warn"} />
-            <Fact label="Setup available" value={String(setupOffers.length)} tone="neutral" />
-            <Fact label="Coming soon" value={String(comingSoonCount)} tone={comingSoonCount ? "warn" : "good"} />
+            <Fact label="Ready tools" value={String(workingOffers.length)} tone="good" />
+            <Fact label="System proof" value={String(proofReadyOffers.length)} tone={proofReadyOffers.length ? "good" : "neutral"} />
+            <Fact label="Setup paths" value={String(setupOffers.length + guidedSetupCount)} tone="neutral" />
+            <Fact label="Custom builds" value="Available" tone="good" />
           </div>
 
           <div className="productCategoryGroups" aria-label="Categorized product lanes">
@@ -1331,7 +1350,7 @@ function ProductCard({ product, config }: { product: ProductRecord; config: Funn
         <div>
           <span className="productCategory">{categoryLabels[product.category]}</span>
           <h3>{productName}</h3>
-          <p>{categoryLabels[product.category]} product route</p>
+          <p>{customerCategoryBenefit(product.category)}</p>
         </div>
         <CustomerStatusPill state={state.customerStatus} />
       </div>
@@ -1381,8 +1400,8 @@ function ProductCard({ product, config }: { product: ProductRecord; config: Funn
             Open Product
           </a>
         ) : (
-          <span className="button primary" aria-disabled="true" title={state.openGateNote || "Module access is locked."}>
-            {state.title === "Manual review locked" ? "Manual Review Locked" : state.customerStatus === "soon" ? "Coming Soon" : "Locked"}
+          <span className="button primary" aria-disabled="true" title={state.openGateNote || "This app is coming soon."}>
+            Coming Soon
           </span>
         )}
         <a className="button secondary" href={landingHref}>
@@ -1397,7 +1416,7 @@ function ProductCard({ product, config }: { product: ProductRecord; config: Funn
             </button>
           </form>
         ) : (
-          <a className="button secondary" href="#request">Request Enterprise Setup</a>
+          <a className="button secondary" href="#request">Request Setup</a>
         )}
         {tutorial?.youtubeUrl ? (
           <a className="button secondary" href={tutorial.youtubeUrl} target="_blank" rel="noreferrer">
@@ -1418,6 +1437,30 @@ function getProductProcessSteps(product: ProductRecord) {
   const override = productProcessById[product.id];
   if (override) return override;
   return productProcessByCategory[product.category];
+}
+
+function plainPlanBenefit(planId: PlanId) {
+  const benefits: Record<PlanId, string> = {
+    core: "starter tool",
+    studio: "creator workflow",
+    suite: "multi-tool access",
+    agency: "client workflow",
+    enterprise: "custom system",
+  };
+  return benefits[planId];
+}
+
+function customerCategoryBenefit(category: ProductRecord["category"]) {
+  const benefits: Record<ProductRecord["category"], string> = {
+    command: "AI workspace and control tools",
+    media: "Content, video, music, and publishing tools",
+    automation: "Lead follow-up and workflow automation",
+    commerce: "Funnels, checkout, and sales tools",
+    realEstate: "Property and local service workflows",
+    backend: "API and business system support",
+    experimental: "Special request and lab tools",
+  };
+  return benefits[category];
 }
 
 function Signal({ label, value }: { label: string; value: string }) {
@@ -1463,9 +1506,9 @@ function ShowcaseVideoFrame({ productName, demo, thumbnailPath }: { productName:
 function CustomerStatusPill({ state, compact = false }: { state: CustomerStatus; compact?: boolean }) {
   const labels: Record<CustomerStatus, string> = {
     working: "Working",
-    tutorial: "Proof ready",
-    setup: "Setup available",
-    soon: "Coming soon",
+    tutorial: "System proof",
+    setup: "Coming Soon",
+    soon: "Coming Soon",
   };
   return (
     <span className={`readinessPill ${statusTone(state)} ${compact ? "compact" : ""}`}>
@@ -1507,17 +1550,17 @@ function isGuidedSetupBehavior(behavior: MonetizationPlanEntry["healthGate"]["be
 }
 
 function customerProofLabel(proof: ProofState) {
-  if (!proof.ready) return "Proof coming";
-  if (proof.primaryVideo?.mode === "result-proof") return "Result proof ready";
-  if (proof.primaryVideo?.mode === "full-walkthrough") return "Tutorial ready";
-  return "Proof ready";
+  if (proof.ready && proof.primaryVideo?.mode === "result-proof") return "Working-output proof";
+  if (proof.primaryVideo?.mode === "full-walkthrough") return "Walkthrough only";
+  if (proof.primaryVideo?.mode === "route-proof") return "Preview only";
+  return "Live proof by request";
 }
 
 function customerProofSummary(proof: ProofState) {
-  if (!proof.ready) return "A guided setup request can cover details while the full tutorial is prepared.";
-  if (proof.primaryVideo?.mode === "result-proof") return "A result proof clip is available to review.";
-  if (proof.primaryVideo?.mode === "full-walkthrough") return "A full tutorial is available to review.";
-  return "A working proof clip is available while the full tutorial is prepared.";
+  if (proof.ready && proof.primaryVideo?.mode === "result-proof") return "A working-output proof video is available to review.";
+  if (proof.primaryVideo?.mode === "full-walkthrough") return "This is a walkthrough only. Request live proof before buying.";
+  if (proof.primaryVideo?.mode === "route-proof") return "This is a preview only. Request live proof before buying.";
+  return "Request live proof for this system before buying.";
 }
 
 type ProductReadiness = {
@@ -1536,6 +1579,8 @@ function getCustomerProductState(product: ProductRecord, config: FunnelConfig): 
   const plan = getMonetizationPlan(product.id);
   const planId = plan?.funnelPlanId || "core";
   const proof = getProofState(product.id);
+  const moduleHref = getProductModuleHref(product.id);
+  const canPublicLaunch = isPublicProductLaunchHref(moduleHref);
   const directCheckout =
     canDirectCheckoutPublicProduct(product.id) &&
     config.subscriptionsReady &&
@@ -1543,66 +1588,66 @@ function getCustomerProductState(product: ProductRecord, config: FunnelConfig): 
 
   if (directCheckout) {
     return {
-      title: "Working module",
+      title: "Ready tool",
       detail: proof.ready
-        ? "This module is available for self-serve access inside Illco, with proof showing it working."
-        : "This module is available for self-serve access inside Illco, with proof details coming soon.",
+        ? "This tool is available for self-serve access with proof showing how it works."
+        : "This tool is available for self-serve access, with more proof details being added.",
       accessLabel: "Subscription",
       demoLabel: customerProofLabel(proof),
       planId,
       customerStatus: proof.ready ? "tutorial" : "working",
       canCheckout: true,
-      canOpen: true,
-      openGateNote: null,
+      canOpen: canPublicLaunch,
+      openGateNote: canPublicLaunch ? null : "Paid access is issued through the account center after checkout.",
     };
   }
 
   if (plan?.healthGate.behavior === "allow-checkout" && plan.publicInFunnel) {
     return {
-      title: "Locked pending checkout",
+      title: "Coming Soon",
       detail: proof.ready
-        ? "This module has working proof, but paid unlock stays locked until checkout activation is verified."
-        : "This module stays locked until proof and checkout activation are verified.",
-      accessLabel: "Locked",
+        ? "Proof is available, but direct access is coming soon."
+        : "This app is coming soon for direct access.",
+      accessLabel: "Coming Soon",
       demoLabel: customerProofLabel(proof),
       planId,
       customerStatus: "soon",
       canCheckout: false,
       canOpen: false,
-      openGateNote: "Module access is locked until monetization checkout gates are fully active.",
+      openGateNote: "This app is coming soon.",
     };
   }
 
   if (plan?.healthGate.behavior === "allow-checkout-with-warning") {
     return {
-      title: "Locked pending verification",
+      title: "Coming Soon",
       detail: proof.ready
-        ? "This app has proof, but access is locked until the degraded health gate is cleared."
-        : "This app is locked until health, proof, checkout, and access are verified.",
-      accessLabel: "Locked",
+        ? "Proof is available, but direct access is coming soon."
+        : "This app is coming soon for direct access.",
+      accessLabel: "Coming Soon",
       demoLabel: customerProofLabel(proof),
       planId,
       customerStatus: "soon",
       canCheckout: false,
       canOpen: false,
-      openGateNote: "Module access is locked while degraded health gates are being cleared.",
+      openGateNote: "This app is coming soon.",
     };
   }
 
   return {
-    title: plan && isGuidedSetupBehavior(plan.healthGate.behavior) ? "Manual review locked" : "Locked",
+    title: "Coming Soon",
     detail: proof.ready
-      ? "This product is not sold directly yet; access stays locked until review passes."
-      : "This product is being prepared for public access and is locked until it works end to end.",
-    accessLabel: "Locked",
+      ? "This product is coming soon for direct access."
+      : "This product is coming soon for direct access.",
+    accessLabel: "Coming Soon",
     demoLabel: customerProofLabel(proof),
     planId,
     customerStatus: "soon",
     canCheckout: false,
     canOpen: false,
     openGateNote: plan && isGuidedSetupBehavior(plan.healthGate.behavior)
-      ? "Manual review is required before module access can open."
-      : "Module access is locked until public readiness checks pass.",
+      ? "This app is coming soon."
+      : "This app is coming soon.",
   };
 }
 
@@ -1613,10 +1658,10 @@ function statusTone(status: CustomerStatus): ReadinessTone {
 }
 
 function customerMenuStatus(status: CustomerStatus) {
-  if (status === "tutorial") return "Tutorial ready";
+  if (status === "tutorial") return "System proof";
   if (status === "working") return "Working";
-  if (status === "setup") return "Setup available";
-  return "Coming soon";
+  if (status === "setup") return "Coming Soon";
+  return "Coming Soon";
 }
 
 function safeLeadResult(detail?: string) {
@@ -1643,21 +1688,21 @@ function formatSnapshotLabel(value: string | null) {
 }
 
 function videoActionLabel(video: ShowcaseVideo) {
-  if (video.mode === "result-proof") return "Watch Result Proof";
-  if (video.mode === "full-walkthrough") return "Watch Full Tutorial";
-  return "Watch Proof Clip";
+  if (video.mode === "result-proof") return "Watch Working Proof";
+  if (video.mode === "full-walkthrough") return "Watch Walkthrough";
+  return "Watch Preview";
 }
 
 function videoTitleSuffix(video: ShowcaseVideo) {
-  if (video.mode === "result-proof") return "result proof";
-  if (video.mode === "full-walkthrough") return "full tutorial";
-  return "proof clip";
+  if (video.mode === "result-proof") return "working proof";
+  if (video.mode === "full-walkthrough") return "walkthrough";
+  return "preview";
 }
 
 function loadVideoLabel(video: ShowcaseVideo) {
-  if (video.mode === "result-proof") return "Load result proof";
-  if (video.mode === "full-walkthrough") return "Load full tutorial";
-  return "Load proof clip";
+  if (video.mode === "result-proof") return "Load working proof";
+  if (video.mode === "full-walkthrough") return "Load walkthrough";
+  return "Load preview";
 }
 
 function uniqueProductsById(products: Array<ProductRecord | null>) {

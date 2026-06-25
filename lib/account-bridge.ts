@@ -12,9 +12,9 @@ export const ACCOUNT_BRIDGE_TTL_SECONDS = 10 * 60;
 
 export type AccountBridgePayload = {
   iss: "illco-command";
-  aud: "illco-app";
+  aud: string;
+  productId: string;
   user: Pick<UserAccount, "id" | "email" | "name" | "company">;
-  purchases: UserPurchase[];
   access: {
     active: boolean;
     planId: FunnelPlanId | null;
@@ -48,8 +48,12 @@ function planRank(planId: string) {
   return ranks[planId] || 0;
 }
 
-function getAccountAccess(purchases: UserPurchase[]) {
-  const paid = purchases.find((purchase) => paidStatus(purchase.status) && planRank(purchase.planId) >= planRank("studio"));
+function getAccountAccess(purchases: UserPurchase[], productId: string) {
+  const paid = purchases.find((purchase) => {
+    if (!paidStatus(purchase.status)) return false;
+    if (purchase.productId === productId) return true;
+    return purchase.productId === "illco-command" && planRank(purchase.planId) >= planRank("studio");
+  });
   if (paid) {
     return {
       active: true,
@@ -67,19 +71,19 @@ function getAccountAccess(purchases: UserPurchase[]) {
   };
 }
 
-export async function createAccountBridgeGrant(user: UserAccount) {
+export async function createAccountBridgeGrant(user: UserAccount, options: { productId: string; audience: string }) {
   const purchases = await listUserPurchases(user);
   const payload: AccountBridgePayload = {
     iss: "illco-command",
-    aud: "illco-app",
+    aud: options.audience,
+    productId: options.productId,
     user: {
       id: user.id,
       email: user.email,
       name: user.name,
       company: user.company,
     },
-    purchases,
-    access: getAccountAccess(purchases),
+    access: getAccountAccess(purchases, options.productId),
     exp: Math.floor(Date.now() / 1000) + ACCOUNT_BRIDGE_TTL_SECONDS,
   };
   const encodedPayload = base64Url(JSON.stringify(payload));
@@ -87,14 +91,20 @@ export async function createAccountBridgeGrant(user: UserAccount) {
   return `${ACCOUNT_BRIDGE_TOKEN_PREFIX}.${encodedPayload}.${signature}`;
 }
 
-export async function appendAccountBridgeGrant(returnTo: string, user: UserAccount) {
-  const grant = await createAccountBridgeGrant(user);
+export async function appendAccountBridgeGrant(returnTo: string, user: UserAccount, options: { productId: string; audience?: string }) {
+  const grant = await createAccountBridgeGrant(user, {
+    productId: options.productId,
+    audience: options.audience || returnTo,
+  });
   const url = new URL(returnTo);
   url.searchParams.set("illco_grant", grant);
   return url.toString();
 }
 
-export function verifyAccountBridgeGrant(token: string | null | undefined) {
+export function verifyAccountBridgeGrant(
+  token: string | null | undefined,
+  options?: { productId?: string; audience?: string },
+) {
   const raw = String(token || "").trim();
   if (!raw.startsWith(`${ACCOUNT_BRIDGE_TOKEN_PREFIX}.`)) {
     throw new Error("A valid ILLCO account grant is required.");
@@ -119,7 +129,13 @@ export function verifyAccountBridgeGrant(token: string | null | undefined) {
     throw new Error("ILLCO account grant payload is invalid.");
   }
 
-  if (decoded.iss !== "illco-command" || decoded.aud !== "illco-app") {
+  if (decoded.iss !== "illco-command" || !decoded.aud || !decoded.productId) {
+    throw new Error("ILLCO account grant audience is invalid.");
+  }
+  if (options?.productId && decoded.productId !== options.productId) {
+    throw new Error("ILLCO account grant product is invalid.");
+  }
+  if (options?.audience && decoded.aud !== options.audience) {
     throw new Error("ILLCO account grant audience is invalid.");
   }
   if (decoded.exp < Math.floor(Date.now() / 1000)) {

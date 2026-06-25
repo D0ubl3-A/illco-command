@@ -70,11 +70,11 @@ export const env = {
   checkoutSessionSecret: readEnvValue(process.env.CHECKOUT_SESSION_SECRET, process.env.SESSION_SECRET, process.env.LICENSE_SIGNING_SECRET),
   stripePriceId: readEnvValue(process.env.STRIPE_PRICE_ID, process.env.STRIPE_PLAN_PRICE_ID),
   stripePriceCoreId: readEnvValue(process.env.STRIPE_PRICE_CORE_ID, process.env.CORE_PRICE_ID, process.env.STRIPE_PRICE_ID),
-  stripePriceStudioId: readEnvValue(process.env.STRIPE_PRICE_STUDIO_ID, process.env.STUDIO_PRICE_ID),
+  stripePriceStudioId: readEnvValue(process.env.STRIPE_PRICE_STUDIO_ID, process.env.STUDIO_PRICE_ID, process.env.STRIPE_PRICE_ID),
   stripePriceSuiteId: readEnvValue(process.env.STRIPE_PRICE_SUITE_ID, process.env.STRIPE_PRICE_AGENCY_ID, process.env.SUITE_PRICE_ID),
   stripePriceAgencyId: readEnvValue(process.env.STRIPE_PRICE_AGENCY_ID, process.env.AGENCY_PRICE_ID),
   stripePriceEnterpriseId: readEnvValue(process.env.STRIPE_PRICE_ENTERPRISE_ID, process.env.ENTERPRISE_PRICE_ID),
-  globalFreeTrialDays: readEnvValue(process.env.GLOBAL_FREE_TRIAL_DAYS, process.env.STRIPE_TRIAL_DAYS, "7"),
+  globalFreeTrialDays: readEnvValue(process.env.GLOBAL_FREE_TRIAL_DAYS, process.env.STRIPE_TRIAL_DAYS, "1"),
   globalFreeTrialEnabled: readEnvValue(process.env.GLOBAL_FREE_TRIAL_ENABLED, "true"),
   stripeSuccessPath: readEnvValue(process.env.STRIPE_SUCCESS_PATH, "/account?checkout=success"),
   stripeCancelPath: readEnvValue(process.env.STRIPE_CANCEL_PATH, "/?checkout=cancelled"),
@@ -156,5 +156,5 @@ export function getGlobalFreeTrialDays() {
 
   const parsed = Number.parseInt(env.globalFreeTrialDays, 10);
   if (!Number.isFinite(parsed) || parsed < 1) return null;
-  return Math.min(parsed, 730);
+  return Math.min(parsed, 1);
 }

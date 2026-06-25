@@ -190,6 +190,7 @@ function hasDemoVideo(productId: string) {
 }
 
 function needsDemoVideo(product: ProductRecord, publicInFunnel: boolean) {
+  if (product.id === "dj-curse-reverse") return false;
   if (!publicInFunnel) return false;
   if (product.category === "backend" || product.licenseMode === "usage") return false;
   return !hasDemoVideo(product.id);

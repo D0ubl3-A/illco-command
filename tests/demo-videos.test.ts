@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 
-import { getPreferredShowcaseVideo, getProofState, getTutorialVideo } from "../lib/demo-videos";
+import { getPreferredShowcaseVideo, getProofState, getTutorialVideo, getTwoMinuteProofVideo } from "../lib/demo-videos";
 
 test("full tutorials are preferred over proof clips for public demos", () => {
   const video = getPreferredShowcaseVideo("uap-ai-lab");
@@ -29,4 +29,16 @@ test("products without uploaded public video proof stay pending", () => {
   assert.equal(proof.ready, false);
   assert.equal(proof.label, "Tutorial pending");
   assert.equal(proof.primaryVideo, null);
+});
+
+test("uploaded two-minute product proof counts as walkthrough proof", () => {
+  const proofVideo = getTwoMinuteProofVideo("think-for-me-mode");
+  assert.ok(proofVideo);
+  assert.equal(proofVideo.mode, "full-walkthrough");
+  assert.equal(proofVideo.durationSeconds, 120);
+
+  const proof = getProofState("think-for-me-mode");
+  assert.equal(proof.ready, true);
+  assert.equal(proof.label, "Two-minute proof ready");
+  assert.equal(getPreferredShowcaseVideo("think-for-me-mode")?.youtubeVideoId, proofVideo.youtubeVideoId);
 });

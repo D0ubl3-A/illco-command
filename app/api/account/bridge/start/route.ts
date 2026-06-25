@@ -6,8 +6,30 @@ import { getProductById } from "@/lib/deployments";
 import { getAccountDatabaseStatus, getCurrentUser } from "@/lib/user-accounts";
 import { YOUTUBE_OPS_APP_URL, YOUTUBE_OPS_PRODUCT_ID } from "@/lib/youtube-ops-integration";
 
-function safeBridgeReturnTo(value: string | null) {
-  return safeAccountReturnTo(value) || YOUTUBE_OPS_APP_URL;
+function normalizeUrl(value: string) {
+  const url = new URL(value);
+  url.hash = "";
+  if (url.pathname === "") url.pathname = "/";
+  return url.toString();
+}
+
+function allowedBridgeReturnTo(productId: string) {
+  if (productId === YOUTUBE_OPS_PRODUCT_ID) return YOUTUBE_OPS_APP_URL;
+  return "";
+}
+
+function safeBridgeReturnTo(productId: string, value: string | null) {
+  const allowed = allowedBridgeReturnTo(productId);
+  if (!allowed) return "";
+
+  const safe = safeAccountReturnTo(value);
+  if (!safe) return allowed;
+
+  try {
+    return normalizeUrl(safe) === normalizeUrl(allowed) ? safe : allowed;
+  } catch {
+    return allowed;
+  }
 }
 
 function currentRequestPath(requestUrl: URL) {
@@ -39,8 +61,12 @@ export async function GET(request: Request) {
     return accountRedirect(request, requestUrl);
   }
 
-  const returnTo = safeBridgeReturnTo(requestUrl.searchParams.get("returnTo"));
-  const bridged = new URL(await appendAccountBridgeGrant(returnTo, user));
+  const returnTo = safeBridgeReturnTo(product.id, requestUrl.searchParams.get("returnTo"));
+  if (!returnTo) {
+    return NextResponse.json({ ok: false, detail: "This product does not support account bridge launch yet." }, { status: 403 });
+  }
+
+  const bridged = new URL(await appendAccountBridgeGrant(returnTo, user, { productId: product.id, audience: returnTo }));
   bridged.searchParams.set("illco_product", product.id);
   bridged.searchParams.set("illco_source", "illco-command");
 

@@ -4,7 +4,7 @@ import { CheckoutProductsSection } from "@/components/checkout-products-section"
 import { ComingSoonCountdown } from "@/components/coming-soon-countdown";
 import { MasterAccessPanel } from "@/components/master-access-panel";
 import { readMasterAccessSession } from "@/lib/master-access";
-import { getProductModuleHref } from "@/lib/product-routes";
+import { getProductModuleHref, isPublicProductLaunchHref } from "@/lib/product-routes";
 import {
   completionStatusLabel,
   getProjectCompletionRecord,
@@ -181,73 +181,73 @@ export async function IllcoToolsInterface() {
     {
       id: "ai-companion-conversational-intake",
       name: "Conversational Intake",
-      status: "Locked",
-      signal: "Separated product",
+      status: "Coming Soon",
+      signal: "Lead intake",
       description: "Guided onboarding chat that captures goals, timeline, and business context before routing to the right workflow.",
       href: "/apps/ai-companion-conversational-intake"
     },
     {
       id: "ai-companion-prompt-studio",
       name: "Prompt Studio",
-      status: "Locked",
-      signal: "Separated product",
+      status: "Coming Soon",
+      signal: "Content planning",
       description: "Structured prompt composer for repeatable campaigns, automation jobs, and specialist-agent handoffs.",
       href: "/apps/ai-companion-prompt-studio"
     },
     {
       id: "ai-companion-content-production",
       name: "Content Production",
-      status: "Locked",
-      signal: "Gemini video paused",
+      status: "Coming Soon",
+      signal: "Content workflow",
       description: "End-to-end content path for long-form walkthroughs, narrated outputs, and distribution-ready variants.",
       href: "/apps/ai-companion-content-production"
     },
     {
       id: "ai-companion-sales-agent-handoff",
       name: "Sales Agent Hand-off",
-      status: "Locked",
-      signal: "Separated product",
+      status: "Coming Soon",
+      signal: "Lead follow-up",
       description: "Visitor qualification and routing to service requests through the embedded customer sales agent.",
       href: "/apps/ai-companion-sales-agent-handoff"
     },
     {
       id: "ai-companion-command-routing",
       name: "Multi-App Command Routing",
-      status: "Locked",
-      signal: "Separated product",
-      description: "Unified launcher across all products with account-linked context and consistent purchase-access journeys.",
+      status: "Coming Soon",
+      signal: "Workflow routing",
+      description: "Unified routing across tools and services with account-linked context and consistent purchase-access journeys.",
       href: "/apps/ai-companion-command-routing"
     },
     {
       id: "ai-companion-workspace-access",
       name: "Unified Workspace Access",
-      status: "Locked",
-      signal: "Separated product",
+      status: "Coming Soon",
+      signal: "Account workspace",
       description: "Shared account center for profile, session, and app access while monetization and safety gates stay centralized.",
       href: "/apps/ai-companion-workspace-access"
     }
   ] as const;
 
   return (
-    <div className="appLandingWorkspace companionsPageWorkspace">
+    <main id="main-content" className="appLandingWorkspace companionsPageWorkspace">
       <section className="appLandingHero heroPanel companionsPageHero">
         <div className="heroCopy companionsPageHeroCopy">
           <p className="companionsPageEyebrow">ILLCO Command</p>
           <h1>ILLCO Tools</h1>
           <p>
-            The main tools workspace for account access, app routing, proof videos, and shipped ILLCO systems.
+            Buy ready AI tools, request working-output proof, or request a custom system for lead follow-up, content, and business automation.
           </p>
           <div className="heroProofBadges" aria-label="ILLCO Tools launch status">
-            <span><strong>{liveAppCount}</strong> in-app modules</span>
-            <span><strong>{categoryCount}</strong> groups</span>
-            <span><strong>{crazyReel.length}</strong> proof videos</span>
+            <span><strong>{liveAppCount}</strong> ready tools</span>
+            <span><strong>{categoryCount}</strong> categories</span>
+            <span><strong>{crazyReel.length}</strong> demo videos</span>
           </div>
         </div>
         <div className="commanderCinema" aria-hidden="true">
           <div className="commanderCinemaChrome">
             <span className="commanderCinemaLive">
               <span />
-              Live command surface
+              Live tool preview
             </span>
             <div className="commanderCinemaSceneRail">
               {heroFrames.map((frame) => (
@@ -307,128 +307,44 @@ export async function IllcoToolsInterface() {
           </div>
         </div>
         <div className="topActions companionsPageHeroActions">
-          <a className="button primary" href="/account">Login / Account</a>
-          <a className="button secondary" href="/admin">Admin</a>
           <a className="button primary" href="/commander#request">Request AI System</a>
-          <a className="button primary" href="#checkout-products">Check Out Products</a>
-          <a className="button secondary" href="#all-apps">Explore All Apps</a>
-          <a className="button secondary" href="/apps/ai-companions-recovered">Open Product Page</a>
+          <a className="button secondary" href="#checkout-products">Buy Ready Tools</a>
+          <a className="button secondary" href="#proof-videos">Request Live Proof</a>
           <a className="button secondary" href={toolsLaunchUrl}>
-            Open Illco Tools
+            Open Tools
           </a>
         </div>
       </section>
 
-      <ComingSoonCountdown targetIso="2026-05-25T09:00:00-07:00" />
-
-      <MasterAccessPanel compact />
-
       <CheckoutProductsSection />
 
-      <section className="connectedAppsSection" aria-label="Connected finished ILLCO apps">
-        <div className="connectedAppsHeader">
-          <div>
-            <p className="companionsPageEyebrow">Connected App System</p>
-            <h2>Finished apps wired into one Commander</h2>
-            <p>
-              Only apps that pass the completion gate appear in this launch network: healthy production URL plus source found locally or on GitHub.
-            </p>
-          </div>
-          <div className="connectedAppsHeaderActions">
-            <a className="button primary" href="#all-apps">Open App Panels</a>
-            <a className="button secondary" href="/account">Account Center</a>
-          </div>
+      <section className="companionsPageSignalStrip" aria-label="ILLCO buyer trust signals">
+        <div className="companionsPageSignal">
+          <h2>Clear first step</h2>
+          <p>Choose a ready tool when the product fits, or request a custom AI system when the workflow is specific.</p>
         </div>
-
-        <div className="connectedAppsMap">
-          <div className="connectedAppsCore" aria-label="ILLCO Command core">
-            <span>ILLCO</span>
-            <strong>Command</strong>
-            <small>{completeProductionApps.length} completed apps</small>
-          </div>
-          <div className="connectedAppsStats" aria-label="Connected app registry summary">
-            <span>{completeProductionApps.length} complete</span>
-            <span>{productionNeedsWork} live repair queue</span>
-            <span>{projectCompletionSummary.needsDeploy} need deploy</span>
-            <span>{finishedAppCategories} app groups</span>
-          </div>
-          <div className="connectedAppsNodes">
-            {connectedApps.map((product) => {
-              const completion = getProjectCompletionRecord(product.id);
-              const completionClassName = completion?.completionStatus || "missing-source";
-              return (
-                <a
-                  className={`connectedAppNode category-${product.category} completion-${completionClassName}`}
-                  href={getProductModuleHref(product.id)}
-                  key={product.id}
-                >
-                  <span>{categoryLabels[product.category]}</span>
-                  <strong>{product.displayName}</strong>
-                  <small>{product.subscriptionTier} / {formatLicenseMode(product.licenseMode)} / {sourceStatusLabel(completion?.sourceStatus)}</small>
-                  <em>{completionStatusLabel(completion?.completionStatus)}</em>
-                </a>
-              );
-            })}
-          </div>
-          <p className="connectedAppsAuditStamp">
-            Source audit checked local projects and GitHub owners {projectCompletionOwnersText()} on {formatAuditTimestamp(projectCompletionGeneratedAt)}.
-          </p>
+        <div className="companionsPageSignal">
+          <h2>Proof before purchase</h2>
+          <p>Previews explain the tools. Real proof must show the system producing the promised output.</p>
         </div>
-      </section>
-
-      <section className="completionQueueSection" aria-label="ILLCO app completion queue">
-        <div className="completionQueueHeader">
-          <div>
-            <p className="companionsPageEyebrow">Completion Queue</p>
-            <h2>Apps to repair, source, or deploy</h2>
-            <p>
-              These records stay out of the finished launch network until they pass the same production health and source ownership checks.
-            </p>
-          </div>
-          <div className="completionQueueStats">
-            <span>{projectCompletionSummary.needsRepair} repair</span>
-            <span>{projectCompletionSummary.needsSource} find source</span>
-            <span>{projectCompletionSummary.needsDeploy} deploy</span>
-            <span>{projectCompletionSummary.missingSource} missing</span>
-          </div>
-        </div>
-        <div className="completionQueueGrid">
-          {completionQueue.map((product) => {
-            const completion = getProjectCompletionRecord(product.id);
-            const sourceHref = getGithubSourceHref(completion);
-            const moduleHref = getProductModuleHref(product.id);
-            return (
-              <article className={`completionQueueItem completion-${completion?.completionStatus || "missing-source"}`} key={product.id}>
-                <span>{completionStatusLabel(completion?.completionStatus)}</span>
-                <strong>{product.displayName}</strong>
-                <small>{sourceStatusLabel(completion?.sourceStatus)} / {completion?.health?.status || "not checked"}</small>
-                <div className="completionQueueActions">
-                  <a href={`/apps/${product.id}`}>Details</a>
-                  <a href={moduleHref}>Module</a>
-                  {sourceHref ? (
-                    <a href={sourceHref} target="_blank" rel="noreferrer">
-                      Source
-                    </a>
-                  ) : null}
-                </div>
-              </article>
-            );
-          })}
+        <div className="companionsPageSignal">
+          <h2>One account</h2>
+          <p>Your ILLCO account keeps access, purchase history, and support paths in one place.</p>
         </div>
       </section>
 
       {featuredReel ? (
-        <section className="crazyReelSection" aria-label="Craziest ILLCO video highlights">
+        <section id="proof-videos" className="crazyReelSection" aria-label="ILLCO proof video highlights">
           <div className="crazyReelHeader">
             <div>
-              <p className="companionsPageEyebrow">Front Page Highlight Reel</p>
-              <h2>Craziest Builds on Deck</h2>
+              <p className="companionsPageEyebrow">Demos and Proof</p>
+              <h2>Separate previews from working proof</h2>
               <p>
-                A fast proof wall of our wildest shipped systems: Sora vaults, AI video tools, rap workflows, voice boards, UAP labs, and mastering proof.
+                Watch examples for context, then request live working-output proof before buying a system.
               </p>
             </div>
-            <a className="button primary" href="/commander#apps">
-              Open App Arsenal
+            <a className="button primary" href="/commander#request">
+              Request Live Proof
             </a>
           </div>
 
@@ -451,7 +367,7 @@ export async function IllcoToolsInterface() {
                     Watch
                   </a>
                   <a className="button secondary" href={featuredReel.moduleHref}>
-                    Open Module
+                    Open Tool
                   </a>
                 </div>
               </div>
@@ -476,24 +392,24 @@ export async function IllcoToolsInterface() {
 
       <section className="companionsPageSignalStrip" aria-label="ILLCO Tools workspace status">
         <div className="companionsPageSignal">
-          <h2>Customer-safe funnel</h2>
-          <p>Customers use Login / Account. Operators use Admin, guarded by the configured admin session and operator key.</p>
+          <h2>Lead follow-up</h2>
+          <p>Use ILLCO systems to collect, qualify, and follow up with prospects without losing the thread.</p>
         </div>
         <div className="companionsPageSignal">
-          <h2>Payments synchronized</h2>
-          <p>Subscription and checkout paths stay centralized so customers move through one consistent purchase flow.</p>
+          <h2>Content production</h2>
+          <p>Turn repeat content work into a guided production flow with proof, review, and delivery steps.</p>
         </div>
         <div className="companionsPageSignal">
-          <h2>Apps in one shell</h2>
-          <p>Tool modules and app routing share the same account context to reduce friction across products.</p>
+          <h2>Workflow automation</h2>
+          <p>Replace repetitive manual steps with focused AI tools and custom setup when needed.</p>
         </div>
       </section>
 
       <section className="panel companionsPagePanel">
         <div className="panelHeader">
           <div>
-            <h2>ILLCO Tools Modules</h2>
-            <p>Each module routes into the same account and monetization surface so customers can move across tools without context loss.</p>
+            <h2>ILLCO Tool Paths</h2>
+            <p>Use these starting points to plan, collect records, produce content, or request a custom AI workflow.</p>
           </div>
         </div>
         <div className="companionsPageModuleGrid">
@@ -531,7 +447,7 @@ export async function IllcoToolsInterface() {
               <div className="companionsPageModuleFoot">
                 <span>{module.signal}</span>
                 <a className="button secondary" href={module.href}>
-                  {module.id === "think-for-me-mode" ? "Use Helper" : "Review Product"}
+                  {module.id === "think-for-me-mode" ? "Use Helper" : "Open"}
                 </a>
               </div>
             </article>
@@ -542,14 +458,14 @@ export async function IllcoToolsInterface() {
       <section id="all-apps" className="companionsAppDirectorySection">
         <div className="panelHeader">
           <div>
-            <h2>ILLCO App Panels</h2>
-            <p>Every app in the Commander catalog, generated from the live product registry.</p>
+            <h2>Browse More Tools</h2>
+            <p>The full product directory is available after the main offer, so first-time visitors can understand the value before comparing options.</p>
           </div>
           <div className="companionsAppDirectoryStats" aria-label="Commander app registry summary">
-            <span>{products.length} apps</span>
-            <span>{liveAppCount} live</span>
+            <span>{products.length} tools</span>
+            <span>{liveAppCount} ready</span>
             {masterAccess.unlocked ? <span>{masterAccess.unlockableProducts.length} unlocked</span> : null}
-            <span>{categoryCount} groups</span>
+            <span>{categoryCount} categories</span>
           </div>
         </div>
         <div className="companionsAppPanelGrid">
@@ -558,7 +474,7 @@ export async function IllcoToolsInterface() {
           ))}
         </div>
       </section>
-    </div>
+    </main>
   );
 }
 
@@ -567,12 +483,13 @@ function AppPanel({ masterUnlocked, product }: { masterUnlocked: boolean; produc
   const completion = getProjectCompletionRecord(product.id);
   const isComplete = completion?.completionStatus === "complete";
   const unlockedHref = masterUnlocked ? launchHref : "";
-  const primaryHref = unlockedHref || (isComplete ? launchHref : getProductModuleHref(product.id));
-  const primaryLabel = unlockedHref ? "Open Unlocked Module" : isComplete ? "Open Module" : "Review";
+  const publicLaunchHref = isPublicProductLaunchHref(launchHref) ? launchHref : "";
+  const primaryHref = unlockedHref || publicLaunchHref || `/apps/${product.id}`;
+  const primaryLabel = unlockedHref ? "Open Tool" : publicLaunchHref ? "Open Tool" : "Details";
   const sourceHref = getGithubSourceHref(completion);
   const secondaryHref = sourceHref || `/apps/${product.id}`;
   const secondaryLabel = sourceHref ? "Source" : "Details";
-  const statusLabel = masterUnlocked ? "Unlocked" : completionStatusLabel(completion?.completionStatus);
+  const statusLabel = masterUnlocked || isComplete ? "Ready" : product.isLive ? "Available" : "Coming Soon";
   const categoryClassName = `category-${product.category}`;
 
   return (
@@ -591,7 +508,7 @@ function AppPanel({ masterUnlocked, product }: { masterUnlocked: boolean; produc
         </div>
         <div>
           <dt>Access</dt>
-          <dd>{masterUnlocked ? "Master" : formatLicenseMode(product.licenseMode)}</dd>
+          <dd>{masterUnlocked ? "Included" : formatLicenseMode(product.licenseMode)}</dd>
         </div>
         <div>
           <dt>Updated</dt>
@@ -615,10 +532,10 @@ function AppPanel({ masterUnlocked, product }: { masterUnlocked: boolean; produc
 }
 
 function formatLicenseMode(mode: ProductRecord["licenseMode"]) {
-  if (mode === "subscription") return "Subscription";
-  if (mode === "seat") return "Seat";
-  if (mode === "usage") return "Usage";
-  return "Internal";
+  if (mode === "subscription") return "Monthly access";
+  if (mode === "seat") return "Team access";
+  if (mode === "usage") return "Pay as needed";
+  return "Guided setup";
 }
 
 function getGithubSourceHref(completion: ReturnType<typeof getProjectCompletionRecord>) {

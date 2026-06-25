@@ -28,7 +28,19 @@ export const metadata: Metadata = {
     description:
       "Buy working AI tools, watch proof videos, or request custom AI systems for lead recovery, content, email, and operations.",
     url: siteUrl,
+    images: [
+      {
+        url: "/media/illco-command-header-loop-poster.jpg",
+        width: 1200,
+        height: 630,
+        alt: "ILLCO AI command marketplace preview",
+      },
+    ],
     type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    images: ["/media/illco-command-header-loop-poster.jpg"],
   },
 };
 

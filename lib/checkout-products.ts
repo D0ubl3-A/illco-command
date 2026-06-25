@@ -36,7 +36,7 @@ export const checkoutProducts = [
     appProductId: "lyric-video-forge",
     name: "Full HD Lyric Videos",
     category: "Video & Creator Growth",
-    summary: "Full HD lyric video delivery for clean artist releases, promos, and YouTube uploads.",
+    summary: "1-day trial for up to 2 Full HD lyric videos, with synced lyrics, release-ready visuals, and ILLCOCOMMAND payment/access sync.",
   },
   {
     id: "youtube-rank-revival-ai-pro",

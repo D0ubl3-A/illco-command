@@ -5,6 +5,7 @@ import { getAppFunnelState } from "../lib/app-funnel";
 import { getProductById } from "../lib/deployments";
 import { getConfigurationStatus } from "../lib/env";
 import { getMonetizationPlan, monetizationPlan } from "../lib/monetization";
+import { getProductModuleHref } from "../lib/product-routes";
 import { canDirectCheckoutPublicPlan, canDirectCheckoutPublicProduct } from "../lib/public-checkout";
 
 function appState(productId: string) {
@@ -63,4 +64,9 @@ test("app landing launch links follow direct-checkout readiness", () => {
   const config = getConfigurationStatus();
   assert.equal(uapState.canOpen, Boolean(config.subscriptionsReady && config.planPrices[uapState.planId]));
   assert.equal(appState("youtube-ops-vercel").canOpen, Boolean(config.subscriptionsReady && config.planPrices.studio));
+});
+
+test("video generator products stay inside ILLCO Command payment unlock routes", () => {
+  assert.equal(getProductModuleHref("illco-ai-video"), "/apps/illco-ai-video");
+  assert.equal(getProductModuleHref("illcoai-video-generator-deploy"), "/apps/illcoai-video-generator-deploy");
 });

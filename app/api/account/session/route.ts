@@ -39,7 +39,7 @@ export async function GET() {
       accountsConfigured: true,
       accountsReady: true,
       accountUrl: "/account",
-      watcherUrl: admin ? "/admin#watcher" : null,
+      watcherUrl: admin ? "/admin?panel=watcher#watcher" : null,
       profile: user
         ? {
             status: "active",

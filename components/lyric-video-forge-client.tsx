@@ -2,6 +2,8 @@
 
 import { useState } from "react";
 
+import { MasterLyricControlRoom } from "@/components/master-lyric-control-room";
+
 type ForgeAction = "brief" | "transcribe" | "image-plan" | "full-run";
 
 type ForgeResponse = {
@@ -178,6 +180,8 @@ export function LyricVideoForgeClient() {
           <a className="button secondary" href={chatgptSseUrl} target="_blank" rel="noreferrer">Open SSE endpoint</a>
         </div>
       </div>
+
+      <MasterLyricControlRoom />
 
       <div className="bigoStrategyGrid">
         <label className="panel bigoStrategyStep">

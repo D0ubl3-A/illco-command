@@ -1,0 +1,521 @@
+{
+    "title":  "M3ntally-iLL Master Lyric App",
+    "artist":  "M3ntally-iLL",
+    "defaultMode":  "censored",
+    "video":  "master-lyric-video.mp4",
+    "generatedAt":  "2026-06-23",
+    "modes":  {
+                  "censored":  {
+                                   "label":  "Censored",
+                                   "cueCount":  50,
+                                   "cues":  [
+                                                {
+                                                    "start":  0.02,
+                                                    "end":  2.14,
+                                                    "text":  "[choir x2] Dirty b***h"
+                                                },
+                                                {
+                                                    "start":  2.17,
+                                                    "end":  3.87,
+                                                    "text":  "Dead to me ignorant"
+                                                },
+                                                {
+                                                    "start":  3.9,
+                                                    "end":  5.82,
+                                                    "text":  "I know I wont help a b***h with rent"
+                                                },
+                                                {
+                                                    "start":  5.85,
+                                                    "end":  8.53,
+                                                    "text":  "But she can suck some d**k for it"
+                                                },
+                                                {
+                                                    "start":  8.56,
+                                                    "end":  13.19,
+                                                    "text":  "Wait a minute, she\u0027s got h****s, give her another d**k"
+                                                },
+                                                {
+                                                    "start":  13.22,
+                                                    "end":  16.92,
+                                                    "text":  "Dirty b***h, funky chick"
+                                                },
+                                                {
+                                                    "start":  16.95,
+                                                    "end":  19.26,
+                                                    "text":  "Dead to me ignorant"
+                                                },
+                                                {
+                                                    "start":  19.29,
+                                                    "end":  21.97,
+                                                    "text":  "I know I wont help a b***h with rent"
+                                                },
+                                                {
+                                                    "start":  22,
+                                                    "end":  24.57,
+                                                    "text":  "But she can suck some d**k for it"
+                                                },
+                                                {
+                                                    "start":  24.6,
+                                                    "end":  30.36,
+                                                    "text":  "Wait a minute, she\u0027s got h****s, give her another d**k"
+                                                },
+                                                {
+                                                    "start":  30.39,
+                                                    "end":  33.57,
+                                                    "text":  "[silent drop]"
+                                                },
+                                                {
+                                                    "start":  33.6,
+                                                    "end":  36.15,
+                                                    "text":  "NuNu"
+                                                },
+                                                {
+                                                    "start":  36.18,
+                                                    "end":  39.09,
+                                                    "text":  "p***y smell like doo doo (Ugh, nasty)"
+                                                },
+                                                {
+                                                    "start":  39.13,
+                                                    "end":  42.43,
+                                                    "text":  "I roast this b***h, if you were me what the f**k would you do?"
+                                                },
+                                                {
+                                                    "start":  42.46,
+                                                    "end":  44.9,
+                                                    "text":  "See me and you, we don\u0027t go good (NOPE)"
+                                                },
+                                                {
+                                                    "start":  44.93,
+                                                    "end":  48.76,
+                                                    "text":  "I\u0027m a one-woman man, and you, you fuck the whole hood (YOU F**K THE WHOLE HOOD!!!)"
+                                                },
+                                                {
+                                                    "start":  48.79,
+                                                    "end":  53.18,
+                                                    "text":  "I\u0027m above you, feels so good (so good!)"
+                                                },
+                                                {
+                                                    "start":  53.22,
+                                                    "end":  57.39,
+                                                    "text":  "To win while you lose in life, you know you choke wood (suck it bitch!)"
+                                                },
+                                                {
+                                                    "start":  57.42,
+                                                    "end":  60.34,
+                                                    "text":  "Do me dirty, don\u0027t care if you\u0027re a female (I don\u0027t give a f**k!)"
+                                                },
+                                                {
+                                                    "start":  60.37,
+                                                    "end":  63.15,
+                                                    "text":  "Click clack pit pat, won\u0027t get into the details (Bow! Bow!)"
+                                                },
+                                                {
+                                                    "start":  63.19,
+                                                    "end":  65.54,
+                                                    "text":  "b***h you got h****s from your baby\u0027s daddy (DAYUMN!!!)"
+                                                },
+                                                {
+                                                    "start":  65.57,
+                                                    "end":  69.27,
+                                                    "text":  "To hurt me we\u0027d have to share a slurpee, you\u0027re afraid to stab me (p***y!)"
+                                                },
+                                                {
+                                                    "start":  69.3,
+                                                    "end":  71.39,
+                                                    "text":  "Here\u0027s a message for your b*****d baby (special delivery!)"
+                                                },
+                                                {
+                                                    "start":  71.42,
+                                                    "end":  74.82,
+                                                    "text":  "Hope your mom and dad get back together and he smacks her daily (Smack!)"
+                                                },
+                                                {
+                                                    "start":  74.85,
+                                                    "end":  77.29,
+                                                    "text":  "If I was with you, I for sure would choke you (Ack!)"
+                                                },
+                                                {
+                                                    "start":  77.32,
+                                                    "end":  81.1,
+                                                    "text":  "So you can\u0027t breathe anymore h*, but I prefer to smoke you (gunshots)"
+                                                },
+                                                {
+                                                    "start":  81.13,
+                                                    "end":  82.97,
+                                                    "text":  "You don\u0027t know it but I really broke you (Shattered!)"
+                                                },
+                                                {
+                                                    "start":  83,
+                                                    "end":  86.95,
+                                                    "text":  "You did some s**t that f****d up your life cause I provoked you (Haha!)"
+                                                },
+                                                {
+                                                    "start":  86.99,
+                                                    "end":  89.6,
+                                                    "text":  "It\u0027s been a while since I looked at your profile (Uh-huh)"
+                                                },
+                                                {
+                                                    "start":  89.63,
+                                                    "end":  93.07,
+                                                    "text":  "But you looking at mine every fucking week so I smile (Cheese!)"
+                                                },
+                                                {
+                                                    "start":  93.1,
+                                                    "end":  95.32,
+                                                    "text":  "Wife material, but not you (Never!)"
+                                                },
+                                                {
+                                                    "start":  95.35,
+                                                    "end":  98.66,
+                                                    "text":  "You cheated, got pregnant, then he dropped you (Thud!)"
+                                                },
+                                                {
+                                                    "start":  98.69,
+                                                    "end":  101.04,
+                                                    "text":  "That brings up another thought too (Wait...)"
+                                                },
+                                                {
+                                                    "start":  101.08,
+                                                    "end":  104.43,
+                                                    "text":  "He socked you, cause we were talking and he caught you (Pow!)"
+                                                },
+                                                {
+                                                    "start":  104.46,
+                                                    "end":  107.16,
+                                                    "text":  "We know she likes to cheat though, she\u0027s a t**t (Skank!)"
+                                                },
+                                                {
+                                                    "start":  107.19,
+                                                    "end":  109.84,
+                                                    "text":  "So she\u0027s popped with three shots like a free throw (Swish!)"
+                                                },
+                                                {
+                                                    "start":  109.88,
+                                                    "end":  112.88,
+                                                    "text":  "She\u0027s cocky, she slides on three cocks and deep throats (Gulp!)"
+                                                },
+                                                {
+                                                    "start":  112.91,
+                                                    "end":  116.35,
+                                                    "text":  "She\u0027s hot, but she\u0027s not, cause these frauds is skeeze h**s (Fake!)"
+                                                },
+                                                {
+                                                    "start":  116.38,
+                                                    "end":  118.86,
+                                                    "text":  "Yo, no one pimps her, I\u0027mma get her profits (Ching ching!)"
+                                                },
+                                                {
+                                                    "start":  118.89,
+                                                    "end":  123.07,
+                                                    "text":  "Sippin\u0027 liquor by the pitcher, mister trippin\u0027 strippin\u0027 strippers\u0027 pockets (Gimme that!)"
+                                                },
+                                                {
+                                                    "start":  123.1,
+                                                    "end":  125.15,
+                                                    "text":  "She p***y pop for a tootsie pop (Pop!)"
+                                                },
+                                                {
+                                                    "start":  125.18,
+                                                    "end":  128.66,
+                                                    "text":  "Plays the pussycock, super f*****g pig like a rookie cop (Oink oink!)"
+                                                },
+                                                {
+                                                    "start":  128.69,
+                                                    "end":  131,
+                                                    "text":  "I laugh when you say I can\u0027t rap bitch (Hahahaha!)"
+                                                },
+                                                {
+                                                    "start":  131.03,
+                                                    "end":  134.95,
+                                                    "text":  "Shut the f**k up w***e, before you get your a** kicked (Booted!)"
+                                                },
+                                                {
+                                                    "start":  134.98,
+                                                    "end":  138.2,
+                                                    "text":  "Compulsive liar, no one\u0027s desire (Nobody!)"
+                                                },
+                                                {
+                                                    "start":  138.23,
+                                                    "end":  140.36,
+                                                    "text":  "h* you ain\u0027t fire, h* used like my tires (Skrrt!)"
+                                                },
+                                                {
+                                                    "start":  140.4,
+                                                    "end":  142.97,
+                                                    "text":  "b***h, I\u0027ll split that 40 dollar wig (gunshot!)"
+                                                },
+                                                {
+                                                    "start":  143,
+                                                    "end":  147.08,
+                                                    "text":  "Get your holy water, pray to your father for your sins (Amen!)"
+                                                },
+                                                {
+                                                    "start":  147.12,
+                                                    "end":  151.12,
+                                                    "text":  "And watch who you call anything but the s**t b***h (Watch it!)"
+                                                },
+                                                {
+                                                    "start":  151.15,
+                                                    "end":  154.92,
+                                                    "text":  "Before I stick this f*****g voodoo doll (Stab!)"
+                                                }
+                                            ]
+                               },
+                  "uncensored":  {
+                                     "label":  "Uncensored",
+                                     "cueCount":  50,
+                                     "cues":  [
+                                                  {
+                                                      "start":  0,
+                                                      "end":  2,
+                                                      "text":  "[choir x2] Dirty bitch"
+                                                  },
+                                                  {
+                                                      "start":  2,
+                                                      "end":  3.6,
+                                                      "text":  "Dead to me ignorant"
+                                                  },
+                                                  {
+                                                      "start":  3.6,
+                                                      "end":  5.4,
+                                                      "text":  "I know I wont help a bitch with rent"
+                                                  },
+                                                  {
+                                                      "start":  5.4,
+                                                      "end":  7.9,
+                                                      "text":  "But she can suck some dick for it"
+                                                  },
+                                                  {
+                                                      "start":  7.9,
+                                                      "end":  12.2,
+                                                      "text":  "Wait a minute, she\u0027s got herpes, give her another dick"
+                                                  },
+                                                  {
+                                                      "start":  12.2,
+                                                      "end":  15.64,
+                                                      "text":  "Dirty bitch, funky chick"
+                                                  },
+                                                  {
+                                                      "start":  15.64,
+                                                      "end":  17.8,
+                                                      "text":  "Dead to me ignorant"
+                                                  },
+                                                  {
+                                                      "start":  17.8,
+                                                      "end":  20.3,
+                                                      "text":  "I know I wont help a bitch with rent"
+                                                  },
+                                                  {
+                                                      "start":  20.3,
+                                                      "end":  22.7,
+                                                      "text":  "But she can suck some dick for it"
+                                                  },
+                                                  {
+                                                      "start":  22.7,
+                                                      "end":  28.04,
+                                                      "text":  "Wait a minute, she\u0027s got herpes, give her another dick"
+                                                  },
+                                                  {
+                                                      "start":  28.04,
+                                                      "end":  31,
+                                                      "text":  "[silent drop]"
+                                                  },
+                                                  {
+                                                      "start":  31,
+                                                      "end":  33.38,
+                                                      "text":  "NuNu"
+                                                  },
+                                                  {
+                                                      "start":  33.38,
+                                                      "end":  36.1,
+                                                      "text":  "Pussy smell like doo doo (Ugh, nasty)"
+                                                  },
+                                                  {
+                                                      "start":  36.1,
+                                                      "end":  39.18,
+                                                      "text":  "I roast this bitch, if you were me what the fuck would you do?"
+                                                  },
+                                                  {
+                                                      "start":  39.18,
+                                                      "end":  41.46,
+                                                      "text":  "See me and you, we don\u0027t go good (NOPE)"
+                                                  },
+                                                  {
+                                                      "start":  41.46,
+                                                      "end":  45.02,
+                                                      "text":  "I\u0027m a one-woman man, and you, you fuck the whole hood (YOU FUCK THE WHOLE HOOD!!!)"
+                                                  },
+                                                  {
+                                                      "start":  45.02,
+                                                      "end":  49.1,
+                                                      "text":  "I\u0027m above you, feels so good (so good!)"
+                                                  },
+                                                  {
+                                                      "start":  49.1,
+                                                      "end":  52.98,
+                                                      "text":  "To win while you lose in life, you know you choke wood (suck it bitch!)"
+                                                  },
+                                                  {
+                                                      "start":  52.98,
+                                                      "end":  55.7,
+                                                      "text":  "Do me dirty, don\u0027t care if you\u0027re a female (I don\u0027t give a fuck!)"
+                                                  },
+                                                  {
+                                                      "start":  55.7,
+                                                      "end":  58.3,
+                                                      "text":  "Click clack pit pat, won\u0027t get into the details (Bow! Bow!)"
+                                                  },
+                                                  {
+                                                      "start":  58.3,
+                                                      "end":  60.5,
+                                                      "text":  "Bitch you got herpes from your baby\u0027s daddy (DAYUMN!!!)"
+                                                  },
+                                                  {
+                                                      "start":  60.5,
+                                                      "end":  63.94,
+                                                      "text":  "To hurt me we\u0027d have to share a slurpee, you\u0027re afraid to stab me (pussy!)"
+                                                  },
+                                                  {
+                                                      "start":  63.94,
+                                                      "end":  65.9,
+                                                      "text":  "Here\u0027s a message for your bastard baby (special delivery!)"
+                                                  },
+                                                  {
+                                                      "start":  65.9,
+                                                      "end":  69.06,
+                                                      "text":  "Hope your mom and dad get back together and he smacks her daily (Smack!)"
+                                                  },
+                                                  {
+                                                      "start":  69.06,
+                                                      "end":  71.34,
+                                                      "text":  "If I was with you, I for sure would choke you (Ack!)"
+                                                  },
+                                                  {
+                                                      "start":  71.34,
+                                                      "end":  74.86,
+                                                      "text":  "So you can\u0027t breathe anymore ho, but I prefer to smoke you (gunshots)"
+                                                  },
+                                                  {
+                                                      "start":  74.86,
+                                                      "end":  76.58,
+                                                      "text":  "You don\u0027t know it but I really broke you (Shattered!)"
+                                                  },
+                                                  {
+                                                      "start":  76.58,
+                                                      "end":  80.26,
+                                                      "text":  "You did some shit that fucked up your life cause I provoked you (Haha!)"
+                                                  },
+                                                  {
+                                                      "start":  80.26,
+                                                      "end":  82.7,
+                                                      "text":  "It\u0027s been a while since I looked at your profile (Uh-huh)"
+                                                  },
+                                                  {
+                                                      "start":  82.7,
+                                                      "end":  85.9,
+                                                      "text":  "But you looking at mine every fucking week so I smile (Cheese!)"
+                                                  },
+                                                  {
+                                                      "start":  85.9,
+                                                      "end":  87.98,
+                                                      "text":  "Wife material, but not you (Never!)"
+                                                  },
+                                                  {
+                                                      "start":  87.98,
+                                                      "end":  91.06,
+                                                      "text":  "You cheated, got pregnant, then he dropped you (Thud!)"
+                                                  },
+                                                  {
+                                                      "start":  91.06,
+                                                      "end":  93.26,
+                                                      "text":  "That brings up another thought too (Wait...)"
+                                                  },
+                                                  {
+                                                      "start":  93.26,
+                                                      "end":  96.38,
+                                                      "text":  "He socked you, cause we were talking and he caught you (Pow!)"
+                                                  },
+                                                  {
+                                                      "start":  96.38,
+                                                      "end":  98.9,
+                                                      "text":  "We know she likes to cheat though, she\u0027s a thot (Skank!)"
+                                                  },
+                                                  {
+                                                      "start":  98.9,
+                                                      "end":  101.38,
+                                                      "text":  "So she\u0027s popped with three shots like a free throw (Swish!)"
+                                                  },
+                                                  {
+                                                      "start":  101.38,
+                                                      "end":  104.18,
+                                                      "text":  "She\u0027s cocky, she slides on three cocks and deep throats (Gulp!)"
+                                                  },
+                                                  {
+                                                      "start":  104.18,
+                                                      "end":  107.38,
+                                                      "text":  "She\u0027s hot, but she\u0027s not, cause these frauds is skeeze hoes (Fake!)"
+                                                  },
+                                                  {
+                                                      "start":  107.38,
+                                                      "end":  109.7,
+                                                      "text":  "Yo, no one pimps her, I\u0027mma get her profits (Ching ching!)"
+                                                  },
+                                                  {
+                                                      "start":  109.7,
+                                                      "end":  113.58,
+                                                      "text":  "Sippin\u0027 liquor by the pitcher, mister trippin\u0027 strippin\u0027 strippers\u0027 pockets (Gimme that!)"
+                                                  },
+                                                  {
+                                                      "start":  113.58,
+                                                      "end":  115.5,
+                                                      "text":  "She pussy pop for a tootsie pop (Pop!)"
+                                                  },
+                                                  {
+                                                      "start":  115.5,
+                                                      "end":  118.74,
+                                                      "text":  "Plays the pussycock, super fucking pig like a rookie cop (Oink oink!)"
+                                                  },
+                                                  {
+                                                      "start":  118.74,
+                                                      "end":  120.9,
+                                                      "text":  "I laugh when you say I can\u0027t rap bitch (Hahahaha!)"
+                                                  },
+                                                  {
+                                                      "start":  120.9,
+                                                      "end":  124.54,
+                                                      "text":  "Shut the fuck up whore, before you get your ass kicked (Booted!)"
+                                                  },
+                                                  {
+                                                      "start":  124.54,
+                                                      "end":  127.54,
+                                                      "text":  "Compulsive liar, no one\u0027s desire (Nobody!)"
+                                                  },
+                                                  {
+                                                      "start":  127.54,
+                                                      "end":  129.54,
+                                                      "text":  "Ho you ain\u0027t fire, ho used like my tires (Skrrt!)"
+                                                  },
+                                                  {
+                                                      "start":  129.54,
+                                                      "end":  131.94,
+                                                      "text":  "Bitch, I\u0027ll split that 40 dollar wig (gunshot!)"
+                                                  },
+                                                  {
+                                                      "start":  131.94,
+                                                      "end":  135.74,
+                                                      "text":  "Get your holy water, pray to your father for your sins (Amen!)"
+                                                  },
+                                                  {
+                                                      "start":  135.74,
+                                                      "end":  139.46,
+                                                      "text":  "And watch who you call anything but the shit bitch (Watch it!)"
+                                                  },
+                                                  {
+                                                      "start":  139.46,
+                                                      "end":  142.94,
+                                                      "text":  "Before I stick this fucking voodoo doll (Stab!)"
+                                                  }
+                                              ]
+                                 }
+              }
+}

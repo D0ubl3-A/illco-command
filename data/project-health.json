@@ -1,829 +1,850 @@
 {
-  "generatedAt": "2026-06-17T03:35:27.512Z",
+  "generatedAt": "2026-06-23T01:42:31.805Z",
   "summary": {
-    "checked": 117,
-    "healthy": 78,
+    "checked": 120,
+    "healthy": 81,
     "degraded": 7,
     "offline": 32
   },
   "projects": {
+    "ai-companions-recovered": {
+      "status": "healthy",
+      "statusCode": 200,
+      "checkedAt": "2026-06-23T01:42:26.073Z",
+      "title": "AI Tools Marketplace",
+      "error": null
+    },
+    "think-for-me-mode": {
+      "status": "healthy",
+      "statusCode": 200,
+      "checkedAt": "2026-06-23T01:42:26.217Z",
+      "title": "Think For Me Mode | ILLCO AI",
+      "error": null
+    },
     "viral-stitch-ai": {
       "status": "offline",
       "statusCode": null,
-      "checkedAt": "2026-06-17T03:35:22.732Z",
+      "checkedAt": "2026-06-23T01:42:26.217Z",
       "title": null,
       "error": "No production URL assigned."
     },
     "barz-web-studio": {
       "status": "offline",
       "statusCode": null,
-      "checkedAt": "2026-06-17T03:35:22.734Z",
+      "checkedAt": "2026-06-23T01:42:26.217Z",
       "title": null,
       "error": "No production URL assigned."
     },
     "barz": {
       "status": "offline",
       "statusCode": null,
-      "checkedAt": "2026-06-17T03:35:22.734Z",
+      "checkedAt": "2026-06-23T01:42:26.217Z",
       "title": null,
       "error": "No production URL assigned."
     },
     "epstein-files-desk": {
       "status": "offline",
       "statusCode": null,
-      "checkedAt": "2026-06-17T03:35:22.734Z",
+      "checkedAt": "2026-06-23T01:42:26.217Z",
       "title": null,
       "error": "No production URL assigned."
-    },
-    "ai-companion-conversational-intake": {
-      "status": "healthy",
-      "statusCode": 200,
-      "checkedAt": "2026-06-17T03:35:22.986Z",
-      "title": "ILLCO AI | AI App Store for Creators and Teams",
-      "error": null
-    },
-    "ai-companions-recovered": {
-      "status": "healthy",
-      "statusCode": 200,
-      "checkedAt": "2026-06-17T03:35:22.994Z",
-      "title": "ILLCO AI | AI App Store for Creators and Teams",
-      "error": null
-    },
-    "ai-companion-prompt-studio": {
-      "status": "healthy",
-      "statusCode": 200,
-      "checkedAt": "2026-06-17T03:35:22.997Z",
-      "title": "ILLCO AI | AI App Store for Creators and Teams",
-      "error": null
     },
     "ai-companion-command-routing": {
       "status": "healthy",
       "statusCode": 200,
-      "checkedAt": "2026-06-17T03:35:23.000Z",
-      "title": "ILLCO AI | AI App Store for Creators and Teams",
-      "error": null
-    },
-    "ai-companion-sales-agent-handoff": {
-      "status": "healthy",
-      "statusCode": 200,
-      "checkedAt": "2026-06-17T03:35:23.006Z",
-      "title": "ILLCO AI | AI App Store for Creators and Teams",
-      "error": null
-    },
-    "ai-companion-workspace-access": {
-      "status": "healthy",
-      "statusCode": 200,
-      "checkedAt": "2026-06-17T03:35:23.009Z",
-      "title": "ILLCO AI | AI App Store for Creators and Teams",
-      "error": null
-    },
-    "ai-companion-content-production": {
-      "status": "healthy",
-      "statusCode": 200,
-      "checkedAt": "2026-06-17T03:35:23.010Z",
-      "title": "ILLCO AI | AI App Store for Creators and Teams",
+      "checkedAt": "2026-06-23T01:42:26.278Z",
+      "title": "AI Companion: Multi-App Command Routing Product Listing | ILLCO AI",
       "error": null
     },
     "uap-ai-lab": {
       "status": "healthy",
       "statusCode": 200,
-      "checkedAt": "2026-06-17T03:35:23.012Z",
+      "checkedAt": "2026-06-23T01:42:26.377Z",
       "title": "PURSUE AI Lab",
       "error": null
     },
-    "sora-catalog-vercel-preview": {
-      "status": "offline",
-      "statusCode": null,
-      "checkedAt": "2026-06-17T03:35:23.012Z",
-      "title": null,
-      "error": "No production URL assigned."
+    "why-not-me-ai": {
+      "status": "healthy",
+      "statusCode": 200,
+      "checkedAt": "2026-06-23T01:42:26.450Z",
+      "title": "WhyNotMe.ai | Local AI Visibility Grader",
+      "error": null
     },
     "video-margin-ai": {
       "status": "healthy",
       "statusCode": 200,
-      "checkedAt": "2026-06-17T03:35:23.154Z",
+      "checkedAt": "2026-06-23T01:42:26.538Z",
       "title": "VideoMargin.ai | AI Video API Cost and SaaS Margin Calculator",
       "error": null
     },
     "vercel-reporter": {
       "status": "healthy",
       "statusCode": 200,
-      "checkedAt": "2026-06-17T03:35:23.191Z",
+      "checkedAt": "2026-06-23T01:42:26.635Z",
       "title": "BIGO Reporter Webhook",
-      "error": null
-    },
-    "why-not-me-ai": {
-      "status": "healthy",
-      "statusCode": 200,
-      "checkedAt": "2026-06-17T03:35:23.193Z",
-      "title": "WhyNotMe.ai | Local AI Visibility Grader",
-      "error": null
-    },
-    "codexgroq": {
-      "status": "healthy",
-      "statusCode": 200,
-      "checkedAt": "2026-06-17T03:35:23.274Z",
-      "title": "Groq Realty Control",
-      "error": null
-    },
-    "youtube-ops-vercel": {
-      "status": "healthy",
-      "statusCode": 200,
-      "checkedAt": "2026-06-17T03:35:23.357Z",
-      "title": "YouTube Ops",
-      "error": null
-    },
-    "illco-ai-video": {
-      "status": "healthy",
-      "statusCode": 200,
-      "checkedAt": "2026-06-17T03:35:23.392Z",
-      "title": "iLLCO AI | AI Video Production Systems",
       "error": null
     },
     "mastering-studio-platform": {
       "status": "healthy",
       "statusCode": 200,
-      "checkedAt": "2026-06-17T03:35:23.397Z",
+      "checkedAt": "2026-06-23T01:42:26.844Z",
       "title": "Mastering Studio Platform",
+      "error": null
+    },
+    "youtube-ops-vercel": {
+      "status": "healthy",
+      "statusCode": 200,
+      "checkedAt": "2026-06-23T01:42:27.147Z",
+      "title": "YouTube Ops",
+      "error": null
+    },
+    "lyric-video-forge": {
+      "status": "healthy",
+      "statusCode": 200,
+      "checkedAt": "2026-06-23T01:42:27.165Z",
+      "title": "Lyric Video Forge | ILLCO AI",
+      "error": null
+    },
+    "sora-catalog-vercel-preview": {
+      "status": "offline",
+      "statusCode": null,
+      "checkedAt": "2026-06-23T01:42:27.165Z",
+      "title": null,
+      "error": "No production URL assigned."
+    },
+    "ai-companion-prompt-studio": {
+      "status": "healthy",
+      "statusCode": 200,
+      "checkedAt": "2026-06-23T01:42:27.191Z",
+      "title": "AI Companion: Prompt Studio Product Listing | ILLCO AI",
+      "error": null
+    },
+    "ai-companion-sales-agent-handoff": {
+      "status": "healthy",
+      "statusCode": 200,
+      "checkedAt": "2026-06-23T01:42:27.196Z",
+      "title": "AI Companion: Sales Agent Hand-off Product Listing | ILLCO AI",
+      "error": null
+    },
+    "ai-companion-content-production": {
+      "status": "healthy",
+      "statusCode": 200,
+      "checkedAt": "2026-06-23T01:42:27.200Z",
+      "title": "AI Companion: Content Production Product Listing | ILLCO AI",
+      "error": null
+    },
+    "ai-companion-conversational-intake": {
+      "status": "healthy",
+      "statusCode": 200,
+      "checkedAt": "2026-06-23T01:42:27.202Z",
+      "title": "AI Companion: Conversational Intake Product Listing | ILLCO AI",
+      "error": null
+    },
+    "ai-companion-workspace-access": {
+      "status": "healthy",
+      "statusCode": 200,
+      "checkedAt": "2026-06-23T01:42:27.234Z",
+      "title": "AI Companion: Unified Workspace Access Product Listing | ILLCO AI",
+      "error": null
+    },
+    "codexgroq": {
+      "status": "healthy",
+      "statusCode": 200,
+      "checkedAt": "2026-06-23T01:42:27.324Z",
+      "title": "Groq Realty Control",
+      "error": null
+    },
+    "illco-ai-video": {
+      "status": "healthy",
+      "statusCode": 200,
+      "checkedAt": "2026-06-23T01:42:27.405Z",
+      "title": "iLLCO AI | AI Video Production Systems",
       "error": null
     },
     "visual-voice-board": {
       "status": "healthy",
       "statusCode": 200,
-      "checkedAt": "2026-06-17T03:35:23.401Z",
+      "checkedAt": "2026-06-23T01:42:27.416Z",
       "title": "Visual Voice Board",
-      "error": null
-    },
-    "illco-ai-funnel": {
-      "status": "healthy",
-      "statusCode": 200,
-      "checkedAt": "2026-06-17T03:35:23.443Z",
-      "title": "iLLCO AI | Autonomous Product Sprints",
-      "error": null
-    },
-    "voice-book-tool": {
-      "status": "healthy",
-      "statusCode": 200,
-      "checkedAt": "2026-06-17T03:35:23.450Z",
-      "title": "VoiceBook AI",
-      "error": null
-    },
-    "rap-lyric-generator": {
-      "status": "healthy",
-      "statusCode": 200,
-      "checkedAt": "2026-06-17T03:35:23.513Z",
-      "title": "Barz | The Worlds Best Rap Generator",
       "error": null
     },
     "ai-dev-co-funnel": {
       "status": "healthy",
       "statusCode": 200,
-      "checkedAt": "2026-06-17T03:35:23.532Z",
+      "checkedAt": "2026-06-23T01:42:27.429Z",
       "title": "AI Dev Co | Autonomous Product Sprints",
+      "error": null
+    },
+    "illco-ai-funnel": {
+      "status": "healthy",
+      "statusCode": 200,
+      "checkedAt": "2026-06-23T01:42:27.434Z",
+      "title": "iLLCO AI | Autonomous Product Sprints",
+      "error": null
+    },
+    "rap-lyric-generator": {
+      "status": "healthy",
+      "statusCode": 200,
+      "checkedAt": "2026-06-23T01:42:27.494Z",
+      "title": "Barz | The Worlds Best Rap Generator",
       "error": null
     },
     "ship-fast-test": {
       "status": "offline",
       "statusCode": 404,
-      "checkedAt": "2026-06-17T03:35:23.556Z",
+      "checkedAt": "2026-06-23T01:42:27.503Z",
       "title": null,
       "error": null
     },
-    "sora-vault-cloud": {
+    "voice-book-tool": {
       "status": "healthy",
       "statusCode": 200,
-      "checkedAt": "2026-06-17T03:35:23.566Z",
-      "title": "Sora Vault Cloud",
+      "checkedAt": "2026-06-23T01:42:27.539Z",
+      "title": "VoiceBook AI",
       "error": null
     },
     "nexus-lab": {
       "status": "healthy",
       "statusCode": 200,
-      "checkedAt": "2026-06-17T03:35:23.571Z",
+      "checkedAt": "2026-06-23T01:42:27.573Z",
       "title": "Nexus Lab",
+      "error": null
+    },
+    "sora-vault-cloud": {
+      "status": "healthy",
+      "statusCode": 200,
+      "checkedAt": "2026-06-23T01:42:27.606Z",
+      "title": "Sora Vault Cloud",
       "error": null
     },
     "bigostreets": {
       "status": "healthy",
       "statusCode": 200,
-      "checkedAt": "2026-06-17T03:35:23.614Z",
+      "checkedAt": "2026-06-23T01:42:27.646Z",
       "title": "Bigo Live Newswire",
       "error": null
     },
     "green-gator-pools": {
       "status": "healthy",
       "statusCode": 200,
-      "checkedAt": "2026-06-17T03:35:23.618Z",
+      "checkedAt": "2026-06-23T01:42:27.663Z",
       "title": "Henderson Pool Cleaning Service | Green Gator Pools",
       "error": null
     },
     "battle-rap-ai": {
       "status": "healthy",
       "statusCode": 200,
-      "checkedAt": "2026-06-17T03:35:23.660Z",
+      "checkedAt": "2026-06-23T01:42:27.676Z",
       "title": "Battle Rap AI - Epic Voice-Powered Rap Battles Against AI",
       "error": null
     },
     "aaron": {
       "status": "offline",
       "statusCode": null,
-      "checkedAt": "2026-06-17T03:35:23.660Z",
+      "checkedAt": "2026-06-23T01:42:27.676Z",
       "title": null,
       "error": "No production URL assigned."
     },
-    "tshirtworkshop": {
-      "status": "healthy",
-      "statusCode": 200,
-      "checkedAt": "2026-06-17T03:35:23.662Z",
-      "title": "T-Shirt Workshop",
+    "debate-league-jcld": {
+      "status": "offline",
+      "statusCode": 404,
+      "checkedAt": "2026-06-23T01:42:27.780Z",
+      "title": null,
       "error": null
     },
     "diss-track-site": {
       "status": "healthy",
       "statusCode": 200,
-      "checkedAt": "2026-06-17T03:35:23.714Z",
+      "checkedAt": "2026-06-23T01:42:27.790Z",
       "title": "Diss Track Vault",
-      "error": null
-    },
-    "debate-league-jcld": {
-      "status": "offline",
-      "statusCode": 404,
-      "checkedAt": "2026-06-17T03:35:23.739Z",
-      "title": null,
       "error": null
     },
     "bigo-live-news": {
       "status": "healthy",
       "statusCode": 200,
-      "checkedAt": "2026-06-17T03:35:23.741Z",
+      "checkedAt": "2026-06-23T01:42:27.955Z",
       "title": "Bigo Live Newswire",
-      "error": null
-    },
-    "sora2-petition": {
-      "status": "healthy",
-      "statusCode": 200,
-      "checkedAt": "2026-06-17T03:35:23.830Z",
-      "title": "Keep Sora 2 Live - Public Petition",
       "error": null
     },
     "assets": {
       "status": "healthy",
       "statusCode": 200,
-      "checkedAt": "2026-06-17T03:35:23.834Z",
+      "checkedAt": "2026-06-23T01:42:28.103Z",
       "title": "NilsasElementalArt | Rare Crystal & Stone Adornments",
       "error": null
     },
-    "lvl-up-agency": {
+    "sora2-petition": {
       "status": "healthy",
       "statusCode": 200,
-      "checkedAt": "2026-06-17T03:35:23.849Z",
-      "title": "Level Up Agency - BIGO Live Host Management & AI Coaching Platform",
-      "error": null
-    },
-    "brii-baby": {
-      "status": "healthy",
-      "statusCode": 200,
-      "checkedAt": "2026-06-17T03:35:23.892Z",
-      "title": "Brii Baby",
-      "error": null
-    },
-    "ill-motion-ai": {
-      "status": "healthy",
-      "statusCode": 200,
-      "checkedAt": "2026-06-17T03:35:23.905Z",
-      "title": "iLL-Motion Ai | Phenomenal Video Generation",
-      "error": null
-    },
-    "cortex-intelligence": {
-      "status": "healthy",
-      "statusCode": 200,
-      "checkedAt": "2026-06-17T03:35:23.979Z",
-      "title": "Cortex Intelligence – Iran Drone Alert",
-      "error": null
-    },
-    "illcoappiverse": {
-      "status": "healthy",
-      "statusCode": 200,
-      "checkedAt": "2026-06-17T03:35:24.009Z",
-      "title": "The Appiverse by Illco",
-      "error": null
-    },
-    "automateflow": {
-      "status": "healthy",
-      "statusCode": 200,
-      "checkedAt": "2026-06-17T03:35:24.023Z",
-      "title": "Base44 APP",
-      "error": null
-    },
-    "music-video-clip-site": {
-      "status": "healthy",
-      "statusCode": 200,
-      "checkedAt": "2026-06-17T03:35:24.065Z",
-      "title": "Neon Performance Clip",
+      "checkedAt": "2026-06-23T01:42:28.204Z",
+      "title": "Keep Sora 2 Live - Public Petition",
       "error": null
     },
     "ltb-tool-payments": {
       "status": "offline",
       "statusCode": 404,
-      "checkedAt": "2026-06-17T03:35:24.088Z",
+      "checkedAt": "2026-06-23T01:42:28.214Z",
       "title": null,
       "error": null
     },
     "radio-edit-studio": {
       "status": "healthy",
       "statusCode": 200,
-      "checkedAt": "2026-06-17T03:35:24.130Z",
+      "checkedAt": "2026-06-23T01:42:28.223Z",
       "title": "Radio Edit Studio",
+      "error": null
+    },
+    "automateflow": {
+      "status": "healthy",
+      "statusCode": 200,
+      "checkedAt": "2026-06-23T01:42:28.245Z",
+      "title": "Base44 APP",
+      "error": null
+    },
+    "lvl-up-agency": {
+      "status": "healthy",
+      "statusCode": 200,
+      "checkedAt": "2026-06-23T01:42:28.261Z",
+      "title": "Level Up Agency - BIGO Live Host Management & AI Coaching Platform",
+      "error": null
+    },
+    "tshirtworkshop": {
+      "status": "healthy",
+      "statusCode": 200,
+      "checkedAt": "2026-06-23T01:42:28.271Z",
+      "title": "T-Shirt Workshop",
+      "error": null
+    },
+    "brii-baby": {
+      "status": "healthy",
+      "statusCode": 200,
+      "checkedAt": "2026-06-23T01:42:28.380Z",
+      "title": "Brii Baby",
+      "error": null
+    },
+    "ill-motion-ai": {
+      "status": "healthy",
+      "statusCode": 200,
+      "checkedAt": "2026-06-23T01:42:28.384Z",
+      "title": "iLL-Motion Ai | Phenomenal Video Generation",
+      "error": null
+    },
+    "cortex-intelligence": {
+      "status": "healthy",
+      "statusCode": 200,
+      "checkedAt": "2026-06-23T01:42:28.448Z",
+      "title": "Cortex Intelligence – Iran Drone Alert",
+      "error": null
+    },
+    "illcoappiverse": {
+      "status": "healthy",
+      "statusCode": 200,
+      "checkedAt": "2026-06-23T01:42:28.451Z",
+      "title": "The Appiverse by Illco",
+      "error": null
+    },
+    "music-video-clip-site": {
+      "status": "healthy",
+      "statusCode": 200,
+      "checkedAt": "2026-06-23T01:42:28.511Z",
+      "title": "Neon Performance Clip",
+      "error": null
+    },
+    "lottery-pattern-analyzer": {
+      "status": "offline",
+      "statusCode": 404,
+      "checkedAt": "2026-06-23T01:42:28.553Z",
+      "title": null,
       "error": null
     },
     "nexus-workstation": {
       "status": "healthy",
       "statusCode": 200,
-      "checkedAt": "2026-06-17T03:35:24.190Z",
+      "checkedAt": "2026-06-23T01:42:28.559Z",
       "title": "My Google AI Studio App",
       "error": null
     },
     "backend": {
       "status": "healthy",
       "statusCode": 200,
-      "checkedAt": "2026-06-17T03:35:24.205Z",
+      "checkedAt": "2026-06-23T01:42:28.583Z",
       "title": null,
-      "error": null
-    },
-    "online-store-radio-edit": {
-      "status": "healthy",
-      "statusCode": 200,
-      "checkedAt": "2026-06-17T03:35:24.273Z",
-      "title": "iLLco Workspace",
-      "error": null
-    },
-    "ghettobirddemo": {
-      "status": "healthy",
-      "statusCode": 200,
-      "checkedAt": "2026-06-17T03:35:24.291Z",
-      "title": "GBird Voice AI",
-      "error": null
-    },
-    "illcoflow": {
-      "status": "healthy",
-      "statusCode": 200,
-      "checkedAt": "2026-06-17T03:35:24.316Z",
-      "title": "Base44 APP",
-      "error": null
-    },
-    "lottery-pattern-analyzer": {
-      "status": "offline",
-      "statusCode": 404,
-      "checkedAt": "2026-06-17T03:35:24.318Z",
-      "title": null,
-      "error": null
-    },
-    "codex-agent-app": {
-      "status": "healthy",
-      "statusCode": 200,
-      "checkedAt": "2026-06-17T03:35:24.411Z",
-      "title": "Codex Agent App",
       "error": null
     },
     "frontend": {
       "status": "degraded",
       "statusCode": 401,
-      "checkedAt": "2026-06-17T03:35:24.445Z",
+      "checkedAt": "2026-06-23T01:42:28.723Z",
       "title": "Authentication Required",
+      "error": null
+    },
+    "illcoflow": {
+      "status": "healthy",
+      "statusCode": 200,
+      "checkedAt": "2026-06-23T01:42:28.740Z",
+      "title": "Base44 APP",
+      "error": null
+    },
+    "ghettobirddemo": {
+      "status": "healthy",
+      "statusCode": 200,
+      "checkedAt": "2026-06-23T01:42:28.744Z",
+      "title": "GBird Voice AI",
+      "error": null
+    },
+    "online-store-radio-edit": {
+      "status": "healthy",
+      "statusCode": 200,
+      "checkedAt": "2026-06-23T01:42:28.746Z",
+      "title": "iLLco Workspace",
+      "error": null
+    },
+    "backend-node": {
+      "status": "offline",
+      "statusCode": 404,
+      "checkedAt": "2026-06-23T01:42:28.780Z",
+      "title": "Error",
+      "error": null
+    },
+    "codex-agent-app": {
+      "status": "healthy",
+      "statusCode": 200,
+      "checkedAt": "2026-06-23T01:42:28.789Z",
+      "title": "Codex Agent App",
       "error": null
     },
     "illcoai-tools": {
       "status": "offline",
       "statusCode": 404,
-      "checkedAt": "2026-06-17T03:35:24.476Z",
+      "checkedAt": "2026-06-23T01:42:28.859Z",
       "title": null,
       "error": null
+    },
+    "powerhouse-app-builder": {
+      "status": "offline",
+      "statusCode": null,
+      "checkedAt": "2026-06-23T01:42:28.907Z",
+      "title": null,
+      "error": "fetch failed"
     },
     "illco-ai-hq": {
       "status": "healthy",
       "statusCode": 200,
-      "checkedAt": "2026-06-17T03:35:24.502Z",
+      "checkedAt": "2026-06-23T01:42:28.928Z",
       "title": null,
       "error": null
     },
     "notion-webhook": {
       "status": "healthy",
       "statusCode": 200,
-      "checkedAt": "2026-06-17T03:35:24.527Z",
+      "checkedAt": "2026-06-23T01:42:28.935Z",
       "title": null,
       "error": null
     },
     "lipsync-app": {
       "status": "healthy",
       "statusCode": 200,
-      "checkedAt": "2026-06-17T03:35:24.528Z",
+      "checkedAt": "2026-06-23T01:42:28.954Z",
       "title": "iLLco Workspace",
       "error": null
-    },
-    "powerhouse-app-builder": {
-      "status": "offline",
-      "statusCode": null,
-      "checkedAt": "2026-06-17T03:35:24.550Z",
-      "title": null,
-      "error": "fetch failed"
     },
     "sbl-sora-battle-league": {
       "status": "healthy",
       "statusCode": 200,
-      "checkedAt": "2026-06-17T03:35:24.648Z",
+      "checkedAt": "2026-06-23T01:42:28.978Z",
       "title": "SBL – Sora Battle League",
       "error": null
     },
     "illcoai-offline-v2": {
       "status": "healthy",
       "statusCode": 200,
-      "checkedAt": "2026-06-17T03:35:24.674Z",
+      "checkedAt": "2026-06-23T01:42:29.000Z",
       "title": null,
-      "error": null
-    },
-    "backend-node": {
-      "status": "offline",
-      "statusCode": 404,
-      "checkedAt": "2026-06-17T03:35:24.741Z",
-      "title": "Error",
-      "error": null
-    },
-    "notion-api-webhook-repo": {
-      "status": "healthy",
-      "statusCode": 200,
-      "checkedAt": "2026-06-17T03:35:24.761Z",
-      "title": "Notion API Webhook Repo",
-      "error": null
-    },
-    "notion-vercel-backend": {
-      "status": "healthy",
-      "statusCode": 200,
-      "checkedAt": "2026-06-17T03:35:24.800Z",
-      "title": "Notion Vercel Backend",
-      "error": null
-    },
-    "illcoai-api": {
-      "status": "offline",
-      "statusCode": 500,
-      "checkedAt": "2026-06-17T03:35:24.815Z",
-      "title": null,
-      "error": null
-    },
-    "ops-bot": {
-      "status": "healthy",
-      "statusCode": 200,
-      "checkedAt": "2026-06-17T03:35:24.820Z",
-      "title": "Ops Bot - Production Workspace | Vercel",
       "error": null
     },
     "illcoai-upscale-v2": {
       "status": "offline",
       "statusCode": 404,
-      "checkedAt": "2026-06-17T03:35:24.891Z",
+      "checkedAt": "2026-06-23T01:42:29.014Z",
       "title": null,
+      "error": null
+    },
+    "notion-api-webhook-repo": {
+      "status": "healthy",
+      "statusCode": 200,
+      "checkedAt": "2026-06-23T01:42:29.088Z",
+      "title": "Notion API Webhook Repo",
+      "error": null
+    },
+    "ops-bot": {
+      "status": "healthy",
+      "statusCode": 200,
+      "checkedAt": "2026-06-23T01:42:29.126Z",
+      "title": "Ops Bot - Production Workspace | Vercel",
+      "error": null
+    },
+    "notion-vercel-backend": {
+      "status": "healthy",
+      "statusCode": 200,
+      "checkedAt": "2026-06-23T01:42:29.162Z",
+      "title": "Notion Vercel Backend",
       "error": null
     },
     "gardening-site": {
       "status": "healthy",
       "statusCode": 200,
-      "checkedAt": "2026-06-17T03:35:24.894Z",
+      "checkedAt": "2026-06-23T01:42:29.164Z",
       "title": "Indoor & Small-Space Gardening Authority",
       "error": null
     },
     "gardening-site-grqp": {
       "status": "healthy",
       "statusCode": 200,
-      "checkedAt": "2026-06-17T03:35:24.939Z",
+      "checkedAt": "2026-06-23T01:42:29.168Z",
       "title": "Indoor & Small-Space Gardening Authority",
       "error": null
     },
-    "real-estate-ai-workstation": {
-      "status": "offline",
-      "statusCode": 404,
-      "checkedAt": "2026-06-17T03:35:24.948Z",
-      "title": null,
+    "web": {
+      "status": "degraded",
+      "statusCode": 401,
+      "checkedAt": "2026-06-23T01:42:29.207Z",
+      "title": "Authentication Required",
       "error": null
     },
-    "ghetto-bird-robot": {
-      "status": "healthy",
-      "statusCode": 200,
-      "checkedAt": "2026-06-17T03:35:25.031Z",
-      "title": "GhettoBirdSim WebGL Host",
-      "error": null
-    },
-    "debate-league": {
+    "illcoai-api": {
       "status": "offline",
-      "statusCode": 404,
-      "checkedAt": "2026-06-17T03:35:25.033Z",
+      "statusCode": 500,
+      "checkedAt": "2026-06-23T01:42:29.228Z",
       "title": null,
       "error": null
     },
     "src": {
       "status": "degraded",
       "statusCode": 401,
-      "checkedAt": "2026-06-17T03:35:25.040Z",
+      "checkedAt": "2026-06-23T01:42:29.233Z",
       "title": "Authentication Required",
       "error": null
     },
-    "online-store": {
-      "status": "degraded",
-      "statusCode": 401,
-      "checkedAt": "2026-06-17T03:35:25.119Z",
-      "title": "Authentication Required",
+    "real-estate-ai-workstation": {
+      "status": "offline",
+      "statusCode": 404,
+      "checkedAt": "2026-06-23T01:42:29.261Z",
+      "title": null,
+      "error": null
+    },
+    "ghetto-bird-robot": {
+      "status": "healthy",
+      "statusCode": 200,
+      "checkedAt": "2026-06-23T01:42:29.343Z",
+      "title": "GhettoBirdSim WebGL Host",
+      "error": null
+    },
+    "debate-league": {
+      "status": "offline",
+      "statusCode": 404,
+      "checkedAt": "2026-06-23T01:42:29.363Z",
+      "title": null,
       "error": null
     },
     "ilco-ops2": {
       "status": "healthy",
       "statusCode": 200,
-      "checkedAt": "2026-06-17T03:35:25.123Z",
+      "checkedAt": "2026-06-23T01:42:29.371Z",
       "title": "Illco Ops",
       "error": null
     },
-    "out": {
+    "online-store": {
       "status": "degraded",
       "statusCode": 401,
-      "checkedAt": "2026-06-17T03:35:25.135Z",
-      "title": "Authentication Required",
-      "error": null
-    },
-    "web": {
-      "status": "degraded",
-      "statusCode": 401,
-      "checkedAt": "2026-06-17T03:35:25.145Z",
+      "checkedAt": "2026-06-23T01:42:29.407Z",
       "title": "Authentication Required",
       "error": null
     },
     "workspace": {
       "status": "offline",
       "statusCode": 404,
-      "checkedAt": "2026-06-17T03:35:25.190Z",
+      "checkedAt": "2026-06-23T01:42:29.411Z",
       "title": null,
+      "error": null
+    },
+    "out": {
+      "status": "degraded",
+      "statusCode": 401,
+      "checkedAt": "2026-06-23T01:42:29.424Z",
+      "title": "Authentication Required",
       "error": null
     },
     "aaron-gateway": {
       "status": "healthy",
       "statusCode": 200,
-      "checkedAt": "2026-06-17T03:35:25.195Z",
+      "checkedAt": "2026-06-23T01:42:29.457Z",
       "title": "Aaron's Server Hub",
-      "error": null
-    },
-    "illcoai-lipsync-v2": {
-      "status": "offline",
-      "statusCode": 404,
-      "checkedAt": "2026-06-17T03:35:25.452Z",
-      "title": null,
       "error": null
     },
     "illcoai-homicide-v2": {
       "status": "offline",
       "statusCode": 404,
-      "checkedAt": "2026-06-17T03:35:25.480Z",
-      "title": null,
-      "error": null
-    },
-    "illcoai-bot-v2": {
-      "status": "offline",
-      "statusCode": 404,
-      "checkedAt": "2026-06-17T03:35:25.497Z",
-      "title": null,
-      "error": null
-    },
-    "illcoai-lipsync-api-v2": {
-      "status": "offline",
-      "statusCode": 404,
-      "checkedAt": "2026-06-17T03:35:25.508Z",
+      "checkedAt": "2026-06-23T01:42:29.523Z",
       "title": null,
       "error": null
     },
     "tmp-deploy": {
       "status": "healthy",
       "statusCode": 200,
-      "checkedAt": "2026-06-17T03:35:25.511Z",
+      "checkedAt": "2026-06-23T01:42:29.640Z",
       "title": "Homicide Forecast Lab",
+      "error": null
+    },
+    "illcoai-upscale-api-v2": {
+      "status": "offline",
+      "statusCode": 404,
+      "checkedAt": "2026-06-23T01:42:29.664Z",
+      "title": null,
+      "error": null
+    },
+    "illcoai-bot-v2": {
+      "status": "offline",
+      "statusCode": 404,
+      "checkedAt": "2026-06-23T01:42:29.741Z",
+      "title": null,
       "error": null
     },
     "illcoai-bot-api-v2": {
       "status": "offline",
       "statusCode": 404,
-      "checkedAt": "2026-06-17T03:35:25.636Z",
+      "checkedAt": "2026-06-23T01:42:29.755Z",
+      "title": null,
+      "error": null
+    },
+    "illcoai-lipsync-v2": {
+      "status": "offline",
+      "statusCode": 404,
+      "checkedAt": "2026-06-23T01:42:29.773Z",
+      "title": null,
+      "error": null
+    },
+    "illcoai-book-v2": {
+      "status": "offline",
+      "statusCode": 404,
+      "checkedAt": "2026-06-23T01:42:29.906Z",
+      "title": null,
+      "error": null
+    },
+    "illcoai-lipsync-api-v2": {
+      "status": "offline",
+      "statusCode": 404,
+      "checkedAt": "2026-06-23T01:42:29.916Z",
       "title": null,
       "error": null
     },
     "vercel-ai-gateway-demo": {
       "status": "healthy",
       "statusCode": 200,
-      "checkedAt": "2026-06-17T03:35:25.675Z",
+      "checkedAt": "2026-06-23T01:42:29.939Z",
       "title": "AI Gateway Demo",
       "error": null
     },
-    "illcoai-upscale-api-v2": {
+    "illcoai-e2b-api-v2": {
       "status": "offline",
       "statusCode": 404,
-      "checkedAt": "2026-06-17T03:35:25.773Z",
+      "checkedAt": "2026-06-23T01:42:30.047Z",
       "title": null,
       "error": null
     },
     "illcoai-airbnb-v2": {
       "status": "offline",
       "statusCode": 404,
-      "checkedAt": "2026-06-17T03:35:25.833Z",
-      "title": null,
-      "error": null
-    },
-    "illcoai-video-generator-deploy": {
-      "status": "healthy",
-      "statusCode": 200,
-      "checkedAt": "2026-06-17T03:35:25.846Z",
-      "title": "iLLCoAi Video Generator",
-      "error": null
-    },
-    "illcoai-book-v2": {
-      "status": "offline",
-      "statusCode": 404,
-      "checkedAt": "2026-06-17T03:35:25.863Z",
+      "checkedAt": "2026-06-23T01:42:30.074Z",
       "title": null,
       "error": null
     },
     "illcoai-book-api-v2": {
       "status": "offline",
       "statusCode": 404,
-      "checkedAt": "2026-06-17T03:35:25.903Z",
-      "title": null,
-      "error": null
-    },
-    "illcoai-e2b-api-v2": {
-      "status": "offline",
-      "statusCode": 404,
-      "checkedAt": "2026-06-17T03:35:25.905Z",
+      "checkedAt": "2026-06-23T01:42:30.100Z",
       "title": null,
       "error": null
     },
     "illcoai-e2b-v2": {
       "status": "offline",
       "statusCode": 404,
-      "checkedAt": "2026-06-17T03:35:26.001Z",
+      "checkedAt": "2026-06-23T01:42:30.153Z",
       "title": null,
       "error": null
     },
     "illcoai-realtor-workflow-v2": {
       "status": "offline",
       "statusCode": 404,
-      "checkedAt": "2026-06-17T03:35:26.038Z",
+      "checkedAt": "2026-06-23T01:42:30.201Z",
       "title": null,
+      "error": null
+    },
+    "illcoai-video-generator-deploy": {
+      "status": "healthy",
+      "statusCode": 200,
+      "checkedAt": "2026-06-23T01:42:30.266Z",
+      "title": "iLLCoAi Video Generator",
+      "error": null
+    },
+    "whatsapp-ai-bot": {
+      "status": "healthy",
+      "statusCode": 200,
+      "checkedAt": "2026-06-23T01:42:30.395Z",
+      "title": "Lip Sync Studio + Groq File Q&amp;A",
+      "error": null
+    },
+    "whatsapp-bot": {
+      "status": "degraded",
+      "statusCode": 401,
+      "checkedAt": "2026-06-23T01:42:30.412Z",
+      "title": "Authentication Required",
       "error": null
     },
     "workstation": {
       "status": "healthy",
       "statusCode": 200,
-      "checkedAt": "2026-06-17T03:35:26.097Z",
+      "checkedAt": "2026-06-23T01:42:30.471Z",
       "title": "Online Store Dashboard",
       "error": null
     },
     "arc-agentic-commerce-hackathon-2026": {
       "status": "healthy",
       "statusCode": 200,
-      "checkedAt": "2026-06-17T03:35:26.186Z",
+      "checkedAt": "2026-06-23T01:42:30.500Z",
       "title": "Agentic API Spend Guard",
-      "error": null
-    },
-    "whatsapp-ai-bot": {
-      "status": "healthy",
-      "statusCode": 200,
-      "checkedAt": "2026-06-17T03:35:26.211Z",
-      "title": "Lip Sync Studio + Groq File Q&amp;A",
       "error": null
     },
     "debate-league-pro": {
       "status": "healthy",
       "statusCode": 200,
-      "checkedAt": "2026-06-17T03:35:26.213Z",
+      "checkedAt": "2026-06-23T01:42:30.506Z",
       "title": "Debate League Pro",
       "error": null
     },
     "whatsapp-bot-app": {
       "status": "healthy",
       "statusCode": 200,
-      "checkedAt": "2026-06-17T03:35:26.235Z",
+      "checkedAt": "2026-06-23T01:42:30.538Z",
       "title": "WhatsApp AI Bot",
       "error": null
     },
     "illco-ai-hq-no-mock-data": {
       "status": "healthy",
       "statusCode": 200,
-      "checkedAt": "2026-06-17T03:35:26.306Z",
+      "checkedAt": "2026-06-23T01:42:30.650Z",
       "title": "iLLCo AI HQ",
-      "error": null
-    },
-    "whatsapp-bot": {
-      "status": "degraded",
-      "statusCode": 401,
-      "checkedAt": "2026-06-17T03:35:26.331Z",
-      "title": "Authentication Required",
       "error": null
     },
     "songanalyzer-deploy": {
       "status": "healthy",
       "statusCode": 200,
-      "checkedAt": "2026-06-17T03:35:26.374Z",
+      "checkedAt": "2026-06-23T01:42:30.667Z",
       "title": "LyricFlow AI - Professional Audio Transcription",
       "error": null
     },
     "debateit": {
       "status": "offline",
       "statusCode": 404,
-      "checkedAt": "2026-06-17T03:35:26.393Z",
-      "title": null,
-      "error": null
-    },
-    "godmode-ui": {
-      "status": "healthy",
-      "statusCode": 200,
-      "checkedAt": "2026-06-17T03:35:26.407Z",
-      "title": "Godmode Console",
-      "error": null
-    },
-    "lyricflow-ai": {
-      "status": "healthy",
-      "statusCode": 200,
-      "checkedAt": "2026-06-17T03:35:26.493Z",
-      "title": "LyricFlow AI - Professional Audio Transcription",
-      "error": null
-    },
-    "debate-league-t49t": {
-      "status": "offline",
-      "statusCode": 404,
-      "checkedAt": "2026-06-17T03:35:26.520Z",
+      "checkedAt": "2026-06-23T01:42:30.682Z",
       "title": null,
       "error": null
     },
     "bookie": {
       "status": "degraded",
       "statusCode": 401,
-      "checkedAt": "2026-06-17T03:35:26.524Z",
+      "checkedAt": "2026-06-23T01:42:30.710Z",
       "title": "Authentication Required",
+      "error": null
+    },
+    "godmode-ui": {
+      "status": "healthy",
+      "statusCode": 200,
+      "checkedAt": "2026-06-23T01:42:30.733Z",
+      "title": "Godmode Console",
+      "error": null
+    },
+    "lyricflow-ai": {
+      "status": "healthy",
+      "statusCode": 200,
+      "checkedAt": "2026-06-23T01:42:30.827Z",
+      "title": "LyricFlow AI - Professional Audio Transcription",
+      "error": null
+    },
+    "debate-league-t49t": {
+      "status": "offline",
+      "statusCode": 404,
+      "checkedAt": "2026-06-23T01:42:30.848Z",
+      "title": null,
+      "error": null
+    },
+    "debate-league-api": {
+      "status": "healthy",
+      "statusCode": 200,
+      "checkedAt": "2026-06-23T01:42:30.857Z",
+      "title": null,
       "error": null
     },
     "master-slideshow": {
       "status": "healthy",
       "statusCode": 200,
-      "checkedAt": "2026-06-17T03:35:26.590Z",
+      "checkedAt": "2026-06-23T01:42:30.873Z",
       "title": "Master PDF Slideshow - Cinematic Presentation",
       "error": null
     },
     "stock-outlook": {
       "status": "healthy",
       "statusCode": 200,
-      "checkedAt": "2026-06-17T03:35:26.600Z",
+      "checkedAt": "2026-06-23T01:42:30.902Z",
       "title": "Stock Outlook",
-      "error": null
-    },
-    "debate-league-api": {
-      "status": "healthy",
-      "statusCode": 200,
-      "checkedAt": "2026-06-17T03:35:26.619Z",
-      "title": null,
       "error": null
     },
     "license-validation-api": {
       "status": "healthy",
       "statusCode": 200,
-      "checkedAt": "2026-06-17T03:35:26.639Z",
+      "checkedAt": "2026-06-23T01:42:30.920Z",
       "title": "License Validation API - Vercel",
+      "error": null
+    },
+    "novastream": {
+      "status": "healthy",
+      "statusCode": 200,
+      "checkedAt": "2026-06-23T01:42:30.922Z",
+      "title": "NovaStream | Immersive Live Streaming",
       "error": null
     },
     "bri-babyy": {
       "status": "healthy",
       "statusCode": 200,
-      "checkedAt": "2026-06-17T03:35:26.685Z",
+      "checkedAt": "2026-06-23T01:42:31.028Z",
       "title": "Attraction Trainer",
       "error": null
     },
     "serato": {
       "status": "healthy",
       "statusCode": 200,
-      "checkedAt": "2026-06-17T03:35:26.708Z",
+      "checkedAt": "2026-06-23T01:42:31.079Z",
       "title": "Audio Scout",
-      "error": null
-    },
-    "novastream": {
-      "status": "healthy",
-      "statusCode": 200,
-      "checkedAt": "2026-06-17T03:35:26.709Z",
-      "title": "NovaStream | Immersive Live Streaming",
       "error": null
     },
     "ghetto-bird-voice-ai": {
       "status": "healthy",
       "statusCode": 200,
-      "checkedAt": "2026-06-17T03:35:26.907Z",
+      "checkedAt": "2026-06-23T01:42:31.162Z",
       "title": "GBird Voice AI",
       "error": null
     },
     "stride-enterprise-platform": {
       "status": "healthy",
       "statusCode": 200,
-      "checkedAt": "2026-06-17T03:35:27.510Z",
+      "checkedAt": "2026-06-23T01:42:31.804Z",
       "title": null,
+      "error": null
+    },
+    "dj-curse-reverse": {
+      "status": "healthy",
+      "statusCode": 200,
+      "checkedAt": "2026-06-23T14:28:43.068Z",
+      "title": "AI DJ Curse Backspin Studio",
       "error": null
     }
   }

@@ -1,6 +1,7 @@
 import crypto from "node:crypto";
 
 import { completeCheckoutSession } from "@/lib/checkout-store";
+import { isCommandPaymentUnlockProduct } from "@/lib/command-payment-products";
 import { hasDatabase } from "@/lib/db";
 import { getProductById } from "@/lib/deployments";
 import { env, requireEnv, type FunnelPlanId } from "@/lib/env";
@@ -154,7 +155,7 @@ export async function hydrateCheckoutSuccess(input: {
   await persistCheckoutSummary(session, input.fallbackProductId);
 
   const licenseKey =
-    summary.checkoutComplete && summary.email && env.licenseSigningSecret
+    summary.checkoutComplete && summary.email && env.licenseSigningSecret && !isCommandPaymentUnlockProduct(summary.productId)
       ? issueSignedLicense({
           email: summary.email,
           productId: summary.productId,

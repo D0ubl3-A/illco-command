@@ -1,19 +1,19 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-06-21T00:43:03.811Z",
+  "generatedAt": "2026-05-20T09:24:00-07:00",
   "sources": {
     "deploymentSnapshotTakenAt": "2026-05-20T09:24:00-07:00",
-    "healthSnapshotGeneratedAt": "2026-06-17T03:35:27.512Z",
-    "demoVideoSnapshotGeneratedAt": "2026-05-21T02:22:19.428Z"
+    "healthSnapshotGeneratedAt": "2026-06-23T01:42:31.805Z",
+    "demoVideoSnapshotGeneratedAt": "2026-06-23T12:12:12.141Z"
   },
   "summary": {
-    "totalProducts": 119,
-    "publicInFunnel": 57,
-    "needsDemoVideo": 50,
+    "totalProducts": 120,
+    "publicInFunnel": 58,
+    "needsDemoVideo": 51,
     "healthGateBehavior": {
-      "allow-checkout": 47,
+      "allow-checkout": 49,
       "block-checkout": 40,
-      "manual-review": 32
+      "manual-review": 31
     }
   },
   "products": {
@@ -23,8 +23,8 @@
       "funnelPlanId": "studio",
       "licenseMode": "seat",
       "routeAfterPurchase": {
-        "type": "command-center",
-        "href": "/tools"
+        "type": "production-url",
+        "href": "https://illco-command.vercel.app"
       },
       "needsDemoVideo": true,
       "publicInFunnel": true,
@@ -40,8 +40,8 @@
       "funnelPlanId": "studio",
       "licenseMode": "seat",
       "routeAfterPurchase": {
-        "type": "command-center",
-        "href": "/apps/ai-companion-conversational-intake"
+        "type": "production-url",
+        "href": "https://illco-command.vercel.app/apps/ai-companion-conversational-intake"
       },
       "needsDemoVideo": false,
       "publicInFunnel": false,
@@ -57,8 +57,8 @@
       "funnelPlanId": "studio",
       "licenseMode": "seat",
       "routeAfterPurchase": {
-        "type": "command-center",
-        "href": "/apps/ai-companion-prompt-studio"
+        "type": "production-url",
+        "href": "https://illco-command.vercel.app/apps/ai-companion-prompt-studio"
       },
       "needsDemoVideo": false,
       "publicInFunnel": false,
@@ -74,8 +74,8 @@
       "funnelPlanId": "studio",
       "licenseMode": "seat",
       "routeAfterPurchase": {
-        "type": "command-center",
-        "href": "/apps/ai-companion-content-production"
+        "type": "production-url",
+        "href": "https://illco-command.vercel.app/apps/ai-companion-content-production"
       },
       "needsDemoVideo": false,
       "publicInFunnel": false,
@@ -91,8 +91,8 @@
       "funnelPlanId": "studio",
       "licenseMode": "seat",
       "routeAfterPurchase": {
-        "type": "command-center",
-        "href": "/apps/ai-companion-sales-agent-handoff"
+        "type": "production-url",
+        "href": "https://illco-command.vercel.app/apps/ai-companion-sales-agent-handoff"
       },
       "needsDemoVideo": false,
       "publicInFunnel": false,
@@ -108,8 +108,8 @@
       "funnelPlanId": "enterprise",
       "licenseMode": "seat",
       "routeAfterPurchase": {
-        "type": "command-center",
-        "href": "/apps/ai-companion-command-routing"
+        "type": "production-url",
+        "href": "https://illco-command.vercel.app/apps/ai-companion-command-routing"
       },
       "needsDemoVideo": false,
       "publicInFunnel": false,
@@ -125,8 +125,8 @@
       "funnelPlanId": "enterprise",
       "licenseMode": "seat",
       "routeAfterPurchase": {
-        "type": "command-center",
-        "href": "/apps/ai-companion-workspace-access"
+        "type": "production-url",
+        "href": "https://illco-command.vercel.app/apps/ai-companion-workspace-access"
       },
       "needsDemoVideo": false,
       "publicInFunnel": false,
@@ -142,15 +142,15 @@
       "funnelPlanId": "studio",
       "licenseMode": "seat",
       "routeAfterPurchase": {
-        "type": "command-center",
-        "href": "/tools/think-for-me-mode"
+        "type": "production-url",
+        "href": "https://illco-command.vercel.app/tools/think-for-me-mode"
       },
-      "needsDemoVideo": false,
+      "needsDemoVideo": true,
       "publicInFunnel": true,
       "healthGate": {
         "status": "healthy",
         "behavior": "allow-checkout",
-        "reason": "Finished downloadable workflow product; access is locked behind paid account entitlement."
+        "reason": "Live deployment passed the latest health gate."
       }
     },
     "lyric-video-forge": {
@@ -159,15 +159,15 @@
       "funnelPlanId": "studio",
       "licenseMode": "seat",
       "routeAfterPurchase": {
-        "type": "command-center",
-        "href": "/tools/lyric-video-forge"
+        "type": "production-url",
+        "href": "https://illco-command.vercel.app/tools/lyric-video-forge"
       },
       "needsDemoVideo": true,
       "publicInFunnel": true,
       "healthGate": {
-        "status": "unknown",
-        "behavior": "manual-review",
-        "reason": "No conclusive health signal exists for this live deployment."
+        "status": "healthy",
+        "behavior": "allow-checkout",
+        "reason": "Live deployment passed the latest health gate."
       }
     },
     "viral-stitch-ai": {
@@ -177,7 +177,7 @@
       "licenseMode": "subscription",
       "routeAfterPurchase": {
         "type": "command-center",
-        "href": "/apps/viral-stitch-ai"
+        "href": "/?checkout=success&productId=viral-stitch-ai"
       },
       "needsDemoVideo": false,
       "publicInFunnel": false,
@@ -194,7 +194,7 @@
       "licenseMode": "subscription",
       "routeAfterPurchase": {
         "type": "command-center",
-        "href": "/apps/barz-web-studio"
+        "href": "/?checkout=success&productId=barz-web-studio"
       },
       "needsDemoVideo": false,
       "publicInFunnel": false,
@@ -211,7 +211,7 @@
       "licenseMode": "seat",
       "routeAfterPurchase": {
         "type": "command-center",
-        "href": "/apps/barz"
+        "href": "/?checkout=success&productId=barz"
       },
       "needsDemoVideo": false,
       "publicInFunnel": false,
@@ -228,7 +228,7 @@
       "licenseMode": "seat",
       "routeAfterPurchase": {
         "type": "command-center",
-        "href": "/apps/epstein-files-desk"
+        "href": "/?checkout=success&productId=epstein-files-desk"
       },
       "needsDemoVideo": false,
       "publicInFunnel": false,
@@ -244,8 +244,8 @@
       "funnelPlanId": "studio",
       "licenseMode": "seat",
       "routeAfterPurchase": {
-        "type": "command-center",
-        "href": "/apps/uap-ai-lab"
+        "type": "production-url",
+        "href": "https://uap-ai-lab.vercel.app"
       },
       "needsDemoVideo": false,
       "publicInFunnel": true,
@@ -261,8 +261,8 @@
       "funnelPlanId": "core",
       "licenseMode": "seat",
       "routeAfterPurchase": {
-        "type": "command-center",
-        "href": "/apps/why-not-me-ai"
+        "type": "production-url",
+        "href": "https://why-not-me-ai.vercel.app"
       },
       "needsDemoVideo": false,
       "publicInFunnel": false,
@@ -278,8 +278,8 @@
       "funnelPlanId": "studio",
       "licenseMode": "seat",
       "routeAfterPurchase": {
-        "type": "command-center",
-        "href": "/apps/video-margin-ai"
+        "type": "production-url",
+        "href": "https://video-margin-ai.vercel.app"
       },
       "needsDemoVideo": false,
       "publicInFunnel": true,
@@ -296,7 +296,7 @@
       "licenseMode": "internal",
       "routeAfterPurchase": {
         "type": "command-center",
-        "href": "/apps/vercel-reporter"
+        "href": "/?checkout=success&productId=vercel-reporter"
       },
       "needsDemoVideo": false,
       "publicInFunnel": false,
@@ -312,8 +312,8 @@
       "funnelPlanId": "enterprise",
       "licenseMode": "seat",
       "routeAfterPurchase": {
-        "type": "command-center",
-        "href": "/apps/mastering-studio-platform"
+        "type": "production-url",
+        "href": "https://mastering-studio-platform.vercel.app"
       },
       "needsDemoVideo": false,
       "publicInFunnel": true,
@@ -329,10 +329,10 @@
       "funnelPlanId": "studio",
       "licenseMode": "subscription",
       "routeAfterPurchase": {
-        "type": "command-center",
-        "href": "/apps/youtube-ops-vercel"
+        "type": "production-url",
+        "href": "https://youtubeopsvercel.vercel.app"
       },
-      "needsDemoVideo": false,
+      "needsDemoVideo": true,
       "publicInFunnel": true,
       "healthGate": {
         "status": "healthy",
@@ -346,8 +346,8 @@
       "funnelPlanId": "studio",
       "licenseMode": "seat",
       "routeAfterPurchase": {
-        "type": "command-center",
-        "href": "/apps/visual-voice-board"
+        "type": "production-url",
+        "href": "https://visual-voice-board.vercel.app"
       },
       "needsDemoVideo": true,
       "publicInFunnel": true,
@@ -363,8 +363,8 @@
       "funnelPlanId": "studio",
       "licenseMode": "seat",
       "routeAfterPurchase": {
-        "type": "command-center",
-        "href": "/apps/codexgroq"
+        "type": "production-url",
+        "href": "https://codexgroq.vercel.app"
       },
       "needsDemoVideo": true,
       "publicInFunnel": true,
@@ -381,7 +381,7 @@
       "licenseMode": "seat",
       "routeAfterPurchase": {
         "type": "command-center",
-        "href": "/apps/sora-catalog-vercel-preview"
+        "href": "/?checkout=success&productId=sora-catalog-vercel-preview"
       },
       "needsDemoVideo": false,
       "publicInFunnel": false,
@@ -397,8 +397,8 @@
       "funnelPlanId": "studio",
       "licenseMode": "seat",
       "routeAfterPurchase": {
-        "type": "command-center",
-        "href": "/apps/sora-vault-cloud"
+        "type": "production-url",
+        "href": "https://soravaultcloud.vercel.app"
       },
       "needsDemoVideo": true,
       "publicInFunnel": true,
@@ -414,8 +414,8 @@
       "funnelPlanId": "studio",
       "licenseMode": "seat",
       "routeAfterPurchase": {
-        "type": "command-center",
-        "href": "/apps/rap-lyric-generator"
+        "type": "production-url",
+        "href": "https://rap-lyric-generator.vercel.app"
       },
       "needsDemoVideo": true,
       "publicInFunnel": true,
@@ -431,8 +431,8 @@
       "funnelPlanId": "studio",
       "licenseMode": "seat",
       "routeAfterPurchase": {
-        "type": "command-center",
-        "href": "/apps/voice-book-tool"
+        "type": "production-url",
+        "href": "https://voice-book-tool-illcoai.vercel.app"
       },
       "needsDemoVideo": true,
       "publicInFunnel": true,
@@ -448,8 +448,8 @@
       "funnelPlanId": "studio",
       "licenseMode": "seat",
       "routeAfterPurchase": {
-        "type": "command-center",
-        "href": "/apps/illco-ai-video"
+        "type": "production-url",
+        "href": "https://illco-ai-video.vercel.app"
       },
       "needsDemoVideo": true,
       "publicInFunnel": true,
@@ -465,8 +465,8 @@
       "funnelPlanId": "agency",
       "licenseMode": "subscription",
       "routeAfterPurchase": {
-        "type": "command-center",
-        "href": "/apps/illco-ai-funnel"
+        "type": "production-url",
+        "href": "https://illco-ai-funnel.vercel.app"
       },
       "needsDemoVideo": true,
       "publicInFunnel": true,
@@ -482,8 +482,8 @@
       "funnelPlanId": "agency",
       "licenseMode": "subscription",
       "routeAfterPurchase": {
-        "type": "command-center",
-        "href": "/apps/ai-dev-co-funnel"
+        "type": "production-url",
+        "href": "https://ai-dev-co-funnel.vercel.app"
       },
       "needsDemoVideo": true,
       "publicInFunnel": true,
@@ -499,8 +499,8 @@
       "funnelPlanId": "core",
       "licenseMode": "seat",
       "routeAfterPurchase": {
-        "type": "command-center",
-        "href": "/apps/ship-fast-test"
+        "type": "production-url",
+        "href": "https://ship-fast-test-illcoai.vercel.app"
       },
       "needsDemoVideo": false,
       "publicInFunnel": false,
@@ -516,8 +516,8 @@
       "funnelPlanId": "studio",
       "licenseMode": "seat",
       "routeAfterPurchase": {
-        "type": "command-center",
-        "href": "/apps/nexus-lab"
+        "type": "production-url",
+        "href": "https://nexus-lab-eta.vercel.app"
       },
       "needsDemoVideo": true,
       "publicInFunnel": true,
@@ -533,8 +533,8 @@
       "funnelPlanId": "agency",
       "licenseMode": "subscription",
       "routeAfterPurchase": {
-        "type": "command-center",
-        "href": "/apps/tshirtworkshop"
+        "type": "production-url",
+        "href": "https://tshirtworkshop.vercel.app"
       },
       "needsDemoVideo": true,
       "publicInFunnel": true,
@@ -550,8 +550,8 @@
       "funnelPlanId": "core",
       "licenseMode": "seat",
       "routeAfterPurchase": {
-        "type": "command-center",
-        "href": "/apps/bigostreets"
+        "type": "production-url",
+        "href": "https://bigostreets.vercel.app"
       },
       "needsDemoVideo": false,
       "publicInFunnel": false,
@@ -567,8 +567,8 @@
       "funnelPlanId": "core",
       "licenseMode": "seat",
       "routeAfterPurchase": {
-        "type": "command-center",
-        "href": "/apps/green-gator-pools"
+        "type": "production-url",
+        "href": "https://green-gator-pools.vercel.app"
       },
       "needsDemoVideo": true,
       "publicInFunnel": true,
@@ -584,8 +584,8 @@
       "funnelPlanId": "studio",
       "licenseMode": "seat",
       "routeAfterPurchase": {
-        "type": "command-center",
-        "href": "/apps/battle-rap-ai"
+        "type": "production-url",
+        "href": "https://battle-rap-ai.vercel.app"
       },
       "needsDemoVideo": true,
       "publicInFunnel": true,
@@ -601,8 +601,8 @@
       "funnelPlanId": "core",
       "licenseMode": "seat",
       "routeAfterPurchase": {
-        "type": "command-center",
-        "href": "/apps/diss-track-site"
+        "type": "production-url",
+        "href": "https://diss-track-site.vercel.app"
       },
       "needsDemoVideo": false,
       "publicInFunnel": false,
@@ -618,8 +618,8 @@
       "funnelPlanId": "core",
       "licenseMode": "seat",
       "routeAfterPurchase": {
-        "type": "command-center",
-        "href": "/apps/debate-league-jcld"
+        "type": "production-url",
+        "href": "https://debate-league-jcld-illcoai.vercel.app"
       },
       "needsDemoVideo": false,
       "publicInFunnel": false,
@@ -635,8 +635,8 @@
       "funnelPlanId": "core",
       "licenseMode": "seat",
       "routeAfterPurchase": {
-        "type": "command-center",
-        "href": "/apps/bigo-live-news"
+        "type": "production-url",
+        "href": "https://bigo-live-news.vercel.app"
       },
       "needsDemoVideo": false,
       "publicInFunnel": false,
@@ -652,10 +652,27 @@
       "funnelPlanId": "studio",
       "licenseMode": "seat",
       "routeAfterPurchase": {
-        "type": "command-center",
-        "href": "/apps/radio-edit-studio"
+        "type": "production-url",
+        "href": "https://radio-edit-studio.vercel.app"
       },
       "needsDemoVideo": true,
+      "publicInFunnel": true,
+      "healthGate": {
+        "status": "healthy",
+        "behavior": "allow-checkout",
+        "reason": "Live deployment passed the latest health gate."
+      }
+    },
+    "dj-curse-reverse": {
+      "productId": "dj-curse-reverse",
+      "planTier": "Core",
+      "funnelPlanId": "core",
+      "licenseMode": "subscription",
+      "routeAfterPurchase": {
+        "type": "production-url",
+        "href": "https://dj-curse-reverse.vercel.app"
+      },
+      "needsDemoVideo": false,
       "publicInFunnel": true,
       "healthGate": {
         "status": "healthy",
@@ -669,8 +686,8 @@
       "funnelPlanId": "core",
       "licenseMode": "seat",
       "routeAfterPurchase": {
-        "type": "command-center",
-        "href": "/apps/assets"
+        "type": "production-url",
+        "href": "https://assets-eta-two.vercel.app"
       },
       "needsDemoVideo": false,
       "publicInFunnel": false,
@@ -686,8 +703,8 @@
       "funnelPlanId": "studio",
       "licenseMode": "seat",
       "routeAfterPurchase": {
-        "type": "command-center",
-        "href": "/apps/sora2-petition"
+        "type": "production-url",
+        "href": "https://sora2-petition.vercel.app"
       },
       "needsDemoVideo": true,
       "publicInFunnel": true,
@@ -704,7 +721,7 @@
       "licenseMode": "seat",
       "routeAfterPurchase": {
         "type": "command-center",
-        "href": "/apps/aaron"
+        "href": "/?checkout=success&productId=aaron"
       },
       "needsDemoVideo": false,
       "publicInFunnel": false,
@@ -720,8 +737,8 @@
       "funnelPlanId": "agency",
       "licenseMode": "subscription",
       "routeAfterPurchase": {
-        "type": "command-center",
-        "href": "/apps/ltb-tool-payments"
+        "type": "production-url",
+        "href": "https://ltb-tool-payments.vercel.app"
       },
       "needsDemoVideo": true,
       "publicInFunnel": true,
@@ -737,8 +754,8 @@
       "funnelPlanId": "agency",
       "licenseMode": "subscription",
       "routeAfterPurchase": {
-        "type": "command-center",
-        "href": "/apps/lvl-up-agency"
+        "type": "production-url",
+        "href": "https://lvl-up-agency.vercel.app"
       },
       "needsDemoVideo": true,
       "publicInFunnel": true,
@@ -754,8 +771,8 @@
       "funnelPlanId": "studio",
       "licenseMode": "seat",
       "routeAfterPurchase": {
-        "type": "command-center",
-        "href": "/apps/automateflow"
+        "type": "production-url",
+        "href": "https://automateflow-eta.vercel.app"
       },
       "needsDemoVideo": true,
       "publicInFunnel": true,
@@ -771,8 +788,8 @@
       "funnelPlanId": "core",
       "licenseMode": "seat",
       "routeAfterPurchase": {
-        "type": "command-center",
-        "href": "/apps/ill-motion-ai"
+        "type": "production-url",
+        "href": "https://ill-motion-ai.vercel.app"
       },
       "needsDemoVideo": false,
       "publicInFunnel": false,
@@ -788,8 +805,8 @@
       "funnelPlanId": "core",
       "licenseMode": "seat",
       "routeAfterPurchase": {
-        "type": "command-center",
-        "href": "/apps/brii-baby"
+        "type": "production-url",
+        "href": "https://brii-baby.vercel.app"
       },
       "needsDemoVideo": false,
       "publicInFunnel": false,
@@ -805,8 +822,8 @@
       "funnelPlanId": "core",
       "licenseMode": "seat",
       "routeAfterPurchase": {
-        "type": "command-center",
-        "href": "/apps/cortex-intelligence"
+        "type": "production-url",
+        "href": "https://cortex-intelligence-gamma.vercel.app"
       },
       "needsDemoVideo": false,
       "publicInFunnel": false,
@@ -822,8 +839,8 @@
       "funnelPlanId": "core",
       "licenseMode": "seat",
       "routeAfterPurchase": {
-        "type": "command-center",
-        "href": "/apps/illcoappiverse"
+        "type": "production-url",
+        "href": "https://illcoappiverse.vercel.app"
       },
       "needsDemoVideo": true,
       "publicInFunnel": true,
@@ -839,8 +856,8 @@
       "funnelPlanId": "agency",
       "licenseMode": "usage",
       "routeAfterPurchase": {
-        "type": "command-center",
-        "href": "/apps/backend"
+        "type": "production-url",
+        "href": "https://backend-illcoai.vercel.app"
       },
       "needsDemoVideo": false,
       "publicInFunnel": false,
@@ -856,8 +873,8 @@
       "funnelPlanId": "core",
       "licenseMode": "seat",
       "routeAfterPurchase": {
-        "type": "command-center",
-        "href": "/apps/ghettobirddemo"
+        "type": "production-url",
+        "href": "https://ghettobirddemo.vercel.app"
       },
       "needsDemoVideo": false,
       "publicInFunnel": false,
@@ -873,8 +890,8 @@
       "funnelPlanId": "studio",
       "licenseMode": "seat",
       "routeAfterPurchase": {
-        "type": "command-center",
-        "href": "/apps/music-video-clip-site"
+        "type": "production-url",
+        "href": "https://music-video-clip-site.vercel.app"
       },
       "needsDemoVideo": true,
       "publicInFunnel": true,
@@ -890,8 +907,8 @@
       "funnelPlanId": "studio",
       "licenseMode": "seat",
       "routeAfterPurchase": {
-        "type": "command-center",
-        "href": "/apps/online-store-radio-edit"
+        "type": "production-url",
+        "href": "https://online-store-radio-edit.vercel.app"
       },
       "needsDemoVideo": true,
       "publicInFunnel": true,
@@ -907,8 +924,8 @@
       "funnelPlanId": "enterprise",
       "licenseMode": "seat",
       "routeAfterPurchase": {
-        "type": "command-center",
-        "href": "/apps/nexus-workstation"
+        "type": "production-url",
+        "href": "https://nexus-workstation.vercel.app"
       },
       "needsDemoVideo": true,
       "publicInFunnel": true,
@@ -924,8 +941,8 @@
       "funnelPlanId": "core",
       "licenseMode": "seat",
       "routeAfterPurchase": {
-        "type": "command-center",
-        "href": "/apps/lottery-pattern-analyzer"
+        "type": "production-url",
+        "href": "https://lottery-pattern-analyzer.vercel.app"
       },
       "needsDemoVideo": false,
       "publicInFunnel": false,
@@ -941,8 +958,8 @@
       "funnelPlanId": "agency",
       "licenseMode": "usage",
       "routeAfterPurchase": {
-        "type": "command-center",
-        "href": "/apps/backend-node"
+        "type": "production-url",
+        "href": "https://backend-node-rust.vercel.app"
       },
       "needsDemoVideo": false,
       "publicInFunnel": false,
@@ -958,8 +975,8 @@
       "funnelPlanId": "core",
       "licenseMode": "seat",
       "routeAfterPurchase": {
-        "type": "command-center",
-        "href": "/apps/frontend"
+        "type": "production-url",
+        "href": "https://frontend-illcoai.vercel.app"
       },
       "needsDemoVideo": false,
       "publicInFunnel": false,
@@ -975,8 +992,8 @@
       "funnelPlanId": "studio",
       "licenseMode": "seat",
       "routeAfterPurchase": {
-        "type": "command-center",
-        "href": "/apps/illcoflow"
+        "type": "production-url",
+        "href": "https://illcoflow.vercel.app"
       },
       "needsDemoVideo": true,
       "publicInFunnel": true,
@@ -992,8 +1009,8 @@
       "funnelPlanId": "studio",
       "licenseMode": "seat",
       "routeAfterPurchase": {
-        "type": "command-center",
-        "href": "/apps/codex-agent-app"
+        "type": "production-url",
+        "href": "https://codex-agent-app.vercel.app"
       },
       "needsDemoVideo": true,
       "publicInFunnel": true,
@@ -1009,8 +1026,8 @@
       "funnelPlanId": "studio",
       "licenseMode": "seat",
       "routeAfterPurchase": {
-        "type": "command-center",
-        "href": "/apps/lipsync-app"
+        "type": "production-url",
+        "href": "https://lipsync-app-ten.vercel.app"
       },
       "needsDemoVideo": true,
       "publicInFunnel": true,
@@ -1026,8 +1043,8 @@
       "funnelPlanId": "studio",
       "licenseMode": "seat",
       "routeAfterPurchase": {
-        "type": "command-center",
-        "href": "/apps/illcoai-tools"
+        "type": "production-url",
+        "href": "https://illcoai-tools.vercel.app"
       },
       "needsDemoVideo": true,
       "publicInFunnel": true,
@@ -1044,7 +1061,7 @@
       "licenseMode": "internal",
       "routeAfterPurchase": {
         "type": "command-center",
-        "href": "/apps/illco-ai-hq"
+        "href": "/?checkout=success&productId=illco-ai-hq"
       },
       "needsDemoVideo": false,
       "publicInFunnel": false,
@@ -1060,8 +1077,8 @@
       "funnelPlanId": "agency",
       "licenseMode": "usage",
       "routeAfterPurchase": {
-        "type": "command-center",
-        "href": "/apps/notion-webhook"
+        "type": "production-url",
+        "href": "https://notion-webhook-eta.vercel.app"
       },
       "needsDemoVideo": false,
       "publicInFunnel": false,
@@ -1077,8 +1094,8 @@
       "funnelPlanId": "agency",
       "licenseMode": "usage",
       "routeAfterPurchase": {
-        "type": "command-center",
-        "href": "/apps/illcoai-api"
+        "type": "production-url",
+        "href": "https://illcoai-api.vercel.app"
       },
       "needsDemoVideo": false,
       "publicInFunnel": false,
@@ -1094,8 +1111,8 @@
       "funnelPlanId": "studio",
       "licenseMode": "seat",
       "routeAfterPurchase": {
-        "type": "command-center",
-        "href": "/apps/sbl-sora-battle-league"
+        "type": "production-url",
+        "href": "https://sbl-sora-battle-league.vercel.app"
       },
       "needsDemoVideo": true,
       "publicInFunnel": true,
@@ -1111,8 +1128,8 @@
       "funnelPlanId": "core",
       "licenseMode": "seat",
       "routeAfterPurchase": {
-        "type": "command-center",
-        "href": "/apps/illcoai-offline-v2"
+        "type": "production-url",
+        "href": "https://illcoai-offline-v2.vercel.app"
       },
       "needsDemoVideo": false,
       "publicInFunnel": false,
@@ -1128,8 +1145,8 @@
       "funnelPlanId": "core",
       "licenseMode": "seat",
       "routeAfterPurchase": {
-        "type": "command-center",
-        "href": "/apps/illcoai-upscale-v2"
+        "type": "production-url",
+        "href": "https://illcoai-upscale-v2.vercel.app"
       },
       "needsDemoVideo": false,
       "publicInFunnel": false,
@@ -1145,8 +1162,8 @@
       "funnelPlanId": "core",
       "licenseMode": "seat",
       "routeAfterPurchase": {
-        "type": "command-center",
-        "href": "/apps/powerhouse-app-builder"
+        "type": "production-url",
+        "href": "https://blackppleats.com"
       },
       "needsDemoVideo": false,
       "publicInFunnel": false,
@@ -1162,8 +1179,8 @@
       "funnelPlanId": "agency",
       "licenseMode": "usage",
       "routeAfterPurchase": {
-        "type": "command-center",
-        "href": "/apps/notion-api-webhook-repo"
+        "type": "production-url",
+        "href": "https://notion-api-webhook-repo.vercel.app"
       },
       "needsDemoVideo": false,
       "publicInFunnel": false,
@@ -1180,7 +1197,7 @@
       "licenseMode": "internal",
       "routeAfterPurchase": {
         "type": "command-center",
-        "href": "/apps/ops-bot"
+        "href": "/?checkout=success&productId=ops-bot"
       },
       "needsDemoVideo": false,
       "publicInFunnel": false,
@@ -1196,8 +1213,8 @@
       "funnelPlanId": "agency",
       "licenseMode": "usage",
       "routeAfterPurchase": {
-        "type": "command-center",
-        "href": "/apps/notion-vercel-backend"
+        "type": "production-url",
+        "href": "https://notion-vercel-backend.vercel.app"
       },
       "needsDemoVideo": false,
       "publicInFunnel": false,
@@ -1213,8 +1230,8 @@
       "funnelPlanId": "core",
       "licenseMode": "seat",
       "routeAfterPurchase": {
-        "type": "command-center",
-        "href": "/apps/src"
+        "type": "production-url",
+        "href": "https://src-illcoai.vercel.app"
       },
       "needsDemoVideo": false,
       "publicInFunnel": false,
@@ -1230,8 +1247,8 @@
       "funnelPlanId": "core",
       "licenseMode": "seat",
       "routeAfterPurchase": {
-        "type": "command-center",
-        "href": "/apps/gardening-site"
+        "type": "production-url",
+        "href": "https://gardening-site-seven.vercel.app"
       },
       "needsDemoVideo": true,
       "publicInFunnel": true,
@@ -1247,8 +1264,8 @@
       "funnelPlanId": "core",
       "licenseMode": "seat",
       "routeAfterPurchase": {
-        "type": "command-center",
-        "href": "/apps/gardening-site-grqp"
+        "type": "production-url",
+        "href": "https://gardening-site-grqp.vercel.app"
       },
       "needsDemoVideo": true,
       "publicInFunnel": true,
@@ -1264,8 +1281,8 @@
       "funnelPlanId": "core",
       "licenseMode": "seat",
       "routeAfterPurchase": {
-        "type": "command-center",
-        "href": "/apps/web"
+        "type": "production-url",
+        "href": "https://web-illcoai.vercel.app"
       },
       "needsDemoVideo": false,
       "publicInFunnel": false,
@@ -1281,8 +1298,8 @@
       "funnelPlanId": "enterprise",
       "licenseMode": "seat",
       "routeAfterPurchase": {
-        "type": "command-center",
-        "href": "/apps/real-estate-ai-workstation"
+        "type": "production-url",
+        "href": "https://real-estate-ai-workstation-illcoai.vercel.app"
       },
       "needsDemoVideo": true,
       "publicInFunnel": true,
@@ -1298,8 +1315,8 @@
       "funnelPlanId": "core",
       "licenseMode": "seat",
       "routeAfterPurchase": {
-        "type": "command-center",
-        "href": "/apps/out"
+        "type": "production-url",
+        "href": "https://out-illcoai.vercel.app"
       },
       "needsDemoVideo": false,
       "publicInFunnel": false,
@@ -1315,8 +1332,8 @@
       "funnelPlanId": "studio",
       "licenseMode": "seat",
       "routeAfterPurchase": {
-        "type": "command-center",
-        "href": "/apps/ghetto-bird-robot"
+        "type": "production-url",
+        "href": "https://ghetto-bird-robot.vercel.app"
       },
       "needsDemoVideo": true,
       "publicInFunnel": true,
@@ -1332,8 +1349,8 @@
       "funnelPlanId": "agency",
       "licenseMode": "usage",
       "routeAfterPurchase": {
-        "type": "command-center",
-        "href": "/apps/vercel-ai-gateway-demo"
+        "type": "production-url",
+        "href": "https://vercel-ai-gateway-demo-illcoai.vercel.app"
       },
       "needsDemoVideo": false,
       "publicInFunnel": true,
@@ -1349,8 +1366,8 @@
       "funnelPlanId": "core",
       "licenseMode": "seat",
       "routeAfterPurchase": {
-        "type": "command-center",
-        "href": "/apps/debate-league"
+        "type": "production-url",
+        "href": "https://debate-league-illcoai.vercel.app"
       },
       "needsDemoVideo": false,
       "publicInFunnel": false,
@@ -1367,7 +1384,7 @@
       "licenseMode": "internal",
       "routeAfterPurchase": {
         "type": "command-center",
-        "href": "/apps/ilco-ops2"
+        "href": "/?checkout=success&productId=ilco-ops2"
       },
       "needsDemoVideo": false,
       "publicInFunnel": false,
@@ -1383,8 +1400,8 @@
       "funnelPlanId": "agency",
       "licenseMode": "subscription",
       "routeAfterPurchase": {
-        "type": "command-center",
-        "href": "/apps/online-store"
+        "type": "production-url",
+        "href": "https://online-store-illcoai.vercel.app"
       },
       "needsDemoVideo": true,
       "publicInFunnel": true,
@@ -1400,8 +1417,8 @@
       "funnelPlanId": "studio",
       "licenseMode": "seat",
       "routeAfterPurchase": {
-        "type": "command-center",
-        "href": "/apps/workspace"
+        "type": "production-url",
+        "href": "https://workspace-illcoai.vercel.app"
       },
       "needsDemoVideo": false,
       "publicInFunnel": false,
@@ -1417,8 +1434,8 @@
       "funnelPlanId": "agency",
       "licenseMode": "usage",
       "routeAfterPurchase": {
-        "type": "command-center",
-        "href": "/apps/aaron-gateway"
+        "type": "production-url",
+        "href": "https://aaron-gateway.vercel.app"
       },
       "needsDemoVideo": false,
       "publicInFunnel": true,
@@ -1434,8 +1451,8 @@
       "funnelPlanId": "core",
       "licenseMode": "seat",
       "routeAfterPurchase": {
-        "type": "command-center",
-        "href": "/apps/illcoai-homicide-v2"
+        "type": "production-url",
+        "href": "https://illcoai-homicide-v2.vercel.app"
       },
       "needsDemoVideo": false,
       "publicInFunnel": false,
@@ -1451,8 +1468,8 @@
       "funnelPlanId": "core",
       "licenseMode": "seat",
       "routeAfterPurchase": {
-        "type": "command-center",
-        "href": "/apps/tmp-deploy"
+        "type": "production-url",
+        "href": "https://tmp-deploy-one.vercel.app"
       },
       "needsDemoVideo": false,
       "publicInFunnel": false,
@@ -1468,8 +1485,8 @@
       "funnelPlanId": "studio",
       "licenseMode": "seat",
       "routeAfterPurchase": {
-        "type": "command-center",
-        "href": "/apps/illcoai-bot-v2"
+        "type": "production-url",
+        "href": "https://illcoai-bot-v2.vercel.app"
       },
       "needsDemoVideo": true,
       "publicInFunnel": true,
@@ -1485,8 +1502,8 @@
       "funnelPlanId": "agency",
       "licenseMode": "usage",
       "routeAfterPurchase": {
-        "type": "command-center",
-        "href": "/apps/illcoai-bot-api-v2"
+        "type": "production-url",
+        "href": "https://illcoai-bot-api-v2.vercel.app"
       },
       "needsDemoVideo": false,
       "publicInFunnel": false,
@@ -1502,8 +1519,8 @@
       "funnelPlanId": "studio",
       "licenseMode": "seat",
       "routeAfterPurchase": {
-        "type": "command-center",
-        "href": "/apps/illcoai-lipsync-v2"
+        "type": "production-url",
+        "href": "https://illcoai-lipsync-v2.vercel.app"
       },
       "needsDemoVideo": true,
       "publicInFunnel": true,
@@ -1519,8 +1536,8 @@
       "funnelPlanId": "agency",
       "licenseMode": "usage",
       "routeAfterPurchase": {
-        "type": "command-center",
-        "href": "/apps/illcoai-lipsync-api-v2"
+        "type": "production-url",
+        "href": "https://illcoai-lipsync-api-v2.vercel.app"
       },
       "needsDemoVideo": false,
       "publicInFunnel": false,
@@ -1536,8 +1553,8 @@
       "funnelPlanId": "agency",
       "licenseMode": "usage",
       "routeAfterPurchase": {
-        "type": "command-center",
-        "href": "/apps/illcoai-upscale-api-v2"
+        "type": "production-url",
+        "href": "https://illcoai-upscale-api-v2.vercel.app"
       },
       "needsDemoVideo": false,
       "publicInFunnel": false,
@@ -1553,8 +1570,8 @@
       "funnelPlanId": "core",
       "licenseMode": "seat",
       "routeAfterPurchase": {
-        "type": "command-center",
-        "href": "/apps/illcoai-book-v2"
+        "type": "production-url",
+        "href": "https://illcoai-book-v2.vercel.app"
       },
       "needsDemoVideo": false,
       "publicInFunnel": false,
@@ -1570,8 +1587,8 @@
       "funnelPlanId": "agency",
       "licenseMode": "usage",
       "routeAfterPurchase": {
-        "type": "command-center",
-        "href": "/apps/illcoai-book-api-v2"
+        "type": "production-url",
+        "href": "https://illcoai-book-api-v2.vercel.app"
       },
       "needsDemoVideo": false,
       "publicInFunnel": false,
@@ -1587,8 +1604,8 @@
       "funnelPlanId": "agency",
       "licenseMode": "usage",
       "routeAfterPurchase": {
-        "type": "command-center",
-        "href": "/apps/illcoai-e2b-api-v2"
+        "type": "production-url",
+        "href": "https://illcoai-e2b-api-v2.vercel.app"
       },
       "needsDemoVideo": false,
       "publicInFunnel": false,
@@ -1604,8 +1621,8 @@
       "funnelPlanId": "core",
       "licenseMode": "seat",
       "routeAfterPurchase": {
-        "type": "command-center",
-        "href": "/apps/illcoai-e2b-v2"
+        "type": "production-url",
+        "href": "https://illcoai-e2b-v2.vercel.app"
       },
       "needsDemoVideo": false,
       "publicInFunnel": false,
@@ -1621,8 +1638,8 @@
       "funnelPlanId": "core",
       "licenseMode": "seat",
       "routeAfterPurchase": {
-        "type": "command-center",
-        "href": "/apps/illcoai-airbnb-v2"
+        "type": "production-url",
+        "href": "https://illcoai-airbnb-v2.vercel.app"
       },
       "needsDemoVideo": true,
       "publicInFunnel": true,
@@ -1638,8 +1655,8 @@
       "funnelPlanId": "core",
       "licenseMode": "seat",
       "routeAfterPurchase": {
-        "type": "command-center",
-        "href": "/apps/illcoai-realtor-workflow-v2"
+        "type": "production-url",
+        "href": "https://illcoai-realtor-workflow-v2.vercel.app"
       },
       "needsDemoVideo": true,
       "publicInFunnel": true,
@@ -1655,8 +1672,8 @@
       "funnelPlanId": "studio",
       "licenseMode": "seat",
       "routeAfterPurchase": {
-        "type": "command-center",
-        "href": "/apps/illcoai-video-generator-deploy"
+        "type": "production-url",
+        "href": "https://illcoai-video-generator-deploy.vercel.app"
       },
       "needsDemoVideo": true,
       "publicInFunnel": true,
@@ -1673,7 +1690,7 @@
       "licenseMode": "internal",
       "routeAfterPurchase": {
         "type": "command-center",
-        "href": "/apps/illco-ai-hq-no-mock-data"
+        "href": "/?checkout=success&productId=illco-ai-hq-no-mock-data"
       },
       "needsDemoVideo": false,
       "publicInFunnel": false,
@@ -1689,8 +1706,8 @@
       "funnelPlanId": "studio",
       "licenseMode": "seat",
       "routeAfterPurchase": {
-        "type": "command-center",
-        "href": "/apps/whatsapp-ai-bot"
+        "type": "production-url",
+        "href": "https://whatsapp-ai-bot-beta.vercel.app"
       },
       "needsDemoVideo": true,
       "publicInFunnel": true,
@@ -1706,8 +1723,8 @@
       "funnelPlanId": "agency",
       "licenseMode": "subscription",
       "routeAfterPurchase": {
-        "type": "command-center",
-        "href": "/apps/arc-agentic-commerce-hackathon-2026"
+        "type": "production-url",
+        "href": "https://arc-agentic-commerce-hackathon-2026.vercel.app"
       },
       "needsDemoVideo": true,
       "publicInFunnel": true,
@@ -1723,8 +1740,8 @@
       "funnelPlanId": "enterprise",
       "licenseMode": "seat",
       "routeAfterPurchase": {
-        "type": "command-center",
-        "href": "/apps/workstation"
+        "type": "production-url",
+        "href": "https://workstation-orpin.vercel.app"
       },
       "needsDemoVideo": true,
       "publicInFunnel": true,
@@ -1740,8 +1757,8 @@
       "funnelPlanId": "core",
       "licenseMode": "seat",
       "routeAfterPurchase": {
-        "type": "command-center",
-        "href": "/apps/novastream"
+        "type": "production-url",
+        "href": "https://novastream-khaki.vercel.app"
       },
       "needsDemoVideo": false,
       "publicInFunnel": false,
@@ -1757,8 +1774,8 @@
       "funnelPlanId": "studio",
       "licenseMode": "seat",
       "routeAfterPurchase": {
-        "type": "command-center",
-        "href": "/apps/whatsapp-bot-app"
+        "type": "production-url",
+        "href": "https://whatsapp-bot-app-one.vercel.app"
       },
       "needsDemoVideo": true,
       "publicInFunnel": true,
@@ -1774,8 +1791,8 @@
       "funnelPlanId": "studio",
       "licenseMode": "seat",
       "routeAfterPurchase": {
-        "type": "command-center",
-        "href": "/apps/whatsapp-bot"
+        "type": "production-url",
+        "href": "https://whatsapp-bot-illcoai.vercel.app"
       },
       "needsDemoVideo": true,
       "publicInFunnel": true,
@@ -1791,8 +1808,8 @@
       "funnelPlanId": "core",
       "licenseMode": "seat",
       "routeAfterPurchase": {
-        "type": "command-center",
-        "href": "/apps/debate-league-pro"
+        "type": "production-url",
+        "href": "https://debate-league-pro.vercel.app"
       },
       "needsDemoVideo": false,
       "publicInFunnel": false,
@@ -1808,8 +1825,8 @@
       "funnelPlanId": "studio",
       "licenseMode": "seat",
       "routeAfterPurchase": {
-        "type": "command-center",
-        "href": "/apps/godmode-ui"
+        "type": "production-url",
+        "href": "https://godmode-ui.vercel.app"
       },
       "needsDemoVideo": true,
       "publicInFunnel": true,
@@ -1825,8 +1842,8 @@
       "funnelPlanId": "core",
       "licenseMode": "seat",
       "routeAfterPurchase": {
-        "type": "command-center",
-        "href": "/apps/bookie"
+        "type": "production-url",
+        "href": "https://bookie-illcoai.vercel.app"
       },
       "needsDemoVideo": false,
       "publicInFunnel": false,
@@ -1842,8 +1859,8 @@
       "funnelPlanId": "studio",
       "licenseMode": "seat",
       "routeAfterPurchase": {
-        "type": "command-center",
-        "href": "/apps/songanalyzer-deploy"
+        "type": "production-url",
+        "href": "https://songanalyzer-deploy.vercel.app"
       },
       "needsDemoVideo": true,
       "publicInFunnel": true,
@@ -1859,8 +1876,8 @@
       "funnelPlanId": "core",
       "licenseMode": "seat",
       "routeAfterPurchase": {
-        "type": "command-center",
-        "href": "/apps/stock-outlook"
+        "type": "production-url",
+        "href": "https://stock-outlook.vercel.app"
       },
       "needsDemoVideo": false,
       "publicInFunnel": false,
@@ -1876,8 +1893,8 @@
       "funnelPlanId": "core",
       "licenseMode": "seat",
       "routeAfterPurchase": {
-        "type": "command-center",
-        "href": "/apps/debateit"
+        "type": "production-url",
+        "href": "https://debateit-illcoai.vercel.app"
       },
       "needsDemoVideo": false,
       "publicInFunnel": false,
@@ -1893,8 +1910,8 @@
       "funnelPlanId": "agency",
       "licenseMode": "usage",
       "routeAfterPurchase": {
-        "type": "command-center",
-        "href": "/apps/debate-league-api"
+        "type": "production-url",
+        "href": "https://debate-league-api.vercel.app"
       },
       "needsDemoVideo": false,
       "publicInFunnel": false,
@@ -1910,8 +1927,8 @@
       "funnelPlanId": "studio",
       "licenseMode": "seat",
       "routeAfterPurchase": {
-        "type": "command-center",
-        "href": "/apps/lyricflow-ai"
+        "type": "production-url",
+        "href": "https://lyricflow-ai-blue.vercel.app"
       },
       "needsDemoVideo": true,
       "publicInFunnel": true,
@@ -1927,8 +1944,8 @@
       "funnelPlanId": "core",
       "licenseMode": "seat",
       "routeAfterPurchase": {
-        "type": "command-center",
-        "href": "/apps/debate-league-t49t"
+        "type": "production-url",
+        "href": "https://debate-league-t49t-illcoai.vercel.app"
       },
       "needsDemoVideo": false,
       "publicInFunnel": false,
@@ -1944,8 +1961,8 @@
       "funnelPlanId": "studio",
       "licenseMode": "seat",
       "routeAfterPurchase": {
-        "type": "command-center",
-        "href": "/apps/serato"
+        "type": "production-url",
+        "href": "https://serato.vercel.app"
       },
       "needsDemoVideo": true,
       "publicInFunnel": true,
@@ -1961,8 +1978,8 @@
       "funnelPlanId": "studio",
       "licenseMode": "seat",
       "routeAfterPurchase": {
-        "type": "command-center",
-        "href": "/apps/master-slideshow"
+        "type": "production-url",
+        "href": "https://master-slideshow.vercel.app"
       },
       "needsDemoVideo": true,
       "publicInFunnel": true,
@@ -1978,8 +1995,8 @@
       "funnelPlanId": "agency",
       "licenseMode": "usage",
       "routeAfterPurchase": {
-        "type": "command-center",
-        "href": "/apps/license-validation-api"
+        "type": "production-url",
+        "href": "https://license-validation-api-tawny.vercel.app"
       },
       "needsDemoVideo": false,
       "publicInFunnel": true,
@@ -1995,8 +2012,8 @@
       "funnelPlanId": "enterprise",
       "licenseMode": "seat",
       "routeAfterPurchase": {
-        "type": "command-center",
-        "href": "/apps/stride-enterprise-platform"
+        "type": "production-url",
+        "href": "https://stride-enterprise-platform.vercel.app"
       },
       "needsDemoVideo": false,
       "publicInFunnel": false,
@@ -2012,8 +2029,8 @@
       "funnelPlanId": "core",
       "licenseMode": "seat",
       "routeAfterPurchase": {
-        "type": "command-center",
-        "href": "/apps/bri-babyy"
+        "type": "production-url",
+        "href": "https://bri-babyy.vercel.app"
       },
       "needsDemoVideo": false,
       "publicInFunnel": false,
@@ -2029,8 +2046,8 @@
       "funnelPlanId": "studio",
       "licenseMode": "seat",
       "routeAfterPurchase": {
-        "type": "command-center",
-        "href": "/apps/ghetto-bird-voice-ai"
+        "type": "production-url",
+        "href": "https://ghetto-bird-voice-ai.vercel.app"
       },
       "needsDemoVideo": true,
       "publicInFunnel": true,

@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
 
 import { GlobalAuthHeader } from "@/components/global-auth-header";
+import { SitePetSalesAgent } from "@/components/site-pet-sales-agent";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -17,11 +18,13 @@ export const metadata: Metadata = {
   },
   icons: {
     icon: [
+      { url: "/icon.png", type: "image/png" },
+      { url: "/favicon.png", type: "image/png" },
       { url: "/icon.svg", type: "image/svg+xml" },
       { url: "/favicon.svg", type: "image/svg+xml" },
     ],
-    shortcut: "/favicon.svg",
-    apple: "/icon.svg",
+    shortcut: "/favicon.png",
+    apple: "/apple-icon.png",
   },
   openGraph: {
     title: "ILLCO AI Tools Marketplace",
@@ -29,6 +32,14 @@ export const metadata: Metadata = {
       "Buy working AI tools, watch proof videos, or request custom AI systems for lead recovery, content, email, and operations.",
     url: "https://illcoai.tech",
     siteName: "ILLCO AI",
+    images: [
+      {
+        url: "/media/illco-command-header-loop-poster.jpg",
+        width: 1200,
+        height: 630,
+        alt: "ILLCO AI command marketplace preview",
+      },
+    ],
     type: "website",
   },
   twitter: {
@@ -36,6 +47,7 @@ export const metadata: Metadata = {
     title: "ILLCO AI Tools Marketplace",
     description:
       "Buy working AI tools, watch proof videos, or request custom AI systems for lead recovery, content, email, and operations.",
+    images: ["/media/illco-command-header-loop-poster.jpg"],
   },
 };
 
@@ -51,6 +63,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
         <a className="skipLink" href="#main-content">Skip to content</a>
         <GlobalAuthHeader />
         {children}
+        <SitePetSalesAgent />
         <footer className="siteFooter" aria-label="Site footer">
           <div>
             <strong>ILLCO AI</strong>

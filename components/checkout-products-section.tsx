@@ -1,9 +1,9 @@
 import { checkoutProductCategories, checkoutProductCategoryDetails, checkoutProducts } from "@/lib/checkout-products";
+import { getCheckoutProductImagePath } from "@/lib/checkout-product-images";
 import { getProductById, type ProductRecord } from "@/lib/deployments";
 import { getConfigurationStatus } from "@/lib/env";
 import { getMonetizationPlan } from "@/lib/monetization";
-import { getProductViralImagePath } from "@/lib/product-marketing";
-import { getProductModuleHref } from "@/lib/product-routes";
+import { getProductModuleHref, isPublicProductLaunchHref } from "@/lib/product-routes";
 import { canDirectCheckoutPublicProduct } from "@/lib/public-checkout";
 
 type CheckoutProductsSectionProps = {
@@ -88,7 +88,7 @@ export function CheckoutProductsSection({
   categoryFilter,
   eyebrow = "Direct Checkout",
   title = "Check Out Our Products",
-  description = "Every listing resolves to an Illco module first. Finished products can be unlocked in-app; unfinished products stay in setup or coming-soon status.",
+  description = "Pick a ready AI tool or request setup when your workflow needs a custom handoff. Product cards focus on outcomes, proof, and the next useful action.",
 }: CheckoutProductsSectionProps = {}) {
   const config = getConfigurationStatus();
   const productIdSet = productIds ? new Set(productIds) : null;
@@ -111,8 +111,8 @@ export function CheckoutProductsSection({
           <p>{description}</p>
         </div>
         <div className="checkoutProductsStats" aria-label="Checkout catalog summary">
-          <span>{visibleProducts.length} products</span>
-          <span>{visibleCategories.length} lanes</span>
+          <span>{visibleProducts.length} tools</span>
+          <span>{visibleCategories.length} categories</span>
         </div>
       </div>
 
@@ -135,7 +135,7 @@ export function CheckoutProductsSection({
                   const moduleHref = appProduct ? getProductModuleHref(appProduct.id) : "/#request";
                   const appLandingHref = appProduct ? `/apps/${encodeURIComponent(appProduct.id)}` : "/#request";
                   const moduleTarget = moduleHref.startsWith("http") ? "_blank" : undefined;
-                  const imagePath = appProduct ? getProductViralImagePath(appProduct) : "/brand/illco-global-brand.png";
+                  const imagePath = getCheckoutProductImagePath(product);
                   const productReady = Boolean(appProduct && canDirectCheckoutPublicProduct(appProduct.id));
                   const paymentConfigured = Boolean(plan && config.subscriptionsReady && config.planPrices[plan.funnelPlanId]);
                   const checkoutReady = Boolean(
@@ -144,7 +144,9 @@ export function CheckoutProductsSection({
                       productReady &&
                       paymentConfigured,
                   );
-                  const statusLabel = checkoutReady ? "Unlock in app" : productReady ? "Payment setup" : appProduct ? "Coming soon" : "Setup required";
+                  const publicLaunchReady = checkoutReady && isPublicProductLaunchHref(moduleHref);
+                  const checkoutReturnTo = publicLaunchReady ? moduleHref : appLandingHref;
+                  const statusLabel = checkoutReady ? "Ready to unlock" : "Coming Soon";
                   const processSteps = getCheckoutProductProcess(appProduct);
 
                   return (
@@ -165,7 +167,7 @@ export function CheckoutProductsSection({
                         </div>
                       ) : null}
                       <div className="checkoutProductActions">
-                        {checkoutReady ? (
+                        {publicLaunchReady ? (
                           <a className="button secondary" href={moduleHref} target={moduleTarget} rel={moduleTarget ? "noreferrer" : undefined}>
                             Open Product
                           </a>
@@ -178,14 +180,14 @@ export function CheckoutProductsSection({
                           <form action="/api/subscriptions/checkout" method="post" className="inlineCheckoutForm">
                             <input type="hidden" name="planId" value={plan.funnelPlanId} />
                             <input type="hidden" name="productId" value={appProduct.id} />
-                            <input type="hidden" name="returnTo" value={moduleHref} />
+                            <input type="hidden" name="returnTo" value={checkoutReturnTo} />
                             <button className="button primary" type="submit">
                               Unlock
                             </button>
                           </form>
                         ) : (
                           <a className="button primary" href={`${appLandingHref}#request`}>
-                            {productReady ? "Setup Payment" : "Request"}
+                            Coming Soon
                           </a>
                         )}
                       </div>

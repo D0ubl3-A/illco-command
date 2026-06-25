@@ -159,7 +159,7 @@ export default async function AppLandingPage({ params }: AppLandingPageProps) {
   const processSteps = getAppLandingProcess(product);
 
   return (
-    <div className="fallbackPage appLandingPage">
+    <main id="main-content" className="fallbackPage appLandingPage">
       <div className="workspace appLandingWorkspace">
         <nav className="appLandingNav" aria-label="App landing navigation">
           <a className="brandBlock" href="/">
@@ -341,7 +341,7 @@ export default async function AppLandingPage({ params }: AppLandingPageProps) {
           />
         </section>
       </div>
-    </div>
+    </main>
   );
 }
 

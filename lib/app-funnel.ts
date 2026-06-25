@@ -2,7 +2,7 @@ import { getProofState, getTutorialVideo } from "@/lib/demo-videos";
 import { getProductById, products, type ProductCategory, type ProductRecord } from "@/lib/deployments";
 import { getConfigurationStatus } from "@/lib/env";
 import { getMonetizationPlan, type MonetizationPlanEntry } from "@/lib/monetization";
-import { getProductModuleHref } from "@/lib/product-routes";
+import { getProductModuleHref, isPublicProductLaunchHref } from "@/lib/product-routes";
 import { canDirectCheckoutPublicProduct } from "@/lib/public-checkout";
 
 export type CustomerStatus = "working" | "tutorial" | "setup" | "soon";
@@ -75,17 +75,17 @@ function summaryFor(product: ProductRecord) {
 
 function proofLabelFor(productId: string) {
   const proof = getProofState(productId);
-  if (!proof.ready) return "Proof coming";
-  if (proof.primaryVideo?.mode === "result-proof") return "Result proof ready";
-  if (proof.primaryVideo?.mode === "full-walkthrough") return "Tutorial ready";
-  return "Proof ready";
+  if (proof.ready && proof.primaryVideo?.mode === "result-proof") return "Working-output proof";
+  if (proof.primaryVideo?.mode === "full-walkthrough") return "Walkthrough only";
+  if (proof.primaryVideo?.mode === "route-proof") return "Preview only";
+  return "Live proof by request";
 }
 
 function statusLabelFor(status: CustomerStatus) {
-  if (status === "tutorial") return "Tutorial ready";
+  if (status === "tutorial") return "System proof";
   if (status === "working") return "Working";
-  if (status === "setup") return "Setup available";
-  return "Coming soon";
+  if (status === "setup") return "Coming Soon";
+  return "Coming Soon";
 }
 
 export function getAppFunnelState(product: ProductRecord): AppFunnelState {
@@ -114,6 +114,8 @@ export function getAppFunnelState(product: ProductRecord): AppFunnelState {
       ? "setup"
       : "soon";
 
+  const safeUrl = getProductModuleHref(product.id);
+
   return {
     product,
     monetization,
@@ -121,12 +123,12 @@ export function getAppFunnelState(product: ProductRecord): AppFunnelState {
     statusLabel: statusLabelFor(status),
     title: titleFor(product),
     summary: summaryFor(product),
-    accessLabel: canCheckout ? "Self-serve subscription" : status === "soon" ? "Locked" : "Guided setup",
+    accessLabel: canCheckout ? "Self-serve subscription" : "Guided setup",
     proofLabel: proofLabelFor(product.id),
     planId,
     canCheckout,
-    canOpen: canCheckout,
-    safeUrl: getProductModuleHref(product.id),
+    canOpen: canCheckout && isPublicProductLaunchHref(safeUrl),
+    safeUrl,
   };
 }
 

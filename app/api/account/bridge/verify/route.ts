@@ -20,7 +20,7 @@ export async function POST(request: Request) {
         ok: true,
         authenticated: true,
         user: payload.user,
-        purchases: payload.purchases,
+        productId: payload.productId,
         access: payload.access,
         expiresAt: new Date(payload.exp * 1000).toISOString(),
       },

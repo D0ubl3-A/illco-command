@@ -38,6 +38,15 @@ function absoluteUrl(path: string) {
   return new URL(path, env.appBaseUrl).toString();
 }
 
+function getCheckoutTrialDays(input: { productId?: string | null }) {
+  if (input.productId === "lyric-video-forge") return 1;
+  return getGlobalFreeTrialDays();
+}
+
+function getCheckoutVideoLimit(input: { productId?: string | null }) {
+  return input.productId === "lyric-video-forge" ? 2 : null;
+}
+
 function buildSuccessUrl(input: { returnPath?: string | null; productId?: string | null }) {
   const url = new URL(input.returnPath || env.stripeSuccessPath, env.appBaseUrl);
   if (!url.searchParams.has("checkout")) {
@@ -60,7 +69,8 @@ export async function createCheckoutSession(input: {
 }) {
   const stripePriceId = requireEnv(getStripePriceIdForPlan(input.planId), `STRIPE_PRICE_${input.planId.toUpperCase()}_ID`);
   const stripe = getStripeClient();
-  const trialDays = getGlobalFreeTrialDays();
+  const trialDays = getCheckoutTrialDays(input);
+  const videoLimit = getCheckoutVideoLimit(input);
 
   const session = await stripe.checkout.sessions.create({
     mode: "subscription",
@@ -79,6 +89,8 @@ export async function createCheckoutSession(input: {
     metadata: {
       planId: input.planId,
       productId: input.productId || "illco-command",
+      trialDays: String(trialDays || 0),
+      videoLimit: videoLimit ? String(videoLimit) : "",
     },
     subscription_data: {
       trial_period_days: trialDays || undefined,
@@ -86,6 +98,7 @@ export async function createCheckoutSession(input: {
         planId: input.planId,
         productId: input.productId || "illco-command",
         trialDays: String(trialDays || 0),
+        videoLimit: videoLimit ? String(videoLimit) : "",
       },
     },
   });

@@ -32,6 +32,21 @@ export type DemoVideoRecord = {
   tutorialUploadPendingAt?: string | null;
   tutorialUploadError?: string | null;
   tutorialUploadErrorAt?: string | null;
+  twoMinuteProofLocalVideoPath?: string | null;
+  twoMinuteProofLocalVideoBytes?: number | null;
+  twoMinuteProofRecordedAt?: string | null;
+  twoMinuteProofDurationSeconds?: number | null;
+  twoMinuteProofSourceUrl?: string | null;
+  twoMinuteProofStatus?: "recorded" | "uploaded" | "failed" | null;
+  twoMinuteProofYoutubeVideoId?: string | null;
+  twoMinuteProofYoutubeUrl?: string | null;
+  twoMinuteProofEmbedUrl?: string | null;
+  twoMinuteProofUploadState?: "pending-credentials" | "uploaded" | "failed" | null;
+  twoMinuteProofUploadedAt?: string | null;
+  twoMinuteProofUploadError?: string | null;
+  twoMinuteProofUploadErrorAt?: string | null;
+  twoMinuteProofReusedExisting?: boolean | null;
+  twoMinuteProofAssembly?: string | null;
   source: "youtube-search" | "uploaded" | "manual";
   updatedAt: string;
 };
@@ -98,7 +113,7 @@ export function getQuickDemoVideo(projectId: string) {
     record.youtubeVideoId,
     record.youtubeUrl,
     record.embedUrl,
-    record.title || "Proof clip",
+    record.title || "Preview clip",
     null,
     "route-proof",
   );
@@ -141,11 +156,40 @@ export function getTutorialVideo(projectId: string) {
   );
 }
 
+export function getTwoMinuteProofVideo(projectId: string) {
+  const record = getDemoVideo(projectId);
+  if (!record?.twoMinuteProofYoutubeVideoId || !record.twoMinuteProofEmbedUrl) return null;
+
+  return buildVideo(
+    record.twoMinuteProofYoutubeVideoId,
+    record.twoMinuteProofYoutubeUrl,
+    record.twoMinuteProofEmbedUrl,
+    `${record.title || "Product"} two-minute proof`,
+    record.twoMinuteProofDurationSeconds || null,
+    "result-proof",
+  );
+}
+
 export function getProofState(projectId: string): ProofState {
   const quickDemoVideo = getQuickDemoVideo(projectId);
   const resultProofVideo = getResultProofVideo(projectId);
   const tutorialVideo = getTutorialVideo(projectId);
+  const twoMinuteProofVideo = getTwoMinuteProofVideo(projectId);
   const needsResultProof = requiresResultProof(projectId);
+  const record = getDemoVideo(projectId);
+
+  if (projectId === "lyric-video-forge" && record?.twoMinuteProofSourceUrl) {
+    return {
+      ready: true,
+      label: "Master lyric proof ready",
+      detail: record.resultProofSummary || "Shows a finished master lyric video output from the Forge lane.",
+      requiresResultProof: false,
+      primaryVideo: twoMinuteProofVideo || quickDemoVideo || tutorialVideo,
+      quickDemoVideo,
+      resultProofVideo,
+      tutorialVideo: tutorialVideo || twoMinuteProofVideo,
+    };
+  }
 
   if (needsResultProof) {
     if (resultProofVideo) {
@@ -157,27 +201,40 @@ export function getProofState(projectId: string): ProofState {
         primaryVideo: resultProofVideo,
         quickDemoVideo,
         resultProofVideo,
-        tutorialVideo,
+        tutorialVideo: tutorialVideo || twoMinuteProofVideo,
       };
     }
 
     return {
       ready: false,
-      label: quickDemoVideo || tutorialVideo ? "Result proof pending" : "Proof pending",
+      label: quickDemoVideo || tutorialVideo || twoMinuteProofVideo ? "Result proof pending" : "Proof pending",
       detail: "Mastering apps must show a source song and the mastered output before they count as public proof.",
       requiresResultProof: true,
-      primaryVideo: tutorialVideo || quickDemoVideo,
+      primaryVideo: tutorialVideo || twoMinuteProofVideo || quickDemoVideo,
       quickDemoVideo,
       resultProofVideo,
-      tutorialVideo,
+      tutorialVideo: tutorialVideo || twoMinuteProofVideo,
+    };
+  }
+
+  if (twoMinuteProofVideo) {
+    return {
+      ready: true,
+      label: "System proof ready",
+      detail: "Shows the system being used for a real workflow instead of only previewing the route shell.",
+      requiresResultProof: false,
+      primaryVideo: twoMinuteProofVideo,
+      quickDemoVideo,
+      resultProofVideo,
+      tutorialVideo: tutorialVideo || twoMinuteProofVideo,
     };
   }
 
   if (tutorialVideo) {
     return {
-      ready: true,
-      label: "Tutorial ready",
-      detail: "Full tutorial includes captions, highlight framing, narration, and slower pacing.",
+      ready: false,
+      label: "Walkthrough available",
+      detail: "This is a walkthrough, not proof of a finished working output. Request live proof before buying.",
       requiresResultProof: false,
       primaryVideo: tutorialVideo,
       quickDemoVideo,
@@ -188,9 +245,9 @@ export function getProofState(projectId: string): ProofState {
 
   if (quickDemoVideo) {
     return {
-      ready: true,
-      label: "Proof clip ready",
-      detail: "A working proof clip is available while the full tutorial is prepared.",
+      ready: false,
+      label: "Preview available",
+      detail: "This is a preview clip, not proof of a finished working output. Request live proof before buying.",
       requiresResultProof: false,
       primaryVideo: quickDemoVideo,
       quickDemoVideo,

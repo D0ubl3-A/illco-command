@@ -166,7 +166,7 @@ export function getTwoMinuteProofVideo(projectId: string) {
     record.twoMinuteProofEmbedUrl,
     `${record.title || "Product"} two-minute proof`,
     record.twoMinuteProofDurationSeconds || null,
-    "result-proof",
+    "full-walkthrough",
   );
 }
 
@@ -220,7 +220,7 @@ export function getProofState(projectId: string): ProofState {
   if (twoMinuteProofVideo) {
     return {
       ready: true,
-      label: "System proof ready",
+      label: "Two-minute proof ready",
       detail: "Shows the system being used for a real workflow instead of only previewing the route shell.",
       requiresResultProof: false,
       primaryVideo: twoMinuteProofVideo,
@@ -232,9 +232,9 @@ export function getProofState(projectId: string): ProofState {
 
   if (tutorialVideo) {
     return {
-      ready: false,
-      label: "Walkthrough available",
-      detail: "This is a walkthrough, not proof of a finished working output. Request live proof before buying.",
+      ready: true,
+      label: "Tutorial ready",
+      detail: "Full tutorial has been uploaded with narration, captions, highlights, and slow pacing.",
       requiresResultProof: false,
       primaryVideo: tutorialVideo,
       quickDemoVideo,

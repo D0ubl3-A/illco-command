@@ -70,10 +70,10 @@ test("Think For Me Mode is locked as a paid Studio product", () => {
   assert.equal(product.category, "command");
   assert.equal(product.subscriptionTier, "Studio");
   assert.equal(product.licenseMode, "seat");
-  assert.equal(product.productionUrl, "https://illco-command.vercel.app/tools/think-for-me-mode");
+  assert.equal(product.productionUrl, "https://illcoai.tech/tools/think-for-me-mode");
   assert.ok(monetization);
   assert.equal(monetization.publicInFunnel, true);
-  assert.equal(monetization.needsDemoVideo, false);
+  assert.equal(monetization.needsDemoVideo, true);
   assert.equal(monetization.healthGate.behavior, "allow-checkout");
   assert.equal(canDirectCheckoutPublicProduct("think-for-me-mode"), true);
 

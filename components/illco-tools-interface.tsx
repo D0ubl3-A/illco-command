@@ -163,6 +163,13 @@ export async function IllcoToolsInterface() {
       narrationCheck: "Redo narration only if the script lies about what is on screen, timing is off, the voice is too quiet, the audio stream is missing, or the final MP4 fails playback. Keep it if the voice is clear, honest, synced enough, and verified."
     },
     {
+      id: "meme-mcp-server",
+      name: "Meme MCP Server",
+      status: "ChatGPT App",
+      signal: "Vercel / MCP / Revenue",
+      description: "A deployed ChatGPT custom app endpoint for meme generation, no-auth tool discovery, usage quotas, conversion tracking, and live monetization status from ILLCO Command.",
+      href: "/tools/meme-mcp-server"
+    },    {
       id: "bigo-gift-strategy",
       name: "BIGO Gift Strategy",
       status: "Account Tool",
@@ -416,7 +423,7 @@ export async function IllcoToolsInterface() {
           {modules.map((module) => (
             <article
               id={module.id}
-              className={`companionsPageModuleCard ${module.id === "think-for-me-mode" ? "isUserHelper" : ""}`}
+              className={`companionsPageModuleCard ${module.id === "think-for-me-mode" ? "isUserHelper" : ""} ${module.id === "meme-mcp-server" ? "isMemeMcp" : ""}`}
               key={module.name}
             >
               <header className="companionsPageModuleHead">

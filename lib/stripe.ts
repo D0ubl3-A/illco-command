@@ -114,6 +114,31 @@ export async function retrieveCheckoutSession(sessionId: string) {
   return stripe.checkout.sessions.retrieve(sessionId);
 }
 
+export async function retrieveStripeSubscription(subscriptionId: string) {
+  const stripe = getStripeClient();
+  return stripe.subscriptions.retrieve(subscriptionId);
+}
+
+export async function retrieveReferralConnectedAccount(accountId: string) {
+  const stripe = getStripeClient();
+  return stripe.accounts.retrieve(accountId);
+}
+
+export async function createReferralTransfer(input: {
+  accountId: string;
+  amountCents: number;
+  currency: string;
+  metadata?: Stripe.MetadataParam;
+}) {
+  const stripe = getStripeClient();
+  return stripe.transfers.create({
+    amount: input.amountCents,
+    currency: input.currency,
+    destination: input.accountId,
+    metadata: input.metadata,
+  });
+}
+
 export async function createPortalSession(input: { stripeCustomerId: string; returnPath?: string | null }) {
   const stripe = getStripeClient();
   const session = await stripe.billingPortal.sessions.create({

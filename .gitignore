@@ -19,3 +19,5 @@ next-start*.log
 next-start*.err
 
 tsconfig.tsbuildinfo
+.vercel
+.env*.local

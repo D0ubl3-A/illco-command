@@ -8,6 +8,7 @@ import {
   GOOGLE_OAUTH_STATE_COOKIE,
   GOOGLE_OAUTH_VERIFIER_COOKIE,
   buildGoogleAuthorizationUrl,
+  getRequestOrigin,
   createGoogleOAuthState,
   createGooglePkceChallenge,
   createGooglePkceVerifier,
@@ -17,7 +18,8 @@ import {
 import { getAccountDatabaseStatus } from "@/lib/user-accounts";
 
 function accountRedirect(request: Request, state: string) {
-  return NextResponse.redirect(new URL(`/account?auth=${encodeURIComponent(state)}`, request.url));
+  const origin = getRequestOrigin(request);
+  return NextResponse.redirect(new URL(`/account?auth=${encodeURIComponent(state)}`, origin));
 }
 
 export async function GET(request: Request) {
@@ -29,6 +31,7 @@ export async function GET(request: Request) {
     return accountRedirect(request, "google-unavailable");
   }
 
+  const requestOrigin = getRequestOrigin(request);
   const requestUrl = new URL(request.url);
   const returnTo = safeAccountReturnTo(requestUrl.searchParams.get("returnTo"));
   const loginHint = requestUrl.searchParams.get("loginHint");
@@ -39,6 +42,7 @@ export async function GET(request: Request) {
     state,
     codeChallenge: createGooglePkceChallenge(verifier),
     loginHint,
+    redirectUri: requestOrigin,
   });
   const response = NextResponse.redirect(authorizationUrl);
   const secure = process.env.NODE_ENV === "production";

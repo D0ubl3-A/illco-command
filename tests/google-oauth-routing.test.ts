@@ -11,6 +11,12 @@ const accountPageSource = readFileSync("app/account/page.tsx", "utf8");
 test("Google OAuth respects the configured redirect URI", () => {
   assert.match(googleOauthSource, /return url\.toString\(\);/);
   assert.doesNotMatch(googleOauthSource, /url\.pathname = "\/api\/account\/google\/callback"/);
+  const configuredRedirectIndex = googleOauthSource.indexOf("const configured = env.googleRedirectUri");
+  const requestOriginFallbackIndex = googleOauthSource.indexOf("if (baseUrl)");
+  assert.notEqual(configuredRedirectIndex, -1);
+  assert.ok(requestOriginFallbackIndex > configuredRedirectIndex);
+  assert.match(accountStartSource, /redirectUri:\s*requestOrigin/);
+  assert.match(accountCallbackSource, /redirectUri:\s*requestOrigin/);
 });
 
 test("Google OAuth supports both canonical and legacy callback cookie paths", () => {

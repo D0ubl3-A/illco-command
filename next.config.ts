@@ -5,9 +5,14 @@ const nextConfig: NextConfig = {
   turbopack: {
     root: path.resolve(__dirname),
   },
-  typedRoutes: true,
   async redirects() {
     return [
+      {
+        source: "/:path*",
+        has: [{ type: "host", value: "illcoai.tech" }],
+        destination: "https://www.illcoai.tech/:path*",
+        permanent: true,
+      },
       {
         source: "/companions",
         destination: "/tools",

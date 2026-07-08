@@ -6,6 +6,13 @@ import { getProductById } from "@/lib/deployments";
 import { getAccountDatabaseStatus, getCurrentUser } from "@/lib/user-accounts";
 import { YOUTUBE_OPS_APP_URL, YOUTUBE_OPS_PRODUCT_ID } from "@/lib/youtube-ops-integration";
 
+const RAPBOTS_PRODUCT_ID = "battle-rap-ai";
+const RAPBOTS_APP_URLS = [
+  "https://rapbots.online",
+  "https://temp-rapbots.vercel.app",
+  "https://illcoai.tech",
+];
+
 function normalizeUrl(value: string) {
   const url = new URL(value);
   url.hash = "";
@@ -14,21 +21,22 @@ function normalizeUrl(value: string) {
 }
 
 function allowedBridgeReturnTo(productId: string) {
-  if (productId === YOUTUBE_OPS_PRODUCT_ID) return YOUTUBE_OPS_APP_URL;
-  return "";
+  if (productId === YOUTUBE_OPS_PRODUCT_ID) return [YOUTUBE_OPS_APP_URL];
+  if (productId === RAPBOTS_PRODUCT_ID) return RAPBOTS_APP_URLS;
+  return [];
 }
 
 function safeBridgeReturnTo(productId: string, value: string | null) {
   const allowed = allowedBridgeReturnTo(productId);
-  if (!allowed) return "";
+  if (!allowed.length) return "";
 
   const safe = safeAccountReturnTo(value);
-  if (!safe) return allowed;
+  if (!safe) return allowed[0];
 
   try {
-    return normalizeUrl(safe) === normalizeUrl(allowed) ? safe : allowed;
+    return allowed.some((candidate) => normalizeUrl(safe) === normalizeUrl(candidate)) ? safe : allowed[0];
   } catch {
-    return allowed;
+    return allowed[0];
   }
 }
 

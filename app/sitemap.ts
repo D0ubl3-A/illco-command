@@ -22,6 +22,18 @@ export default function sitemap(): MetadataRoute.Sitemap {
       priority: 0.8,
     },
     {
+      url: `${siteUrl}/tools/lyric-video-forge`,
+      lastModified,
+      changeFrequency: "weekly",
+      priority: 0.84,
+    },
+    {
+      url: `${siteUrl}/products`,
+      lastModified,
+      changeFrequency: "daily",
+      priority: 0.96,
+    },
+    {
       url: `${siteUrl}/tools/think-for-me-mode`,
       lastModified,
       changeFrequency: "weekly",

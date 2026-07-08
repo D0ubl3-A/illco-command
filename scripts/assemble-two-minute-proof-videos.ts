@@ -43,6 +43,21 @@ async function statOrNull(filePath: string) {
 }
 
 async function runFfmpeg(inputPath: string, outputPath: string) {
+  const watermarkText = "Video Forge iLLCoAI.Tech";
+  const escapedWatermarkText = watermarkText.replace(/'/g, "'\\''");
+  const watermarkFilter =
+    "drawtext="
+    + "text='" + escapedWatermarkText + "':"
+    + "fontcolor=white@0.7:"
+    + "fontsize=26:"
+    + "x=14:"
+    + "y=h-th-14:"
+    + "box=1:"
+    + "boxcolor=black@0.45:"
+    + "boxborderw=6:"
+    + "shadowx=1:"
+    + "shadowy=1:"
+    + "shadowcolor=black@0.7";
   await fs.mkdir(path.dirname(outputPath), { recursive: true });
   const args = [
     "-y",
@@ -53,7 +68,7 @@ async function runFfmpeg(inputPath: string, outputPath: string) {
     "-t",
     "120",
     "-vf",
-    "scale=960:-2,fps=15",
+    `scale=960:-2,fps=15,${watermarkFilter}`,
     "-an",
     "-c:v",
     "libvpx-vp9",

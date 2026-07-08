@@ -80,16 +80,35 @@ export function isGoogleOAuthConfigured() {
   return Boolean(env.googleClientId && env.googleClientSecret);
 }
 
-export function getGoogleOAuthRedirectUri() {
+export function getRequestOrigin(request: Request) {
+  const headers = request.headers;
+  const forwardedHost = headers.get("x-forwarded-host") || headers.get("host") || "";
+  const forwardedProto = headers.get("x-forwarded-proto") || "https";
+  if (forwardedHost) {
+    return `${forwardedProto}://${forwardedHost.split(",")[0].trim()}`;
+  }
+  try {
+    return new URL(request.url).origin;
+  } catch {
+    return env.appBaseUrl;
+  }
+}
+
+export function getGoogleOAuthRedirectUri(baseUrl?: string) {
   const configured = env.googleRedirectUri;
   if (configured) {
     try {
       const url = new URL(configured);
       return url.toString();
     } catch {
-      // Fall through to the canonical app-account callback.
+      // Fall through to request/app origin fallback.
     }
   }
+
+  if (baseUrl) {
+    return new URL("/api/account/google/callback", baseUrl).toString();
+  }
+
   return new URL("/api/account/google/callback", env.appBaseUrl).toString();
 }
 
@@ -127,10 +146,11 @@ export function buildGoogleAuthorizationUrl(input: {
   state: string;
   codeChallenge: string;
   loginHint?: string | null;
+  redirectUri?: string;
 }) {
   const url = new URL(GOOGLE_AUTH_URL);
   url.searchParams.set("client_id", env.googleClientId);
-  url.searchParams.set("redirect_uri", getGoogleOAuthRedirectUri());
+  url.searchParams.set("redirect_uri", getGoogleOAuthRedirectUri(input.redirectUri));
   url.searchParams.set("response_type", "code");
   url.searchParams.set("scope", GOOGLE_SCOPES.join(" "));
   url.searchParams.set("state", input.state);
@@ -147,6 +167,7 @@ export function buildGoogleAuthorizationUrl(input: {
 export async function exchangeGoogleAuthorizationCode(input: {
   code: string;
   codeVerifier: string;
+  redirectUri?: string;
   fetchImpl?: typeof fetch;
 }) {
   const fetchImpl = input.fetchImpl || fetch;
@@ -154,7 +175,7 @@ export async function exchangeGoogleAuthorizationCode(input: {
     code: input.code,
     client_id: env.googleClientId,
     client_secret: env.googleClientSecret,
-    redirect_uri: getGoogleOAuthRedirectUri(),
+    redirect_uri: getGoogleOAuthRedirectUri(input.redirectUri),
     grant_type: "authorization_code",
     code_verifier: input.codeVerifier,
   });

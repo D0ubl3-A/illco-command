@@ -28,6 +28,7 @@
 
 html {
   background: var(--bg);
+  color-scheme: dark;
   scroll-behavior: smooth;
 }
 
@@ -36,9 +37,9 @@ body {
   margin: 0;
   color: var(--text);
   background:
-    linear-gradient(90deg, rgba(255, 51, 85, 0.15), transparent 31%),
-    linear-gradient(270deg, rgba(68, 215, 255, 0.13), transparent 34%),
-    linear-gradient(180deg, var(--bg) 0%, #0a0d11 45%, #050607 100%);
+    radial-gradient(circle at 18% 18%, rgba(68, 215, 255, 0.11), transparent 28%),
+    radial-gradient(circle at 82% 14%, rgba(255, 186, 58, 0.1), transparent 24%),
+    linear-gradient(180deg, #05070b 0%, #090d14 48%, #040507 100%);
   background-attachment: fixed;
   font-family:
     Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
@@ -119,18 +120,12 @@ textarea:focus-visible {
   min-width: 0;
 }
 
-.globalAuthBrand span {
-  display: grid;
-  place-items: center;
+.globalAuthBrand img {
   width: 38px;
   height: 38px;
-  border: 1px solid rgba(255, 51, 85, 0.44);
-  border-radius: var(--radius);
-  background: linear-gradient(145deg, rgba(255, 51, 85, 0.28), rgba(68, 215, 255, 0.12));
-  box-shadow: 0 12px 34px rgba(255, 51, 85, 0.18);
-  font-size: 0.78rem;
-  font-weight: 950;
-  letter-spacing: 0;
+  flex: 0 0 auto;
+  object-fit: contain;
+  filter: drop-shadow(0 12px 34px rgba(255, 51, 85, 0.18));
 }
 
 .globalAuthBrand strong {
@@ -233,6 +228,20 @@ textarea:focus-visible {
 .siteFooter > div {
   display: grid;
   gap: 4px;
+}
+
+.siteFooterBrand {
+  grid-template-columns: auto 1fr;
+  align-items: center;
+  column-gap: 12px;
+}
+
+.siteFooterBrand img {
+  grid-row: 1 / span 2;
+  width: 42px;
+  height: 42px;
+  object-fit: contain;
+  filter: drop-shadow(0 10px 24px rgba(255, 51, 85, 0.22));
 }
 
 .siteFooter strong {
@@ -4091,7 +4100,7 @@ td a {
     display: none;
   }
 
-  .globalAuthBrand span {
+  .globalAuthBrand img {
     width: 34px;
     height: 34px;
   }
@@ -6239,6 +6248,20 @@ td a {
   overflow-wrap: anywhere;
 }
 
+.checkoutProductPrice {
+  width: fit-content;
+  min-height: 34px;
+  display: inline-flex;
+  align-items: center;
+  border: 1px solid rgba(255, 186, 58, 0.34);
+  border-radius: var(--radius);
+  background: linear-gradient(135deg, rgba(255, 186, 58, 0.18), rgba(68, 215, 255, 0.1));
+  color: #fff5cf;
+  padding: 0 11px;
+  font-size: 1.1rem;
+  font-weight: 950;
+  letter-spacing: 0;
+}
 .checkoutProductCard p {
   margin: 0;
   color: rgba(223, 234, 248, 0.76);
@@ -8052,6 +8075,7 @@ td a {
   }
 }
 
+
 .serviceStudioLayout {
   display: grid;
   grid-template-columns: minmax(0, 0.96fr) minmax(360px, 0.84fr);
@@ -9844,6 +9868,92 @@ td a {
   transform-origin: center;
 }
 
+.sitePetSprite.lyricForge,
+.sitePetSprite.workflowRouter,
+.sitePetSprite.accessScout {
+  width: 68px;
+  height: 72px;
+  border: 2px solid rgba(255, 255, 255, 0.76);
+  border-radius: 24px 24px 18px 18px;
+  background-image: none;
+  background-size: auto;
+  box-shadow: inset 0 -10px 16px rgba(0, 0, 0, 0.3), 0 0 18px rgba(255, 255, 255, 0.18);
+  image-rendering: pixelated;
+  transform: translate(-50%, -50%);
+}
+
+.sitePetSprite.lyricForge {
+  background:
+    linear-gradient(90deg, transparent 8px, rgba(255, 255, 255, 0.92) 8px 14px, transparent 14px 30px, rgba(255, 255, 255, 0.92) 30px 36px, transparent 36px),
+    radial-gradient(circle at 50% 72%, #ffba3a 0 9px, transparent 10px),
+    linear-gradient(135deg, #ff3355, #7b3cff 54%, #44d7ff);
+}
+
+.sitePetSprite.lyricForge::before,
+.sitePetSprite.workflowRouter::before,
+.sitePetSprite.accessScout::before {
+  content: "";
+  position: absolute;
+  left: 10px;
+  right: 10px;
+  top: 26px;
+  height: 10px;
+  border-radius: 999px;
+  background: repeating-linear-gradient(90deg, #051019 0 5px, transparent 5px 19px);
+}
+
+.sitePetSprite.lyricForge::after {
+  content: "";
+  position: absolute;
+  left: 18px;
+  right: 18px;
+  bottom: 9px;
+  height: 9px;
+  border-radius: 999px;
+  background: linear-gradient(90deg, #fff4cf, #ffba3a);
+}
+
+.sitePetSprite.workflowRouter {
+  background:
+    radial-gradient(circle at 18% 18%, #42d978 0 8px, transparent 9px),
+    radial-gradient(circle at 82% 20%, #44d7ff 0 8px, transparent 9px),
+    linear-gradient(150deg, #0a121a, #173d2d 54%, #44d7ff);
+}
+
+.sitePetSprite.workflowRouter::after {
+  content: "";
+  position: absolute;
+  left: 12px;
+  right: 12px;
+  bottom: 10px;
+  height: 14px;
+  border: 2px solid rgba(255, 255, 255, 0.74);
+  border-radius: 999px;
+  background: linear-gradient(90deg, rgba(66, 217, 120, 0.82), rgba(68, 215, 255, 0.82));
+}
+
+.sitePetSprite.accessScout {
+  background:
+    linear-gradient(90deg, transparent 0 10px, rgba(255, 186, 58, 0.9) 10px 18px, transparent 18px 50px, rgba(255, 186, 58, 0.9) 50px 58px, transparent 58px),
+    linear-gradient(145deg, #2b153d, #ff3355 58%, #ffba3a);
+}
+
+.sitePetSprite.accessScout::after {
+  content: "";
+  position: absolute;
+  left: 16px;
+  right: 16px;
+  bottom: 9px;
+  height: 10px;
+  border-radius: 0 0 999px 999px;
+  background: #fff;
+  box-shadow: 0 -5px 0 rgba(255, 255, 255, 0.26);
+}
+
+.sitePetSprite.m3ntallyIll {
+  background-image: url("/pets/m3ntally-ill-me/spritesheet.webp");
+}
+
 .sitePetAgentPanel {
   margin-top: 10px;
   overflow: hidden;
@@ -9855,6 +9965,53 @@ td a {
     radial-gradient(circle at 88% 20%, rgba(68, 215, 255, 0.26), transparent 34%),
     linear-gradient(160deg, rgba(4, 5, 8, 0.96), rgba(11, 14, 21, 0.94));
   box-shadow: 0 28px 80px rgba(0, 0, 0, 0.58);
+}
+
+.sitePetRoster {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+  margin: 14px 0;
+}
+
+.sitePetRoster button {
+  display: grid;
+  grid-template-columns: 38px minmax(0, 1fr);
+  align-items: center;
+  gap: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.13);
+  border-radius: 16px;
+  padding: 7px;
+  color: rgba(255, 255, 255, 0.84);
+  cursor: pointer;
+  background: rgba(255, 255, 255, 0.05);
+  font-family: "Trebuchet MS", Arial, sans-serif;
+  font-size: 0.74rem;
+  font-weight: 900;
+  text-align: left;
+  text-transform: uppercase;
+}
+
+.sitePetRoster button.active {
+  color: #050506;
+  background: linear-gradient(90deg, #ffba3a, #42d978, #44d7ff);
+}
+
+.sitePetMiniAvatar {
+  position: relative;
+  width: 38px;
+  height: 38px;
+  overflow: hidden;
+  border-radius: 13px;
+  background: rgba(5, 8, 12, 0.86);
+}
+
+.sitePetMiniAvatar .sitePetSprite {
+  transform: translate(-50%, -50%) scale(0.52);
+}
+
+.sitePetMiniAvatar .sitePetSprite.m3ntallyIll {
+  transform: translate(-50%, -50%) scale(0.19);
 }
 
 .sitePetAgentHeader span {
@@ -9943,9 +10100,154 @@ td a {
   animation: lyricRgbSweep 2.2s linear infinite;
 }
 
+.sitePetPromptForm {
+  margin-top: 12px;
+  display: grid;
+  gap: 8px;
+}
+
+.sitePetPromptForm label {
+  color: rgba(223, 246, 255, 0.75);
+  font-size: 0.75rem;
+  font-weight: 900;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.sitePetPromptForm textarea,
+.sitePetPromptForm input {
+  min-height: 80px;
+  resize: vertical;
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  border-radius: 16px;
+  padding: 10px;
+  color: #fff;
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.sitePetPromptForm input {
+  min-height: 42px;
+  resize: none;
+}
+
+.sitePetPromptForm .sitePetPrimaryCta {
+  margin-top: 0;
+}
+
+.sitePetSettings {
+  margin-top: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 14px;
+  padding: 8px 10px;
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.sitePetSettings span {
+  color: rgba(223, 246, 255, 0.8);
+  font-size: 0.74rem;
+  font-weight: 900;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.sitePetSecondaryCta {
+  display: flex;
+  justify-content: center;
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  border-radius: 999px;
+  margin-top: 8px;
+  padding: 11px 14px;
+  color: #fff;
+  background: rgba(255, 255, 255, 0.06);
+  font-weight: 900;
+  cursor: pointer;
+  letter-spacing: -0.02em;
+  text-transform: uppercase;
+}
+
+.sitePetVoiceCta {
+  display: flex;
+  justify-content: center;
+  border: 1px solid rgba(255, 186, 58, 0.36);
+  border-radius: 999px;
+  margin-top: 8px;
+  padding: 11px 14px;
+  color: #fff8df;
+  background: rgba(255, 186, 58, 0.12);
+  box-shadow: 0 0 20px rgba(255, 186, 58, 0.12);
+  font-weight: 950;
+  cursor: pointer;
+  letter-spacing: -0.02em;
+  text-transform: uppercase;
+}
+
+.sitePetVoiceCta:disabled {
+  cursor: not-allowed;
+  opacity: 0.62;
+}
+
+.sitePetSecondaryCta:disabled {
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.sitePetCacheNotice {
+  margin-top: 8px;
+  display: block;
+  color: #8ffcff;
+  font-size: 0.74rem;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.sitePetAgentEnable {
+  width: auto;
+  min-height: 52px;
+}
+
 @keyframes sitePetFloat {
   0%, 100% { transform: translateY(0) rotate(-1deg); }
   50% { transform: translateY(-4px) rotate(2deg); }
+}
+
+.forgeProgressWrap {
+  position: relative;
+  margin: 4px 0 6px;
+}
+
+.forgeProgressLabel {
+  display: block;
+  margin-bottom: 8px;
+  color: rgba(223, 246, 255, 0.76);
+  font-size: 0.74rem;
+  font-weight: 900;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.forgeProgressTrack,
+.forgeProgressFill {
+  border-radius: 999px;
+}
+
+.forgeProgressTrack {
+  height: 12px;
+  background: rgba(255, 255, 255, 0.12);
+}
+
+.forgeProgressFill {
+  margin-top: -12px;
+  height: 12px;
+  width: 0;
+  max-width: 100%;
+  background: linear-gradient(90deg, #ff3355, #ffba3a, #42d978, #44d7ff);
+  background-size: 220% 100%;
+  animation: lyricRgbSweep 2.1s linear infinite;
 }
 
 @media (max-width: 560px) {
@@ -9958,6 +10260,10 @@ td a {
   .sitePetChoices {
     grid-template-columns: 1fr;
   }
+
+  .sitePetRoster {
+    grid-template-columns: 1fr;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -9965,4 +10271,2156 @@ td a {
   .sitePetPrimaryCta {
     animation: none !important;
   }
+
+  #forge .bigoStrategyGrid {
+    grid-template-columns: 1fr;
+  }
+
+  #forge .bigoStrategyActions {
+    grid-template-columns: 1fr;
+  }
+
+  #forge .button {
+    width: 100%;
+  }
+
+  #forge .companionsPageHelperPrompt textarea,
+  #forge input,
+  #forge select {
+    width: 100%;
+  }
+}
+
+/* Meme MCP Server webapp */
+.companionsPageModuleCard.isMemeMcp {
+  border-color: rgba(68, 215, 255, 0.38);
+  background:
+    linear-gradient(135deg, rgba(68, 215, 255, 0.16), rgba(255, 51, 85, 0.08)),
+    rgba(7, 18, 36, 0.72);
+  box-shadow: 0 18px 54px rgba(68, 215, 255, 0.08);
+}
+
+.memeMcpWorkspace {
+  gap: 18px;
+}
+
+.memeMcpConsole {
+  display: grid;
+  gap: 18px;
+}
+
+.memeMcpHero {
+  display: grid;
+  grid-template-columns: minmax(0, 1.12fr) minmax(320px, 0.88fr);
+  gap: 18px;
+  align-items: stretch;
+  overflow: hidden;
+  position: relative;
+  background:
+    radial-gradient(circle at 10% 15%, rgba(68, 215, 255, 0.18), transparent 34%),
+    radial-gradient(circle at 90% 0%, rgba(255, 51, 85, 0.16), transparent 32%),
+    linear-gradient(135deg, rgba(18, 22, 28, 0.96), rgba(6, 10, 16, 0.96));
+}
+
+.memeMcpHero h1 {
+  margin: 12px 0 10px;
+  color: #fff;
+  font-size: clamp(2.7rem, 7vw, 6.8rem);
+  line-height: 0.88;
+  letter-spacing: 0;
+  text-transform: uppercase;
+}
+
+.memeMcpHero p {
+  max-width: 720px;
+  margin: 0;
+  color: rgba(232, 239, 252, 0.86);
+  font-size: clamp(1.02rem, 1.55vw, 1.26rem);
+  line-height: 1.55;
+}
+
+.memeMcpEndpointCard,
+.memeMcpSetupPanel,
+.memeMcpProbePanel,
+.memeMcpGeneratorPanel,
+.memeMcpMonetizationPanel {
+  min-width: 0;
+}
+
+.memeMcpEndpointCard {
+  display: grid;
+  align-content: center;
+  gap: 14px;
+  border: 1px solid rgba(68, 215, 255, 0.28);
+  border-radius: var(--radius);
+  padding: 18px;
+  background: rgba(4, 12, 22, 0.72);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.08), 0 22px 70px rgba(0, 0, 0, 0.28);
+}
+
+.memeMcpEndpointCard span,
+.memeMcpTopicField span {
+  color: #9eeaff;
+  font-size: 0.74rem;
+  font-weight: 900;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.memeMcpEndpointCard code,
+.memeMcpOutput {
+  overflow-wrap: anywhere;
+  white-space: pre-wrap;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: var(--radius);
+  color: #eaf7ff;
+  background: rgba(0, 0, 0, 0.28);
+  font-family: "SFMono-Regular", Consolas, "Liberation Mono", monospace;
+}
+
+.memeMcpEndpointCard code {
+  padding: 12px;
+  font-size: 0.92rem;
+}
+
+.memeMcpGrid {
+  display: grid;
+  grid-template-columns: minmax(0, 0.95fr) minmax(0, 1.05fr);
+  gap: 18px;
+}
+
+.memeMcpSettingsList {
+  display: grid;
+  gap: 10px;
+  margin: 0;
+}
+
+.memeMcpSettingsList div {
+  display: grid;
+  grid-template-columns: 110px minmax(0, 1fr);
+  gap: 12px;
+  align-items: center;
+  min-height: 50px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: var(--radius);
+  padding: 10px 12px;
+  background: rgba(255, 255, 255, 0.045);
+}
+
+.memeMcpSettingsList dt,
+.memeMcpSettingsList dd {
+  margin: 0;
+}
+
+.memeMcpSettingsList dt {
+  color: rgba(154, 234, 255, 0.84);
+  font-size: 0.78rem;
+  font-weight: 900;
+  text-transform: uppercase;
+}
+
+.memeMcpSettingsList dd {
+  min-width: 0;
+  overflow-wrap: anywhere;
+  color: #fff;
+  font-weight: 780;
+}
+
+.memeMcpSteps {
+  display: grid;
+  gap: 9px;
+  margin: 16px 0 0;
+  padding-left: 22px;
+  color: rgba(232, 239, 252, 0.86);
+  line-height: 1.45;
+}
+
+.memeMcpProbePanel.status-ready {
+  border-color: rgba(66, 217, 120, 0.26);
+}
+
+.memeMcpProbePanel.status-error {
+  border-color: rgba(255, 51, 85, 0.38);
+}
+
+.memeMcpToolStrip {
+  border: 1px solid rgba(68, 215, 255, 0.2);
+  border-radius: var(--radius);
+  padding: 13px;
+  color: #dff7ff;
+  background: rgba(68, 215, 255, 0.08);
+  font-weight: 850;
+}
+
+.memeMcpToolList {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+  margin-top: 14px;
+}
+
+.memeMcpToolList span {
+  display: grid;
+  gap: 8px;
+  min-height: 96px;
+  align-content: center;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: var(--radius);
+  padding: 12px;
+  background: rgba(255, 255, 255, 0.045);
+}
+
+.memeMcpToolList strong {
+  color: #fff;
+  line-height: 1.15;
+}
+
+.memeMcpToolList small {
+  width: fit-content;
+  border: 1px solid rgba(66, 217, 120, 0.28);
+  border-radius: 999px;
+  padding: 4px 8px;
+  color: #caffdc;
+  background: rgba(66, 217, 120, 0.09);
+  font-weight: 900;
+  text-transform: uppercase;
+}
+
+.memeMcpGeneratorPanel {
+  display: grid;
+  gap: 14px;
+}
+
+.memeMcpTopicField {
+  display: grid;
+  gap: 8px;
+}
+
+.memeMcpTopicField input {
+  min-height: 52px;
+  width: 100%;
+  border: 1px solid rgba(68, 215, 255, 0.26);
+  border-radius: var(--radius);
+  padding: 0 14px;
+  color: #fff;
+  background: rgba(255, 255, 255, 0.07);
+}
+
+.memeMcpOutput {
+  max-height: 460px;
+  overflow: auto;
+  margin: 0;
+  padding: 14px;
+  color: #dff7ff;
+  font-size: 0.84rem;
+  line-height: 1.48;
+}
+
+@media (max-width: 980px) {
+  .memeMcpHero,
+  .memeMcpGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .memeMcpToolList {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 560px) {
+  .memeMcpSettingsList div {
+    grid-template-columns: 1fr;
+  }
+
+  .memeMcpHero h1 {
+    font-size: clamp(2.5rem, 15vw, 4.8rem);
+  }
+}
+
+
+/* App store theme refresh */
+:root {
+  --bg: #020409;
+  --bg-2: #07101a;
+  --panel: rgba(9, 13, 22, 0.86);
+  --panel-strong: rgba(13, 19, 31, 0.97);
+  --surface: rgba(255, 255, 255, 0.04);
+  --surface-strong: rgba(255, 255, 255, 0.08);
+  --border: rgba(255, 255, 255, 0.08);
+  --border-strong: rgba(255, 255, 255, 0.16);
+  --text: #f5f8ff;
+  --muted: #95a4be;
+  --muted-2: #67758f;
+  --red: #5cf1ff;
+  --red-deep: #18c0d5;
+  --cyan: #5cf1ff;
+  --green: #51d4a1;
+  --amber: #f0b24b;
+  --blue: #7aa7ff;
+  --ink: #041018;
+  --shadow: 0 30px 88px rgba(0, 0, 0, 0.42);
+  --shadow-sharp: 0 18px 44px rgba(0, 0, 0, 0.34);
+  --radius: 14px;
+}
+
+html {
+  background: #020409;
+}
+
+body {
+  background:
+    radial-gradient(circle at 16% 14%, rgba(92, 241, 255, 0.12), transparent 28%),
+    radial-gradient(circle at 84% 8%, rgba(240, 178, 75, 0.1), transparent 24%),
+    radial-gradient(circle at 50% 92%, rgba(81, 212, 161, 0.07), transparent 30%),
+    linear-gradient(180deg, #020409 0%, #05070d 46%, #050812 100%);
+  background-attachment: fixed;
+  font-family: "Aptos", "Avenir Next", "Segoe UI", sans-serif;
+}
+
+body::before {
+  background:
+    linear-gradient(rgba(255, 255, 255, 0.028) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.024) 1px, transparent 1px);
+  background-size: 72px 72px;
+  opacity: 0.7;
+}
+
+body::after {
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.02), transparent 24%),
+    radial-gradient(circle at 0 0, rgba(255, 255, 255, 0.06), transparent 18%);
+  opacity: 0.9;
+}
+
+a:focus-visible,
+button:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible {
+  outline-color: rgba(92, 241, 255, 0.88);
+}
+
+.button {
+  border-radius: 14px;
+  border-color: rgba(255, 255, 255, 0.08);
+}
+
+.button.primary {
+  border-color: rgba(255, 255, 255, 0.12);
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.12), transparent),
+    linear-gradient(135deg, #5cf1ff, #bdf8ff);
+  box-shadow: 0 18px 44px rgba(92, 241, 255, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.2);
+  color: #041018;
+}
+
+.button.secondary {
+  border-color: rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.04);
+  color: var(--text);
+}
+
+.button.secondary:hover {
+  border-color: rgba(92, 241, 255, 0.3);
+  background: rgba(92, 241, 255, 0.08);
+}
+
+.panel,
+.factCard {
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 14px;
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.02)),
+    rgba(9, 13, 22, 0.86);
+  box-shadow: 0 22px 54px rgba(0, 0, 0, 0.34);
+  backdrop-filter: blur(22px) saturate(1.18);
+}
+
+.workspace {
+  max-width: 1360px;
+  padding: 24px;
+}
+
+.fallbackPage {
+  min-height: 100vh;
+  display: grid;
+  place-items: center;
+  padding: 28px;
+}
+
+.appLandingNav,
+.globalAuthHeader,
+.siteFooter {
+  background: rgba(2, 4, 9, 0.84);
+  backdrop-filter: blur(22px);
+}
+
+.appLandingNav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  min-width: 0;
+}
+
+.appLandingNav > div,
+.appLandingActions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  align-items: center;
+}
+
+.brandBlock {
+  display: grid;
+  grid-template-columns: 46px 1fr;
+  align-items: center;
+  gap: 12px;
+  min-height: 52px;
+}
+
+.brandGlyph {
+  display: grid;
+  place-items: center;
+  width: 46px;
+  height: 46px;
+  border: 1px solid rgba(92, 241, 255, 0.25);
+  border-radius: 14px;
+  background: linear-gradient(135deg, rgba(92, 241, 255, 0.28), rgba(240, 178, 75, 0.18));
+  color: #fff;
+  font-weight: 900;
+}
+
+.brandBlock strong {
+  font-size: 1rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.globalAuthHeader {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  background:
+    linear-gradient(90deg, rgba(92, 241, 255, 0.08), transparent 32%, rgba(240, 178, 75, 0.08)),
+    rgba(2, 4, 9, 0.86);
+}
+
+.globalAuthBrand img,
+.siteFooterBrand img {
+  filter: drop-shadow(0 12px 34px rgba(92, 241, 255, 0.14));
+}
+
+.globalAuthNav a,
+.siteFooter a,
+.railNav a {
+  border-radius: 14px;
+}
+
+.globalAuthAdminLink {
+  border-color: rgba(240, 178, 75, 0.25);
+  background: rgba(240, 178, 75, 0.08);
+  color: #fff5d0 !important;
+}
+
+.globalAuthMasterLink {
+  border-color: rgba(92, 241, 255, 0.18);
+  background: rgba(92, 241, 255, 0.08);
+}
+
+.globalAuthMasterLink.isUnlocked {
+  border-color: rgba(81, 212, 161, 0.28);
+  background: rgba(81, 212, 161, 0.1);
+  color: #d9ffe9 !important;
+}
+
+.globalAuthUser {
+  border-color: rgba(92, 241, 255, 0.24);
+  background: rgba(92, 241, 255, 0.08);
+  color: #dffcff;
+}
+
+.globalAuthButton {
+  min-height: 38px;
+}
+
+.siteFooter {
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.commandShell {
+  background:
+    linear-gradient(180deg, rgba(2, 4, 9, 0), rgba(2, 4, 9, 0.72) 38%, rgba(2, 4, 9, 0.96) 100%),
+    #020409;
+}
+
+.sideRail {
+  border-right: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(2, 4, 9, 0.78);
+  backdrop-filter: blur(22px);
+}
+
+.railNav a:hover {
+  background: rgba(92, 241, 255, 0.08);
+  transform: translateX(2px);
+}
+
+.posterHero,
+.proofRail,
+.posterPanel,
+.leadShortcutPanel,
+.proofStoryPanel,
+.proofRailPanel,
+.serviceStudio,
+.contentProductionPanel,
+.musicVideoTestimonials,
+.youtubeOpsSpotlight,
+.demoPanel,
+.masterAgentHero,
+.masterAgentWorkbench,
+.legalHero,
+.legalBody,
+.checkoutProductsSection,
+.lyricAdHero,
+.lyricAdPainSection,
+.lyricAdDemoBand,
+.lyricAdPlatformClose,
+.lyricAdProofStage,
+.lyricAdFinal {
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 18px;
+  background:
+    radial-gradient(circle at 12% 12%, rgba(92, 241, 255, 0.08), transparent 24%),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.02)),
+    rgba(9, 13, 22, 0.9);
+  box-shadow: 0 22px 54px rgba(0, 0, 0, 0.34);
+}
+
+.heroEyebrow,
+.checkoutProductsEyebrow,
+.blogEyebrow,
+.lyricAdEyebrow,
+.readinessPill,
+.productCategory {
+  color: #5cf1ff;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+}
+
+.checkoutProductsSection {
+  overflow: hidden;
+}
+
+.checkoutProductsHeader,
+.checkoutProductGroupHeader,
+.masterAgentHero,
+.masterAgentWorkbench,
+.lyricAdHero,
+.lyricAdPlatformClose,
+.lyricAdProofStage,
+.lyricAdFinal {
+  gap: 18px;
+}
+
+.checkoutProductCard,
+.masterAgentMiniStat,
+.masterAgentPreset,
+.masterAgentRecommendationCard,
+.legalSection,
+.testimonialCard,
+.demoCard,
+.serviceRow,
+.proofRailItem,
+.githubProofCard,
+.lyricAdFloatingCue,
+.lyricAdPhone,
+.checkoutProductGroup,
+.checkoutProductActions,
+.masterAgentPopup,
+.resultBox {
+  border-radius: 14px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(255, 255, 255, 0.03);
+}
+
+.checkoutProductThumb,
+.heroHeaderVideo,
+.heroHeaderFlyover,
+.posterHeroVideoBackdrop,
+.posterHeroFlyover,
+.lyricAdPhone img,
+.demoFrame,
+.proofStageFrame {
+  border-radius: 14px;
+}
+
+.checkoutProductActions .button,
+.serviceSpotlightActions .button,
+.masterAgentHeroActions .button,
+.lyricAdActions .button,
+.lyricAdFinal .button,
+.topActions .button {
+  min-height: 44px;
+}
+
+.lyricAdPage {
+  background:
+    radial-gradient(circle at 14% 8%, rgba(92, 241, 255, 0.16), transparent 28%),
+    radial-gradient(circle at 82% 10%, rgba(240, 178, 75, 0.14), transparent 30%),
+    linear-gradient(145deg, #020409 0%, #05070d 45%, #050812 100%);
+}
+
+.lyricAdPage .button.primary {
+  color: #041018 !important;
+  background: linear-gradient(135deg, #5cf1ff, #bdf8ff) !important;
+  box-shadow: 0 18px 42px rgba(92, 241, 255, 0.2) !important;
+}
+
+.lyricAdPage .button.secondary {
+  border-color: rgba(255, 255, 255, 0.1) !important;
+  background: rgba(255, 255, 255, 0.04) !important;
+}
+
+.masterAgentPage,
+.legalPage {
+  background: transparent;
+}
+
+.appStoreShell {
+  --store-bg: #020409;
+  --store-panel: rgba(10, 15, 24, 0.84);
+  --store-panel-strong: rgba(13, 20, 33, 0.97);
+  --store-border: rgba(255, 255, 255, 0.08);
+  --store-border-strong: rgba(255, 255, 255, 0.16);
+  --store-text: #f5f8ff;
+  --store-muted: #98a7c0;
+  --store-muted-strong: #d7e1f0;
+  --store-cyan: #5cf1ff;
+  --store-amber: #f0b24b;
+  --store-radius: 10px;
+  --store-radius-lg: 14px;
+  --store-max: 1360px;
+  --store-heading: "Bahnschrift SemiCondensed", "Bahnschrift", "Segoe UI Semibold", "Arial Narrow", sans-serif;
+  position: relative;
+  min-height: 100vh;
+  color: var(--store-text);
+  overflow-x: hidden;
+  background:
+    radial-gradient(circle at 12% 18%, rgba(92, 241, 255, 0.13), transparent 26%),
+    radial-gradient(circle at 86% 4%, rgba(240, 180, 75, 0.12), transparent 24%),
+    radial-gradient(circle at 50% 92%, rgba(81, 212, 161, 0.08), transparent 28%),
+    linear-gradient(180deg, #020409 0%, #03060b 42%, #050912 100%);
+  isolation: isolate;
+}
+
+.appStoreShell::before,
+.appStoreShell::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: -1;
+}
+
+.appStoreShell::before {
+  background:
+    radial-gradient(circle at 14% 12%, rgba(92, 241, 255, 0.16), transparent 22%),
+    radial-gradient(circle at 86% 2%, rgba(240, 180, 75, 0.15), transparent 18%),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.025), transparent 26%);
+}
+
+.appStoreShell::after {
+  background-image:
+    linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+  background-size: 100% 40px, 40px 100%;
+  opacity: 0.08;
+  mask-image: linear-gradient(180deg, rgba(0, 0, 0, 0.85), transparent 92%);
+}
+
+.appStoreShell a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.appStoreShell button,
+.appStoreShell input,
+.appStoreShell select {
+  font: inherit;
+}
+
+.appStoreShell button {
+  border: 0;
+  color: inherit;
+  background: none;
+  cursor: pointer;
+}
+
+.appStoreWrap {
+  width: min(var(--store-max), calc(100% - 32px));
+  margin: 0 auto;
+}
+
+.appStoreTopbar {
+  position: sticky;
+  top: 0;
+  z-index: 40;
+  border-bottom: 1px solid var(--store-border);
+  background: rgba(3, 5, 9, 0.72);
+  box-shadow: 0 16px 60px rgba(0, 0, 0, 0.22);
+  backdrop-filter: blur(20px);
+}
+
+.appStoreTopbarInner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 18px;
+  padding: 16px 0;
+}
+
+.appStoreBrand {
+  display: inline-flex;
+  align-items: center;
+  gap: 14px;
+  min-width: 0;
+}
+
+.appStoreBrandMark {
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  display: grid;
+  place-items: center;
+  background:
+    radial-gradient(circle at 30% 25%, rgba(255, 255, 255, 0.38), transparent 30%),
+    linear-gradient(145deg, rgba(78, 231, 246, 0.95), rgba(243, 178, 74, 0.85));
+  box-shadow: 0 18px 36px rgba(32, 176, 198, 0.25);
+  color: #041018;
+  font-weight: 800;
+}
+
+.appStoreBrandCopy {
+  display: grid;
+  gap: 2px;
+  min-width: 0;
+}
+
+.appStoreBrandCopy strong,
+.appStoreHeroCopy h1,
+.appStoreSectionHead h2,
+.appStoreCatalogToolbar h2,
+.appStoreMosaicCopy h3,
+.appStoreCardHead h3,
+.appStorePriceBlock strong,
+.appStoreCartHead h3,
+.appStoreConcierge h2,
+.appStoreStep strong,
+.appStoreFooter strong {
+  font-family: var(--store-heading);
+  text-transform: uppercase;
+  letter-spacing: -0.05em;
+}
+
+.appStoreBrandCopy strong {
+  letter-spacing: 0.06em;
+  font-size: 0.96rem;
+}
+
+.appStoreBrandCopy span {
+  color: var(--store-muted);
+  font-size: 0.82rem;
+  letter-spacing: 0.04em;
+}
+
+.appStoreNav,
+.appStoreActions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.appStoreNav {
+  color: var(--store-muted);
+  font-size: 0.72rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+}
+
+.appStoreNav a {
+  padding: 8px 10px;
+  border: 1px solid transparent;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.02);
+  transition: 0.16s ease;
+}
+
+.appStoreNav a:hover {
+  color: var(--store-text);
+  border-color: rgba(92, 241, 255, 0.16);
+  background: rgba(92, 241, 255, 0.07);
+}
+
+.appStoreActions {
+  justify-content: flex-end;
+}
+
+.appStorePill,
+.appStoreBtn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  min-height: 44px;
+  white-space: nowrap;
+  transition:
+    transform 0.16s ease,
+    border-color 0.16s ease,
+    background 0.16s ease,
+    box-shadow 0.16s ease;
+}
+
+.appStorePill {
+  padding: 10px 13px;
+  border: 1px solid rgba(92, 241, 255, 0.16);
+  border-radius: 999px;
+  color: #d9fbff;
+  background: rgba(8, 14, 23, 0.88);
+}
+
+.appStoreBtn {
+  padding: 0 16px;
+  border-radius: 11px;
+  border: 1px solid transparent;
+  font-weight: 700;
+}
+
+.appStorePill:hover,
+.appStoreBtn:hover {
+  transform: translateY(-1px);
+}
+
+.appStoreBtnPrimary {
+  color: #04111b;
+  background: linear-gradient(135deg, #5cf1ff 0%, #96f0d0 100%);
+  box-shadow: 0 18px 40px rgba(92, 241, 255, 0.2);
+}
+
+.appStoreBtnSecondary {
+  color: var(--store-text);
+  border-color: rgba(255, 255, 255, 0.11);
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.appStoreBtnQuiet {
+  color: #d7fbff;
+  border-color: rgba(92, 241, 255, 0.16);
+  background: rgba(12, 19, 31, 0.88);
+}
+
+.appStoreHero {
+  padding: 54px 0 26px;
+}
+
+.appStoreHeroGrid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.08fr) minmax(360px, 0.92fr);
+  gap: 34px;
+  align-items: start;
+}
+
+.appStoreEyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  margin: 0 0 18px;
+  color: var(--store-amber);
+  text-transform: uppercase;
+  letter-spacing: 0.32em;
+  font-size: 0.68rem;
+  font-weight: 700;
+}
+
+.appStoreEyebrow::before {
+  content: "";
+  width: 14px;
+  height: 1px;
+  background: currentColor;
+}
+
+.appStoreHeroCopy h1 {
+  margin: 0;
+  max-width: 9.5ch;
+  font-size: clamp(3.2rem, 6.6vw, 7.2rem);
+  line-height: 0.86;
+  letter-spacing: -0.08em;
+}
+
+.appStoreHeroCopy p,
+.appStoreSectionHead p,
+.appStoreCatalogToolbar p,
+.appStoreMosaicCopy p,
+.appStoreCardHead p,
+.appStoreConcierge p,
+.appStoreFooter span {
+  color: var(--store-muted);
+  line-height: 1.65;
+}
+
+.appStoreHeroCopy > p:not(.appStoreEyebrow) {
+  max-width: 61ch;
+  margin: 18px 0 0;
+  font-size: 1.03rem;
+}
+
+.appStoreBackendNote {
+  display: block;
+  padding: 14px 16px;
+  border: 1px solid rgba(92, 241, 255, 0.16);
+  border-radius: 12px;
+  background:
+    linear-gradient(180deg, rgba(92, 241, 255, 0.06), rgba(255, 255, 255, 0.02)),
+    rgba(8, 14, 23, 0.82);
+  color: #d8e4f6 !important;
+}
+
+.appStoreBackendNote::before {
+  content: "Shared backend";
+  display: block;
+  margin-bottom: 8px;
+  color: var(--store-cyan);
+  font-size: 0.66rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  font-weight: 700;
+}
+
+.appStoreHeroActions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 24px;
+}
+
+.appStoreHeroMeta {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+  margin-top: 24px;
+}
+
+.appStoreHeroMeta article {
+  position: relative;
+  overflow: hidden;
+  min-height: 106px;
+  padding: 16px;
+  border: 1px solid var(--store-border);
+  border-radius: 12px;
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.04), rgba(255, 255, 255, 0.02)),
+    rgba(7, 12, 21, 0.86);
+}
+
+.appStoreHeroMeta strong {
+  display: block;
+  margin-bottom: 8px;
+  font-family: var(--store-heading);
+  font-size: clamp(1.5rem, 3vw, 2.1rem);
+  line-height: 1;
+}
+
+.appStoreHeroMeta span {
+  color: var(--store-muted);
+  font-size: 0.86rem;
+  line-height: 1.45;
+}
+
+.appStoreHeroVisual {
+  position: relative;
+  padding: 18px;
+  border: 1px solid var(--store-border);
+  border-radius: 18px;
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.04), rgba(255, 255, 255, 0.015)),
+    rgba(6, 10, 16, 0.72);
+  box-shadow: 0 30px 90px rgba(0, 0, 0, 0.45);
+}
+
+.appStoreMosaic {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  grid-auto-rows: minmax(172px, auto);
+  gap: 14px;
+}
+
+.appStoreMosaicCard {
+  position: relative;
+  overflow: hidden;
+  min-height: 204px;
+  padding: 14px;
+  border: 1px solid rgba(var(--store-card-accent-rgb), 0.14);
+  border-radius: 14px;
+  background:
+    linear-gradient(180deg, rgba(var(--store-card-accent-rgb), 0.1), rgba(255, 255, 255, 0.03)),
+    rgba(8, 13, 23, 0.86);
+  box-shadow: 0 18px 44px rgba(0, 0, 0, 0.3);
+  transition: transform 0.2s ease, border-color 0.2s ease;
+}
+
+.appStoreMosaicCard:first-child {
+  grid-column: 1 / -1;
+  min-height: 286px;
+}
+
+.appStoreMosaicCard:hover,
+.appStoreProductCard:hover {
+  transform: translateY(-5px);
+}
+
+.appStoreMosaicTop,
+.appStoreTagline {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  font-size: 0.68rem;
+  text-transform: uppercase;
+  letter-spacing: 0.18em;
+}
+
+.appStoreMosaicTop span,
+.appStoreTagline strong,
+.appStoreBadge {
+  color: var(--store-card-accent);
+}
+
+.appStoreMosaicTop strong {
+  color: var(--store-card-accent-2);
+  letter-spacing: 0.2em;
+}
+
+.appStoreArtShell {
+  position: relative;
+  overflow: hidden;
+  min-height: 140px;
+  margin-top: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.appStoreArtShell img,
+.appStoreThumb img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.appStoreMosaicCopy {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  gap: 6px;
+  margin-top: 12px;
+}
+
+.appStoreMosaicCopy h3 {
+  margin: 0;
+  font-size: 1.5rem;
+  line-height: 0.92;
+}
+
+.appStoreMosaicCopy p,
+.appStoreCardHead p {
+  margin: 0;
+  font-size: 0.88rem;
+}
+
+.appStoreSection {
+  padding: 44px 0 0;
+}
+
+.appStoreSectionHead,
+.appStoreCatalogToolbar {
+  display: flex;
+  align-items: end;
+  justify-content: space-between;
+  gap: 18px;
+}
+
+.appStoreSectionHead {
+  margin-bottom: 20px;
+}
+
+.appStoreSectionHead h2,
+.appStoreCatalogToolbar h2,
+.appStoreConcierge h2 {
+  margin: 0;
+  font-size: clamp(1.9rem, 3vw, 3rem);
+  line-height: 1;
+}
+
+.appStoreSectionHead p,
+.appStoreCatalogToolbar p {
+  max-width: 58ch;
+  margin: 8px 0 0;
+}
+
+.appStoreCategoryGrid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 14px;
+}
+
+.appStoreCategoryCard {
+  position: relative;
+  overflow: hidden;
+  min-height: 150px;
+  padding: 18px;
+  text-align: left;
+  border: 1px solid rgba(var(--store-card-accent-rgb), 0.14);
+  border-radius: 12px;
+  background:
+    linear-gradient(180deg, rgba(var(--store-card-accent-rgb), 0.13), rgba(255, 255, 255, 0.02)),
+    rgba(10, 15, 26, 0.82);
+  transition: 0.18s ease;
+}
+
+.appStoreCategoryCard:hover,
+.appStoreCategoryCard[data-active="true"] {
+  transform: translateY(-2px);
+  border-color: rgba(var(--store-card-accent-rgb), 0.38);
+  background:
+    linear-gradient(180deg, rgba(var(--store-card-accent-rgb), 0.2), rgba(255, 255, 255, 0.03)),
+    rgba(12, 18, 31, 0.92);
+}
+
+.appStoreCategoryCard strong {
+  display: block;
+  margin-bottom: 12px;
+  font-family: var(--store-heading);
+  text-transform: uppercase;
+  font-size: 1.05rem;
+  letter-spacing: -0.03em;
+}
+
+.appStoreCategoryCard span {
+  display: inline-flex;
+  align-items: center;
+  min-height: 24px;
+  padding: 0 10px;
+  border: 1px solid rgba(var(--store-card-accent-rgb), 0.18);
+  border-radius: 999px;
+  color: var(--store-card-accent);
+  background: rgba(var(--store-card-accent-rgb), 0.12);
+  font-size: 0.72rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+.appStoreCategoryCard p {
+  position: relative;
+  z-index: 1;
+  margin: 12px 0 0;
+  color: var(--store-muted);
+  font-size: 0.9rem;
+  line-height: 1.5;
+}
+
+.appStoreCreatorStatus {
+  padding-top: 38px;
+}
+
+.appStoreStatusGrid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 14px;
+}
+
+.appStoreStatusCard {
+  min-height: 194px;
+  display: grid;
+  align-content: start;
+  gap: 12px;
+  overflow: hidden;
+  position: relative;
+  padding: 18px;
+  border: 1px solid rgba(92, 241, 255, 0.13);
+  border-radius: 14px;
+  background:
+    linear-gradient(180deg, rgba(92, 241, 255, 0.07), rgba(255, 255, 255, 0.02)),
+    rgba(9, 14, 25, 0.88);
+  box-shadow: 0 18px 46px rgba(0, 0, 0, 0.24);
+}
+
+.appStoreStatusCard::after {
+  content: "";
+  position: absolute;
+  inset: auto -40px -50px auto;
+  width: 130px;
+  height: 130px;
+  border-radius: 999px;
+  background: radial-gradient(circle, rgba(240, 178, 75, 0.16), transparent 68%);
+}
+
+.appStoreStatusCard span {
+  width: fit-content;
+  min-height: 25px;
+  display: inline-flex;
+  align-items: center;
+  padding: 0 10px;
+  border: 1px solid rgba(92, 241, 255, 0.2);
+  border-radius: 999px;
+  color: #c9f9ff;
+  background: rgba(92, 241, 255, 0.08);
+  font-size: 0.68rem;
+  font-weight: 800;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+.appStoreStatusCard strong {
+  position: relative;
+  z-index: 1;
+  color: var(--store-text);
+  font-family: var(--store-heading);
+  font-size: 1.36rem;
+  line-height: 1;
+  letter-spacing: -0.04em;
+  text-transform: uppercase;
+}
+
+.appStoreStatusCard p {
+  position: relative;
+  z-index: 1;
+  margin: 0;
+  color: var(--store-muted);
+  line-height: 1.58;
+}
+
+.appStoreSkipProof {
+  padding-top: 38px;
+}
+
+.appStoreSkipGrid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.02fr) minmax(360px, 0.98fr);
+  gap: 18px;
+  align-items: stretch;
+  padding: 22px;
+  border: 1px solid rgba(92, 241, 255, 0.14);
+  border-radius: 18px;
+  background:
+    radial-gradient(circle at 14% 18%, rgba(92, 241, 255, 0.13), transparent 28%),
+    radial-gradient(circle at 88% 10%, rgba(240, 178, 75, 0.12), transparent 26%),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.055), rgba(255, 255, 255, 0.022)),
+    rgba(7, 12, 21, 0.9);
+  box-shadow: 0 24px 80px rgba(0, 0, 0, 0.38);
+}
+
+.appStoreSkipGrid h2 {
+  max-width: 13ch;
+  margin: 0;
+  font-family: var(--store-heading);
+  text-transform: uppercase;
+  font-size: clamp(2rem, 3.9vw, 4.4rem);
+  line-height: 0.9;
+  letter-spacing: -0.06em;
+}
+
+.appStoreSkipGrid p:not(.appStoreEyebrow) {
+  max-width: 68ch;
+  margin: 14px 0 0;
+  color: var(--store-muted);
+  line-height: 1.68;
+}
+
+.appStoreSkipStats {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.appStoreSkipStats article {
+  min-height: 176px;
+  display: grid;
+  align-content: end;
+  gap: 12px;
+  overflow: hidden;
+  position: relative;
+  border: 1px solid rgba(255, 255, 255, 0.09);
+  border-radius: 14px;
+  padding: 16px;
+  background:
+    linear-gradient(180deg, rgba(var(--store-card-accent-rgb), 0.12), rgba(255, 255, 255, 0.025)),
+    rgba(9, 13, 24, 0.84);
+}
+
+.appStoreSkipStats article::before {
+  content: "";
+  position: absolute;
+  inset: -40% -20% auto auto;
+  width: 150px;
+  height: 150px;
+  border-radius: 999px;
+  background: radial-gradient(circle, rgba(92, 241, 255, 0.18), transparent 66%);
+}
+
+.appStoreSkipStats strong {
+  position: relative;
+  z-index: 1;
+  color: #f5fbff;
+  font-family: var(--store-heading);
+  font-size: clamp(2.3rem, 5vw, 4.4rem);
+  line-height: 0.84;
+  letter-spacing: -0.06em;
+}
+
+.appStoreSkipStats span {
+  position: relative;
+  z-index: 1;
+  color: var(--store-muted);
+  font-size: 0.88rem;
+  line-height: 1.45;
+}
+
+.appStoreSkipBlog {
+  padding-top: 38px;
+}
+
+.appStoreBlogGrid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 14px;
+}
+
+.appStoreBlogCard {
+  min-height: 210px;
+  display: grid;
+  align-content: space-between;
+  gap: 14px;
+  overflow: hidden;
+  position: relative;
+  border: 1px solid rgba(255, 255, 255, 0.09);
+  border-radius: 14px;
+  padding: 16px;
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.052), rgba(255, 255, 255, 0.02)),
+    rgba(9, 13, 24, 0.88);
+  box-shadow: 0 18px 46px rgba(0, 0, 0, 0.24);
+  transition: transform 0.18s ease, border-color 0.18s ease, background 0.18s ease;
+}
+
+.appStoreBlogCard:hover {
+  transform: translateY(-3px);
+  border-color: rgba(92, 241, 255, 0.26);
+  background:
+    linear-gradient(180deg, rgba(92, 241, 255, 0.08), rgba(255, 255, 255, 0.025)),
+    rgba(11, 16, 28, 0.94);
+}
+
+.appStoreBlogCard span {
+  width: fit-content;
+  min-height: 24px;
+  display: inline-flex;
+  align-items: center;
+  padding: 0 10px;
+  border: 1px solid rgba(92, 241, 255, 0.18);
+  border-radius: 999px;
+  color: #c9f9ff;
+  background: rgba(92, 241, 255, 0.09);
+  font-size: 0.68rem;
+  font-weight: 800;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.appStoreBlogCard h3 {
+  margin: 0;
+  color: var(--store-text);
+  font-family: var(--store-heading);
+  font-size: 1.28rem;
+  line-height: 1.02;
+  letter-spacing: -0.04em;
+  text-transform: uppercase;
+}
+
+.appStoreBlogCard p {
+  margin: 0;
+  color: var(--store-muted);
+  font-size: 0.88rem;
+}
+
+.appStoreBlogCta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+  margin-top: 16px;
+  padding: 16px;
+  border: 1px solid rgba(240, 178, 75, 0.16);
+  border-radius: 14px;
+  background:
+    linear-gradient(90deg, rgba(240, 178, 75, 0.1), rgba(92, 241, 255, 0.07)),
+    rgba(7, 12, 21, 0.86);
+}
+
+.appStoreBlogCta strong {
+  max-width: 70ch;
+  color: var(--store-muted-strong);
+  line-height: 1.45;
+}
+
+.appStoreCatalogToolbar {
+  margin-bottom: 16px;
+  padding: 18px;
+  border: 1px solid var(--store-border);
+  border-radius: 16px;
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.02)),
+    rgba(7, 12, 21, 0.86);
+  box-shadow: 0 16px 50px rgba(0, 0, 0, 0.22);
+}
+
+.appStoreToolbarRight {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.appStoreSearchGroup,
+.appStoreSelectWrap {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 48px;
+  padding: 0 14px;
+  border: 1px solid var(--store-border);
+  border-radius: 12px;
+  background: rgba(8, 12, 21, 0.9);
+  color: var(--store-muted-strong);
+}
+
+.appStoreSearchGroup {
+  min-width: min(100%, 420px);
+}
+
+.appStoreSearchGroup > span {
+  color: var(--store-muted);
+  font-size: 0.72rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.appStoreSearchGroup input,
+.appStoreSelectWrap select {
+  width: 100%;
+  min-width: 0;
+  border: 0;
+  outline: 0;
+  color: var(--store-text);
+  background: transparent;
+}
+
+.appStoreSelectWrap select {
+  min-width: 150px;
+}
+
+.appStoreFilterRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 16px;
+}
+
+.appStoreFilterRow button {
+  padding: 10px 14px;
+  border: 1px solid rgba(var(--store-card-accent-rgb), 0.14);
+  border-radius: 999px;
+  background: rgba(var(--store-card-accent-rgb), 0.06);
+  color: rgba(234, 244, 255, 0.78);
+  font-size: 0.9rem;
+  transition: 0.16s ease;
+}
+
+.appStoreFilterRow button:hover {
+  transform: translateY(-1px);
+  border-color: rgba(var(--store-card-accent-rgb), 0.34);
+  background: rgba(var(--store-card-accent-rgb), 0.12);
+}
+
+.appStoreFilterRow button.isActive {
+  color: #041019;
+  border-color: transparent;
+  background: linear-gradient(135deg, var(--store-card-accent), var(--store-card-accent-2));
+  box-shadow: 0 12px 28px rgba(var(--store-card-accent-rgb), 0.24);
+  font-weight: 700;
+}
+
+.appStoreBuildShare {
+  display: grid;
+  gap: 12px;
+  margin: 16px 0 0;
+  padding: 14px;
+  border: 1px solid rgba(var(--store-card-accent-rgb), 0.22);
+  border-radius: 12px;
+  background:
+    linear-gradient(135deg, rgba(var(--store-card-accent-rgb), 0.12), rgba(var(--store-card-accent-2-rgb), 0.07)),
+    rgba(8, 12, 21, 0.88);
+}
+
+.appStoreBuildShare > div:first-child {
+  display: grid;
+  gap: 5px;
+}
+
+.appStoreBuildShare span {
+  color: var(--store-card-accent);
+  font-size: 0.72rem;
+  font-weight: 850;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.appStoreBuildShare strong {
+  color: var(--store-text);
+  font-size: 0.86rem;
+  line-height: 1.25;
+  overflow-wrap: anywhere;
+}
+
+.appStoreBuildShare p {
+  margin: 0;
+  color: var(--store-muted-strong);
+  font-size: 0.82rem;
+  font-weight: 800;
+}
+
+.appStoreBuildShareActions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.appStoreBuildShareActions a,
+.appStoreBuildShareActions button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 34px;
+  padding: 0 11px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.055);
+  color: var(--store-text);
+  font: inherit;
+  font-size: 0.8rem;
+  font-weight: 850;
+  text-decoration: none;
+  cursor: pointer;
+  transition: transform 0.16s ease, border-color 0.16s ease, background 0.16s ease;
+}
+
+.appStoreBuildShareActions a:hover,
+.appStoreBuildShareActions button:hover {
+  transform: translateY(-1px);
+  border-color: rgba(var(--store-card-accent-rgb), 0.38);
+  background: rgba(var(--store-card-accent-rgb), 0.12);
+}
+.appStoreCatalogLayout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 350px;
+  gap: 20px;
+  align-items: start;
+}
+
+.appStoreProductGrid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 20px;
+}
+
+.appStoreProductCard {
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  min-height: 460px;
+  border: 1px solid rgba(var(--store-card-accent-rgb), 0.16);
+  border-radius: 14px;
+  background:
+    linear-gradient(180deg, rgba(var(--store-card-accent-rgb), 0.1), rgba(255, 255, 255, 0.02)),
+    rgba(9, 13, 24, 0.92);
+  box-shadow: 0 22px 54px rgba(0, 0, 0, 0.34);
+  transition: transform 0.18s ease, border-color 0.18s ease, box-shadow 0.18s ease;
+}
+
+.appStoreProductCard:hover,
+.appStoreProductCard.isActive {
+  border-color: rgba(var(--store-card-accent-rgb), 0.42);
+}
+
+.appStoreThumb {
+  position: relative;
+  overflow: hidden;
+  height: 230px;
+  border-bottom: 1px solid rgba(var(--store-card-accent-rgb), 0.16);
+  background:
+    radial-gradient(circle at 20% 18%, rgba(255, 255, 255, 0.1), transparent 18%),
+    linear-gradient(145deg, rgba(var(--store-card-accent-rgb), 0.16), rgba(var(--store-card-accent-2-rgb), 0.1));
+}
+
+.appStoreTagline {
+  position: absolute;
+  left: 16px;
+  right: 16px;
+  top: 14px;
+  z-index: 2;
+}
+
+.appStoreTagline span {
+  display: inline-flex;
+  align-items: center;
+  min-height: 24px;
+  padding: 0 10px;
+  border: 1px solid rgba(var(--store-card-accent-rgb), 0.18);
+  border-radius: 999px;
+  background: rgba(var(--store-card-accent-rgb), 0.12);
+}
+
+.appStorePriceBadge {
+  position: absolute;
+  right: 16px;
+  bottom: 14px;
+  z-index: 2;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 12px;
+  border: 1px solid rgba(var(--store-card-accent-rgb), 0.24);
+  border-radius: 999px;
+  color: #f5fbff;
+  background: linear-gradient(135deg, rgba(var(--store-card-accent-rgb), 0.18), rgba(6, 10, 17, 0.82));
+  backdrop-filter: blur(10px);
+}
+
+.appStorePriceBadge span,
+.appStoreCardInfo span,
+.appStorePriceBlock span {
+  color: var(--store-muted);
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.16em;
+}
+
+.appStoreCardBody {
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
+  gap: 12px;
+  padding: 16px;
+}
+
+.appStoreCardHead {
+  display: flex;
+  align-items: start;
+  justify-content: space-between;
+  gap: 14px;
+}
+
+.appStoreCardHead h3 {
+  margin: 0;
+  font-size: 1.34rem;
+  line-height: 1;
+}
+
+.appStoreBadge {
+  display: inline-flex;
+  align-items: center;
+  padding: 8px 11px;
+  border: 1px solid rgba(var(--store-card-accent-rgb), 0.18);
+  border-radius: 999px;
+  background: rgba(var(--store-card-accent-rgb), 0.08);
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.16em;
+  white-space: nowrap;
+}
+
+.appStoreFeatureList {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.appStoreFeatureList span {
+  display: inline-flex;
+  align-items: center;
+  padding: 7px 10px;
+  border: 1px solid rgba(var(--store-card-accent-rgb), 0.14);
+  border-radius: 999px;
+  background: rgba(var(--store-card-accent-rgb), 0.06);
+  color: #d6e2f6;
+  font-size: 0.78rem;
+}
+
+.appStoreCardInfo {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.appStoreCardInfo div {
+  min-width: 0;
+  padding: 10px 12px;
+  border: 1px solid rgba(var(--store-card-accent-rgb), 0.14);
+  border-radius: 12px;
+  background: rgba(var(--store-card-accent-rgb), 0.05);
+}
+
+.appStoreCardInfo strong {
+  display: block;
+  margin-top: 6px;
+  color: var(--store-text);
+  font-size: 0.88rem;
+  line-height: 1.35;
+}
+
+.appStoreCardFooter {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-top: auto;
+  padding-top: 14px;
+  border-top: 1px solid rgba(var(--store-card-accent-rgb), 0.14);
+}
+
+.appStorePriceBlock {
+  display: grid;
+  gap: 4px;
+}
+
+.appStorePriceBlock strong {
+  font-size: 1.3rem;
+}
+
+.appStoreCardActions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.appStoreCardActions button,
+.appStoreCardActions a {
+  min-height: 40px;
+  padding: 0 14px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid rgba(var(--store-card-accent-rgb), 0.18);
+  border-radius: 11px;
+  background: rgba(var(--store-card-accent-rgb), 0.06);
+  color: var(--store-text);
+  transition: 0.16s ease;
+}
+
+.appStoreCardActions button:hover,
+.appStoreCardActions a:hover {
+  transform: translateY(-1px);
+  border-color: rgba(var(--store-card-accent-rgb), 0.34);
+  background: rgba(var(--store-card-accent-rgb), 0.12);
+}
+
+.appStoreCardActions .isActive {
+  color: #041019;
+  border-color: transparent;
+  background: linear-gradient(135deg, var(--store-card-accent), var(--store-card-accent-2));
+  font-weight: 700;
+}
+
+.appStoreCartPanel {
+  position: sticky;
+  top: 88px;
+  display: grid;
+  gap: 14px;
+  padding: 20px;
+  border: 1px solid var(--store-border);
+  border-radius: 16px;
+  background:
+    radial-gradient(circle at 12% 12%, rgba(92, 241, 255, 0.08), transparent 24%),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.02)),
+    rgba(10, 15, 27, 0.92);
+  box-shadow: 0 24px 80px rgba(0, 0, 0, 0.48);
+}
+
+.appStoreCartHead h3 {
+  margin: 0;
+  font-size: 1.35rem;
+}
+
+.appStoreCartHead p:not(.appStoreEyebrow),
+.appStoreCartNote,
+.appStoreCartItem p,
+.appStoreCartItem span {
+  margin: 0;
+  color: var(--store-muted);
+  font-size: 0.92rem;
+  line-height: 1.58;
+}
+
+.appStoreCartEmpty,
+.appStoreEmpty {
+  padding: 18px;
+  border: 1px dashed rgba(255, 255, 255, 0.13);
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.02);
+  color: var(--store-muted);
+  line-height: 1.6;
+}
+
+.appStoreEmpty {
+  grid-column: 1 / -1;
+  min-height: 260px;
+  display: grid;
+  place-items: center;
+  text-align: center;
+}
+
+.appStoreEmpty h3 {
+  margin: 0 0 10px;
+  font-size: 1.6rem;
+}
+
+.appStoreCartItems {
+  display: grid;
+  gap: 10px;
+}
+
+.appStoreCartItem {
+  display: grid;
+  gap: 5px;
+  padding: 12px 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.appStoreCartItem > div {
+  display: flex;
+  align-items: start;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.appStoreCartItem button {
+  padding: 7px 10px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.03);
+  color: #bcd0ec;
+  font-size: 0.82rem;
+}
+
+.appStoreCartSummary {
+  display: grid;
+  gap: 10px;
+  padding-top: 6px;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.appStoreCartSummary div {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  color: var(--store-muted-strong);
+  font-size: 0.92rem;
+}
+
+.appStoreCartSummary strong {
+  color: var(--store-text);
+  font-size: 1.12rem;
+}
+
+.appStoreCartNote a {
+  color: #d9fbff;
+  text-decoration: underline;
+  text-decoration-color: rgba(78, 231, 246, 0.32);
+}
+
+.appStoreConcierge {
+  padding: 22px;
+  border: 1px solid var(--store-border);
+  border-radius: 18px;
+  background:
+    radial-gradient(circle at 10% 18%, rgba(92, 241, 255, 0.12), transparent 28%),
+    radial-gradient(circle at 88% 14%, rgba(240, 180, 75, 0.1), transparent 26%),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.02)),
+    rgba(10, 14, 24, 0.92);
+  box-shadow: 0 24px 80px rgba(0, 0, 0, 0.48);
+}
+
+.appStoreConciergeGrid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.2fr) minmax(0, 0.8fr);
+  gap: 18px;
+  align-items: center;
+}
+
+.appStoreSteps {
+  display: grid;
+  gap: 12px;
+}
+
+.appStoreStep {
+  display: flex;
+  gap: 12px;
+  align-items: start;
+  padding: 14px;
+  border: 1px solid var(--store-border);
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.03);
+}
+
+.appStoreStep > span {
+  width: 34px;
+  height: 34px;
+  flex: 0 0 auto;
+  display: grid;
+  place-items: center;
+  border-radius: 10px;
+  background: linear-gradient(135deg, #5cf1ff, #f0b24b);
+  color: #041118;
+  font-weight: 800;
+}
+
+.appStoreStep strong {
+  display: block;
+  margin-bottom: 4px;
+}
+
+.appStoreFooter {
+  padding: 28px 0 46px;
+  color: var(--store-muted);
+}
+
+.appStoreFooterInner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+  padding-top: 22px;
+  border-top: 1px solid var(--store-border);
+}
+
+.appStoreFooter strong {
+  display: block;
+  margin-bottom: 6px;
+  color: var(--store-text);
+}
+
+.appStoreFooter nav {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.appStoreFooter nav a {
+  color: var(--store-muted-strong);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  font-size: 0.72rem;
+}
+
+@keyframes appStoreDrift {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-8px);
+  }
+}
+
+.appStoreFloat1,
+.appStoreFloat2,
+.appStoreFloat3,
+.appStoreFloat4 {
+  animation: appStoreDrift 12s ease-in-out infinite;
+}
+
+.appStoreFloat2 {
+  animation-delay: -2s;
+}
+
+.appStoreFloat3 {
+  animation-delay: -4s;
+}
+
+.appStoreFloat4 {
+  animation-delay: -6s;
+}
+
+@media (max-width: 1180px) {
+  .appStoreHeroGrid,
+  .appStoreCatalogLayout,
+  .appStoreConciergeGrid,
+  .appStoreSkipGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .appStoreCategoryGrid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .appStoreStatusGrid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .appStoreSkipStats {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .appStoreBlogGrid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .appStoreCartPanel {
+    position: static;
+  }
+}
+
+@media (max-width: 820px) {
+  .appStoreTopbarInner,
+  .appStoreSectionHead,
+  .appStoreCatalogToolbar {
+    align-items: start;
+    flex-direction: column;
+  }
+
+  .appStoreNav {
+    flex-wrap: wrap;
+  }
+
+  .appStoreHeroMeta,
+  .appStoreProductGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .appStoreSearchGroup {
+    min-width: 0;
+    width: 100%;
+  }
+
+  .appStoreToolbarRight {
+    width: 100%;
+    justify-content: flex-start;
+  }
+}
+
+@media (max-width: 620px) {
+  .appStoreWrap {
+    width: min(var(--store-max), calc(100% - 22px));
+  }
+
+  .appStoreHero {
+    padding-top: 28px;
+  }
+
+  .appStoreHeroCopy h1 {
+    max-width: 100%;
+    font-size: clamp(2.7rem, 16vw, 4.6rem);
+  }
+
+  .appStoreCategoryGrid,
+  .appStoreStatusGrid,
+  .appStoreMosaic,
+  .appStoreCardInfo,
+  .appStoreSkipStats,
+  .appStoreBlogGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .appStoreCardFooter {
+    align-items: start;
+    flex-direction: column;
+  }
+
+  .appStoreCardActions,
+  .appStoreActions,
+  .appStoreHeroActions {
+    width: 100%;
+  }
+
+  .appStoreCardActions button,
+  .appStoreCardActions a,
+  .appStoreActions .appStoreBtn,
+  .appStoreActions .appStorePill,
+  .appStoreHeroActions .appStoreBtn {
+    width: 100%;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .appStoreShell *,
+  .appStoreShell *::before,
+  .appStoreShell *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+.appStoreImageLink {
+  display: block;
+  color: inherit;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.appStoreImageLink:focus-visible {
+  outline: 2px solid var(--store-card-accent, #5cf1ff);
+  outline-offset: 3px;
+}
+
+.appStoreImageLink img {
+  transition: transform 220ms ease, filter 220ms ease;
+}
+
+.appStoreImageLink:hover img,
+.appStoreImageLink:focus-visible img {
+  filter: saturate(1.16) contrast(1.05);
+  transform: scale(1.025);
+}
+
+.checkoutProductImageLink {
+  display: block;
+  overflow: hidden;
+  min-height: 190px;
+  border-radius: 14px;
+  color: inherit;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.checkoutProductImageLink:focus-visible {
+  outline: 2px solid #9bdfff;
+  outline-offset: 3px;
+}
+
+.checkoutProductImageLink .checkoutProductThumb {
+  min-height: 190px;
+  transition: transform 220ms ease, filter 220ms ease;
+}
+
+.checkoutProductImageLink:hover .checkoutProductThumb,
+.checkoutProductImageLink:focus-visible .checkoutProductThumb {
+  filter: saturate(1.18) contrast(1.06);
+  transform: scale(1.025);
 }

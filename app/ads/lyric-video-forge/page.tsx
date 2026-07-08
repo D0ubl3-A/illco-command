@@ -31,6 +31,8 @@ export const metadata: Metadata = {
 };
 
 export default function LyricVideoForgeAdPage() {
+  const proofVideoUrl = "/media/illco-flyover-cutout-optimized.mp4";
+
   return (
     <main className="lyricAdPage">
       <section className="lyricAdHero" aria-label="Lyric video ad landing hero">
@@ -124,13 +126,34 @@ export default function LyricVideoForgeAdPage() {
           <p>
             This is the proof layer that keeps ad traffic from bouncing: a finished lyric-video output, not a promise or a mockup.
           </p>
-          <a className="button secondary" href="https://master-lyric-deploy.vercel.app/master-lyric-video.mp4" target="_blank" rel="noreferrer">
+          <a className="button secondary" href={proofVideoUrl} target="_blank" rel="noreferrer">
             Open Proof Video
           </a>
         </div>
-        <div className="lyricAdProofVideo">
-          <video controls playsInline preload="metadata">
-            <source src="https://master-lyric-deploy.vercel.app/master-lyric-video.mp4" type="video/mp4" />
+        <div className="lyricAdProofVideo" style={{ position: "relative" }}>
+          <div
+            aria-hidden="true"
+            style={{
+              position: "absolute",
+              right: "10px",
+              top: "10px",
+              zIndex: 2,
+              background: "rgba(0,0,0,0.55)",
+              color: "#ffffff",
+              fontWeight: 700,
+              fontSize: "13px",
+              letterSpacing: "0.04em",
+              padding: "4px 8px",
+              borderRadius: "999px",
+              textShadow: "0 0 8px rgba(0,0,0,0.9)",
+              border: "1px solid rgba(255,255,255,0.35)",
+              pointerEvents: "none",
+            }}
+          >
+            Video Forge iLLCoAI.Tech
+          </div>
+          <video controls playsInline preload="metadata" style={{ position: "relative", zIndex: 1 }}>
+            <source src={proofVideoUrl} type="video/mp4" />
           </video>
         </div>
       </section>

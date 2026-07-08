@@ -75,7 +75,7 @@ const categoryOrder: ProductRecord["category"][] = [
 ];
 
 const categoryDescriptions: Record<ProductRecord["category"], string> = {
-  command: "Operator tools, Codex helpers, command centers, and multi-app control surfaces.",
+  command: "Proven decision systems that turn uncertain requests into repeatable execution plans.",
   automation: "Lead handling, workflow routing, bots, ops assistants, and productivity systems.",
   media: "Music, video, voice, lyrics, mastering, creator tools, and publishing workflows.",
   commerce: "Funnels, payments, stores, merch, product sales, and conversion assets.",
@@ -94,11 +94,12 @@ const planNames: Record<PlanId, string> = {
 
 const productProcessById: Record<string, string[]> = {
   "think-for-me-mode": [
-    "Pick the first request and choose one measurable output.",
-    "Let the helper assemble a short plan and required command.",
-    "Review commands for safety before execution.",
-    "Run the approved command and capture the result.",
-    "Adjust and repeat using one clear next action.",
+    "Define the objective and the measurable outcome you are trying to hit.",
+    "Gather context, files, constraints, and any hard boundaries.",
+    "Run the Command Operator prompt to create a prioritized action plan.",
+    "Review and refine the output against your team rules and brand standards.",
+    "Assign actions and ownership to the next best decision.",
+    "Execute the plan, then record what worked and what should be reused.",
   ],
   "ai-companion-conversational-intake": [
     "Capture the user context and source lane.",
@@ -139,11 +140,12 @@ const productProcessById: Record<string, string[]> = {
 
 const productProcessByCategory: Record<ProductRecord["category"], string[]> = {
   command: [
-    "Open the workspace and confirm the active tool path.",
-    "Collect the operating goal and scope in one sentence.",
-    "Route the job to the right app or agent.",
-    "Verify outcome against the stated goal.",
-    "Close with the next decision or follow-up action.",
+    "Define the business objective and expected outcome.",
+    "Gather all relevant context, constraints, and source inputs.",
+    "Run the Command Operator prompt to generate a clear execution plan.",
+    "Review and refine the output against your real rules and safety constraints.",
+    "Assign owners, priorities, and timelines to each next action.",
+    "Execute, then capture lessons in the same workflow for reuse.",
   ],
   media: [
     "Collect source assets, style notes, and output requirement.",
@@ -339,6 +341,7 @@ const creditUsageExamples = [
   "Premium video generation: quoted by model, length, and review level",
 ];
 
+
 export function CommandClient({ products, featuredProductIds, config, checkoutProductsSlot }: Props) {
   const [query, setQuery] = useState("");
   const [category, setCategory] = useState<ProductRecord["category"] | "all">("all");
@@ -394,7 +397,11 @@ export function CommandClient({ products, featuredProductIds, config, checkoutPr
   );
   const snapshotLabel = formatSnapshotLabel(deploymentSnapshotTakenAt);
   const demoSnapshotLabel = formatSnapshotLabel(demoVideos.generatedAt);
-  const heroProofProducts = uniqueProductsById(
+  const isReadyProduct = (product: ProductRecord) => {
+    const state = getCustomerProductState(product, config);
+    return state.customerStatus === "working" || state.customerStatus === "tutorial";
+  };
+  const heroProofCandidates = uniqueProductsById(
     [
       "mastering-studio-platform",
       "youtube-ops-vercel",
@@ -405,7 +412,12 @@ export function CommandClient({ products, featuredProductIds, config, checkoutPr
       .map((id) => products.find((product) => product.id === id) || null)
       .filter(Boolean)
       .concat(proofReadyOffers.map(({ product }) => product)),
-  ).slice(0, 5);
+  );
+  const readyHeroProofProducts = heroProofCandidates.filter(isReadyProduct);
+  const heroProofProducts = uniqueProductsById([...readyHeroProofProducts, ...heroProofCandidates.filter((product) => !isReadyProduct(product))]).slice(
+    0,
+    3,
+  );
   const [activeProofProductId, setActiveProofProductId] = useState(heroProofProducts[0]?.id || "");
   const activeProofProduct =
     heroProofProducts.find((product) => product.id === activeProofProductId) || heroProofProducts[0] || null;
@@ -458,11 +470,20 @@ export function CommandClient({ products, featuredProductIds, config, checkoutPr
   }, [category, config, deferredQuery, products]);
 
   const visibleProducts = showAllApps ? filteredProducts : filteredProducts.slice(0, 6);
-  const visibleProductGroups = categoryOrder
+  const readyVisibleProducts = visibleProducts.filter(isReadyProduct);
+  const comingSoonVisibleProducts = visibleProducts.filter((product) => !isReadyProduct(product));
+  const readyProductGroups = categoryOrder
     .map((categoryId) => ({
       categoryId,
-      products: visibleProducts.filter((product) => product.category === categoryId),
-      total: filteredProducts.filter((product) => product.category === categoryId).length,
+      products: readyVisibleProducts.filter((product) => product.category === categoryId),
+      total: readyVisibleProducts.filter((product) => product.category === categoryId).length,
+    }))
+    .filter((group) => group.products.length > 0);
+  const comingSoonProductGroups = categoryOrder
+    .map((categoryId) => ({
+      categoryId,
+      products: comingSoonVisibleProducts.filter((product) => product.category === categoryId),
+      total: comingSoonVisibleProducts.filter((product) => product.category === categoryId).length,
     }))
     .filter((group) => group.products.length > 0);
   const selectedService = serviceOffers.find((service) => service.id === selectedServiceId) || customServiceOffer;
@@ -501,7 +522,7 @@ export function CommandClient({ products, featuredProductIds, config, checkoutPr
       <aside className="sideRail landingNav" aria-label="Landing navigation">
         <a className="brandBlock" href="#offer" aria-label="ILLCO AI home">
           <span className="brandGlyph">
-            <img src="/brand/illco-command-logo.png" alt="ILLCO AI logo" />
+            <img src="/brand/illco-command-logo.svg" alt="ILLCO AI logo" />
           </span>
           <strong>ILLCO AI</strong>
         </a>
@@ -535,24 +556,27 @@ export function CommandClient({ products, featuredProductIds, config, checkoutPr
             <source src="/media/illco-flyover-cutout.webm" type="video/webm" />
             <source src="/media/illco-flyover-cutout-optimized.mp4" type="video/mp4" />
           </video>
-          <header className="landingHeroToolbar">
-            <div>
-              <p className="heroEyebrow">AI tools and custom systems for small teams</p>
-              <h1>Buy ready AI tools or request a custom AI system.</h1>
-              <p>Use ILLCO AI to recover leads, make content, automate follow-up, and turn repeat work into a working app.</p>
-            </div>
-            <div className="topActions">
-              <a className="button primary" href="#request">Request My AI System</a>
-              <a className="button secondary" href="#checkout-products">Buy Ready Tools</a>
-              <a className="button secondary" href="#demos">Request Live Proof</a>
-            </div>
-          </header>
+        <header className="landingHeroToolbar">
+          <div>
+            <p className="heroEyebrow">AI tools that work now</p>
+            <h1>Buy ready tools first, then build your custom stack.</h1>
+            <p>Start with a working workflow, then unlock higher-complexity automation after proof and fit are confirmed.</p>
+          </div>
+          <div className="topActions">
+            <a className="button primary" href="#checkout-products">
+              Buy a ready tool
+            </a>
+            <a className="button secondary" href="#request">
+              Request custom AI system
+            </a>
+          </div>
+        </header>
           <div className="posterPanel posterCopy">
             <div className="posterHeading">
               <p className="heroEyebrow">One clear path</p>
-              <h2>Tell us the work you want handled. We match it to a tool or build the system.</h2>
+              <h2>Turn ChatGPT into a command partner, not just a chatbot.</h2>
               <p className="posterLead">
-                Start with a ready product for content, lead follow-up, and automation, or request a custom build when your workflow needs a dedicated agent.
+                Choose a proven system for planning, decision support, and execution, or request a custom build when your process needs a dedicated operator stack.
               </p>
             </div>
 
@@ -564,26 +588,24 @@ export function CommandClient({ products, featuredProductIds, config, checkoutPr
             </div>
 
             <div className="heroActionRow">
-              <a className="button primary" href="#request">Request My AI System</a>
-              <a className="button secondary" href="#checkout-products">Buy Ready Tools</a>
-              <a className="button secondary" href="#demos">Request Live Proof</a>
+              <a className="button primary" href="#checkout-products">
+                Buy a ready tool
+              </a>
+              <a className="button secondary" href="#request">
+                Request custom AI system
+              </a>
             </div>
 
             <div className="heroLaneGrid" aria-label="ILLCO operating lanes">
               <div className="heroLane">
                 <span>Buy</span>
-                <strong>Start with a ready AI tool.</strong>
-                <p>Choose a product for content, lead handling, or workflow automation.</p>
+                <strong>Start with a ready AI system.</strong>
+                <p>Choose a proven tool with checkout and proof before you scale.</p>
               </div>
               <div className="heroLane">
                 <span>Build</span>
-                <strong>Get a custom workflow built.</strong>
-                <p>Use a specialist AI agent when your process needs a custom handoff.</p>
-              </div>
-              <div className="heroLane">
-                <span>Prove</span>
-                <strong>Ask for live proof before you buy.</strong>
-                <p>Previews and walkthroughs help explain the tool, but real proof must show the system producing the output.</p>
+                <strong>Get a custom AI operating system.</strong>
+                <p>We build dedicated stacks when your process needs custom routing, approvals, and execution controls.</p>
               </div>
             </div>
           </div>
@@ -709,12 +731,18 @@ export function CommandClient({ products, featuredProductIds, config, checkoutPr
           </form>
         </section>
 
-        <section className="proofStoryGrid" aria-label="Proof and monetization overview">
+        <section id="proof" className="proofStoryGrid" aria-label="Proof and monetization overview">
           <div className="panel proofStoryPanel">
             <div className="panelHeader">
               <div>
-                <h2>Proof means working output</h2>
-                <p>Walkthroughs and previews explain the product. Only videos that show the system producing a real result count as proof.</p>
+                <h2>Trust signals that mean real output</h2>
+                <p>
+                  We only promote products with proof-first availability. Checkout is shown only for live-ready tools, while guided/setup items are clearly
+                  separated.
+                </p>
+                <p>
+                  For proof questions, contact <a href="mailto:admin@illcoai.tech">admin@illcoai.tech</a> or request a custom system below.
+                </p>
               </div>
               <div className="planReadinessSummary">
                 <strong>{snapshotLabel}</strong>
@@ -755,7 +783,7 @@ export function CommandClient({ products, featuredProductIds, config, checkoutPr
           </div>
         </section>
 
-        <section id="proof" className="panel githubProofPanel" aria-labelledby="github-proof-heading">
+        <section id="proof-evidence" className="panel githubProofPanel" aria-labelledby="github-proof-heading">
           <div className="panelHeader">
             <div>
               <p className="heroEyebrow">Trust proof</p>
@@ -789,7 +817,11 @@ export function CommandClient({ products, featuredProductIds, config, checkoutPr
           </div>
         </section>
 
-        {checkoutProductsSlot ? <div className="landingCheckoutProductsSlot">{checkoutProductsSlot}</div> : null}
+        {checkoutProductsSlot ? (
+          <section id="checkout-products" className="landingCheckoutProductsSlot">
+            {checkoutProductsSlot}
+          </section>
+        ) : null}
 
         <section id="services" className="panel serviceStudio">
           <div className="panelHeader">
@@ -855,9 +887,9 @@ export function CommandClient({ products, featuredProductIds, config, checkoutPr
         </section>
 
         <section className="stepGrid" aria-label="Subscription steps">
-          <Step number="01" title="Map the Work" copy="Start with the workflows, bottlenecks, and outcomes that matter most." />
-          <Step number="02" title="Build the System" copy="Create specialist agents, Notion workflows, automation paths, or production systems." />
-          <Step number="03" title="Launch Lean" copy="Ship with working tool proof, clear handoff, and a path for ongoing support." />
+          <Step number="01" title="Define the goal" copy="Pick the outcome you need this week: faster decisions, less repetitive work, or cleaner execution." />
+          <Step number="02" title="Run the operator" copy="Apply a proven command workflow to produce a structured plan and clear next actions." />
+          <Step number="03" title="Scale results" copy="Deploy with proof checkpoints and reuse the improved system on every future task." />
         </section>
 
         <section id="content-production" className="panel contentProductionPanel">
@@ -1213,9 +1245,18 @@ export function CommandClient({ products, featuredProductIds, config, checkoutPr
             <Fact label="Custom builds" value="Available" tone="good" />
           </div>
 
-          <div className="productCategoryGroups" aria-label="Categorized product lanes">
-            {visibleProductGroups.map((group) => (
-              <section className="productCategoryGroup" key={group.categoryId} aria-label={`${categoryLabels[group.categoryId]} apps`}>
+          <div className="productCategoryGroups" aria-label="Ready product lanes">
+            <section className="productCategoryGroup">
+              <header className="productCategoryGroupHeader">
+                <div>
+                  <span>Ready now</span>
+                  <h3>Ready tools and systems</h3>
+                  <p>Open, checkout-ready products with direct next steps.</p>
+                </div>
+              </header>
+            </section>
+            {readyProductGroups.map((group) => (
+              <section className="productCategoryGroup" key={group.categoryId} aria-label={`${categoryLabels[group.categoryId]} ready apps`}>
                 <header className="productCategoryGroupHeader">
                   <div>
                     <span>{categoryLabels[group.categoryId]}</span>
@@ -1235,6 +1276,40 @@ export function CommandClient({ products, featuredProductIds, config, checkoutPr
               </section>
             ))}
           </div>
+
+          {comingSoonProductGroups.length > 0 ? (
+            <div className="productCategoryGroups" aria-label="Coming soon product lanes">
+              <section className="productCategoryGroup">
+                <header className="productCategoryGroupHeader">
+                  <div>
+                    <span>In development</span>
+                    <h3>Coming soon products</h3>
+                    <p>These items need guided setup or final launch prep before instant access.</p>
+                  </div>
+                </header>
+              </section>
+              {comingSoonProductGroups.map((group) => (
+                <section className="productCategoryGroup" key={group.categoryId} aria-label={`${categoryLabels[group.categoryId]} coming soon apps`}>
+                  <header className="productCategoryGroupHeader">
+                    <div>
+                      <span>{categoryLabels[group.categoryId]}</span>
+                      <h3>{categoryLabels[group.categoryId]} Apps</h3>
+                      <p>{categoryDescriptions[group.categoryId]}</p>
+                    </div>
+                    <strong>
+                      {group.products.length}
+                      {group.total !== group.products.length ? ` of ${group.total}` : ""} shown
+                    </strong>
+                  </header>
+                  <div className="productCardGrid" aria-label={`${categoryLabels[group.categoryId]} product cards`}>
+                    {group.products.map((product) => (
+                      <ProductCard config={config} key={product.id} product={product} />
+                    ))}
+                  </div>
+                </section>
+              ))}
+            </div>
+          ) : null}
 
           {filteredProducts.length === 0 ? (
             <div className="emptyState">
@@ -1386,7 +1461,7 @@ function ProductCard({ product, config }: { product: ProductRecord; config: Funn
       ) : null}
 
       <div className="accountNote">
-        <strong>Suggested process</strong>
+        <strong>Execution framework</strong>
         <ol>
           {processSteps.map((step, index) => (
             <li key={`${product.id}-process-${index}`}>{step}</li>
@@ -1395,29 +1470,29 @@ function ProductCard({ product, config }: { product: ProductRecord; config: Funn
       </div>
 
       <div className="productActions">
-        {state.canOpen ? (
-          <a className="button primary" href={moduleHref} target={moduleTarget} rel={moduleTarget ? "noreferrer" : undefined}>
-            Open Product
-          </a>
-        ) : (
-          <span className="button primary" aria-disabled="true" title={state.openGateNote || "This app is coming soon."}>
-            Coming Soon
-          </span>
-        )}
-        <a className="button secondary" href={landingHref}>
-          Details
-        </a>
         {state.canCheckout ? (
           <form action="/api/subscriptions/checkout" method="post" className="inlineCheckoutForm">
             <input type="hidden" name="planId" value={state.planId} />
             <input type="hidden" name="productId" value={product.id} />
-            <button className="button secondary" type="submit">
+            <button className="button primary" type="submit">
               {trialDays ? `Start ${trialDays}-day trial` : "Start Subscription"}
             </button>
           </form>
+        ) : state.canOpen ? (
+          <a className="button primary" href={moduleHref} target={moduleTarget} rel={moduleTarget ? "noreferrer" : undefined}>
+            Open Product
+          </a>
         ) : (
-          <a className="button secondary" href="#request">Request Setup</a>
+          <a className="button primary" href={landingHref}>
+            View Details
+          </a>
         )}
+        {state.canCheckout && state.canOpen ? (
+          <a className="button secondary" href={moduleHref} target={moduleTarget} rel={moduleTarget ? "noreferrer" : undefined}>
+            Open Tool
+          </a>
+        ) : null}
+        {state.canCheckout || state.canOpen ? null : <a className="button secondary" href="#request">Request Setup</a>}
         {tutorial?.youtubeUrl ? (
           <a className="button secondary" href={tutorial.youtubeUrl} target="_blank" rel="noreferrer">
             {videoActionLabel(tutorial)}
@@ -1452,7 +1527,7 @@ function plainPlanBenefit(planId: PlanId) {
 
 function customerCategoryBenefit(category: ProductRecord["category"]) {
   const benefits: Record<ProductRecord["category"], string> = {
-    command: "AI workspace and control tools",
+    command: "Decision-ready operators, execution frameworks, and repeatable team workflows.",
     media: "Content, video, music, and publishing tools",
     automation: "Lead follow-up and workflow automation",
     commerce: "Funnels, checkout, and sales tools",

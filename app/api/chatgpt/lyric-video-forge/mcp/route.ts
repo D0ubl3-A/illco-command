@@ -26,7 +26,7 @@ export async function GET(request: Request) {
 
 export async function POST(request: Request) {
   const body = await request.json().catch(() => ({}));
-  return handleLyricVideoForgeRpc(body, originFrom(request));
+  return handleLyricVideoForgeRpc(body, originFrom(request), request);
 }
 
 

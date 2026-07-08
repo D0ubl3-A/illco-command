@@ -23,7 +23,7 @@ function safeReturnTo(value: string) {
       hostname === "localhost" ||
       hostname === "127.0.0.1" ||
       hostname === "illcoai.tech" ||
-      hostname === "illco-command.vercel.app" ||
+      hostname.endsWith(".illcoai.tech") ||
       hostname.endsWith(".illcoai.tech");
 
     return allowed && (url.protocol === "https:" || url.protocol === "http:") ? url.toString() : "";

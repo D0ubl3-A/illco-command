@@ -1,4 +1,4 @@
-const builtInAdminEmails = ["aaronalltonai@gmail.com", "d0ubl3a0@gmail.com"] as const;
+const builtInAdminEmails = ["aaronalltonai@gmail.com", "d0ubl3a0@gmail.com", "weallton@gmail.com", "admin@illcoai.tech"] as const;
 
 function normalizeEmail(value: string | null | undefined) {
   return String(value || "").trim().toLowerCase();

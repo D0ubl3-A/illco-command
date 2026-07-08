@@ -3,18 +3,33 @@ import type { Metadata } from "next";
 import { blogPosts, blogSiteUrl, featuredBlogPosts } from "@/lib/blog-posts";
 
 export const metadata: Metadata = {
-  title: "AI Automation Blog",
+  title: "ILLCO AI Blog | Practical SEO Guides That Rank and Convert",
   description:
-    "SERP-driven guides for AI automation tools, custom agents, Notion workflows, creator content systems, pricing, and lead follow-up automation.",
+    "SERP-driven guides for AI automation tools, custom agents, Notion workflows, creator content systems, pricing, lead follow-up automation, and product SEO.",
   alternates: {
     canonical: `${blogSiteUrl}/blog`,
   },
   openGraph: {
-    title: "AI Automation Blog | ILLCO Command",
+    title: "ILLCO AI Blog | illcoai.tech",
     description:
-      "Practical AI automation guides for small businesses, creators, custom agents, Notion systems, and lead follow-up workflows.",
+      "Practical AI automation and SEO guides for small businesses, creators, custom agents, Notion systems, and lead follow-up workflows.",
     url: `${blogSiteUrl}/blog`,
     type: "website",
+    images: [
+      {
+        url: `${blogSiteUrl}/blog/opengraph-image`,
+        width: 1200,
+        height: 630,
+        alt: "ILLCO AI blog preview",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "ILLCO AI Blog | illcoai.tech",
+    description:
+      "Practical AI automation and SEO guides for small businesses, creators, custom agents, Notion systems, and lead follow-up workflows.",
+    images: [`${blogSiteUrl}/blog/opengraph-image`],
   },
 };
 

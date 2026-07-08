@@ -109,7 +109,7 @@ export function GlobalAuthHeader() {
   return (
     <header className="globalAuthHeader" aria-label="Global account navigation">
       <a className="globalAuthBrand" href="/">
-        <span>IC</span>
+        <img src="/brand/illco-command-logo.png" alt="ILLCO Command logo" />
         <strong>ILLCO Command</strong>
       </a>
       <nav className="globalAuthNav" aria-label="Primary links">

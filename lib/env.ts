@@ -1,9 +1,16 @@
 function readEnvValue(...values: Array<string | undefined>) {
   for (const value of values) {
-    const normalized = stripWrappingQuotes(String(value || "").trim().replace(/^\uFEFF/, ""));
+    const normalized = stripEnvControlCharacters(stripWrappingQuotes(String(value || "").trim().replace(/^\uFEFF/, "")));
     if (normalized) return normalized;
   }
   return "";
+}
+
+function stripEnvControlCharacters(value: string) {
+  return value
+    .replace(/\\r|\\n|\\t/g, "")
+    .replace(/[\u0000-\u001F\u007F]/g, "")
+    .trim();
 }
 
 function stripWrappingQuotes(value: string) {
@@ -57,7 +64,7 @@ export const env = {
     process.env.APP_BASE_URL,
     process.env.NEXT_PUBLIC_APP_BASE_URL,
     process.env.NEXT_PUBLIC_APP_URL,
-    "http://localhost:3000",
+    "https://illco-ai-app-store.vercel.app",
   ),
   databaseUrl: readEnvValue(process.env.DATABASE_URL, process.env.POSTGRES_URL, process.env.db_url_DATABASE_URL),
   storageDatabaseReady: hasStorageDatabaseEnv(),
@@ -85,6 +92,7 @@ export const env = {
     process.env.LEAD_NOTIFICATION_WEBHOOK_URL,
   ),
   leadAdminEmails: configuredLeadAdminEmails,
+  groqApiKey: readEnvValue(process.env.GROQ_API_KEY, process.env.GROQ_SECRET_KEY),
   leadWebhookSecret: readEnvValue(
     process.env.LEAD_WEBHOOK_SECRET,
     process.env.BETA_SIGNUP_WEBHOOK_SECRET,
@@ -99,6 +107,13 @@ export const env = {
     process.env.GOOGLE_OAUTH_REDIRECT_URI,
     process.env.NEXT_PUBLIC_GOOGLE_REDIRECT_URI,
   ),
+  referralCommissionRatePercent: Number.parseFloat(readEnvValue(process.env.REFERRAL_COMMISSION_RATE_PERCENT, "20")),
+  referralCashoutMinimumCents: Number.parseInt(readEnvValue(process.env.REFERRAL_CASHOUT_MINIMUM_CENTS, "2500"), 10),
+  referralCommissionHoldDays: Number.parseInt(readEnvValue(process.env.REFERRAL_COMMISSION_HOLD_DAYS, "14"), 10),
+  referralCurrency: readEnvValue(process.env.REFERRAL_CURRENCY, "usd"),
+  elevenLabsApiKey: readEnvValue(process.env.ELEVENLABS_API_KEY, process.env.ELEVENLABS_SECRET_KEY),
+  m3ntallyIllVoiceId: readEnvValue(process.env.ELEVENLABS_M3NTALLY_ILL_VOICE_ID, process.env.ELEVENLABS_VOICE_ID),
+  elevenLabsModelId: readEnvValue(process.env.ELEVENLABS_MODEL_ID, "eleven_multilingual_v2"),
 };
 
 export function requireEnv(value: string, name: string) {

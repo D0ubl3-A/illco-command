@@ -5,7 +5,10 @@ export function accountBridgeCorsHeaders(origin: string | null) {
     const url = new URL(value);
     const hostname = url.hostname.toLowerCase();
     allowed =
-      ["localhost", "127.0.0.1", "gemini-video-studio.vercel.app", "youtubeopsvercel.vercel.app"].includes(hostname) ||
+      hostname === "localhost" ||
+      hostname === "127.0.0.1" ||
+      ["gemini-video-studio.vercel.app", "youtubeopsvercel.vercel.app"].includes(hostname) ||
+      hostname.endsWith(".illcoai.tech") ||
       /^gemini-video-studio-[a-z0-9-]+-illcoai\.vercel\.app$/.test(hostname) ||
       /^youtubeopsvercel-[a-z0-9-]+-illcoai\.vercel\.app$/.test(hostname);
   } catch {

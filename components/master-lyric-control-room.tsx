@@ -32,7 +32,7 @@ const fxIntensities: Array<{ key: FxIntensity; label: string }> = [
   { key: "high", label: "High" },
 ];
 
-const fallbackVideoUrl = "https://master-lyric-deploy.vercel.app/master-lyric-video.mp4";
+const fallbackVideoUrl = "/media/illco-flyover-cutout-optimized.mp4";
 
 function readSavedValue<T extends string>(key: string, fallback: T, allowed: readonly T[]) {
   if (typeof window === "undefined") return fallback;
@@ -181,7 +181,28 @@ export function MasterLyricControlRoom() {
       </div>
 
       <div className="masterLyricStage">
-        <div className="masterLyricVideoShell">
+        <div className="masterLyricVideoShell" style={{ position: "relative" }}>
+          <div
+            aria-hidden="true"
+            style={{
+              position: "absolute",
+              right: "10px",
+              top: "10px",
+              zIndex: 2,
+              background: "rgba(0,0,0,0.55)",
+              color: "#ffffff",
+              fontWeight: 700,
+              fontSize: "14px",
+              letterSpacing: "0.04em",
+              padding: "4px 8px",
+              borderRadius: "999px",
+              textShadow: "0 0 8px rgba(0,0,0,0.9)",
+              border: "1px solid rgba(255,255,255,0.35)",
+              pointerEvents: "none",
+            }}
+          >
+            Video Forge iLLCoAI.Tech
+          </div>
           <video
             ref={videoRef}
             controls
@@ -191,6 +212,7 @@ export function MasterLyricControlRoom() {
             onTimeUpdate={(event) => setCurrentTime(event.currentTarget.currentTime || 0)}
             onPlay={() => setIsPlaying(true)}
             onPause={() => setIsPlaying(false)}
+            style={{ position: "relative", zIndex: 1 }}
           >
             <source src={videoUrl} type="video/mp4" />
           </video>

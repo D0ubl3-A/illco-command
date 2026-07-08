@@ -15,6 +15,7 @@ type LyricVideoForgePayload = {
   timingStatus?: string;
   requestedAction?: LyricVideoForgeAction;
   imageCount?: number;
+  editCount?: number;
   lyricsApproved?: boolean;
   characterReferenceName?: string;
   audioFileName?: string;
@@ -29,6 +30,7 @@ const defaultAgentModel = process.env.LYRIC_VIDEO_FORGE_AGENT_MODEL || "gpt-5-na
 const defaultImageModel = process.env.LYRIC_VIDEO_FORGE_IMAGE_MODEL || "gpt-image-1";
 const realtimeTranscriptionModel = process.env.LYRIC_VIDEO_FORGE_REALTIME_TRANSCRIBE_MODEL || "gpt-4o-transcribe";
 const wordTimestampFallbackModel = process.env.LYRIC_VIDEO_FORGE_WORD_TIMESTAMP_MODEL || "whisper-1";
+const AGENT_TIMEOUT_MS = 12_000;
 
 const rapTranscriptPrompt = [
   "You are a master transcription engineer for dense rap lyrics and lyric-video karaoke timing.",
@@ -68,6 +70,28 @@ const creditCosts = {
   imagePlanBase: 2,
   imagePerGeneratedStill: 5,
   fullRunPlan: 8,
+  editPerVideoPass: 3,
+};
+
+const adRewards = {
+  rewardPerImage: 1,
+  rewardPerEdit: 2,
+  minProfitForPayout: 1,
+};
+
+type BriefResult = {
+  brief: string;
+  briefSource: "agent" | "fallback" | "error";
+  briefNote?: string;
+};
+
+type AdEarningEstimate = {
+  imageCreditReward: number;
+  editCreditReward: number;
+  grossPotentialCredits: number;
+  netCreditGain: number;
+  canEarnWithAds: boolean;
+  earnedAdCredits: number;
 };
 
 function coerceAction(value: unknown): LyricVideoForgeAction {
@@ -75,15 +99,53 @@ function coerceAction(value: unknown): LyricVideoForgeAction {
   return "brief";
 }
 
-function imageCountToCredits(imageCount: number) {
-  return creditCosts.imagePlanBase + Math.max(1, Math.min(12, imageCount)) * creditCosts.imagePerGeneratedStill;
+function clampImageCount(value: number) {
+  return Math.max(1, Math.min(12, Number(value) || 1));
 }
 
-function estimateCredits(action: LyricVideoForgeAction, imageCount: number) {
+function clampEditCount(value: number) {
+  return Math.max(0, Math.min(30, Number(value) || 0));
+}
+
+function imageCountToCredits(imageCount: number) {
+  const safeImageCount = clampImageCount(imageCount);
+  return creditCosts.imagePlanBase + safeImageCount * creditCosts.imagePerGeneratedStill;
+}
+
+function editCountToCredits(editCount: number) {
+  return clampEditCount(editCount) * creditCosts.editPerVideoPass;
+}
+
+function estimateCredits(action: LyricVideoForgeAction, imageCount: number, editCount: number) {
+  const selectedImageCredits = imageCountToCredits(imageCount);
+  const selectedEditCredits = editCountToCredits(editCount);
   if (action === "transcribe") return creditCosts.transcribe;
-  if (action === "image-plan") return imageCountToCredits(imageCount);
-  if (action === "full-run") return creditCosts.fullRunPlan + creditCosts.transcribe + imageCountToCredits(imageCount);
+  if (action === "image-plan") return selectedImageCredits;
+  if (action === "full-run") return creditCosts.fullRunPlan + creditCosts.transcribe + selectedImageCredits + selectedEditCredits;
   return creditCosts.brief;
+}
+
+function estimateAdReward(imageCount: number, editCount: number) {
+  return clampImageCount(imageCount) * adRewards.rewardPerImage + clampEditCount(editCount) * adRewards.rewardPerEdit;
+}
+
+function estimateAdEarning(imageCount: number, editCount: number, estimatedCost: number): AdEarningEstimate {
+  const safeImageCount = clampImageCount(imageCount);
+  const safeEditCount = clampEditCount(editCount);
+  const imageCreditReward = safeImageCount * adRewards.rewardPerImage;
+  const editCreditReward = safeEditCount * adRewards.rewardPerEdit;
+  const grossPotentialCredits = imageCreditReward + editCreditReward;
+  const netCreditGain = grossPotentialCredits - estimatedCost;
+  const canEarnWithAds = netCreditGain >= adRewards.minProfitForPayout;
+
+  return {
+    imageCreditReward,
+    editCreditReward,
+    grossPotentialCredits,
+    netCreditGain,
+    canEarnWithAds,
+    earnedAdCredits: canEarnWithAds ? Math.max(0, netCreditGain) : 0,
+  };
 }
 
 function validateRequestInputs(
@@ -122,6 +184,72 @@ function validateRequestInputs(
   return { errors, warnings };
 }
 
+function runWithTimeout(actionPrompt: string, timeoutMs = AGENT_TIMEOUT_MS): Promise<{ output: string }> {
+  const timeout = new Promise<never>((_, reject) => {
+    const timeoutId = setTimeout(() => {
+      clearTimeout(timeoutId);
+      reject(new Error(`Agent SDK timed out after ${timeoutMs}ms.`));
+    }, timeoutMs);
+  });
+
+  return Promise.race([run(lyricVideoForgeAgent, actionPrompt), timeout]).then((result) => {
+    if (!result) {
+      return { output: "" };
+    }
+    const output = String((result as any).finalOutput || "").trim();
+    return { output };
+  });
+}
+
+async function buildBrief(payload: Awaited<ReturnType<typeof parseRequest>>["payload"], hasReference: boolean) {
+  const estimatedCredits = estimateCredits(payload.requestedAction, payload.imageCount, payload.editCount);
+  const adEarning = estimateAdEarning(payload.imageCount, payload.editCount, estimatedCredits);
+  const fallback = fallbackBrief(payload, hasReference);
+
+  if (!env.codexApiKey) {
+    return {
+      brief: fallback,
+      briefSource: "fallback" as const,
+      briefNote: "Agent SDK disabled: OPENAI_API_KEY is not configured.",
+    };
+  }
+
+  try {
+    const { output } = await runWithTimeout(
+      [
+        `Artist: ${payload.artist}`,
+        `Song title: ${payload.songTitle}`,
+        `Uploaded audio: ${payload.audioFileName || "none"}`,
+        `Uploaded character reference: ${payload.characterReferenceName || "none"}`,
+        `Visual direction: ${payload.visualDirection}`,
+        `Known lyric/timing issues: ${payload.lyricIssues}`,
+        `Lyrics approved by user: ${payload.lyricsApproved}`,
+        `Selected image count: ${payload.imageCount}`,
+        `Estimated edit count: ${payload.editCount}`,
+        `Credit estimate: ${estimatedCredits}`,
+        `Ad reward potential: +${adEarning.imageCreditReward} (images) +${adEarning.editCreditReward} (edits), net ad gain ${adEarning.netCreditGain >= 0 ? "+" : ""}${adEarning.netCreditGain} credits`,
+        `Ad reward status: ${adEarning.canEarnWithAds ? "profitable" : "not profitable"}`,
+        `Realtime transcription target: ${realtimeTranscriptionModel}`,
+        `Word timestamp fallback: ${wordTimestampFallbackModel}`,
+        `Image generation model: ${defaultImageModel}`,
+        "Create the gated production workflow, transcription plan, image-generation plan, dissolve plan, and QC checklist.",
+      ].join("\n"),
+    );
+
+    if (output) {
+      return { brief: output, briefSource: "agent" as const };
+    }
+  } catch (error) {
+    return {
+      brief: fallback,
+      briefSource: "error" as const,
+      briefNote: error instanceof Error ? error.message : "Agent SDK execution failed.",
+    };
+  }
+
+  return { brief: fallback, briefSource: "fallback" as const };
+}
+
 async function parseRequest(request: Request) {
   const contentType = request.headers.get("content-type") || "";
   let body: LyricVideoForgePayload = {};
@@ -139,6 +267,7 @@ async function parseRequest(request: Request) {
       timingStatus: String(form.get("timingStatus") || ""),
       requestedAction: coerceAction(form.get("requestedAction")),
       imageCount: Number(form.get("imageCount") || 4),
+      editCount: Number(form.get("editCount") || 0),
       lyricsApproved: String(form.get("lyricsApproved") || "false") === "true",
     };
     const maybeAudio = form.get("audio");
@@ -152,7 +281,8 @@ async function parseRequest(request: Request) {
   }
 
   const action = coerceAction(body.requestedAction);
-  const imageCount = Math.max(1, Math.min(12, Number(body.imageCount || 4)));
+  const imageCount = clampImageCount(Number(body.imageCount || 4));
+  const editCount = clampEditCount(Number(body.editCount || 0));
   const payload = {
     artist: String(body.artist || "M3ntally-iLL").trim(),
     songTitle: String(body.songTitle || "Untitled lyric video").trim(),
@@ -162,6 +292,7 @@ async function parseRequest(request: Request) {
     timingStatus: String(body.timingStatus || "first-pass timing until manually corrected").trim(),
     requestedAction: action,
     imageCount,
+    editCount,
     lyricsApproved: Boolean(body.lyricsApproved),
     audioFileName: String(body.audioFileName || "").trim(),
     characterReferenceName: String(body.characterReferenceName || "").trim(),
@@ -219,11 +350,15 @@ async function transcribeUploadedAudio(audioFile: File | null) {
 }
 
 function imageGenerationPlan(payload: Awaited<ReturnType<typeof parseRequest>>["payload"], hasReference: boolean) {
+  const imageCost = imageCountToCredits(payload.imageCount);
+  const editCost = editCountToCredits(payload.editCount);
   return {
     status: payload.lyricsApproved ? "ready-after-credit-check" : "blocked-until-lyrics-approved",
     imageModel: defaultImageModel,
     selectedImageCount: payload.imageCount,
-    estimatedImageCredits: imageCountToCredits(payload.imageCount),
+    estimatedImageCredits: imageCost,
+    estimatedEditCredits: editCost,
+    selectedEditCount: payload.editCount,
     characterReferenceRequired: true,
     characterReferenceReceived: hasReference,
     dissolveRule: "Generate the selected number of identity-locked stills, then cross-dissolve between them. No hard cuts.",
@@ -232,6 +367,7 @@ function imageGenerationPlan(payload: Awaited<ReturnType<typeof parseRequest>>["
       "Preserve face, eyes, nose, mouth, jaw, skin detail, posture, and artist attitude.",
       "Generate only the selected image count allowed by credits.",
       "Do not start image generation until the user confirms the transcript lyrics are correct.",
+      "Only bill edit credits when user-selected edits are executed in the final timeline.",
     ],
   };
 }
@@ -244,13 +380,14 @@ function fallbackBrief(payload: Awaited<ReturnType<typeof parseRequest>>["payloa
     "3. Transcribe lyrics and word timings.",
     "4. Show transcript to user and require approval before image generation.",
     "5. Generate selected image count based on credits.",
-    "6. Cross-dissolve generated images into the lyric video.",
+    "6. Estimate edit passes and cross-dissolve generated images into the lyric video.",
     "",
     "## Render Target",
     `Artist: ${payload.artist}`,
     `Song: ${payload.songTitle}`,
     `Audio: ${payload.audioFileName || payload.audioPath}`,
     `Character reference: ${hasReference ? payload.characterReferenceName || "uploaded" : "missing"}`,
+    `Requested edits: ${payload.editCount}`,
     "",
     "## Transcription",
     `Realtime-first model target: ${realtimeTranscriptionModel}`,
@@ -263,64 +400,103 @@ function fallbackBrief(payload: Awaited<ReturnType<typeof parseRequest>>["payloa
 }
 
 export async function POST(request: Request) {
-  const { payload, audioFile, characterReference } = await parseRequest(request);
-  const estimatedCredits = estimateCredits(payload.requestedAction, payload.imageCount);
-  const hasAudio = Boolean(audioFile);
-  const hasReference = Boolean(characterReference);
-  const validation = validateRequestInputs(payload, hasAudio, hasReference);
-  const transcription = payload.requestedAction === "transcribe" || payload.requestedAction === "full-run" ? await transcribeUploadedAudio(audioFile) : null;
-  const images = imageGenerationPlan(payload, Boolean(characterReference));
+  try {
+    const { payload, audioFile, characterReference } = await parseRequest(request);
+    const estimatedCredits = estimateCredits(payload.requestedAction, payload.imageCount, payload.editCount);
+    const adEarning = estimateAdEarning(payload.imageCount, payload.editCount, estimatedCredits);
+    const hasAudio = Boolean(audioFile);
+    const hasReference = Boolean(characterReference);
+    const validation = validateRequestInputs(payload, hasAudio, hasReference);
+    const transcription =
+      payload.requestedAction === "transcribe" || payload.requestedAction === "full-run" ? await transcribeUploadedAudio(audioFile) : null;
+    const images = imageGenerationPlan(payload, Boolean(characterReference));
+    const { brief, briefSource, briefNote } = await buildBrief(payload, Boolean(characterReference));
 
-  let brief = "";
-  if (env.codexApiKey) {
-    const result = await run(
-      lyricVideoForgeAgent,
-      [
-        `Artist: ${payload.artist}`,
-        `Song title: ${payload.songTitle}`,
-        `Uploaded audio: ${payload.audioFileName || "none"}`,
-        `Uploaded character reference: ${payload.characterReferenceName || "none"}`,
-        `Visual direction: ${payload.visualDirection}`,
-        `Known lyric/timing issues: ${payload.lyricIssues}`,
-        `Lyrics approved by user: ${payload.lyricsApproved}`,
-        `Selected image count: ${payload.imageCount}`,
-        `Credit estimate: ${estimatedCredits}`,
-        `Realtime transcription target: ${realtimeTranscriptionModel}`,
-        `Word timestamp fallback: ${wordTimestampFallbackModel}`,
-        `Image generation model: ${defaultImageModel}`,
-        "Create the gated production workflow, transcription plan, image-generation plan, dissolve plan, and QC checklist.",
-      ].join("\n"),
+    if (!brief && validation.errors.length) {
+      return NextResponse.json(
+        {
+          brief: `Cannot run workflow: ${validation.errors.join(" ")}`,
+          usedAgentSdk: Boolean(env.codexApiKey),
+          modelDefaults: {
+            agent: defaultAgentModel,
+            image: defaultImageModel,
+            realtimeTranscription: realtimeTranscriptionModel,
+            wordTimestampFallback: wordTimestampFallbackModel,
+          },
+          credits: {
+            estimatedCost: estimatedCredits,
+            adEarning,
+            packs: creditPacks,
+            costs: creditCosts,
+          },
+          validation,
+          uploadInputs: {
+            audioReceived: hasAudio,
+            audioFileName: payload.audioFileName,
+            characterReferenceReceived: hasReference,
+            characterReferenceName: payload.characterReferenceName,
+          },
+          transcription,
+          images,
+          payload,
+          serverNote: `Lyric Video Forge completed via ${briefSource}. ${briefNote || ""}`.trim(),
+        },
+        { status: 400 },
+      );
+    }
+
+    return NextResponse.json({
+      brief,
+      usedAgentSdk: Boolean(env.codexApiKey) && briefSource !== "fallback",
+      modelDefaults: {
+        agent: defaultAgentModel,
+        image: defaultImageModel,
+        realtimeTranscription: realtimeTranscriptionModel,
+        wordTimestampFallback: wordTimestampFallbackModel,
+      },
+      credits: {
+        estimatedCost: estimatedCredits,
+        adEarning,
+        packs: creditPacks,
+        costs: creditCosts,
+      },
+      validation,
+      uploadInputs: {
+        audioReceived: hasAudio,
+        audioFileName: payload.audioFileName,
+        characterReferenceReceived: hasReference,
+        characterReferenceName: payload.characterReferenceName,
+      },
+      transcription,
+      images,
+      payload,
+      serverNote: briefSource === "agent" ? "Workflow completed." : `Workflow completed with fallback: ${briefNote || "Agent output unavailable."}`,
+    });
+  } catch (error) {
+    const message = error instanceof Error ? error.message : "Unable to process Lyric Video Forge request.";
+    return NextResponse.json(
+      {
+        brief: "The workflow did not complete. Please retry with smaller files and a valid OPENAI_API_KEY.",
+        usedAgentSdk: false,
+        modelDefaults: {
+          agent: defaultAgentModel,
+          image: defaultImageModel,
+          realtimeTranscription: realtimeTranscriptionModel,
+          wordTimestampFallback: wordTimestampFallbackModel,
+        },
+        credits: {
+          estimatedCost: 0,
+          adEarning: null,
+          packs: creditPacks,
+          costs: creditCosts,
+        },
+        validation: {
+          errors: [message],
+          warnings: [],
+        },
+        serverNote: `Lyric Video Forge request failed: ${message}`,
+      },
+      { status: 500 },
     );
-    brief = String(result.finalOutput || "").trim();
   }
-
-  if (!brief) brief = fallbackBrief(payload, Boolean(characterReference));
-
-  return NextResponse.json({
-    brief,
-    usedAgentSdk: Boolean(env.codexApiKey),
-    modelDefaults: {
-      agent: defaultAgentModel,
-      image: defaultImageModel,
-      realtimeTranscription: realtimeTranscriptionModel,
-      wordTimestampFallback: wordTimestampFallbackModel,
-    },
-    credits: {
-      estimatedCost: estimatedCredits,
-      packs: creditPacks,
-      costs: creditCosts,
-    },
-    validation,
-    uploadInputs: {
-      audioReceived: hasAudio,
-      audioFileName: payload.audioFileName,
-      characterReferenceReceived: hasReference,
-      characterReferenceName: payload.characterReferenceName,
-    },
-    transcription,
-    images,
-    payload,
-  });
 }
-
-

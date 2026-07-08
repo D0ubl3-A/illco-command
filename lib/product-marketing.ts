@@ -5,35 +5,40 @@ import { getProductDisplayHref } from "@/lib/product-routes";
 import { getProjectCompletionRecord } from "@/lib/project-completion";
 
 const customProductImages: Record<string, string> = {
-  automateflow: "/products/custom/instant-lead-rescue-text-back-ai.jpg",
+  automateflow: "/products/generated/automateflow.jpg",
   "ai-companion-command-routing": "/products/custom/think-for-me-mode-command-center.jpg",
   "ai-companion-conversational-intake": "/products/custom/instant-lead-rescue-text-back-ai.jpg",
   "ai-companion-sales-agent-handoff": "/products/custom/instant-lead-rescue-text-back-ai.jpg",
+  "ai-dev-co-funnel": "/products/generated/ai-dev-co-funnel.jpg",
   "ai-music-mastering-pro": "/products/custom/ill-motion-ai-music-video.jpg",
   "barz-web-studio": "/products/custom/ill-motion-ai-music-video.jpg",
-  "cinematic-ai-music-video-production": "/products/custom/ill-motion-ai-music-video.jpg",
+  "cinematic-ai-music-video-production": "/products/generated/illco-ai-video.jpg",
+  "chrome-proposal-generator": "/products/generated/ai-dev-co-funnel.jpg",
   "codex-agent-app": "/products/custom/think-for-me-mode-command-center.jpg",
   "dj-curse-reverse": "/products/custom/dj-curse-reverse.jpg",
-  "full-hd-lyric-videos": "/products/custom/ill-motion-ai-music-video.jpg",
+  "full-hd-lyric-videos": "/products/generated/lyric-video-forge.jpg",
   "godmode-ui": "/products/custom/think-for-me-mode-command-center.jpg",
   "ill-motion-ai": "/products/custom/ill-motion-ai-music-video.jpg",
   "illco-ai-video": "/products/custom/illcoai-video-generator-dashboard.jpg",
   "illcoai-video-generator-deploy": "/products/custom/illcoai-video-generator-dashboard.jpg",
-  "lyric-video-forge": "/products/custom/ill-motion-ai-music-video.jpg",
+  "lyric-video-forge": "/products/generated/lyric-video-forge.jpg",
   "mastering-studio-platform": "/products/custom/ill-motion-ai-music-video.jpg",
   "music-video-clip-site": "/products/custom/ill-motion-ai-music-video.jpg",
   "nexus-workstation": "/products/custom/think-for-me-mode-command-center.jpg",
-  "rap-lyric-generator": "/products/custom/ill-motion-ai-music-video.jpg",
+  "rap-lyric-generator": "/products/generated/rap-lyric-generator.jpg",
   "sora-catalog-vercel-preview": "/products/custom/illcoai-video-generator-dashboard.jpg",
   "sora-vault-cloud": "/products/custom/illcoai-video-generator-dashboard.jpg",
   "testimonial-to-marketing-asset-generator": "/products/custom/illcoai-video-generator-dashboard.jpg",
   "viral-stitch-ai": "/products/custom/youtube-ops-command-center.jpg",
   "voice-book-tool": "/products/custom/think-for-me-mode-command-center.jpg",
+  "voicematch-ai-reply-copilot": "/products/generated/visual-voice-board.jpg",
   "youtube-ops-vercel": "/products/custom/youtube-ops-command-center.jpg",
   "youtube-rank-revival-ai-pro": "/products/custom/youtube-ops-command-center.jpg",
 };
 
 export function getProductViralImagePath(product: ProductRecord) {
+  if (product.imageUrl?.startsWith("/products/")) return product.imageUrl;
+
   const customImage = customProductImages[product.id];
   if (customImage) return customImage;
 
@@ -367,4 +372,3 @@ function escapeSvg(value: string) {
     .replace(/>/g, "&gt;")
     .replace(/"/g, "&quot;");
 }
-

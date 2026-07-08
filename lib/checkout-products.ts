@@ -57,7 +57,8 @@ export const checkoutProducts = [
     appProductId: "think-for-me-mode",
     name: "AI Workflow Mastery",
     category: "Command & AI Operators",
-    summary: "Workflow package for mapping repeatable AI processes across daily operations.",
+    summary:
+      "A repeatable AI operating system: command frameworks, prompt systems, decision frameworks, and execution SOPs that help you plan faster, decide better, and ship consistently.",
   },
   {
     id: "interactive-legacy-avatar-upgrade",
@@ -137,6 +138,13 @@ export const checkoutProducts = [
     summary: "Short-form stitching workflow for turning creator clips into faster social variants.",
   },
   {
+    id: "vocal-visualizer",
+    appProductId: "visual-voice-board",
+    name: "Vocal Visualizer",
+    category: "Video & Creator Growth",
+    summary: "Voice-reactive visual system for turning vocals, hooks, and spoken creator clips into branded motion assets.",
+  },
+  {
     id: "infinite-living-memory",
     appProductId: "voice-book-tool",
     name: "INFINITE Living Memory (Voice and Personality)",
@@ -146,9 +154,9 @@ export const checkoutProducts = [
   {
     id: "voicebook-ai-studio",
     appProductId: "voice-book-tool",
-    name: "VoiceBook AI Studio",
+    name: "VoiceBook OS",
     category: "Voice & Memory",
-    summary: "Voice-first studio for transforming written or recorded material into a richer audio experience.",
+    summary: "Flagship voice-first content pipeline for turning spoken ideas into scripts, video concepts, shorts, captions, and memory-backed creator workflows.",
   },
   {
     id: "website-to-android-app-conversion",
@@ -192,7 +200,8 @@ export const checkoutProductCategories = [
 ] satisfies CheckoutProductCategory[];
 
 export const checkoutProductCategoryDetails: Record<CheckoutProductCategory, string> = {
-  "Command & AI Operators": "Strategic AI operating systems for people who need decisions, plans, and execution moved faster.",
+  "Command & AI Operators":
+    "Turn ChatGPT into your command center with proven AI operating systems for planning, decision-making, and repeatable execution.",
   "Sales & Lead Recovery": "Lead capture, reply, CRM, proposal, and follow-up products that protect revenue.",
   "Workflow Automation": "Research, meeting, Notion, and daily process tools that remove repeat work.",
   "Music & Audio": "Mastering, beat, lyric, and song tools for artists shipping release-ready work.",

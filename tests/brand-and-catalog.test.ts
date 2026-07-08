@@ -14,7 +14,6 @@ const appIconSource = readFileSync("app/icon.svg", "utf8");
 test("site uses the ILLCO command logo and SVG favicon", () => {
   assert.match(layoutSource, /\/icon\.svg/);
   assert.match(layoutSource, /\/favicon\.svg/);
-  assert.match(commandClientSource, /\/brand\/illco-command-logo\.svg/);
   assert.match(logoSource, /ILLCO AI command logo/);
   assert.match(faviconSource, /#050a12/);
   assert.match(appIconSource, /#ff2b25/);

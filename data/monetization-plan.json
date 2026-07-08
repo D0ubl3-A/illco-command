@@ -24,7 +24,7 @@
       "licenseMode": "seat",
       "routeAfterPurchase": {
         "type": "production-url",
-        "href": "https://illco-command.vercel.app"
+        "href": "https://illcoai.tech"
       },
       "needsDemoVideo": true,
       "publicInFunnel": true,
@@ -41,7 +41,7 @@
       "licenseMode": "seat",
       "routeAfterPurchase": {
         "type": "production-url",
-        "href": "https://illco-command.vercel.app/apps/ai-companion-conversational-intake"
+        "href": "https://illcoai.tech/apps/ai-companion-conversational-intake"
       },
       "needsDemoVideo": false,
       "publicInFunnel": false,
@@ -58,7 +58,7 @@
       "licenseMode": "seat",
       "routeAfterPurchase": {
         "type": "production-url",
-        "href": "https://illco-command.vercel.app/apps/ai-companion-prompt-studio"
+        "href": "https://illcoai.tech/apps/ai-companion-prompt-studio"
       },
       "needsDemoVideo": false,
       "publicInFunnel": false,
@@ -75,7 +75,7 @@
       "licenseMode": "seat",
       "routeAfterPurchase": {
         "type": "production-url",
-        "href": "https://illco-command.vercel.app/apps/ai-companion-content-production"
+        "href": "https://illcoai.tech/apps/ai-companion-content-production"
       },
       "needsDemoVideo": false,
       "publicInFunnel": false,
@@ -92,7 +92,7 @@
       "licenseMode": "seat",
       "routeAfterPurchase": {
         "type": "production-url",
-        "href": "https://illco-command.vercel.app/apps/ai-companion-sales-agent-handoff"
+        "href": "https://illcoai.tech/apps/ai-companion-sales-agent-handoff"
       },
       "needsDemoVideo": false,
       "publicInFunnel": false,
@@ -109,7 +109,7 @@
       "licenseMode": "seat",
       "routeAfterPurchase": {
         "type": "production-url",
-        "href": "https://illco-command.vercel.app/apps/ai-companion-command-routing"
+        "href": "https://illcoai.tech/apps/ai-companion-command-routing"
       },
       "needsDemoVideo": false,
       "publicInFunnel": false,
@@ -126,7 +126,7 @@
       "licenseMode": "seat",
       "routeAfterPurchase": {
         "type": "production-url",
-        "href": "https://illco-command.vercel.app/apps/ai-companion-workspace-access"
+        "href": "https://illcoai.tech/apps/ai-companion-workspace-access"
       },
       "needsDemoVideo": false,
       "publicInFunnel": false,
@@ -143,7 +143,7 @@
       "licenseMode": "seat",
       "routeAfterPurchase": {
         "type": "production-url",
-        "href": "https://illco-command.vercel.app/tools/think-for-me-mode"
+        "href": "https://illcoai.tech/tools/think-for-me-mode"
       },
       "needsDemoVideo": true,
       "publicInFunnel": true,
@@ -160,7 +160,7 @@
       "licenseMode": "seat",
       "routeAfterPurchase": {
         "type": "production-url",
-        "href": "https://illco-command.vercel.app/tools/lyric-video-forge"
+        "href": "https://illcoai.tech/tools/lyric-video-forge"
       },
       "needsDemoVideo": true,
       "publicInFunnel": true,
@@ -329,8 +329,8 @@
       "funnelPlanId": "studio",
       "licenseMode": "subscription",
       "routeAfterPurchase": {
-        "type": "production-url",
-        "href": "https://youtubeopsvercel.vercel.app"
+        "type": "command-center",
+        "href": "/apps/youtube-ops-vercel"
       },
       "needsDemoVideo": true,
       "publicInFunnel": true,
@@ -585,7 +585,7 @@
       "licenseMode": "seat",
       "routeAfterPurchase": {
         "type": "production-url",
-        "href": "https://battle-rap-ai.vercel.app"
+        "href": "https://illcoai.tech"
       },
       "needsDemoVideo": true,
       "publicInFunnel": true,

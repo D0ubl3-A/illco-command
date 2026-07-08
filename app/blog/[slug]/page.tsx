@@ -33,11 +33,20 @@ export async function generateMetadata({ params }: BlogArticlePageProps): Promis
       publishedTime: post.publishedAt,
       modifiedTime: post.updatedAt,
       authors: ["ILLCO AI"],
+      images: [
+        {
+          url: `${canonical}/opengraph-image`,
+          width: 1200,
+          height: 630,
+          alt: `${post.title} - ILLCO Command`,
+        },
+      ],
     },
     twitter: {
       card: "summary_large_image",
       title: post.title,
       description: post.description,
+      images: [`${canonical}/opengraph-image`],
     },
   };
 }
@@ -67,6 +76,7 @@ export default async function BlogArticlePage({ params }: BlogArticlePageProps) 
       url: blogSiteUrl,
     },
     mainEntityOfPage: canonical,
+    image: `${canonical}/opengraph-image`,
     keywords: [post.primaryKeyword, ...post.secondaryKeywords].join(", "),
     about: post.category,
   };

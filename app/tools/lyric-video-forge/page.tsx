@@ -38,11 +38,11 @@ export default function LyricVideoForgePage() {
       <div className="workspace appLandingWorkspace bigoStrategyWorkspace">
         <nav className="appLandingNav" aria-label="Lyric Video Forge navigation">
           <a className="brandBlock" href="/tools">
-            <span className="brandGlyph">IC</span>
+            <img src="/brand/illco-command-logo.png" alt="ILLCO Command" style={{ width: 42, height: 42, borderRadius: 8, objectFit: "contain" }} />
             <strong>ILLCO Tools</strong>
           </a>
-          <div>
-            <a className="button secondary" href="/tools">Back to Tools</a>
+          <div className="appLandingNavLinks">
+            <a className="button secondary" href="/tools">Back</a>
             <a className="button secondary" href="/account">Account</a>
             <a className="button primary" href="#forge">Open Forge</a>
           </div>

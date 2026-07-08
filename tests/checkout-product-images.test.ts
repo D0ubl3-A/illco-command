@@ -25,7 +25,7 @@ test("music checkout products use distinct generated photos", () => {
   const musicImageIds = musicProducts.map((product) => getCheckoutProductVisualSignature(product));
 
   assert.deepEqual(musicImageIds, [
-    "mastering-studio-platform",
+    "ai-music-mastering-pro",
     "rap-lyric-generator",
     "songanalyzer-deploy",
     "sora-vault-cloud",
@@ -34,12 +34,24 @@ test("music checkout products use distinct generated photos", () => {
   assert.equal(new Set(musicImageIds).size, musicProducts.length);
 });
 
-test("checkout image mappings use generator output instead of custom repeated photos", () => {
-  assert.equal(getImagePathForProduct("ai-music-mastering-pro"), "/products/generated/mastering-studio-platform.jpg?v=2026-06-24-generator-assets-v1");
-  assert.equal(getImagePathForProduct("rap-lyric-generator"), "/products/generated/rap-lyric-generator.jpg?v=2026-06-24-generator-assets-v1");
-  assert.equal(getImagePathForProduct("song-analyzer-deploy"), "/products/generated/songanalyzer-deploy.jpg?v=2026-06-24-generator-assets-v1");
-  assert.equal(getImagePathForProduct("vault-select-exclusive-trap-beat"), "/products/generated/sora-vault-cloud.jpg?v=2026-06-24-generator-assets-v1");
-  assert.equal(getImagePathForProduct("barz-beat-shop"), "/products/generated/barz-web-studio.jpg?v=2026-06-24-generator-assets-v1");
+test("latest ZIP images are used for the top checkout products", () => {
+  assert.equal(getImagePathForProduct("ai-music-mastering-pro"), "/products/generated/ai-music-mastering-pro.jpg?v=2026-06-30-alternate-colors-top10-v1");
+  assert.equal(getImagePathForProduct("cinematic-ai-music-video-production"), "/products/generated/cinematic-ai-music-video-production.jpg?v=2026-06-30-alternate-colors-top10-v1");
+  assert.equal(getImagePathForProduct("full-hd-lyric-videos"), "/products/generated/full-hd-lyric-videos.jpg?v=2026-06-30-alternate-colors-top10-v1");
+  assert.equal(getImagePathForProduct("youtube-rank-revival-ai-pro"), "/products/generated/youtube-rank-revival-ai-pro.jpg?v=2026-06-30-alternate-colors-top10-v1");
+  assert.equal(getImagePathForProduct("instant-lead-rescue-text-back-ai"), "/products/generated/instant-lead-rescue-text-back-ai.jpg?v=2026-06-30-alternate-colors-top10-v1");
+  assert.equal(getImagePathForProduct("ai-workflow-mastery"), "/products/generated/ai-workflow-mastery.jpg?v=2026-06-30-alternate-colors-top10-v1");
+  assert.equal(getImagePathForProduct("interactive-legacy-avatar-upgrade"), "/products/generated/interactive-legacy-avatar-upgrade.jpg?v=2026-06-30-alternate-colors-top10-v1");
+  assert.equal(getImagePathForProduct("testimonial-to-marketing-asset-generator"), "/products/generated/testimonial-to-marketing-asset-generator.jpg?v=2026-06-30-alternate-colors-top10-v1");
+  assert.equal(getImagePathForProduct("notion-research-clipper-ai-for-chrome"), "/products/generated/notion-research-clipper-ai-for-chrome.jpg?v=2026-06-30-alternate-colors-top10-v1");
+  assert.equal(getImagePathForProduct("linkedin-gmail-lead-sync-extension"), "/products/generated/linkedin-gmail-lead-sync-extension.jpg?v=2026-06-30-alternate-colors-top10-v1");
+});
+
+test("checkout image mappings keep generator fallback output for remaining products", () => {
+  assert.equal(getImagePathForProduct("rap-lyric-generator"), "/products/generated/rap-lyric-generator.jpg?v=2026-06-30-alternate-colors-top10-v1");
+  assert.equal(getImagePathForProduct("song-analyzer-deploy"), "/products/generated/songanalyzer-deploy.jpg?v=2026-06-30-alternate-colors-top10-v1");
+  assert.equal(getImagePathForProduct("vault-select-exclusive-trap-beat"), "/products/generated/sora-vault-cloud.jpg?v=2026-06-30-alternate-colors-top10-v1");
+  assert.equal(getImagePathForProduct("barz-beat-shop"), "/products/generated/barz-web-studio.jpg?v=2026-06-30-alternate-colors-top10-v1");
 });
 
 function getImagePathForProduct(productId: string) {

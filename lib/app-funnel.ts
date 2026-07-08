@@ -69,6 +69,10 @@ function summaryFor(product: ProductRecord) {
     return "Think For Me Mode turns messy ideas, stuck builds, unclear next steps, Codex planning, CLI execution, Agents SDK decisions, and ElevenLabs narration checks into one guided operating system. It is built for people who want fewer blank screens, fewer loops, and a verified next move every time.";
   }
 
+  if (product.description) {
+    return product.description;
+  }
+
   const category = categoryLabels[product.category].toLowerCase();
   return `${customerProductName(product)} is part of the ILLCO ${category} catalog inside one app. Use this page to review the customer-safe access path, proof state, and next best action.`;
 }

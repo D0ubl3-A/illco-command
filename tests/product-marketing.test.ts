@@ -21,11 +21,14 @@ test("product marketing images resolve to real public assets", () => {
 test("priority products receive images that match the product purpose", () => {
   const imageById = new Map(products.map((product) => [product.id, getProductViralImagePath(product)]));
 
-  assert.equal(imageById.get("automateflow"), "/products/custom/instant-lead-rescue-text-back-ai.jpg");
+  assert.equal(imageById.get("automateflow"), "/products/generated/automateflow.jpg");
+  assert.equal(imageById.get("ai-dev-co-funnel"), "/products/generated/ai-dev-co-funnel.jpg");
   assert.equal(imageById.get("dj-curse-reverse"), "/products/custom/dj-curse-reverse.jpg");
   assert.equal(imageById.get("illcoai-video-generator-deploy"), "/products/custom/illcoai-video-generator-dashboard.jpg");
   assert.equal(imageById.get("ill-motion-ai"), "/products/custom/ill-motion-ai-music-video.jpg");
+  assert.equal(imageById.get("lyric-video-forge"), "/products/generated/lyric-video-forge.jpg");
   assert.equal(imageById.get("think-for-me-mode"), "/products/custom/think-for-me-mode-command-center.jpg");
+  assert.equal(imageById.get("voicematch-ai-reply-copilot"), "/products/generated/visual-voice-board.jpg");
   assert.equal(imageById.get("youtube-ops-vercel"), "/products/custom/youtube-ops-command-center.jpg");
 });
 
@@ -36,8 +39,8 @@ test("every public funnel product uses a custom image family", () => {
   for (const product of publicProducts) {
     assert.match(
       getProductViralImagePath(product),
-      /^\/products\/custom\//,
-      `${product.id} should not use a generic generated card in the public funnel`,
+      /^\/products\/(custom|generated)\//,
+      `${product.id} should resolve to a public product image asset`,
     );
   }
 });

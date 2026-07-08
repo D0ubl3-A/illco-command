@@ -37,6 +37,11 @@ https://YOUR-TUNNEL.ngrok-free.app/api/chatgpt/lyric-video-forge/sse
 - `lyric_video_forge_start`: starts a run from artist, song, visual direction, image count, and lyric status.
 - `lyric_video_forge_transcript_review`: reviews provided transcription text and keeps user approval as the gate.
 - `lyric_video_forge_visual_plan`: plans image count, character lock, dissolve pacing, and render requirements after lyrics are approved.
+- `lyric_video_forge_choose_stt_model`: selects the STT model and word/segment timestamp mode before transcription.
+- `lyric_video_forge_transcribe_audio`: requires a ChatGPT-provided `audioFile` reference, fetches its temporary `download_url` server-side, and returns transcript text plus timed lyric JSON when STT credentials are configured.
+- `lyric_video_forge_export_srt`: stages approved timed lyrics for SRT caption export.
+- `lyric_video_forge_export_ass`: stages approved timed lyrics for styled ASS subtitle burn-in.
+- `lyric_video_forge_render_lyric_video`: stages final watermarked render using audio, approved captions, selected images, dissolve transitions, and QC artifacts.
 
 ## Data rules
 
@@ -52,4 +57,7 @@ https://YOUR-TUNNEL.ngrok-free.app/api/chatgpt/lyric-video-forge/sse
 - The app does not expose destructive write actions through MCP.
 - Asset generation, rendering, purchases, and credit-spending actions must stay behind the normal ILLCO app UI and user confirmation.
 - Transcript review accepts only lyrics/transcript text needed for the job.
+- Render, export, and transcription MCP actions expose the production workflow to ChatGPT, but final file upload, credit spend, render execution, and downloads still require Forge account/UI confirmation.
+- `transcribe_audio` uses `_meta["openai/fileParams"] = ["audioFile"]`; do not pass local paths or `file://` URLs. ChatGPT must attach the uploaded MP3 as `audioFile`.
+- Groq STT requires `GROQ_API_KEY`; OpenAI STT requires `OPENAI_API_KEY` or `CODEX_API_KEY`.
 - If OAuth is added later, scopes should be narrow and action-specific, for example `lyric_video:plan` and `lyric_video:review_transcript`.

@@ -29,6 +29,8 @@ export function getProductModuleHref(productId: string) {
   if (localRoute) return localRoute;
 
   const product = getProductById(rawProductId);
+  if (product?.loginUrl && (product.requiresLogin || product.ssoConnected)) return product.loginUrl;
+
   const productionUrl = product?.productionUrl?.trim();
   if (productionUrl) return productionUrl;
 
@@ -57,7 +59,10 @@ export function isPublicProductLaunchHref(href: string | null | undefined) {
 
   try {
     const url = new URL(value);
-    return ["illcoai.tech", "www.illcoai.tech", "illco-command.vercel.app"].includes(url.hostname.toLowerCase());
+    return [
+      "illcoai.tech",
+      "www.illcoai.tech",
+    ].includes(url.hostname.toLowerCase());
   } catch {
     return false;
   }
@@ -69,7 +74,6 @@ export function isInAppProductHref(href: string | null | undefined) {
   return (
     value.startsWith("/") ||
     value.startsWith("https://illcoai.tech/") ||
-    value.startsWith("https://illco-command.vercel.app/") ||
     isKnownProductProductionHref(value)
   );
 }

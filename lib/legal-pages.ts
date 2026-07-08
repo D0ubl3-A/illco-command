@@ -3,7 +3,7 @@ import type { Metadata } from "next";
 export const legalSiteUrl = "https://illcoai.tech";
 export const companyEmail = "admin@illcoai.tech";
 export const supportEmail = "admin@illcoai.tech";
-export const lastUpdated = "June 21, 2026";
+export const lastUpdated = "June 28, 2026";
 
 export type LegalPage = {
   slug: string;
@@ -45,6 +45,7 @@ export const legalPages: LegalPage[] = [
         heading: "AI Inputs And Outputs",
         body: [
           "When you submit prompts, files, media, or instructions into an AI product, those materials may be processed by model providers and infrastructure services needed to deliver the requested result.",
+          "Assistant voice features, including custom AI voice playback, may send the text you ask the assistant to speak to a voice provider such as ElevenLabs so audio can be generated and returned to your browser.",
           "Do not submit sensitive personal data, regulated health data, financial account credentials, private keys, or confidential third-party material unless a written agreement specifically covers that workflow.",
         ],
       },
@@ -70,8 +71,17 @@ export const legalPages: LegalPage[] = [
       {
         heading: "Products And Access",
         body: [
-          "Some products are self-serve subscription tools. Others require setup, manual review, onboarding, or a delivery window before access is activated. Product pages and checkout screens identify the expected access model.",
-          "ILLCO AI may improve, replace, suspend, or retire products when required for security, reliability, provider changes, legal compliance, or product quality.",
+          "ILLCO AI operates an AI app store and command marketplace that may include public apps, private apps, subscriptions, credits, managed workflows, custom builds, support tools, generated assistants, and app launch links connected to ILLCO Command.",
+          "Some products are self-serve subscription tools. Others require OAuth sign-in, account verification, setup, manual review, onboarding, provider credit allocation, or a delivery window before access is activated. Product pages, checkout screens, account pages, and support messages identify the expected access model.",
+          "ILLCO AI may improve, replace, suspend, migrate, rename, combine, or retire products when required for security, reliability, provider changes, legal compliance, customer safety, or product quality.",
+        ],
+      },
+      {
+        heading: "Accounts, OAuth, And Launch Handoff",
+        body: [
+          "Some tools use ILLCO Command login, Google OAuth, ChatGPT app OAuth, app-specific launch links, or third-party account handoff to connect your purchase, subscription, license, or support request to the right product.",
+          "You are responsible for keeping account credentials secure, using only accounts you are authorized to use, and promptly contacting support if you believe an account, token, checkout session, or app handoff was misused.",
+          "OAuth scopes, access tokens, session cookies, and account metadata are used only to provide account access, product launch, support, security, billing, and app functionality.",
         ],
       },
       {
@@ -85,6 +95,22 @@ export const legalPages: LegalPage[] = [
         heading: "Subscriptions And Billing",
         body: [
           "Subscription fees, trial periods, renewal terms, and plan limits are shown at checkout or on the relevant product page. Continued use after a trial or renewal date authorizes recurring billing until canceled.",
+          "Credits, usage-based services, provider costs, custom setup, one-time builds, media generation, voice generation, and manually delivered work may have separate limits, activation timing, and refund treatment described at checkout, in a quote, or in written project messages.",
+        ],
+      },
+      {
+        heading: "Custom Builds And Generated Assets",
+        body: [
+          "Custom AI builds, app sprites, assistant personalities, voice scripts, generated product images, generated videos, and workflow assets are delivered for the business purpose described in the order, quote, or project message.",
+          "Unless a signed agreement says otherwise, ILLCO AI may reuse general know-how, templates, internal tooling, non-confidential workflows, and reusable implementation patterns while keeping customer-specific confidential material protected.",
+          "Generated media and AI output may require review before commercial use. You are responsible for confirming rights, likeness permissions, brand claims, advertising compliance, platform rules, and any required disclosures before publishing.",
+        ],
+      },
+      {
+        heading: "Assistant And Voice Features",
+        body: [
+          "Site assistants and pet-style interface characters are routing and support tools. They may recommend products, collect project requirements, start a quote request, explain access paths, or play generated voice audio.",
+          "Custom AI voice playback uses configured voice-provider services such as ElevenLabs. Voice output is generated from text provided by the user or from assistant responses and is not a guarantee of human review or human availability.",
         ],
       },
       {

@@ -1,364 +1,266 @@
-﻿import type { Metadata } from "next";
+import Link from "next/link";
 import { notFound } from "next/navigation";
+import type { Metadata } from "next";
+import { ArrowLeft, ArrowRight, Bot, CheckCircle2, ExternalLink, ShieldCheck, Sparkles, Star, Workflow } from "lucide-react";
 
-import { CheckoutProductsSection } from "@/components/checkout-products-section";
-import { LeadCaptureForm } from "@/components/lead-capture-form";
+import { ProductCard } from "@/components/product/product-card";
+import { getProductById, products, type ProductRecord } from "@/lib/deployments";
+import { getProductViralImagePath } from "@/lib/product-marketing";
+import { getProductModuleHref } from "@/lib/product-routes";
 import {
-  categoryLabels,
-  customerProductName,
-  getAppFunnelState,
-  getAppLandingProduct,
-  getPrimaryAppVideo,
-  planNames,
-} from "@/lib/app-funnel";
-import { isMasterAccessUnlocked, isMasterUnlockableProduct } from "@/lib/master-access";
-import { getProductListingKicker, getProductViralImagePath } from "@/lib/product-marketing";
-import { getProductNotice } from "@/lib/product-notices";
-import { type ProductRecord } from "@/lib/deployments";
+  storefrontCategoryLabels,
+  storefrontDisplayName,
+  storefrontPriceLabel,
+  storefrontProductImage,
+  storefrontRating,
+  storefrontStage,
+} from "@/lib/storefront";
 
-type AppLandingPageProps = {
+type ProductPageProps = {
   params: Promise<{ productId: string }>;
 };
 
-const barzStudioProductIds = [
-  "ai-music-mastering-pro",
-  "rap-lyric-generator",
-  "song-analyzer-deploy",
-  "vault-select-exclusive-trap-beat",
-  "barz-beat-shop",
-  "cinematic-ai-music-video-production",
-  "full-hd-lyric-videos",
-  "youtube-rank-revival-ai-pro",
-  "testimonial-to-marketing-asset-generator",
-  "viral-stitch-ai",
-];
+const siteUrl = "https://illcoai.tech";
 
-const illcoAiVideoShowcase = [
-  {
-    src: "/media/sora-showcase/sora-razor-cut-music-edit.mp4",
-    label: "Razor-cut music edit",
-    note: "Fast visual rhythm for song promo edits.",
-  },
-  {
-    src: "/media/sora-showcase/sora-music-video-techno.mp4",
-    label: "Techno music-video look",
-    note: "Sora-generated motion concept for a music release.",
-  },
-  {
-    src: "/media/sora-showcase/sora-music-video-techno-alt.mp4",
-    label: "Alternate music visual",
-    note: "Second local Sora pass for creative direction.",
-  },
-];
-
-const appLandingProcessByCategory: Record<ProductRecord["category"], string[]> = {
-  command: [
-    "Open the app and confirm the active module state.",
-    "Choose one user-facing goal and input source.",
-    "Run the first validation pass for setup and access.",
-    "Review results against expected output and safety checks.",
-    "Share next steps with the team in one short handoff.",
-  ],
-  media: [
-    "Load the source assets and brief.",
-    "Set the output format, quality target, and destination.",
-    "Generate or edit until the first pass passes review.",
-    "Export with metadata and delivery notes.",
-    "Distribute or handoff the final output to next step.",
-  ],
-  automation: [
-    "Collect trigger inputs and desired result fields.",
-    "Define owners, escalation, and failure handling.",
-    "Connect channels and validate each integration.",
-    "Run the workflow once with sample traffic.",
-    "Review logs and adjust rules for reliability.",
-  ],
-  commerce: [
-    "Define offer, price, and checkout journey.",
-    "Run a test purchase or lead funnel path.",
-    "Confirm payment, confirmation, and receipt generation.",
-    "Validate post-purchase automation and notifications.",
-    "Measure close rate, objections, and completion.",
-  ],
-  realEstate: [
-    "Collect the listing or service input with context.",
-    "Assign lead source, owner, and required follow-ups.",
-    "Schedule tours or discovery steps and track status.",
-    "Deliver documents and communication in one lane.",
-    "Close, recycle, or escalate each opportunity.",
-  ],
-  backend: [
-    "Map required endpoint shape and error contracts.",
-    "Connect secrets, permissions, and auth checks.",
-    "Validate payloads through healthy request flows.",
-    "Monitor response behavior and retry paths.",
-    "Ship fixes with clear rollback and test evidence.",
-  ],
-  experimental: [
-    "Define hypothesis and measurable success criterion.",
-    "Build a minimal test path with explicit limits.",
-    "Collect feedback and document known limitations.",
-    "Run acceptance checks and log failures.",
-    "Iterate quickly and harden only proven paths.",
-  ],
-};
-
-function getAppLandingProcess(product: ProductRecord) {
-  return appLandingProcessByCategory[product.category];
+function getAccessLabel(product: ProductRecord) {
+  if (product.ssoConnected) return "Google OAuth";
+  if (product.requiresLogin) return "Login required";
+  return "Open access";
 }
 
-export async function generateMetadata({ params }: AppLandingPageProps): Promise<Metadata> {
+function getPrimaryCta(product: ProductRecord) {
+  if (product.primaryCta?.trim()) return product.primaryCta.trim();
+  if (product.paymentUrl) return "Checkout";
+  if (product.ssoConnected || product.requiresLogin) return "Open with Google";
+  return "Open app";
+}
+
+export async function generateMetadata({ params }: ProductPageProps): Promise<Metadata> {
   const { productId } = await params;
-  const product = getAppLandingProduct(productId);
+  const product = getProductById(productId);
   if (!product) return {};
-  const state = getAppFunnelState(product);
-  const productName = customerProductName(product);
-  const image = getProductViralImagePath(product);
-  const url = `/apps/${product.id}`;
+
+  const productName = storefrontDisplayName(product);
+  const image = storefrontProductImage(product);
+  const description = product.description || `${productName} on the ILLCO AI App Store.`;
 
   return {
-    title: `${productName} Product Listing`,
-    description: `${state.summary} Status: ${state.statusLabel}.`,
+    title: `${productName} | ILLCO AI App Store`,
+    description,
     alternates: {
-      canonical: url,
+      canonical: `${siteUrl}/apps/${product.id}`,
     },
     openGraph: {
-      title: `${productName} | ILLCO AI`,
-      description: state.summary,
-      url,
+      title: `${productName} | ILLCO AI App Store`,
+      description,
+      url: `${siteUrl}/apps/${product.id}`,
       type: "website",
-      images: image ? [{ url: image, width: 1600, height: 900, alt: `${productName} product image` }] : undefined,
+      images: image ? [{ url: image, width: 1600, height: 900, alt: `${productName} preview` }] : undefined,
     },
     twitter: {
       card: "summary_large_image",
-      title: `${productName} | ILLCO AI`,
-      description: state.summary,
+      title: `${productName} | ILLCO AI App Store`,
+      description,
       images: image ? [image] : undefined,
     },
   };
 }
 
-export default async function AppLandingPage({ params }: AppLandingPageProps) {
+export default async function ProductPage({ params }: ProductPageProps) {
   const { productId } = await params;
-  const product = getAppLandingProduct(productId);
+  const product = getProductById(productId);
   if (!product) notFound();
 
-  const state = getAppFunnelState(product);
-  const video = getPrimaryAppVideo(product.id);
-  const category = categoryLabels[product.category];
-  const productName = customerProductName(product);
-  const masterUnlocked = (await isMasterAccessUnlocked()) && isMasterUnlockableProduct(product.id);
-  const isBarzStudio = product.id === "barz-web-studio";
-  const isIllcoAiVideo = product.id === "illco-ai-video";
-  const productHeroImage = getProductViralImagePath(product);
-  const listingKicker = getProductListingKicker(product);
-  const productNotice = getProductNotice(product.id);
-  const moduleTarget = state.safeUrl?.startsWith("http") ? "_blank" : undefined;
-  const landingHref = `/apps/${encodeURIComponent(product.id)}`;
-  const hasSeparateProductHref = Boolean((masterUnlocked || state.canOpen) && state.safeUrl && state.safeUrl !== landingHref);
-  const processSteps = getAppLandingProcess(product);
+  const productName = storefrontDisplayName(product);
+  const appLandingProductImage = storefrontProductImage(product) || getProductViralImagePath(product);
+  const launchHref = getProductModuleHref(product.id);
+  const launchTarget = /^https?:\/\//i.test(launchHref) ? "_blank" : undefined;
+  const launchRel = launchTarget ? "noreferrer" : undefined;
+  const relatedProducts = products.filter((item) => item.id !== product.id && item.category === product.category).slice(0, 4);
+  const googleOAuthHref = `/api/account/google/start?returnTo=${encodeURIComponent(`/apps/${product.id}`)}`;
 
   return (
-    <main id="main-content" className="fallbackPage appLandingPage">
-      <div className="workspace appLandingWorkspace">
-        <nav className="appLandingNav" aria-label="App landing navigation">
-          <a className="brandBlock" href="/">
-            <span className="brandGlyph">IC</span>
-            <strong>ILLCO Command</strong>
-          </a>
-          <div>
-            <a className="button secondary" href="/#apps">All Modules</a>
-            <a className="button secondary" href="#checkout-products">Products</a>
-            <a className="button secondary" href="/#services">Services</a>
-            <a className="button primary" href="#request">Request Setup</a>
-          </div>
-        </nav>
+    <main id="main-content" className="bg-slate-950">
+      <section className="border-b border-white/10 bg-[radial-gradient(circle_at_18%_18%,rgba(68,215,255,0.11),transparent_30%),radial-gradient(circle_at_82%_14%,rgba(255,186,58,0.10),transparent_26%),linear-gradient(180deg,rgba(7,10,16,0.98),rgba(5,7,12,0.98))]">
+        <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8 lg:py-10">
+          <Link
+            href="/products"
+            className="inline-flex items-center gap-2 rounded-[8px] border border-white/10 bg-white/[0.04] px-3 py-2 text-sm font-semibold text-white transition hover:border-cyan-300/40 hover:bg-white/[0.08]"
+          >
+            <ArrowLeft className="h-4 w-4" />
+            Back to catalog
+          </Link>
 
-        <section className="panel appLandingHero">
-          <div className="appLandingCopy">
-            <span className={`readinessPill ${masterUnlocked ? "ready" : state.status === "soon" ? "pending" : state.status === "setup" ? "neutral" : "ready"}`}>
-              {masterUnlocked ? "Master unlocked" : state.statusLabel}
-            </span>
-            <h1>{productName}</h1>
-            <strong className="appLandingKicker">{listingKicker}</strong>
-            <p>{state.title}. {state.summary}</p>
-            {productNotice ? (
-              <aside className="activationNotice" aria-label={`${productName} activation notice`}>
-                <span>Activation notice</span>
-                <strong>{productNotice.title}</strong>
-                <p>{productNotice.body}</p>
-                <em>{productNotice.meta}</em>
-              </aside>
-            ) : null}
-            <div className="appLandingActions">
-              {masterUnlocked && state.safeUrl ? (
-                <a className="button primary" href={state.safeUrl} target={moduleTarget} rel={moduleTarget ? "noreferrer" : undefined}>
-                  Open Unlocked Module
-                </a>
-              ) : state.canCheckout ? (
-                <form action="/api/subscriptions/checkout" method="post" className="inlineCheckoutForm">
-                  <input type="hidden" name="planId" value={state.planId} />
-                  <input type="hidden" name="productId" value={product.id} />
-                  <button className="button primary" type="submit">Start Subscription</button>
-                </form>
-              ) : (
-                <a className="button primary" href="#request">Request Setup</a>
-              )}
-              {hasSeparateProductHref && state.safeUrl ? (
-                <a className="button secondary" href={state.safeUrl} target={moduleTarget} rel={moduleTarget ? "noreferrer" : undefined}>Open Product</a>
-              ) : null}
-              {video?.youtubeUrl ? (
-                <a className="button secondary" href={video.youtubeUrl} target="_blank" rel="noreferrer">
-                  {video.mode === "full-walkthrough" ? "Watch Full Tutorial" : "Watch Proof"}
-                </a>
-              ) : null}
-            </div>
-          </div>
-          <div className="appLandingSide">
-            {isIllcoAiVideo ? (
-              <div className="appLandingVideoShowcase" aria-label="Local Sora music video showcase">
-                <div className="appLandingVideoFrame">
-                  <video
-                    src={illcoAiVideoShowcase[0].src}
-                    poster={productHeroImage || undefined}
-                    autoPlay
-                    muted
-                    loop
-                    playsInline
-                    controls
-                    preload="metadata"
-                  />
-                  <div className="appLandingVideoCaption">
-                    <span>Local Sora clip</span>
-                    <strong>{illcoAiVideoShowcase[0].label}</strong>
-                  </div>
-                </div>
-                <div className="soraClipRail">
-                  {illcoAiVideoShowcase.slice(1).map((clip) => (
-                    <article className="soraClipCard" key={clip.src}>
-                      <video src={clip.src} muted loop playsInline controls preload="metadata" />
-                      <div>
-                        <strong>{clip.label}</strong>
-                        <span>{clip.note}</span>
-                      </div>
-                    </article>
-                  ))}
-                </div>
-              </div>
-            ) : productHeroImage ? (
-              <div className="appLandingProductImage">
-                <img src={productHeroImage} alt={`${productName} product preview`} />
-              </div>
-            ) : null}
-            <div className="appLandingFacts">
-              <Fact label="Category" value={category} tone="neutral" />
-              <Fact label="Plan" value={planNames[state.planId]} tone="neutral" />
-              <Fact label="Access" value={masterUnlocked ? "Master unlocked" : state.accessLabel} tone={masterUnlocked || state.canCheckout ? "good" : "neutral"} />
-              <Fact label="Proof" value={state.proofLabel} tone={video ? "good" : "warn"} />
-            </div>
-          </div>
-        </section>
-
-        {isBarzStudio ? (
-          <CheckoutProductsSection
-            productIds={barzStudioProductIds}
-            eyebrow="Studio Media Package"
-            title="Barz Web Studio Package"
-            description="One focused music and media stack for artists: lyrics, song analysis, mastering, beat purchase, lyric videos, cinematic music videos, YouTube revival, proof assets, and Viral Stitch."
-          />
-        ) : (
-          <CheckoutProductsSection />
-        )}
-
-        <section className="appLandingGrid">
-          <article className="panel appLandingCard">
-            <div className="panelHeader">
-              <div>
-                <h2>Why this app exists</h2>
-                <p>Each app landing page gives buyers a clean decision path with proof, access guidance, and a next best action.</p>
-              </div>
-            </div>
-            <div className="appValueStack">
-              <ValueItem title="Workflow focus" copy={`Built for the ${category.toLowerCase()} lane inside the ILLCO app catalog.`} />
-              <ValueItem title="Customer-safe access" copy={state.canCheckout ? "Self-serve checkout is available because the app, proof, and plan gates pass." : "Guided setup keeps access clean until the right package is confirmed."} />
-              <ValueItem title="Proof-led buying" copy={video ? "A proof or tutorial link is available before buyers commit." : "A setup request is the right next step while proof is prepared."} />
-            </div>
-          </article>
-
-          <article className="panel appLandingCard">
-            <div className="panelHeader">
-              <div>
-                <h2>Proof and walkthrough</h2>
-                <p>Full tutorials are prioritized when they include slower pacing, narration, highlights, and captions.</p>
-              </div>
-            </div>
-            {video?.embedUrl ? (
-              <div className="appVideoFrame">
-                <iframe
-                  title={`${productName} walkthrough`}
-                  src={`${video.embedUrl}?rel=0`}
-                  loading="lazy"
-                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                  allowFullScreen
+          <div className="mt-6 grid gap-10 lg:grid-cols-[0.96fr_1.04fr] lg:items-start">
+            <div>
+              <div className="overflow-hidden rounded-[8px] border border-white/10 bg-slate-900">
+                <img
+                  src={appLandingProductImage}
+                  alt={`${productName} preview`}
+                  className="aspect-[4/3] w-full object-cover"
                 />
               </div>
-            ) : (
-              <div className="accountNote">
-                <strong>Tutorial pending</strong>
-                <span>Request setup for a guided walkthrough and access details.</span>
-              </div>
-            )}
-          </article>
 
-          <article className="panel appLandingCard">
-            <div className="panelHeader">
-              <div>
-                <h2>Suggested process</h2>
-                <p>Use this default operating path when setting up and testing this app.</p>
-              </div>
-            </div>
-            <div className="accountNote">
-              <ol>
-                {processSteps.map((step, index) => (
-                  <li key={`${product.id}-process-${index}`}>{step}</li>
+              <div className="mt-4 grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
+                {[
+                  { label: "Stage", value: storefrontStage(product), icon: CheckCircle2 },
+                  { label: "Category", value: storefrontCategoryLabels[product.category], icon: Bot },
+                  { label: "Rating", value: storefrontRating(product), icon: Star },
+                  { label: "Access", value: getAccessLabel(product), icon: ShieldCheck },
+                ].map(({ label, value, icon: Icon }) => (
+                  <div key={label} className="rounded-[8px] border border-white/10 bg-white/[0.04] p-4">
+                    <Icon className="h-5 w-5 text-cyan-300" />
+                    <div className="mt-3 text-xs uppercase tracking-[0.2em] text-slate-500">{label}</div>
+                    <div className="mt-1 text-sm font-semibold text-white">{value}</div>
+                  </div>
                 ))}
-              </ol>
+              </div>
             </div>
-          </article>
-        </section>
 
-        <section id="request" className="panel appLandingRequest">
-          <div className="panelHeader">
             <div>
-              <h2>Request {productName}</h2>
-              <p>Tell us what you want handled first. We will route it to the right app, service package, or enterprise setup.</p>
+              <div className="flex flex-wrap gap-2">
+                <span className="inline-flex items-center gap-2 rounded-[8px] border border-cyan-400/30 bg-cyan-400/10 px-3 py-1.5 text-xs font-semibold text-cyan-100">
+                  <Workflow className="h-3.5 w-3.5" />
+                  {storefrontCategoryLabels[product.category]}
+                </span>
+                <span className="inline-flex items-center gap-2 rounded-[8px] border border-white/10 bg-white/[0.04] px-3 py-1.5 text-xs font-medium text-slate-200">
+                  {storefrontStage(product)}
+                </span>
+                {product.saleStatus ? (
+                  <span className="inline-flex items-center gap-2 rounded-[8px] border border-white/10 bg-white/[0.04] px-3 py-1.5 text-xs font-medium text-slate-200">
+                    {product.saleStatus}
+                  </span>
+                ) : null}
+                {product.ssoConnected ? (
+                  <span className="inline-flex items-center gap-2 rounded-[8px] border border-emerald-400/30 bg-emerald-400/10 px-3 py-1.5 text-xs font-semibold text-emerald-100">
+                    <ShieldCheck className="h-3.5 w-3.5" />
+                    Google OAuth
+                  </span>
+                ) : null}
+              </div>
+
+              <h1 className="mt-5 text-4xl font-semibold tracking-tight text-white sm:text-5xl">{productName}</h1>
+              <p className="mt-5 max-w-2xl text-lg leading-8 text-slate-300">{product.description}</p>
+
+              <div className="mt-6 flex flex-wrap gap-2">
+                {[product.owner, product.accessModel, product.fulfillmentPath, product.checkoutOfferId].filter(Boolean).map((item) => (
+                  <span key={item} className="rounded-[8px] border border-white/10 bg-white/[0.03] px-3 py-2 text-sm text-slate-300">
+                    {item}
+                  </span>
+                ))}
+              </div>
+
+              <div className="mt-8 rounded-[8px] border border-white/10 bg-white/[0.03] p-6">
+                <div className="flex flex-col gap-5 sm:flex-row sm:items-end sm:justify-between">
+                  <div>
+                    <div className="text-xs uppercase tracking-[0.2em] text-slate-500">Price</div>
+                    <div className="mt-1 text-4xl font-semibold text-cyan-200">{storefrontPriceLabel(product)}</div>
+                    <p className="mt-2 max-w-lg text-sm leading-6 text-slate-400">
+                      {product.paymentUrl ? "Checkout is available through the product payment path." : "Pricing is quote-based or handled after review."}
+                    </p>
+                  </div>
+
+                  <div className="flex flex-wrap gap-3">
+                    <a
+                      href={launchHref}
+                      target={launchTarget}
+                      rel={launchRel}
+                      className="inline-flex items-center gap-2 rounded-[8px] border border-cyan-400/35 bg-cyan-400 px-4 py-2.5 text-sm font-semibold text-slate-950 transition hover:bg-cyan-300"
+                    >
+                      {getPrimaryCta(product)}
+                      <ArrowRight className="h-4 w-4" />
+                    </a>
+                    {product.ssoConnected || product.requiresLogin ? (
+                      <a
+                        href={googleOAuthHref}
+                        className="inline-flex items-center gap-2 rounded-[8px] border border-white/10 bg-white/[0.04] px-4 py-2.5 text-sm font-semibold text-white transition hover:border-cyan-300/40 hover:bg-white/[0.08]"
+                      >
+                        Google OAuth
+                        <ShieldCheck className="h-4 w-4" />
+                      </a>
+                    ) : null}
+                    {product.paymentUrl ? (
+                      <a
+                        href={product.paymentUrl}
+                        target="_blank"
+                        rel="noreferrer"
+                        className="inline-flex items-center gap-2 rounded-[8px] border border-white/10 bg-white/[0.04] px-4 py-2.5 text-sm font-semibold text-white transition hover:border-cyan-300/40 hover:bg-white/[0.08]"
+                      >
+                        Checkout
+                        <ExternalLink className="h-4 w-4" />
+                      </a>
+                    ) : null}
+                    {product.id === "lyric-video-forge" ? (
+                      <Link
+                        href="/tools/lyric-video-forge"
+                        className="inline-flex items-center gap-2 rounded-[8px] border border-white/10 bg-white/[0.04] px-4 py-2.5 text-sm font-semibold text-white transition hover:border-cyan-300/40 hover:bg-white/[0.08]"
+                      >
+                        ChatGPT tool
+                        <Sparkles className="h-4 w-4" />
+                      </Link>
+                    ) : null}
+                  </div>
+                </div>
+              </div>
+
+              <div className="mt-6 grid gap-3 sm:grid-cols-3">
+                {[
+                  { label: "Login", value: product.loginUrl ? "Connected" : "Not set" },
+                  { label: "Live URL", value: product.liveUrl || product.productionUrl || "Not set" },
+                  { label: "Demo", value: product.demoUrl || product.demoEmbedUrl || "Not set" },
+                ].map((item) => (
+                  <div key={item.label} className="rounded-[8px] border border-white/10 bg-white/[0.04] p-4">
+                    <div className="text-xs uppercase tracking-[0.2em] text-slate-500">{item.label}</div>
+                    <div className="mt-2 break-words text-sm font-semibold text-white">{item.value}</div>
+                  </div>
+                ))}
+              </div>
             </div>
           </div>
-          <LeadCaptureForm
-            serviceId={state.canCheckout ? state.planId : `app-${product.id}`}
-            productName={productName}
-            buttonLabel={state.canCheckout ? "Ask Before Subscribing" : "Request Setup"}
-          />
+        </div>
+      </section>
+
+      {product.demoEmbedUrl ? (
+        <section className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
+          <div className="rounded-[8px] border border-white/10 bg-white/[0.03] p-4 sm:p-5">
+            <div className="mb-4">
+              <h2 className="text-2xl font-semibold text-white">Proof</h2>
+              <p className="mt-2 text-sm leading-6 text-slate-400">Embedded demo or proof path for the current product.</p>
+            </div>
+            <div className="overflow-hidden rounded-[8px] border border-white/10 bg-slate-900">
+              <iframe
+                title={`${productName} demo`}
+                src={`${product.demoEmbedUrl}${product.demoEmbedUrl.includes("?") ? "&" : "?"}rel=0`}
+                className="h-[32rem] w-full"
+                loading="lazy"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                allowFullScreen
+              />
+            </div>
+          </div>
         </section>
-      </div>
+      ) : null}
+
+      <section className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
+        <div className="flex items-end justify-between gap-4">
+          <div>
+            <h2 className="text-3xl font-semibold tracking-tight text-white">Related apps</h2>
+            <p className="mt-2 text-sm leading-6 text-slate-400">Same category, different angle.</p>
+          </div>
+        </div>
+
+        {relatedProducts.length > 0 ? (
+          <div className="mt-6 grid gap-5 lg:grid-cols-2 xl:grid-cols-4">
+            {relatedProducts.map((item) => (
+              <ProductCard key={item.id} product={item} />
+            ))}
+          </div>
+        ) : (
+          <div className="mt-6 rounded-[8px] border border-white/10 bg-white/[0.03] p-8 text-sm text-slate-400">
+            No related apps in this category yet.
+          </div>
+        )}
+      </section>
     </main>
-  );
-}
-
-function Fact({ label, value, tone }: { label: string; value: string; tone: "good" | "warn" | "neutral" }) {
-  return (
-    <div className={`factCard ${tone}`}>
-      <span>{label}</span>
-      <strong>{value}</strong>
-    </div>
-  );
-}
-
-function ValueItem({ title, copy }: { title: string; copy: string }) {
-  return (
-    <div className="accountNote">
-      <strong>{title}</strong>
-      <span>{copy}</span>
-    </div>
   );
 }

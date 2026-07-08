@@ -4,6 +4,7 @@ import { getProductById, type ProductRecord } from "@/lib/deployments";
 import { getConfigurationStatus } from "@/lib/env";
 import { getMonetizationPlan } from "@/lib/monetization";
 import { getProductModuleHref, isPublicProductLaunchHref } from "@/lib/product-routes";
+import { storefrontPriceLabel, storefrontProductImage } from "@/lib/storefront";
 import { canDirectCheckoutPublicProduct } from "@/lib/public-checkout";
 
 type CheckoutProductsSectionProps = {
@@ -16,11 +17,12 @@ type CheckoutProductsSectionProps = {
 
 const checkoutProductProcessById: Record<string, string[]> = {
   "think-for-me-mode": [
-    "Define the business outcome and choose one measurable output.",
-    "Open the helper and collect context in one pass.",
-    "Generate a safe first attempt and review it.",
-    "Capture action, owner, and next step.",
-    "Execute repeatably and document what changed.",
+    "Define the objective and what outcome defines success.",
+    "Collect context, constraints, source files, and guardrails in one pass.",
+    "Run the operator to generate a ready-to-execute plan.",
+    "Review and refine the plan before first execution.",
+    "Assign owners, priorities, and a review checkpoint.",
+    "Execute once, then capture lessons for the next cycle.",
   ],
   "ai-companion-conversational-intake": [
     "Capture the user context and source.",
@@ -33,11 +35,11 @@ const checkoutProductProcessById: Record<string, string[]> = {
 
 const checkoutProductProcessByCategory: Record<ProductRecord["category"], string[]> = {
   command: [
-    "Capture the request and define the output.",
-    "Choose the right command or specialist lane.",
-    "Run the first pass and confirm expected behavior.",
-    "Track results and handoff to the next owner.",
-    "Measure completion against the target outcome.",
+    "Define the business objective and measurable outcome.",
+    "Gather context, constraints, and source inputs.",
+    "Run the Operator path to generate the first execution plan.",
+    "Review, harden, and assign ownership to action owners.",
+    "Execute quickly and reuse the winning playbook across future runs.",
   ],
   media: [
     "Collect source files and output format.",
@@ -88,7 +90,7 @@ export function CheckoutProductsSection({
   categoryFilter,
   eyebrow = "Direct Checkout",
   title = "Check Out Our Products",
-  description = "Pick a ready AI tool or request setup when your workflow needs a custom handoff. Product cards focus on outcomes, proof, and the next useful action.",
+  description = "Pick a proven AI system that improves planning, decision-making, and execution without you rebuilding processes from scratch.",
 }: CheckoutProductsSectionProps = {}) {
   const config = getConfigurationStatus();
   const productIdSet = productIds ? new Set(productIds) : null;
@@ -130,12 +132,16 @@ export function CheckoutProductsSection({
               </header>
               <div className="checkoutProductGrid">
                 {products.map((product) => {
-                  const appProduct = getProductById(product.appProductId);
+                  const offerProduct = getProductById(product.id);
+                  const appProduct = getProductById(product.appProductId) || offerProduct;
+                  const priceProduct = offerProduct || appProduct;
                   const plan = appProduct ? getMonetizationPlan(appProduct.id) : null;
                   const moduleHref = appProduct ? getProductModuleHref(appProduct.id) : "/#request";
                   const appLandingHref = appProduct ? `/apps/${encodeURIComponent(appProduct.id)}` : "/#request";
                   const moduleTarget = moduleHref.startsWith("http") ? "_blank" : undefined;
-                  const imagePath = getCheckoutProductImagePath(product);
+                  const imagePath = offerProduct ? storefrontProductImage(offerProduct) : getCheckoutProductImagePath(product);
+                  const imageHref = offerProduct ? `/apps/${encodeURIComponent(offerProduct.id)}` : appLandingHref;
+                  const priceLabel = priceProduct ? storefrontPriceLabel(priceProduct) : "Custom";
                   const productReady = Boolean(appProduct && canDirectCheckoutPublicProduct(appProduct.id));
                   const paymentConfigured = Boolean(plan && config.subscriptionsReady && config.planPrices[plan.funnelPlanId]);
                   const checkoutReady = Boolean(
@@ -151,14 +157,17 @@ export function CheckoutProductsSection({
 
                   return (
                     <article className={`checkoutProductCard ${checkoutReady ? "isReady" : "isSetup"}`} key={product.id}>
-                      <img className="checkoutProductThumb" src={imagePath} alt={`${product.name} product preview`} loading="lazy" />
+                      <a className="checkoutProductImageLink" href={imageHref} aria-label={`View ${product.name} details`}>
+                        <img className="checkoutProductThumb" src={imagePath} alt={`${product.name} product preview`} loading="lazy" />
+                      </a>
                       <span>{product.category}</span>
                       <strong>{product.name}</strong>
+                      <div className="checkoutProductPrice">{priceLabel}</div>
                       <p>{product.summary}</p>
                       <em>{statusLabel}</em>
                       {processSteps.length ? (
                         <div className="accountNote">
-                          <strong>Suggested process</strong>
+                          <strong>How it works</strong>
                           <ol>
                             {processSteps.map((step, index) => (
                               <li key={`${product.id}-process-${index}`}>{step}</li>

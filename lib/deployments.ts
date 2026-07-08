@@ -1,3 +1,5 @@
+import appRegistrySnapshot from "@/data/apps.json";
+
 export type DeploymentProject = {
   name: string;
   productionUrl: string | null;
@@ -21,60 +23,108 @@ export type ProductRecord = DeploymentProject & {
   subscriptionTier: "Core" | "Pro" | "Studio" | "Enterprise";
   licenseMode: "subscription" | "seat" | "usage" | "internal";
   isLive: boolean;
+  registrySource?: "deployment-snapshot" | "illco-command-registry";
+  description?: string;
+  imageUrl?: string;
+  liveUrl?: string;
+  paymentUrl?: string;
+  loginUrl?: string;
+  primaryCta?: string;
+  stage?: string;
+  saleStatus?: string;
+  owner?: string;
+  checkoutOfferId?: string;
+  accessModel?: string;
+  fulfillmentPath?: string;
+  priceCents?: number;
+  displayed?: boolean;
+  ssoConnected?: boolean;
+  requiresLogin?: boolean;
+  demoUrl?: string;
+  demoEmbedUrl?: string;
 };
 
 type ProductOverride = Partial<Pick<ProductRecord, "displayName" | "category" | "subscriptionTier" | "licenseMode">>;
+
+type IllcoRegistryEntry = {
+  id?: string;
+  name?: string;
+  type?: string;
+  stage?: string;
+  liveUrl?: string;
+  paymentUrl?: string;
+  loginUrl?: string;
+  ssoConnected?: boolean;
+  requiresLogin?: boolean;
+  displayed?: boolean;
+  demoUrl?: string;
+  demoEmbedUrl?: string;
+  owner?: string;
+  notes?: string;
+  checkoutOfferId?: string;
+  saleStatus?: string;
+  fulfillmentPath?: string;
+  priceCents?: number;
+  primaryCta?: string;
+  imageUrl?: string;
+  accessModel?: string;
+};
+
+type IllcoRegistrySnapshot = {
+  updatedAt?: string;
+  apps?: IllcoRegistryEntry[];
+};
 
 export const deploymentSnapshotTakenAt = "2026-05-20T09:24:00-07:00";
 export const vercelScope = "illcoai";
 
 export const deploymentProjects = [
-  { name: "ai-companions-recovered", productionUrl: "https://illco-command.vercel.app", updated: "production Commander interface", nodeVersion: "20.x" },
+  { name: "ai-companions-recovered", productionUrl: "https://illcoai.tech", updated: "production Commander interface", nodeVersion: "20.x" },
   {
     name: "ai-companion-conversational-intake",
-    productionUrl: "https://illco-command.vercel.app/apps/ai-companion-conversational-intake",
+    productionUrl: "https://illcoai.tech/apps/ai-companion-conversational-intake",
     updated: "Command module landing",
     nodeVersion: "20.x",
   },
   {
     name: "ai-companion-prompt-studio",
-    productionUrl: "https://illco-command.vercel.app/apps/ai-companion-prompt-studio",
+    productionUrl: "https://illcoai.tech/apps/ai-companion-prompt-studio",
     updated: "Command module landing",
     nodeVersion: "20.x",
   },
   {
     name: "ai-companion-content-production",
-    productionUrl: "https://illco-command.vercel.app/apps/ai-companion-content-production",
+    productionUrl: "https://illcoai.tech/apps/ai-companion-content-production",
     updated: "Command module landing",
     nodeVersion: "20.x",
   },
   {
     name: "ai-companion-sales-agent-handoff",
-    productionUrl: "https://illco-command.vercel.app/apps/ai-companion-sales-agent-handoff",
+    productionUrl: "https://illcoai.tech/apps/ai-companion-sales-agent-handoff",
     updated: "Command module landing",
     nodeVersion: "20.x",
   },
   {
     name: "ai-companion-command-routing",
-    productionUrl: "https://illco-command.vercel.app/apps/ai-companion-command-routing",
+    productionUrl: "https://illcoai.tech/apps/ai-companion-command-routing",
     updated: "Command module landing",
     nodeVersion: "20.x",
   },
   {
     name: "ai-companion-workspace-access",
-    productionUrl: "https://illco-command.vercel.app/apps/ai-companion-workspace-access",
+    productionUrl: "https://illcoai.tech/apps/ai-companion-workspace-access",
     updated: "Command module landing",
     nodeVersion: "20.x",
   },
   {
     name: "think-for-me-mode",
-    productionUrl: "https://illco-command.vercel.app/tools/think-for-me-mode",
+    productionUrl: "https://illcoai.tech/tools/think-for-me-mode",
     updated: "premium helper product",
     nodeVersion: "20.x",
   },
   {
     name: "lyric-video-forge",
-    productionUrl: "https://illco-command.vercel.app/tools/lyric-video-forge",
+    productionUrl: "https://illcoai.tech/tools/lyric-video-forge",
     updated: "Agent SDK lyric video workflow",
     nodeVersion: "20.x",
   },
@@ -102,7 +152,7 @@ export const deploymentProjects = [
   { name: "tshirtworkshop", productionUrl: "https://tshirtworkshop.vercel.app", updated: "31d", nodeVersion: "24.x" },
   { name: "bigostreets", productionUrl: "https://bigostreets.vercel.app", updated: "40d", nodeVersion: "24.x" },
   { name: "green-gator-pools", productionUrl: "https://green-gator-pools.vercel.app", updated: "41d", nodeVersion: "24.x" },
-  { name: "battle-rap-ai", productionUrl: "https://battle-rap-ai.vercel.app", updated: "42d", nodeVersion: "24.x" },
+  { name: "battle-rap-ai", productionUrl: "https://illcoai.tech", updated: "42d", nodeVersion: "24.x" },
   { name: "diss-track-site", productionUrl: "https://diss-track-site.vercel.app", updated: "43d", nodeVersion: "24.x" },
   { name: "debate-league-jcld", productionUrl: "https://debate-league-jcld-illcoai.vercel.app", updated: "43d", nodeVersion: "24.x" },
   { name: "bigo-live-news", productionUrl: "https://bigo-live-news.vercel.app", updated: "43d", nodeVersion: "24.x" },
@@ -279,6 +329,10 @@ function slugify(value: string) {
     .replace(/^-+|-+$/g, "");
 }
 
+function normalizeProductId(value: string) {
+  return slugify(value || "illco-app");
+}
+
 function toDisplayName(value: string) {
   return value
     .replace(/^illcoai-/, "ILLCO AI ")
@@ -303,6 +357,14 @@ function categoryFor(name: string): ProductCategory {
   return "experimental";
 }
 
+function categoryForRegistryApp(app: IllcoRegistryEntry): ProductCategory {
+  const type = String(app.type || "").toLowerCase();
+  if (type === "creative" || type === "music") return "media";
+  if (type === "growth") return "commerce";
+  if (type === "ops") return "command";
+  return categoryFor(`${app.id || ""} ${app.name || ""} ${app.notes || ""}`);
+}
+
 function tierFor(category: ProductCategory, name: string): ProductRecord["subscriptionTier"] {
   if (/(enterprise|platform|hq|workstation|mastering|command)/i.test(name)) return "Enterprise";
   if (category === "media" || category === "automation") return "Studio";
@@ -317,7 +379,22 @@ function licenseModeFor(category: ProductCategory, name: string): ProductRecord[
   return "seat";
 }
 
-export const products = deploymentProjects.map((project) => {
+function publicUrl(value: string | null | undefined) {
+  const url = String(value || "").trim();
+  if (!/^https?:\/\//i.test(url)) return null;
+  try {
+    const parsed = new URL(url);
+    if (["localhost", "127.0.0.1", "0.0.0.0"].includes(parsed.hostname.toLowerCase())) return null;
+  } catch {
+    return null;
+  }
+  return url;
+}
+
+const registrySnapshot = appRegistrySnapshot as IllcoRegistrySnapshot;
+export const illcoCommandRegistryUpdatedAt = registrySnapshot.updatedAt || deploymentSnapshotTakenAt;
+
+const deploymentProducts = deploymentProjects.map((project) => {
   const override = productOverridesByName[project.name] || null;
   const category = override?.category || categoryFor(project.name);
   return {
@@ -328,7 +405,106 @@ export const products = deploymentProjects.map((project) => {
     subscriptionTier: override?.subscriptionTier || tierFor(category, project.name),
     licenseMode: override?.licenseMode || licenseModeFor(category, project.name),
     isLive: Boolean(project.productionUrl),
+    registrySource: "deployment-snapshot",
   };
+}) satisfies ProductRecord[];
+
+function registryProductFromApp(app: IllcoRegistryEntry): ProductRecord | null {
+  const rawId = String(app.id || app.name || "").trim();
+  const displayName = String(app.name || app.id || "").trim();
+  const id = normalizeProductId(rawId || displayName);
+  if (!id || !displayName) return null;
+
+  const category = categoryForRegistryApp(app);
+  const liveUrl = publicUrl(app.liveUrl);
+  const stage = String(app.stage || "Registry").trim();
+
+  return {
+    name: rawId || id,
+    productionUrl: liveUrl,
+    updated: stage,
+    nodeVersion: "22.x",
+    id,
+    displayName,
+    category,
+    subscriptionTier: tierFor(category, `${displayName} ${stage}`),
+    licenseMode: licenseModeFor(category, `${displayName} ${app.type || ""}`),
+    isLive: Boolean(liveUrl && /production|live|verified|public/i.test(`${stage} ${app.saleStatus || ""}`)),
+    registrySource: "illco-command-registry",
+    description: String(app.notes || "").trim() || undefined,
+    imageUrl: String(app.imageUrl || "").trim() || undefined,
+    liveUrl: liveUrl || undefined,
+    paymentUrl: publicUrl(app.paymentUrl) || undefined,
+    loginUrl: publicUrl(app.loginUrl) || undefined,
+    primaryCta: String(app.primaryCta || "").trim() || undefined,
+    stage,
+    saleStatus: String(app.saleStatus || "").trim() || undefined,
+    owner: String(app.owner || "").trim() || undefined,
+    checkoutOfferId: String(app.checkoutOfferId || "").trim() || undefined,
+    accessModel: String(app.accessModel || "").trim() || undefined,
+    fulfillmentPath: String(app.fulfillmentPath || "").trim() || undefined,
+    priceCents: typeof app.priceCents === "number" ? app.priceCents : undefined,
+    displayed: app.displayed,
+    ssoConnected: Boolean(app.ssoConnected),
+    requiresLogin: Boolean(app.requiresLogin),
+    demoUrl: publicUrl(app.demoUrl) || undefined,
+    demoEmbedUrl: publicUrl(app.demoEmbedUrl) || undefined,
+  };
+}
+
+const mergedProductsById = new Map<string, ProductRecord>();
+
+for (const product of deploymentProducts) {
+  mergedProductsById.set(product.id, product);
+}
+
+const registrySaleFields = new Set<keyof ProductRecord>([
+  "accessModel",
+  "checkoutOfferId",
+  "demoEmbedUrl",
+  "demoUrl",
+  "description",
+  "displayed",
+  "fulfillmentPath",
+  "imageUrl",
+  "isLive",
+  "liveUrl",
+  "loginUrl",
+  "owner",
+  "paymentUrl",
+  "priceCents",
+  "primaryCta",
+  "productionUrl",
+  "requiresLogin",
+  "saleStatus",
+  "ssoConnected",
+  "stage",
+  "updated",
+]);
+
+function mergeRegistryProduct(current: ProductRecord, registryProduct: ProductRecord) {
+  const merged: ProductRecord = { ...current, registrySource: "illco-command-registry" };
+
+  for (const [key, value] of Object.entries(registryProduct) as Array<[keyof ProductRecord, ProductRecord[keyof ProductRecord]]>) {
+    if (registrySaleFields.has(key) && value !== undefined && value !== null) {
+      (merged as Record<keyof ProductRecord, ProductRecord[keyof ProductRecord]>)[key] = value;
+    }
+  }
+
+  return merged;
+}
+
+for (const app of registrySnapshot.apps || []) {
+  const registryProduct = registryProductFromApp(app);
+  if (!registryProduct) continue;
+
+  const current = mergedProductsById.get(registryProduct.id);
+  mergedProductsById.set(registryProduct.id, current ? mergeRegistryProduct(current, registryProduct) : registryProduct);
+}
+
+export const products = [...mergedProductsById.values()].sort((left, right) => {
+  const liveRank = Number(right.isLive) - Number(left.isLive);
+  return liveRank || left.displayName.localeCompare(right.displayName);
 }) satisfies ProductRecord[];
 
 export const featuredProductIds = [

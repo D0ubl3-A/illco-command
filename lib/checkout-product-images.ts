@@ -1,7 +1,19 @@
 import type { CheckoutProduct } from "@/lib/checkout-products";
 
-const checkoutImageVersion = "2026-06-24-generator-assets-v1";
+const checkoutImageVersion = "2026-06-30-alternate-colors-top10-v1";
 
+const latestZipImageByCheckoutId: Record<string, string> = {
+  "ai-music-mastering-pro": "ai-music-mastering-pro",
+  "cinematic-ai-music-video-production": "cinematic-ai-music-video-production",
+  "full-hd-lyric-videos": "full-hd-lyric-videos",
+  "youtube-rank-revival-ai-pro": "youtube-rank-revival-ai-pro",
+  "instant-lead-rescue-text-back-ai": "instant-lead-rescue-text-back-ai",
+  "ai-workflow-mastery": "ai-workflow-mastery",
+  "interactive-legacy-avatar-upgrade": "interactive-legacy-avatar-upgrade",
+  "testimonial-to-marketing-asset-generator": "testimonial-to-marketing-asset-generator",
+  "notion-research-clipper-ai-for-chrome": "notion-research-clipper-ai-for-chrome",
+  "linkedin-gmail-lead-sync-extension": "linkedin-gmail-lead-sync-extension",
+};
 const generatedImageByCheckoutId: Record<string, string> = {
   "ai-music-mastering-pro": "mastering-studio-platform",
   "cinematic-ai-music-video-production": "illco-ai-video",
@@ -20,6 +32,7 @@ const generatedImageByCheckoutId: Record<string, string> = {
   "song-analyzer-deploy": "songanalyzer-deploy",
   "t-shirt-workshop-pro-pc": "tshirtworkshop",
   "viral-stitch-ai": "viral-stitch-ai",
+  "vocal-visualizer": "lyricflow-ai",
   "infinite-living-memory": "ghetto-bird-voice-ai",
   "voicebook-ai-studio": "ghettobirddemo",
   "website-to-android-app-conversion": "illcoappiverse",
@@ -33,10 +46,11 @@ export function getCheckoutProductGeneratedImageId(product: CheckoutProduct) {
 }
 
 export function getCheckoutProductImagePath(product: CheckoutProduct) {
-  const imageId = getCheckoutProductGeneratedImageId(product);
+  const latestZipImageId = latestZipImageByCheckoutId[product.id];
+  const imageId = latestZipImageId || getCheckoutProductGeneratedImageId(product);
   return `/products/generated/${encodeURIComponent(imageId)}.jpg?v=${checkoutImageVersion}`;
 }
 
 export function getCheckoutProductVisualSignature(product: CheckoutProduct) {
-  return getCheckoutProductGeneratedImageId(product);
+  return latestZipImageByCheckoutId[product.id] || getCheckoutProductGeneratedImageId(product);
 }

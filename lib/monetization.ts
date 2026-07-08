@@ -51,7 +51,9 @@ export const monetizationPlan = monetizationPlanSnapshot as MonetizationPlanSnap
 function collectCoverageProblems(snapshot: MonetizationPlanSnapshot) {
   const snapshotIds = new Set(Object.keys(snapshot.products));
   const productIds = new Set(products.map((product) => product.id));
-  const missingProductIds = products.filter((product) => !snapshotIds.has(product.id)).map((product) => product.id);
+  const missingProductIds = products
+    .filter((product) => !snapshotIds.has(product.id) && product.registrySource !== "illco-command-registry")
+    .map((product) => product.id);
   const orphanProductIds = [...snapshotIds].filter((productId) => !productIds.has(productId));
   const fieldMismatches: string[] = [];
 
@@ -100,8 +102,41 @@ export function assertMonetizationPlanCoverage(snapshot = monetizationPlan) {
 
 assertMonetizationPlanCoverage();
 
+function fallbackMonetizationPlanForProduct(productId: string): MonetizationPlanEntry | null {
+  const product = products.find((candidate) => candidate.id === productId);
+  if (!product) return null;
+
+  const planId =
+    product.subscriptionTier === "Enterprise"
+      ? "enterprise"
+      : product.subscriptionTier === "Studio"
+        ? "studio"
+        : product.subscriptionTier === "Pro"
+          ? "suite"
+          : "core";
+  const href = product.loginUrl || product.paymentUrl || product.productionUrl || `/apps/${encodeURIComponent(product.id)}`;
+
+  return {
+    productId: product.id,
+    planTier: product.subscriptionTier,
+    funnelPlanId: planId,
+    licenseMode: product.licenseMode,
+    routeAfterPurchase: {
+      type: product.productionUrl ? "production-url" : "command-center",
+      href,
+    },
+    needsDemoVideo: true,
+    publicInFunnel: true,
+    healthGate: {
+      status: product.isLive ? "healthy" : "unknown",
+      behavior: product.isLive ? "allow-checkout-with-warning" : "manual-review",
+      reason: "Imported from the ILLCO Command app registry. Checkout is routed through guided setup unless a reviewed monetization entry exists.",
+    },
+  };
+}
+
 export function getMonetizationPlan(productId: string) {
-  return monetizationPlan.products[productId] || null;
+  return monetizationPlan.products[productId] || fallbackMonetizationPlanForProduct(productId);
 }
 
 export function getProductMonetization(productId: string) {
@@ -112,7 +147,7 @@ export function getProductMonetization(productId: string) {
 
 export const monetizedProducts = products.map((product) => ({
   ...product,
-  monetization: monetizationPlan.products[product.id] as MonetizationPlanEntry,
+  monetization: getMonetizationPlan(product.id) as MonetizationPlanEntry,
 }));
 
 export function canOfferPublicCheckout(productId: string) {

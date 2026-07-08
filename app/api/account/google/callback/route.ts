@@ -1,4 +1,4 @@
-﻿import { cookies } from "next/headers";
+import { cookies } from "next/headers";
 import { NextResponse } from "next/server";
 
 import { safeAccountReturnTo } from "@/lib/account-return";
@@ -8,6 +8,7 @@ import {
   GOOGLE_OAUTH_STATE_COOKIE,
   GOOGLE_OAUTH_VERIFIER_COOKIE,
   exchangeGoogleAuthorizationCode,
+  getRequestOrigin,
   fetchGoogleAccountProfile,
   getGoogleOAuthCookiePaths,
   isGoogleOAuthConfigured,
@@ -16,7 +17,8 @@ import { createUserSessionCookieValue, setUserSessionCookieOnResponse } from "@/
 import { getAccountDatabaseStatus, upsertGoogleUserAccount } from "@/lib/user-accounts";
 
 function accountUrl(request: Request, state: string) {
-  return new URL(`/account?auth=${encodeURIComponent(state)}`, request.url);
+  const origin = getRequestOrigin(request);
+  return new URL(`/account?auth=${encodeURIComponent(state)}`, origin);
 }
 
 function clearOauthCookies(response: NextResponse) {
@@ -50,6 +52,7 @@ export async function GET(request: Request) {
     return redirectWithClearedCookies(request, "google-unavailable");
   }
 
+  const requestOrigin = getRequestOrigin(request);
   const requestUrl = new URL(request.url);
   if (requestUrl.searchParams.get("error")) {
     return redirectWithClearedCookies(request, "google-denied");
@@ -67,7 +70,7 @@ export async function GET(request: Request) {
   }
 
   try {
-    const token = await exchangeGoogleAuthorizationCode({ code, codeVerifier: verifier });
+    const token = await exchangeGoogleAuthorizationCode({ code, codeVerifier: verifier, redirectUri: requestOrigin });
     const profile = await fetchGoogleAccountProfile({
       accessToken: token.access_token || "",
       idToken: token.id_token || null,
@@ -79,7 +82,7 @@ export async function GET(request: Request) {
       avatarUrl: profile.avatarUrl,
     });
     const sessionToken = await createUserSessionCookieValue(user.id);
-    const response = NextResponse.redirect(returnTo ? new URL(returnTo, request.url) : accountUrl(request, mode === "signup" ? "google-created" : "google-signed-in"));
+    const response = NextResponse.redirect(returnTo ? new URL(returnTo, requestOrigin) : accountUrl(request, mode === "signup" ? "google-created" : "google-signed-in"));
     setUserSessionCookieOnResponse(response, sessionToken);
     clearOauthCookies(response);
     return response;

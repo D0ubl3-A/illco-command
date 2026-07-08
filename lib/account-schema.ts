@@ -166,4 +166,41 @@ async function createAccountSchema() {
     await sql`CREATE INDEX IF NOT EXISTS idx_illco_command_user_action_tokens_user ON illco_command_user_action_tokens (user_id, token_type, created_at DESC)`;
     await sql`CREATE INDEX IF NOT EXISTS idx_illco_command_user_action_tokens_open ON illco_command_user_action_tokens (token_type, expires_at) WHERE consumed_at IS NULL`;
   }
+
+  await sql`
+    CREATE TABLE IF NOT EXISTS illco_command_oauth_codes (
+      id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+      code_hash TEXT NOT NULL UNIQUE,
+      user_id UUID NOT NULL,
+      client_id TEXT NOT NULL,
+      redirect_uri TEXT NOT NULL,
+      scope TEXT NOT NULL,
+      code_challenge TEXT NOT NULL,
+      code_challenge_method TEXT NOT NULL,
+      expires_at TIMESTAMPTZ NOT NULL,
+      consumed_at TIMESTAMPTZ,
+      created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+    )
+  `;
+  await sql`
+    CREATE TABLE IF NOT EXISTS illco_command_oauth_access_tokens (
+      id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+      token_hash TEXT NOT NULL UNIQUE,
+      user_id UUID NOT NULL,
+      client_id TEXT NOT NULL,
+      scope TEXT NOT NULL,
+      expires_at TIMESTAMPTZ NOT NULL,
+      revoked_at TIMESTAMPTZ,
+      created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+    )
+  `;
+  if (usingDsql) {
+    await sql`CREATE INDEX ASYNC IF NOT EXISTS idx_illco_command_oauth_codes_open ON illco_command_oauth_codes (client_id, expires_at)`;
+    await sql`CREATE INDEX ASYNC IF NOT EXISTS idx_illco_command_oauth_access_tokens_open ON illco_command_oauth_access_tokens (client_id, expires_at)`;
+    await sql`CREATE INDEX ASYNC IF NOT EXISTS idx_illco_command_oauth_access_tokens_user ON illco_command_oauth_access_tokens (user_id, created_at)`;
+  } else {
+    await sql`CREATE INDEX IF NOT EXISTS idx_illco_command_oauth_codes_open ON illco_command_oauth_codes (client_id, expires_at) WHERE consumed_at IS NULL`;
+    await sql`CREATE INDEX IF NOT EXISTS idx_illco_command_oauth_access_tokens_open ON illco_command_oauth_access_tokens (client_id, expires_at) WHERE revoked_at IS NULL`;
+    await sql`CREATE INDEX IF NOT EXISTS idx_illco_command_oauth_access_tokens_user ON illco_command_oauth_access_tokens (user_id, created_at DESC)`;
+  }
 }

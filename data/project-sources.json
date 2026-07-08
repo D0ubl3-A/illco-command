@@ -5,13 +5,13 @@
     "aaronalltonai-ship-it"
   ],
   "summary": {
-    "checked": 119,
-    "liveProductionUrls": 113,
+    "checked": 164,
+    "liveProductionUrls": 143,
     "complete": 65,
     "needsRepair": 30,
-    "needsSource": 15,
+    "needsSource": 45,
     "needsDeploy": 5,
-    "missingSource": 4,
+    "missingSource": 19,
     "localSource": 70,
     "githubSource": 45
   },
@@ -20,7 +20,7 @@
       "id": "ai-companions-recovered",
       "name": "ai-companions-recovered",
       "displayName": "ILLCO Tools",
-      "productionUrl": "https://illco-command.vercel.app",
+      "productionUrl": "https://illcoai.tech",
       "completionStatus": "complete",
       "sourceStatus": "local-only",
       "health": {
@@ -72,7 +72,7 @@
       "id": "ai-companion-conversational-intake",
       "name": "ai-companion-conversational-intake",
       "displayName": "AI Companion: Conversational Intake",
-      "productionUrl": "https://illco-command.vercel.app/apps/ai-companion-conversational-intake",
+      "productionUrl": "https://illcoai.tech/apps/ai-companion-conversational-intake",
       "completionStatus": "complete",
       "sourceStatus": "local-only",
       "health": {
@@ -124,7 +124,7 @@
       "id": "ai-companion-prompt-studio",
       "name": "ai-companion-prompt-studio",
       "displayName": "AI Companion: Prompt Studio",
-      "productionUrl": "https://illco-command.vercel.app/apps/ai-companion-prompt-studio",
+      "productionUrl": "https://illcoai.tech/apps/ai-companion-prompt-studio",
       "completionStatus": "complete",
       "sourceStatus": "local-only",
       "health": {
@@ -176,7 +176,7 @@
       "id": "ai-companion-content-production",
       "name": "ai-companion-content-production",
       "displayName": "AI Companion: Content Production",
-      "productionUrl": "https://illco-command.vercel.app/apps/ai-companion-content-production",
+      "productionUrl": "https://illcoai.tech/apps/ai-companion-content-production",
       "completionStatus": "complete",
       "sourceStatus": "local-only",
       "health": {
@@ -228,7 +228,7 @@
       "id": "ai-companion-sales-agent-handoff",
       "name": "ai-companion-sales-agent-handoff",
       "displayName": "AI Companion: Sales Agent Hand-off",
-      "productionUrl": "https://illco-command.vercel.app/apps/ai-companion-sales-agent-handoff",
+      "productionUrl": "https://illcoai.tech/apps/ai-companion-sales-agent-handoff",
       "completionStatus": "complete",
       "sourceStatus": "local-only",
       "health": {
@@ -280,7 +280,7 @@
       "id": "ai-companion-command-routing",
       "name": "ai-companion-command-routing",
       "displayName": "AI Companion: Multi-App Command Routing",
-      "productionUrl": "https://illco-command.vercel.app/apps/ai-companion-command-routing",
+      "productionUrl": "https://illcoai.tech/apps/ai-companion-command-routing",
       "completionStatus": "complete",
       "sourceStatus": "local-only",
       "health": {
@@ -332,7 +332,7 @@
       "id": "ai-companion-workspace-access",
       "name": "ai-companion-workspace-access",
       "displayName": "AI Companion: Unified Workspace Access",
-      "productionUrl": "https://illco-command.vercel.app/apps/ai-companion-workspace-access",
+      "productionUrl": "https://illcoai.tech/apps/ai-companion-workspace-access",
       "completionStatus": "complete",
       "sourceStatus": "local-only",
       "health": {
@@ -384,7 +384,7 @@
       "id": "think-for-me-mode",
       "name": "think-for-me-mode",
       "displayName": "Think For Me Mode",
-      "productionUrl": "https://illco-command.vercel.app/tools/think-for-me-mode",
+      "productionUrl": "https://illcoai.tech/tools/think-for-me-mode",
       "completionStatus": "complete",
       "sourceStatus": "local-only",
       "health": {
@@ -412,7 +412,7 @@
       "id": "lyric-video-forge",
       "name": "lyric-video-forge",
       "displayName": "Lyric Video Forge",
-      "productionUrl": "https://illco-command.vercel.app/tools/lyric-video-forge",
+      "productionUrl": "https://illcoai.tech/tools/lyric-video-forge",
       "completionStatus": "complete",
       "sourceStatus": "local-only",
       "health": {
@@ -1200,7 +1200,7 @@
       "id": "battle-rap-ai",
       "name": "battle-rap-ai",
       "displayName": "Battle Rap AI",
-      "productionUrl": "https://battle-rap-ai.vercel.app",
+      "productionUrl": "https://illcoai.tech",
       "completionStatus": "complete",
       "sourceStatus": "local-and-github",
       "health": {
@@ -1664,7 +1664,7 @@
         "status": "healthy",
         "statusCode": 200,
         "checkedAt": "2026-05-25T12:54:27.034Z",
-        "title": "Cortex Intelligence \u2013 Iran Drone Alert",
+        "title": "Cortex Intelligence – Iran Drone Alert",
         "error": null
       },
       "aliases": [
@@ -2271,7 +2271,7 @@
         "status": "healthy",
         "statusCode": 200,
         "checkedAt": "2026-05-25T12:54:27.590Z",
-        "title": "SBL \u2013 Sora Battle League",
+        "title": "SBL – Sora Battle League",
         "error": null
       },
       "aliases": [
@@ -4234,6 +4234,817 @@
           "alias": "ghetto-bird-voice-ai"
         }
       ],
+      "githubRepos": []
+    },
+    "agent-gpt": {
+      "id": "agent-gpt",
+      "name": "agent-gpt",
+      "displayName": "Agent GPT",
+      "productionUrl": "https://agent-gpt-illcoai.vercel.app",
+      "completionStatus": "needs-source",
+      "sourceStatus": "not-found",
+      "health": {
+        "status": "healthy",
+        "statusCode": 200,
+        "checkedAt": "2026-07-02T00:00:00.000Z",
+        "title": null,
+        "error": null
+      },
+      "aliases": [
+        "agent-gpt"
+      ],
+      "localPaths": [],
+      "githubRepos": []
+    },
+    "illco-agent-gpt-runner": {
+      "id": "illco-agent-gpt-runner",
+      "name": "illco-agent-gpt-runner",
+      "displayName": "Agent GPT Runner",
+      "productionUrl": "https://agent-gpt-illcoai.vercel.app",
+      "completionStatus": "needs-source",
+      "sourceStatus": "not-found",
+      "health": {
+        "status": "healthy",
+        "statusCode": 200,
+        "checkedAt": "2026-07-02T00:00:00.000Z",
+        "title": null,
+        "error": null
+      },
+      "aliases": [
+        "illco-agent-gpt-runner"
+      ],
+      "localPaths": [],
+      "githubRepos": []
+    },
+    "bigo-clickfunnels-package": {
+      "id": "bigo-clickfunnels-package",
+      "name": "bigo-clickfunnels-package",
+      "displayName": "BIGO ClickFunnels Package",
+      "productionUrl": "https://bigo-clickfunnels-package.vercel.app",
+      "completionStatus": "needs-source",
+      "sourceStatus": "not-found",
+      "health": {
+        "status": "healthy",
+        "statusCode": 200,
+        "checkedAt": "2026-07-02T00:00:00.000Z",
+        "title": null,
+        "error": null
+      },
+      "aliases": [
+        "bigo-clickfunnels-package"
+      ],
+      "localPaths": [],
+      "githubRepos": []
+    },
+    "bigo-live-clickfunnels-package": {
+      "id": "bigo-live-clickfunnels-package",
+      "name": "bigo_live_clickfunnels_package",
+      "displayName": "BIGO Live ClickFunnels Package",
+      "productionUrl": "https://bigoliveclickfunnelspackage.vercel.app",
+      "completionStatus": "needs-source",
+      "sourceStatus": "not-found",
+      "health": {
+        "status": "healthy",
+        "statusCode": 200,
+        "checkedAt": "2026-07-02T00:00:00.000Z",
+        "title": null,
+        "error": null
+      },
+      "aliases": [
+        "bigo-live-clickfunnels-package",
+        "bigo_live_clickfunnels_package"
+      ],
+      "localPaths": [],
+      "githubRepos": []
+    },
+    "charge-window-ai": {
+      "id": "charge-window-ai",
+      "name": "charge-window-ai",
+      "displayName": "Charge Window AI",
+      "productionUrl": "https://charge-window-ai.vercel.app",
+      "completionStatus": "needs-source",
+      "sourceStatus": "not-found",
+      "health": {
+        "status": "healthy",
+        "statusCode": 200,
+        "checkedAt": "2026-07-02T00:00:00.000Z",
+        "title": null,
+        "error": null
+      },
+      "aliases": [
+        "charge-window-ai"
+      ],
+      "localPaths": [],
+      "githubRepos": []
+    },
+    "dj-curse-reverse": {
+      "id": "dj-curse-reverse",
+      "name": "dj-curse-reverse",
+      "displayName": "DJ Curse Reverse",
+      "productionUrl": "https://dj-curse-reverse.vercel.app",
+      "completionStatus": "needs-source",
+      "sourceStatus": "not-found",
+      "health": {
+        "status": "healthy",
+        "statusCode": 200,
+        "checkedAt": "2026-07-02T00:00:00.000Z",
+        "title": null,
+        "error": null
+      },
+      "aliases": [
+        "dj-curse-reverse"
+      ],
+      "localPaths": [],
+      "githubRepos": []
+    },
+    "illco-toolbox": {
+      "id": "illco-toolbox",
+      "name": "illco-toolbox",
+      "displayName": "Illco Toolbox",
+      "productionUrl": "https://illcoappiverse.vercel.app",
+      "completionStatus": "needs-source",
+      "sourceStatus": "not-found",
+      "health": {
+        "status": "healthy",
+        "statusCode": 200,
+        "checkedAt": "2026-07-02T00:00:00.000Z",
+        "title": null,
+        "error": null
+      },
+      "aliases": [
+        "illco-toolbox"
+      ],
+      "localPaths": [],
+      "githubRepos": []
+    },
+    "illco-voice": {
+      "id": "illco-voice",
+      "name": "illco-voice",
+      "displayName": "Illco Voice",
+      "productionUrl": "https://ill-motion-ai.vercel.app",
+      "completionStatus": "needs-source",
+      "sourceStatus": "not-found",
+      "health": {
+        "status": "healthy",
+        "statusCode": 200,
+        "checkedAt": "2026-07-02T00:00:00.000Z",
+        "title": null,
+        "error": null
+      },
+      "aliases": [
+        "illco-voice"
+      ],
+      "localPaths": [],
+      "githubRepos": []
+    },
+    "spotify-market-radar": {
+      "id": "spotify-market-radar",
+      "name": "spotify-market-radar",
+      "displayName": "Spotify Market Radar",
+      "productionUrl": "https://spotify-market-radar.vercel.app",
+      "completionStatus": "needs-source",
+      "sourceStatus": "not-found",
+      "health": {
+        "status": "healthy",
+        "statusCode": 200,
+        "checkedAt": "2026-07-02T00:00:00.000Z",
+        "title": null,
+        "error": null
+      },
+      "aliases": [
+        "spotify-market-radar"
+      ],
+      "localPaths": [],
+      "githubRepos": []
+    },
+    "appiverse": {
+      "id": "appiverse",
+      "name": "appiverse",
+      "displayName": "The Appiverse",
+      "productionUrl": "https://illcoai.tech",
+      "completionStatus": "needs-source",
+      "sourceStatus": "not-found",
+      "health": {
+        "status": "healthy",
+        "statusCode": 200,
+        "checkedAt": "2026-07-02T00:00:00.000Z",
+        "title": null,
+        "error": null
+      },
+      "aliases": [
+        "appiverse"
+      ],
+      "localPaths": [],
+      "githubRepos": []
+    },
+    "voicebook": {
+      "id": "voicebook",
+      "name": "voicebook",
+      "displayName": "VoiceBook",
+      "productionUrl": "https://voice-book-tool.vercel.app",
+      "completionStatus": "needs-source",
+      "sourceStatus": "not-found",
+      "health": {
+        "status": "healthy",
+        "statusCode": 200,
+        "checkedAt": "2026-07-02T00:00:00.000Z",
+        "title": null,
+        "error": null
+      },
+      "aliases": [
+        "voicebook"
+      ],
+      "localPaths": [],
+      "githubRepos": []
+    },
+    "agent-search-demo": {
+      "id": "agent-search-demo",
+      "name": "agent-search-demo",
+      "displayName": "agent-search-demo",
+      "productionUrl": "https://agent-search-demo.vercel.app",
+      "completionStatus": "needs-source",
+      "sourceStatus": "not-found",
+      "health": {
+        "status": "degraded",
+        "statusCode": null,
+        "checkedAt": "2026-07-02T00:00:00.000Z",
+        "title": null,
+        "error": "Production URL is listed, but live verification is not complete in the source audit."
+      },
+      "aliases": [
+        "agent-search-demo"
+      ],
+      "localPaths": [],
+      "githubRepos": []
+    },
+    "ai-music-mastering-pro": {
+      "id": "ai-music-mastering-pro",
+      "name": "ai-music-mastering-pro",
+      "displayName": "AI Music Mastering Pro",
+      "productionUrl": null,
+      "completionStatus": "missing-source",
+      "sourceStatus": "not-found",
+      "health": null,
+      "aliases": [
+        "ai-music-mastering-pro"
+      ],
+      "localPaths": [],
+      "githubRepos": []
+    },
+    "appiverse-automations": {
+      "id": "appiverse-automations",
+      "name": "appiverse-automations",
+      "displayName": "Appiverse Automations Engine",
+      "productionUrl": null,
+      "completionStatus": "missing-source",
+      "sourceStatus": "not-found",
+      "health": null,
+      "aliases": [
+        "appiverse-automations"
+      ],
+      "localPaths": [],
+      "githubRepos": []
+    },
+    "chatbot": {
+      "id": "chatbot",
+      "name": "chatbot",
+      "displayName": "chatbot",
+      "productionUrl": null,
+      "completionStatus": "missing-source",
+      "sourceStatus": "not-found",
+      "health": null,
+      "aliases": [
+        "chatbot"
+      ],
+      "localPaths": [],
+      "githubRepos": []
+    },
+    "chrome-proposal-generator-agencies-freelancers": {
+      "id": "chrome-proposal-generator-agencies-freelancers",
+      "name": "chrome-proposal-generator-agencies-freelancers",
+      "displayName": "Chrome Proposal Generator for Agencies & Freelancers",
+      "productionUrl": null,
+      "completionStatus": "missing-source",
+      "sourceStatus": "not-found",
+      "health": null,
+      "aliases": [
+        "chrome-proposal-generator-agencies-freelancers"
+      ],
+      "localPaths": [],
+      "githubRepos": []
+    },
+    "cinematic-ai-music-video-production": {
+      "id": "cinematic-ai-music-video-production",
+      "name": "cinematic-ai-music-video-production",
+      "displayName": "Cinematic AI Music Video Production",
+      "productionUrl": null,
+      "completionStatus": "missing-source",
+      "sourceStatus": "not-found",
+      "health": null,
+      "aliases": [
+        "cinematic-ai-music-video-production"
+      ],
+      "localPaths": [],
+      "githubRepos": []
+    },
+    "custom-mcp-server": {
+      "id": "custom-mcp-server",
+      "name": "custom-mcp-server",
+      "displayName": "custom-mcp-server",
+      "productionUrl": "https://custom-mcp-server.vercel.app",
+      "completionStatus": "needs-source",
+      "sourceStatus": "not-found",
+      "health": {
+        "status": "degraded",
+        "statusCode": null,
+        "checkedAt": "2026-07-02T00:00:00.000Z",
+        "title": null,
+        "error": "Production URL is listed, but live verification is not complete in the source audit."
+      },
+      "aliases": [
+        "custom-mcp-server"
+      ],
+      "localPaths": [],
+      "githubRepos": []
+    },
+    "gemini-video-studio": {
+      "id": "gemini-video-studio",
+      "name": "gemini-video-studio",
+      "displayName": "gemini-video-studio",
+      "productionUrl": "https://gemini-video-studio-illcoai.vercel.app",
+      "completionStatus": "needs-source",
+      "sourceStatus": "not-found",
+      "health": {
+        "status": "degraded",
+        "statusCode": null,
+        "checkedAt": "2026-07-02T00:00:00.000Z",
+        "title": null,
+        "error": "Production URL is listed, but live verification is not complete in the source audit."
+      },
+      "aliases": [
+        "gemini-video-studio"
+      ],
+      "localPaths": [],
+      "githubRepos": []
+    },
+    "project-infographics-ai-background-covers": {
+      "id": "project-infographics-ai-background-covers",
+      "name": "project-infographics-ai-background-covers",
+      "displayName": "ILLCO Background Cover Art",
+      "productionUrl": "https://project-infographics.vercel.app/ai-product-art/index.html",
+      "completionStatus": "needs-source",
+      "sourceStatus": "not-found",
+      "health": {
+        "status": "degraded",
+        "statusCode": null,
+        "checkedAt": "2026-07-02T00:00:00.000Z",
+        "title": null,
+        "error": "Production URL is listed, but live verification is not complete in the source audit."
+      },
+      "aliases": [
+        "project-infographics-ai-background-covers"
+      ],
+      "localPaths": [],
+      "githubRepos": []
+    },
+    "project-infographics-control-panel-images": {
+      "id": "project-infographics-control-panel-images",
+      "name": "project-infographics-control-panel-images",
+      "displayName": "ILLCO Control Panel Image Catalog",
+      "productionUrl": "https://project-infographics.vercel.app/vercel-software-packages/index.html",
+      "completionStatus": "needs-source",
+      "sourceStatus": "not-found",
+      "health": {
+        "status": "degraded",
+        "statusCode": null,
+        "checkedAt": "2026-07-02T00:00:00.000Z",
+        "title": null,
+        "error": "Production URL is listed, but live verification is not complete in the source audit."
+      },
+      "aliases": [
+        "project-infographics-control-panel-images"
+      ],
+      "localPaths": [],
+      "githubRepos": []
+    },
+    "project-infographics-ai-product-art": {
+      "id": "project-infographics-ai-product-art",
+      "name": "project-infographics-ai-product-art",
+      "displayName": "ILLCO Product Art Catalog",
+      "productionUrl": "https://project-infographics.vercel.app/ai-product-art-all/index.html",
+      "completionStatus": "needs-source",
+      "sourceStatus": "not-found",
+      "health": {
+        "status": "degraded",
+        "statusCode": null,
+        "checkedAt": "2026-07-02T00:00:00.000Z",
+        "title": null,
+        "error": "Production URL is listed, but live verification is not complete in the source audit."
+      },
+      "aliases": [
+        "project-infographics-ai-product-art"
+      ],
+      "localPaths": [],
+      "githubRepos": []
+    },
+    "illco-code-app": {
+      "id": "illco-code-app",
+      "name": "illco-code-app",
+      "displayName": "illco-code-app",
+      "productionUrl": "https://illco-code-app.vercel.app",
+      "completionStatus": "needs-source",
+      "sourceStatus": "not-found",
+      "health": {
+        "status": "degraded",
+        "statusCode": null,
+        "checkedAt": "2026-07-02T00:00:00.000Z",
+        "title": null,
+        "error": "Production URL is listed, but live verification is not complete in the source audit."
+      },
+      "aliases": [
+        "illco-code-app"
+      ],
+      "localPaths": [],
+      "githubRepos": []
+    },
+    "illco-command": {
+      "id": "illco-command",
+      "name": "illco-command",
+      "displayName": "illco-command",
+      "productionUrl": "https://illcoai.tech",
+      "completionStatus": "needs-source",
+      "sourceStatus": "not-found",
+      "health": {
+        "status": "degraded",
+        "statusCode": null,
+        "checkedAt": "2026-07-02T00:00:00.000Z",
+        "title": null,
+        "error": "Production URL is listed, but live verification is not complete in the source audit."
+      },
+      "aliases": [
+        "illco-command"
+      ],
+      "localPaths": [],
+      "githubRepos": []
+    },
+    "illco-command-machine": {
+      "id": "illco-command-machine",
+      "name": "illco-command-machine",
+      "displayName": "illco-command-machine",
+      "productionUrl": "https://illco-command-machine-illcoai.vercel.app",
+      "completionStatus": "needs-source",
+      "sourceStatus": "not-found",
+      "health": {
+        "status": "degraded",
+        "statusCode": null,
+        "checkedAt": "2026-07-02T00:00:00.000Z",
+        "title": null,
+        "error": "Production URL is listed, but live verification is not complete in the source audit."
+      },
+      "aliases": [
+        "illco-command-machine"
+      ],
+      "localPaths": [],
+      "githubRepos": []
+    },
+    "instant-lead-rescue-text-back-ai": {
+      "id": "instant-lead-rescue-text-back-ai",
+      "name": "instant-lead-rescue-text-back-ai",
+      "displayName": "Instant Lead Rescue Text-Back AI",
+      "productionUrl": null,
+      "completionStatus": "missing-source",
+      "sourceStatus": "not-found",
+      "health": null,
+      "aliases": [
+        "instant-lead-rescue-text-back-ai"
+      ],
+      "localPaths": [],
+      "githubRepos": []
+    },
+    "interactive-legacy-avatar-upgrade": {
+      "id": "interactive-legacy-avatar-upgrade",
+      "name": "interactive-legacy-avatar-upgrade",
+      "displayName": "Interactive Legacy Avatar Upgrade",
+      "productionUrl": null,
+      "completionStatus": "missing-source",
+      "sourceStatus": "not-found",
+      "health": null,
+      "aliases": [
+        "interactive-legacy-avatar-upgrade"
+      ],
+      "localPaths": [],
+      "githubRepos": []
+    },
+    "jfk-files-desk": {
+      "id": "jfk-files-desk",
+      "name": "jfk-files-desk",
+      "displayName": "jfk-files-desk",
+      "productionUrl": "https://jfk-files-desk.vercel.app",
+      "completionStatus": "needs-source",
+      "sourceStatus": "not-found",
+      "health": {
+        "status": "degraded",
+        "statusCode": null,
+        "checkedAt": "2026-07-02T00:00:00.000Z",
+        "title": null,
+        "error": "Production URL is listed, but live verification is not complete in the source audit."
+      },
+      "aliases": [
+        "jfk-files-desk"
+      ],
+      "localPaths": [],
+      "githubRepos": []
+    },
+    "linkedin-gmail-lead-sync-extension": {
+      "id": "linkedin-gmail-lead-sync-extension",
+      "name": "linkedin-gmail-lead-sync-extension",
+      "displayName": "LinkedIn & Gmail Lead Sync Extension",
+      "productionUrl": null,
+      "completionStatus": "missing-source",
+      "sourceStatus": "not-found",
+      "health": null,
+      "aliases": [
+        "linkedin-gmail-lead-sync-extension"
+      ],
+      "localPaths": [],
+      "githubRepos": []
+    },
+    "michigan-luxury-veo-ads": {
+      "id": "michigan-luxury-veo-ads",
+      "name": "michigan-luxury-veo-ads",
+      "displayName": "michigan-luxury-veo-ads",
+      "productionUrl": "https://michigan-luxury-veo-ads.vercel.app",
+      "completionStatus": "needs-source",
+      "sourceStatus": "not-found",
+      "health": {
+        "status": "degraded",
+        "statusCode": null,
+        "checkedAt": "2026-07-02T00:00:00.000Z",
+        "title": null,
+        "error": "Production URL is listed, but live verification is not complete in the source audit."
+      },
+      "aliases": [
+        "michigan-luxury-veo-ads"
+      ],
+      "localPaths": [],
+      "githubRepos": []
+    },
+    "notion-meeting-notes-assistant": {
+      "id": "notion-meeting-notes-assistant",
+      "name": "notion-meeting-notes-assistant",
+      "displayName": "Notion Meeting Notes Assistant",
+      "productionUrl": null,
+      "completionStatus": "missing-source",
+      "sourceStatus": "not-found",
+      "health": null,
+      "aliases": [
+        "notion-meeting-notes-assistant"
+      ],
+      "localPaths": [],
+      "githubRepos": []
+    },
+    "notion-research-clipper-ai-chrome": {
+      "id": "notion-research-clipper-ai-chrome",
+      "name": "notion-research-clipper-ai-chrome",
+      "displayName": "Notion Research Clipper AI for Chrome",
+      "productionUrl": null,
+      "completionStatus": "missing-source",
+      "sourceStatus": "not-found",
+      "health": null,
+      "aliases": [
+        "notion-research-clipper-ai-chrome"
+      ],
+      "localPaths": [],
+      "githubRepos": []
+    },
+    "private-pilot-tv": {
+      "id": "private-pilot-tv",
+      "name": "private-pilot-tv",
+      "displayName": "Private Pilot TV",
+      "productionUrl": null,
+      "completionStatus": "missing-source",
+      "sourceStatus": "not-found",
+      "health": null,
+      "aliases": [
+        "private-pilot-tv"
+      ],
+      "localPaths": [],
+      "githubRepos": []
+    },
+    "runpod-ai-studio-bridge": {
+      "id": "runpod-ai-studio-bridge",
+      "name": "runpod-ai-studio-bridge",
+      "displayName": "runpod-ai-studio-bridge",
+      "productionUrl": "https://runpod-ai-studio-bridge.vercel.app",
+      "completionStatus": "needs-source",
+      "sourceStatus": "not-found",
+      "health": {
+        "status": "degraded",
+        "statusCode": null,
+        "checkedAt": "2026-07-02T00:00:00.000Z",
+        "title": null,
+        "error": "Production URL is listed, but live verification is not complete in the source audit."
+      },
+      "aliases": [
+        "runpod-ai-studio-bridge"
+      ],
+      "localPaths": [],
+      "githubRepos": []
+    },
+    "signable-ai": {
+      "id": "signable-ai",
+      "name": "signable-ai",
+      "displayName": "signable-ai",
+      "productionUrl": "https://signable-ai.vercel.app",
+      "completionStatus": "needs-source",
+      "sourceStatus": "not-found",
+      "health": {
+        "status": "degraded",
+        "statusCode": null,
+        "checkedAt": "2026-07-02T00:00:00.000Z",
+        "title": null,
+        "error": "Production URL is listed, but live verification is not complete in the source audit."
+      },
+      "aliases": [
+        "signable-ai"
+      ],
+      "localPaths": [],
+      "githubRepos": []
+    },
+    "testimonial-marketing-asset-generator": {
+      "id": "testimonial-marketing-asset-generator",
+      "name": "testimonial-marketing-asset-generator",
+      "displayName": "Testimonial-to-Marketing Asset Generator",
+      "productionUrl": null,
+      "completionStatus": "missing-source",
+      "sourceStatus": "not-found",
+      "health": null,
+      "aliases": [
+        "testimonial-marketing-asset-generator"
+      ],
+      "localPaths": [],
+      "githubRepos": []
+    },
+    "vault-select-exclusive-trap-beat": {
+      "id": "vault-select-exclusive-trap-beat",
+      "name": "vault-select-exclusive-trap-beat",
+      "displayName": "Vault Select Exclusive Trap Beat",
+      "productionUrl": null,
+      "completionStatus": "missing-source",
+      "sourceStatus": "not-found",
+      "health": null,
+      "aliases": [
+        "vault-select-exclusive-trap-beat"
+      ],
+      "localPaths": [],
+      "githubRepos": []
+    },
+    "vercel-recruiter": {
+      "id": "vercel-recruiter",
+      "name": "vercel-recruiter",
+      "displayName": "vercel-recruiter",
+      "productionUrl": "https://vercel-recruiter.vercel.app",
+      "completionStatus": "needs-source",
+      "sourceStatus": "not-found",
+      "health": {
+        "status": "degraded",
+        "statusCode": null,
+        "checkedAt": "2026-07-02T00:00:00.000Z",
+        "title": null,
+        "error": "Production URL is listed, but live verification is not complete in the source audit."
+      },
+      "aliases": [
+        "vercel-recruiter"
+      ],
+      "localPaths": [],
+      "githubRepos": []
+    },
+    "vercel-url-demo": {
+      "id": "vercel-url-demo",
+      "name": "vercel-url-demo",
+      "displayName": "vercel-url-demo",
+      "productionUrl": "https://vercel-url-demo.vercel.app",
+      "completionStatus": "needs-source",
+      "sourceStatus": "not-found",
+      "health": {
+        "status": "degraded",
+        "statusCode": null,
+        "checkedAt": "2026-07-02T00:00:00.000Z",
+        "title": null,
+        "error": "Production URL is listed, but live verification is not complete in the source audit."
+      },
+      "aliases": [
+        "vercel-url-demo"
+      ],
+      "localPaths": [],
+      "githubRepos": []
+    },
+    "vibe-coding-platform": {
+      "id": "vibe-coding-platform",
+      "name": "vibe-coding-platform",
+      "displayName": "vibe-coding-platform",
+      "productionUrl": "https://vibe-coding-platform-illcoai.vercel.app",
+      "completionStatus": "needs-source",
+      "sourceStatus": "not-found",
+      "health": {
+        "status": "degraded",
+        "statusCode": null,
+        "checkedAt": "2026-07-02T00:00:00.000Z",
+        "title": null,
+        "error": "Production URL is listed, but live verification is not complete in the source audit."
+      },
+      "aliases": [
+        "vibe-coding-platform"
+      ],
+      "localPaths": [],
+      "githubRepos": []
+    },
+    "vibe-coding-platform-groq-codex": {
+      "id": "vibe-coding-platform-groq-codex",
+      "name": "vibe-coding-platform-groq-codex",
+      "displayName": "vibe-coding-platform-groq-codex",
+      "productionUrl": "https://vibe-coding-platform-groq-codex-illcoai.vercel.app",
+      "completionStatus": "needs-source",
+      "sourceStatus": "not-found",
+      "health": {
+        "status": "degraded",
+        "statusCode": null,
+        "checkedAt": "2026-07-02T00:00:00.000Z",
+        "title": null,
+        "error": "Production URL is listed, but live verification is not complete in the source audit."
+      },
+      "aliases": [
+        "vibe-coding-platform-groq-codex"
+      ],
+      "localPaths": [],
+      "githubRepos": []
+    },
+    "vibe-coding-platform-groq-codex-deploy": {
+      "id": "vibe-coding-platform-groq-codex-deploy",
+      "name": "vibe-coding-platform-groq-codex-deploy",
+      "displayName": "vibe-coding-platform-groq-codex-deploy",
+      "productionUrl": null,
+      "completionStatus": "missing-source",
+      "sourceStatus": "not-found",
+      "health": null,
+      "aliases": [
+        "vibe-coding-platform-groq-codex-deploy"
+      ],
+      "localPaths": [],
+      "githubRepos": []
+    },
+    "voicebookai": {
+      "id": "voicebookai",
+      "name": "voicebookai",
+      "displayName": "voicebookai",
+      "productionUrl": "https://voicebookai-illcoai.vercel.app",
+      "completionStatus": "needs-source",
+      "sourceStatus": "not-found",
+      "health": {
+        "status": "degraded",
+        "statusCode": null,
+        "checkedAt": "2026-07-02T00:00:00.000Z",
+        "title": null,
+        "error": "Production URL is listed, but live verification is not complete in the source audit."
+      },
+      "aliases": [
+        "voicebookai"
+      ],
+      "localPaths": [],
+      "githubRepos": []
+    },
+    "voicematch-ai-reply-copilot": {
+      "id": "voicematch-ai-reply-copilot",
+      "name": "voicematch-ai-reply-copilot",
+      "displayName": "VoiceMatch AI Reply Copilot for Gmail & LinkedIn",
+      "productionUrl": null,
+      "completionStatus": "missing-source",
+      "sourceStatus": "not-found",
+      "health": null,
+      "aliases": [
+        "voicematch-ai-reply-copilot"
+      ],
+      "localPaths": [],
+      "githubRepos": []
+    },
+    "workflow-factory-control-plane": {
+      "id": "workflow-factory-control-plane",
+      "name": "workflow-factory-control-plane",
+      "displayName": "workflow-factory-control-plane",
+      "productionUrl": "https://workflow-factory-control-plane.vercel.app",
+      "completionStatus": "needs-source",
+      "sourceStatus": "not-found",
+      "health": {
+        "status": "degraded",
+        "statusCode": null,
+        "checkedAt": "2026-07-02T00:00:00.000Z",
+        "title": null,
+        "error": "Production URL is listed, but live verification is not complete in the source audit."
+      },
+      "aliases": [
+        "workflow-factory-control-plane"
+      ],
+      "localPaths": [],
       "githubRepos": []
     }
   }

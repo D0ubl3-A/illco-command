@@ -7,6 +7,7 @@ import {
   ArrowRight,
   Bot,
   Boxes,
+  BrainCircuit,
   BriefcaseBusiness,
   ChevronDown,
   ExternalLink,
@@ -54,6 +55,7 @@ const desktopGroups: MenuGroup[] = [
     title: "Launch tools",
     copy: "Open working product surfaces.",
     links: [
+      { href: "/brain", label: "Brain OS", detail: "Private projects, memory, and execution", icon: BrainCircuit },
       { href: "/tools/lyric-video-forge", label: "Lyric Video Forge", detail: "ChatGPT-ready creator tool", icon: Sparkles },
       { href: "/tools/think-for-me-mode", label: "Think For Me Mode", detail: "Execution and planning skill", icon: Rocket },
       { href: "/commander", label: "Commander", detail: "Legacy command workspace", icon: Bot },
@@ -74,6 +76,7 @@ const desktopGroups: MenuGroup[] = [
 
 const quickLinks = [
   { href: "/products", label: "Apps", icon: Boxes },
+  { href: "/brain", label: "Brain", icon: BrainCircuit },
   { href: "/tools/lyric-video-forge", label: "ChatGPT", icon: Sparkles },
   { href: "/commander", label: "Commander", icon: Rocket },
 ] as const;

@@ -5,7 +5,7 @@ import { BrainClient } from "@/app/brain/brain-client";
 import styles from "@/app/brain/brain.module.css";
 import { isTrustedAdminEmail } from "@/lib/admin-identities";
 import { createFallbackBrainSnapshot } from "@/lib/brain-seed";
-import { getBrainSnapshot } from "@/lib/brain-store";
+import { getSafeBrainSnapshot } from "@/lib/brain-snapshot";
 import { getAccountDatabaseStatus, getCurrentUser } from "@/lib/user-accounts";
 
 export const dynamic = "force-dynamic";
@@ -57,7 +57,7 @@ export default async function BrainPage() {
 
   if (accountStatus.ready) {
     try {
-      snapshot = await getBrainSnapshot(currentUser.email);
+      snapshot = await getSafeBrainSnapshot(currentUser.email);
       storageMode = "database";
       storageMessage = "Persistent private storage is active for this admin account.";
     } catch (error) {

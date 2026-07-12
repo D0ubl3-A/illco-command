@@ -1,0 +1,7 @@
+{
+  "service": "ILLCO Brain OS",
+  "status": "ready",
+  "route": "/brain",
+  "deploymentTrigger": "2026-07-12T21:20:00Z",
+  "sourceCommit": "5b335432b835506894371f2e078451f8d38424e4"
+}

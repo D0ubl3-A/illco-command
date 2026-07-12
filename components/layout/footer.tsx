@@ -1,11 +1,12 @@
 import Link from "next/link";
-import { Bot, LogIn, ShieldCheck, Sparkles } from "lucide-react";
+import { Bot, BrainCircuit, LogIn, ShieldCheck, Sparkles } from "lucide-react";
 
 const googleOAuthHref = "/api/account/google/start?returnTo=/account" as const;
 
 const footerLinks = [
   { href: googleOAuthHref, label: "Login" },
   { href: "/products", label: "Apps" },
+  { href: "/brain", label: "Brain OS" },
   { href: "/commander", label: "Commander" },
   { href: "/tools/lyric-video-forge", label: "ChatGPT" },
   { href: "/account", label: "Account" },
@@ -43,6 +44,10 @@ export function StoreFooter() {
               <Sparkles className="h-3.5 w-3.5 text-amber-300" />
               ChatGPT tools
             </span>
+            <Link href="/brain" className="inline-flex items-center gap-2 rounded-[999px] border border-cyan-300/30 bg-cyan-300/10 px-3 py-1.5 text-xs font-semibold text-cyan-100 transition hover:bg-cyan-300/15">
+              <BrainCircuit className="h-3.5 w-3.5" />
+              Private Brain OS
+            </Link>
           </div>
         </div>
 

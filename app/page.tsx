@@ -12,7 +12,7 @@ import { getProductById } from "@/lib/deployments";
 import { getPublicProductPriceLabel } from "@/lib/pricing";
 import { storefrontProductImage } from "@/lib/storefront";
 
-const siteUrl = "https://www.illcoai.tech";
+const siteUrl = "https://illcoai.tech";
 const storeReturnTo = "https://illco-ai-app-store.vercel.app/";
 const skipProfileHref = "https://helloskip.com/b/illco-ai";
 const skipBlogHref = "https://helloskip.com/b/illco-ai/blog";

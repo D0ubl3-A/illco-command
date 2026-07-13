@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#05070b">
+  <title>AI Uprising: Last Human Protocol</title>
+  <style>
+    html,body{margin:0;min-height:100%;background:#020508;color:#dcf7f4;font-family:system-ui,sans-serif}
+    body{display:grid;place-items:center}
+    #loading{display:grid;gap:14px;text-align:center;letter-spacing:.12em}
+    .bar{width:min(420px,70vw);height:5px;border-radius:999px;background:#10232b;overflow:hidden}
+    .bar i{display:block;height:100%;width:0;background:linear-gradient(90deg,#57e4ff,#88efb4);transition:width .15s}
+    small{color:#789399;max-width:720px}
+  </style>
+</head>
+<body>
+  <div id="loading">
+    <strong>LOADING AI UPRISING</strong>
+    <div class="bar"><i id="progress"></i></div>
+    <small id="status">Preparing continuity command systems…</small>
+  </div>
+  <script>
+    (async () => {
+      const count = 10;
+      const expectedSha256 = '7b4934cf58c746fc83cfa7a8b96c90f77acbfd2bfd7c0d049a975cfe97527643';
+      const arrays = [];
+      let total = 0;
+      const progress = document.getElementById('progress');
+      const status = document.getElementById('status');
+      try {
+        for (let i = 0; i < count; i += 1) {
+          const path = `chunks/part-${String(i).padStart(2, '0')}.b64`;
+          const response = await fetch(path, { cache: 'force-cache' });
+          if (!response.ok) throw new Error(`Missing simulation module ${i + 1}`);
+          const base64 = (await response.text()).replace(/\s+/g, '');
+          const bytes = Uint8Array.from(atob(base64), character => character.charCodeAt(0));
+          arrays.push(bytes);
+          total += bytes.length;
+          progress.style.width = `${((i + 1) / count) * 92}%`;
+          status.textContent = `Loading module ${i + 1} of ${count}`;
+        }
+        const merged = new Uint8Array(total);
+        let offset = 0;
+        for (const bytes of arrays) {
+          merged.set(bytes, offset);
+          offset += bytes.length;
+        }
+        status.textContent = 'Verifying simulation integrity…';
+        const digest = new Uint8Array(await crypto.subtle.digest('SHA-256', merged));
+        const sha256 = Array.from(digest, byte => byte.toString(16).padStart(2, '0')).join('');
+        if (sha256 !== expectedSha256) throw new Error(`Integrity check failed (${sha256.slice(0, 12)})`);
+        progress.style.width = '100%';
+        const html = new TextDecoder().decode(merged);
+        document.open();
+        document.write(html);
+        document.close();
+      } catch (error) {
+        document.getElementById('loading').innerHTML = `<strong>SIMULATION LOAD FAILED</strong><small>${String(error.message || error)}</small>`;
+        console.error(error);
+      }
+    })();
+  </script>
+</body>
+</html>

@@ -15,6 +15,7 @@ const latestZipImageByCheckoutId: Record<string, string> = {
   "linkedin-gmail-lead-sync-extension": "linkedin-gmail-lead-sync-extension",
 };
 const generatedImageByCheckoutId: Record<string, string> = {
+  "doomsday-command": "think-for-me-mode",
   "ai-music-mastering-pro": "mastering-studio-platform",
   "cinematic-ai-music-video-production": "illco-ai-video",
   "full-hd-lyric-videos": "lyric-video-forge",

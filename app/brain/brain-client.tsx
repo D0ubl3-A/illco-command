@@ -26,6 +26,7 @@ import {
 } from "lucide-react";
 
 import { createBrainItemAction, importBrainItemsAction, updateBrainItemStatusAction } from "@/app/brain/actions";
+import organic from "@/app/brain/brain-organic.module.css";
 import styles from "@/app/brain/brain.module.css";
 import { brainKinds, brainPriorities, brainStatuses, type BrainItem, type BrainSnapshot, type BrainStatus } from "@/lib/brain-types";
 
@@ -112,6 +113,8 @@ export function BrainClient({
     [areas, snapshot.items],
   );
 
+  const brainRegions = graphAreas.slice(0, 8);
+
   function exportBrain() {
     const payload = {
       exportedAt: new Date().toISOString(),
@@ -129,6 +132,12 @@ export function BrainClient({
     URL.revokeObjectURL(url);
   }
 
+  function selectBrainRegion(areaName: string) {
+    setArea(areaName);
+    setStatus("open");
+    window.setTimeout(() => document.getElementById("memory-index")?.scrollIntoView({ behavior: "smooth", block: "start" }), 20);
+  }
+
   async function readImportFile(event: ChangeEvent<HTMLInputElement>) {
     const file = event.target.files?.[0];
     if (!file) return;
@@ -136,12 +145,12 @@ export function BrainClient({
   }
 
   return (
-    <div className={styles.shell}>
-      <header className={styles.hero}>
+    <div className={`${styles.shell} ${organic.brainShell}`}>
+      <header className={`${styles.hero} ${organic.heroBrain}`}>
         <div className={styles.heroCopy}>
           <span className={styles.eyebrow}><BrainCircuit size={16} /> PRIVATE OPERATING MEMORY</span>
           <h1>{ownerName.split(" ")[0]}&apos;s ILLCO Brain OS</h1>
-          <p>One searchable system for iLLCo Ai, M3ntally-iLL, products, code, research, content, routines, and decisions.</p>
+          <p>One searchable neural system for iLLCo Ai, M3ntally-iLL, products, code, research, content, routines, and decisions.</p>
         </div>
         <div className={styles.heroActions}>
           <button type="button" className={styles.secondaryButton} onClick={exportBrain}>
@@ -161,18 +170,46 @@ export function BrainClient({
         </div>
       </section>
 
-      <section className={styles.statsGrid} aria-label="Brain OS summary">
-        <article><span>Total memory</span><strong>{snapshot.total}</strong><small>indexed records</small></article>
-        <article><span>Active</span><strong>{snapshot.active}</strong><small>in motion</small></article>
-        <article><span>Next</span><strong>{snapshot.next}</strong><small>queued actions</small></article>
-        <article><span>Blocked</span><strong>{snapshot.blocked}</strong><small>needs attention</small></article>
-        <article><span>Areas</span><strong>{snapshot.areas}</strong><small>connected domains</small></article>
+      <section className={organic.brainStage} aria-label="Interactive operating brain map">
+        <div className={organic.brainStageHeader}>
+          <div>
+            <span className={styles.sectionLabel}><BrainCircuit size={14} /> NEURAL MAP</span>
+            <h2>Your work is organized like a living brain.</h2>
+          </div>
+          <p>Each lobe is a major operating area. Select one to activate that region and open its memories below.</p>
+        </div>
+        <div className={organic.brainDiagram}>
+          {brainRegions.map((node, index) => {
+            const Icon = areaIcon(node.name);
+            return (
+              <button
+                key={node.name}
+                type="button"
+                onClick={() => selectBrainRegion(node.name)}
+                className={`${organic.brainLobe} ${organic[`brainLobe${index + 1}`]} ${area === node.name ? organic.activeLobe : ""}`}
+              >
+                <span><Icon size={17} /></span>
+                <strong>{node.name}</strong>
+                <small>{node.count} memories · {node.open} active · {node.critical} critical</small>
+              </button>
+            );
+          })}
+          <div className={organic.brainCore} title="ILLCO neural core"><BrainCircuit size={34} /></div>
+        </div>
       </section>
 
-      <section className={styles.commandPanel}>
+      <section className={styles.statsGrid} aria-label="Brain OS summary">
+        <article className={organic.neuralStat}><span>Total memory</span><strong>{snapshot.total}</strong><small>indexed records</small></article>
+        <article className={organic.neuralStat}><span>Active</span><strong>{snapshot.active}</strong><small>in motion</small></article>
+        <article className={organic.neuralStat}><span>Next</span><strong>{snapshot.next}</strong><small>queued actions</small></article>
+        <article className={organic.neuralStat}><span>Blocked</span><strong>{snapshot.blocked}</strong><small>needs attention</small></article>
+        <article className={organic.neuralStat}><span>Areas</span><strong>{snapshot.areas}</strong><small>connected lobes</small></article>
+      </section>
+
+      <section className={`${styles.commandPanel} ${organic.frontalLobe}`}>
         <div className={styles.commandHeading}>
           <div>
-            <span className={styles.sectionLabel}><Sparkles size={14} /> ASK YOUR BRAIN</span>
+            <span className={styles.sectionLabel}><Sparkles size={14} /> FRONTAL LOBE · SEARCH + DECISION</span>
             <h2>Find anything you have built, decided, sold, studied, or planned.</h2>
           </div>
           <span className={styles.resultCount}>{filteredItems.length} results</span>
@@ -182,8 +219,8 @@ export function BrainClient({
           <input value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Try: lyric video, agent swarm, Friday music, lead intake, real estate..." />
         </label>
         <div className={styles.filters}>
-          <label><ListFilter size={15} /><select value={area} onChange={(event) => setArea(event.target.value)}><option value="all">All areas</option>{areas.map((value) => <option key={value} value={value}>{value}</option>)}</select></label>
-          <label><Layers3 size={15} /><select value={kind} onChange={(event) => setKind(event.target.value)}><option value="all">All types</option>{brainKinds.map((value) => <option key={value} value={value}>{titleCase(value)}</option>)}</select></label>
+          <label><ListFilter size={15} /><select value={area} onChange={(event) => setArea(event.target.value)}><option value="all">All lobes</option>{areas.map((value) => <option key={value} value={value}>{value}</option>)}</select></label>
+          <label><Layers3 size={15} /><select value={kind} onChange={(event) => setKind(event.target.value)}><option value="all">All memory types</option>{brainKinds.map((value) => <option key={value} value={value}>{titleCase(value)}</option>)}</select></label>
           <label><CircleDot size={15} /><select value={status} onChange={(event) => setStatus(event.target.value)}><option value="open">Open only</option><option value="all">All statuses</option>{brainStatuses.map((value) => <option key={value} value={value}>{titleCase(value)}</option>)}</select></label>
         </div>
       </section>
@@ -192,7 +229,7 @@ export function BrainClient({
         {snapshot.sources.map((source) => {
           const Icon = source.name === "GitHub" ? GitBranch : source.name === "Private import" ? FileJson : Database;
           return (
-            <article key={source.name} className={styles.sourceCard}>
+            <article key={source.name} className={`${styles.sourceCard} ${organic.synapseCard}`}>
               <span className={styles.sourceIcon}><Icon size={20} /></span>
               <div><strong>{source.name}</strong><p>{source.detail}</p></div>
               <span className={styles.sourceCount}>{source.itemCount}</span>
@@ -202,16 +239,16 @@ export function BrainClient({
       </section>
 
       <div className={styles.twoColumn}>
-        <section className={styles.panel}>
+        <section className={`${styles.panel} ${organic.brainPanel}`}>
           <div className={styles.panelHeading}>
-            <div><span className={styles.sectionLabel}>EXECUTION QUEUE</span><h2>What needs attention now</h2></div>
+            <div><span className={styles.sectionLabel}>MOTOR CORTEX · EXECUTION</span><h2>What needs attention now</h2></div>
             <span>{nextItems.length} surfaced</span>
           </div>
           <div className={styles.nextList}>
             {nextItems.map((item) => {
               const Icon = statusIcon(item.status);
               return (
-                <article key={item.id} className={styles.nextItem}>
+                <article key={item.id} className={`${styles.nextItem} ${organic.neuralConnector}`}>
                   <span className={`${styles.statusIcon} ${styles[item.status]}`}><Icon size={17} /></span>
                   <div><strong>{item.title}</strong><p>{item.area} · {titleCase(item.priority)} priority</p></div>
                   <ChevronRight size={17} />
@@ -221,16 +258,16 @@ export function BrainClient({
           </div>
         </section>
 
-        <section className={styles.panel}>
+        <section className={`${styles.panel} ${organic.brainPanel}`}>
           <div className={styles.panelHeading}>
-            <div><span className={styles.sectionLabel}>KNOWLEDGE GRAPH</span><h2>Connected operating areas</h2></div>
+            <div><span className={styles.sectionLabel}>ASSOCIATION CORTEX · CONNECTIONS</span><h2>Connected operating areas</h2></div>
             <span>{graphAreas.length} nodes</span>
           </div>
           <div className={styles.graphList}>
             {graphAreas.slice(0, 10).map((node) => {
               const Icon = areaIcon(node.name);
               return (
-                <button key={node.name} type="button" onClick={() => setArea(node.name)} className={styles.graphNode}>
+                <button key={node.name} type="button" onClick={() => selectBrainRegion(node.name)} className={`${styles.graphNode} ${organic.neuralConnector}`}>
                   <span><Icon size={17} /></span>
                   <div><strong>{node.name}</strong><small>{node.open} open · {node.critical} critical</small></div>
                   <b>{node.count}</b>
@@ -241,16 +278,16 @@ export function BrainClient({
         </section>
       </div>
 
-      <section className={styles.panel}>
+      <section id="memory-index" className={`${styles.panel} ${organic.brainPanel}`}>
         <div className={styles.panelHeading}>
-          <div><span className={styles.sectionLabel}>MEMORY INDEX</span><h2>Search results</h2></div>
+          <div><span className={styles.sectionLabel}>HIPPOCAMPUS · MEMORY INDEX</span><h2>Search results</h2></div>
           <span>{filteredItems.length} shown</span>
         </div>
         <div className={styles.memoryGrid}>
           {filteredItems.map((item) => {
             const Icon = statusIcon(item.status);
             return (
-              <article key={item.id} className={styles.memoryCard}>
+              <article key={item.id} className={`${styles.memoryCard} ${organic.memoryNeuron}`}>
                 <div className={styles.cardTopline}>
                   <span className={styles.kindPill}>{titleCase(item.kind)}</span>
                   <span className={`${styles.priorityPill} ${styles[`priority_${item.priority}`]}`}>{titleCase(item.priority)}</span>
@@ -283,9 +320,9 @@ export function BrainClient({
       </section>
 
       <section id="capture" className={styles.captureGrid}>
-        <article className={styles.panel}>
+        <article className={`${styles.panel} ${organic.brainPanel}`}>
           <div className={styles.panelHeading}>
-            <div><span className={styles.sectionLabel}>CAPTURE</span><h2>Add a memory, task, decision, or project</h2></div>
+            <div><span className={styles.sectionLabel}>SENSORY CORTEX · CAPTURE</span><h2>Add a memory, task, decision, or project</h2></div>
             <Plus size={20} />
           </div>
           <form action={createBrainItemAction} className={styles.formGrid}>
@@ -302,9 +339,9 @@ export function BrainClient({
           </form>
         </article>
 
-        <article className={styles.panel}>
+        <article className={`${styles.panel} ${organic.brainPanel}`}>
           <div className={styles.panelHeading}>
-            <div><span className={styles.sectionLabel}>PRIVATE IMPORT</span><h2>Load the full memory pack</h2></div>
+            <div><span className={styles.sectionLabel}>LONG-TERM MEMORY · PRIVATE IMPORT</span><h2>Load the full memory pack</h2></div>
             <Upload size={20} />
           </div>
           <p className={styles.importCopy}>Sensitive Gmail, calendar, personal, health, and infrastructure data stays outside the public codebase. Import it here after signing in.</p>

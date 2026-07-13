@@ -4,6 +4,15 @@ export const metadata: Metadata = {
   title: "ReelWorld GO — Location-Based AR Fishing",
   description: "Explore mapped water, scan real water with your camera, catch animated fish, visit gas-station bait shops, buy game permits, and avoid ranger citations.",
   applicationName: "ReelWorld GO",
+  alternates: {
+    canonical: "/apps/reelworld-go",
+  },
+  openGraph: {
+    title: "ReelWorld GO — Location-Based AR Fishing",
+    description: "A mobile-first location and camera fishing game inside ILLCO Command.",
+    url: "/apps/reelworld-go",
+    type: "website",
+  },
 };
 
 export const viewport: Viewport = {

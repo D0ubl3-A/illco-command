@@ -1,9 +1,19 @@
 import type { Metadata } from "next";
 
+const canonicalUrl = "https://illcoai.tech/nuclear-war-simulator";
+
 export const metadata: Metadata = {
   title: "Doomsday Command: Nuclear War Simulator",
   description:
     "A standalone strategic nuclear-war simulation with deterrence, missile defense, submarines, bombers, fallout, mission recording, replay, and MP4 export.",
+  alternates: { canonical: canonicalUrl },
+  openGraph: {
+    title: "Doomsday Command: Nuclear War Simulator",
+    description:
+      "A standalone strategic nuclear-war simulation with deterrence, missile defense, fallout, recording, replay, and MP4 export.",
+    url: canonicalUrl,
+    type: "website",
+  },
 };
 
 export default function NuclearWarSimulatorPage() {

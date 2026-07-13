@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#05090d">
+  <title>Doomsday Command: Aftermath Protocol</title>
+  <style>
+    html,body{margin:0;min-height:100%;background:#020508;color:#d8f5f4;font-family:system-ui,sans-serif}
+    body{display:grid;place-items:center}
+    #loading{display:grid;gap:14px;text-align:center;letter-spacing:.12em}
+    .bar{width:min(420px,70vw);height:5px;border-radius:999px;background:#10232b;overflow:hidden}
+    .bar i{display:block;height:100%;width:0;background:linear-gradient(90deg,#58e1f5,#8ff0b4);transition:width .15s}
+    small{color:#78949a}
+  </style>
+</head>
+<body>
+  <div id="loading">
+    <strong>LOADING DOOMSDAY COMMAND</strong>
+    <div class="bar"><i id="progress"></i></div>
+    <small id="status">Preparing command interface…</small>
+  </div>
+  <script>
+    (async () => {
+      const count = 16;
+      const arrays = [];
+      let total = 0;
+      const progress = document.getElementById('progress');
+      const status = document.getElementById('status');
+      try {
+        for (let i = 0; i < count; i += 1) {
+          const path = `chunks/part-${String(i).padStart(2, '0')}.b64`;
+          const response = await fetch(path, { cache: 'force-cache' });
+          if (!response.ok) throw new Error(`Missing simulation module ${i + 1}`);
+          const base64 = (await response.text()).replace(/\s+/g, '');
+          const bytes = Uint8Array.from(atob(base64), character => character.charCodeAt(0));
+          arrays.push(bytes);
+          total += bytes.length;
+          progress.style.width = `${((i + 1) / count) * 100}%`;
+          status.textContent = `Loading module ${i + 1} of ${count}`;
+        }
+        const merged = new Uint8Array(total);
+        let offset = 0;
+        for (const bytes of arrays) {
+          merged.set(bytes, offset);
+          offset += bytes.length;
+        }
+        let html = new TextDecoder().decode(merged);
+        const repairs = new Map([
+          ['ctx.chowColor', 'ctx.shadowColor'],
+          ['ctx.chadowBlur', 'ctx.shadowBlur'],
+          ['ctx.bineTo', 'ctx.lineTo'],
+          ['ctx.zoundRect', 'ctx.roundRect'],
+          ['const raw/state.lastFrame', 'const raw=state.lastFrame']
+        ]);
+        for (const [broken, fixed] of repairs) html = html.replaceAll(broken, fixed);
+        document.open();
+        document.write(html);
+        document.close();
+      } catch (error) {
+        document.getElementById('loading').innerHTML = `<strong>SIMULATION LOAD FAILED</strong><small>${String(error.message || error)}</small>`;
+        console.error(error);
+      }
+    })();
+  </script>
+</body>
+</html>

@@ -1,30 +1,47 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 
-import { type BlogPost, blogPosts, blogSiteUrl, getBlogPost, getRelatedPosts, headingId } from "@/lib/blog-posts";
+import { type BlogPost, blogPosts, blogSiteUrl, headingId } from "@/lib/blog-posts";
+import { newsBlogPosts } from "@/lib/news-blog-posts";
 
-type BlogArticlePageProps = {
-  params: Promise<{ slug: string }>;
-};
+type BlogArticlePageProps = { params: Promise<{ slug: string }> };
+
+const allBlogPosts: BlogPost[] = [...newsBlogPosts, ...blogPosts];
+
+function getPost(slug: string) {
+  return allBlogPosts.find((post) => post.slug === slug) || null;
+}
+
+function getRelated(post: BlogPost) {
+  const linkedSlugs = new Set(
+    post.internalLinks
+      .map((link) => link.href.match(/^\/blog\/([^/]+)$/)?.[1])
+      .filter((value): value is string => Boolean(value)),
+  );
+  const explicit = allBlogPosts.filter((candidate) => candidate.slug !== post.slug && linkedSlugs.has(candidate.slug));
+  const sameCategory = allBlogPosts.filter(
+    (candidate) => candidate.slug !== post.slug && candidate.category === post.category && !linkedSlugs.has(candidate.slug),
+  );
+  const fallback = allBlogPosts.filter(
+    (candidate) => candidate.slug !== post.slug && candidate.category !== post.category && !linkedSlugs.has(candidate.slug),
+  );
+  return [...explicit, ...sameCategory, ...fallback].slice(0, 3);
+}
 
 export function generateStaticParams() {
-  return blogPosts.map((post) => ({ slug: post.slug }));
+  return allBlogPosts.map((post) => ({ slug: post.slug }));
 }
 
 export async function generateMetadata({ params }: BlogArticlePageProps): Promise<Metadata> {
   const { slug } = await params;
-  const post = getBlogPost(slug);
+  const post = getPost(slug);
   if (!post) return {};
-
   const canonical = `${blogSiteUrl}/blog/${post.slug}`;
-
   return {
     title: post.title,
     description: post.description,
     keywords: [post.primaryKeyword, ...post.secondaryKeywords],
-    alternates: {
-      canonical,
-    },
+    alternates: { canonical },
     openGraph: {
       title: post.title,
       description: post.description,
@@ -33,14 +50,7 @@ export async function generateMetadata({ params }: BlogArticlePageProps): Promis
       publishedTime: post.publishedAt,
       modifiedTime: post.updatedAt,
       authors: ["ILLCO AI"],
-      images: [
-        {
-          url: `${canonical}/opengraph-image`,
-          width: 1200,
-          height: 630,
-          alt: `${post.title} - ILLCO Command`,
-        },
-      ],
+      images: [{ url: `${canonical}/opengraph-image`, width: 1200, height: 630, alt: `${post.title} - ILLCO AI` }],
     },
     twitter: {
       card: "summary_large_image",
@@ -53,11 +63,11 @@ export async function generateMetadata({ params }: BlogArticlePageProps): Promis
 
 export default async function BlogArticlePage({ params }: BlogArticlePageProps) {
   const { slug } = await params;
-  const post = getBlogPost(slug);
+  const post = getPost(slug);
   if (!post) notFound();
 
   const canonical = `${blogSiteUrl}/blog/${post.slug}`;
-  const relatedPosts = getRelatedPosts(post);
+  const relatedPosts = getRelated(post);
   const articleJsonLd = {
     "@context": "https://schema.org",
     "@type": "Article",
@@ -65,16 +75,8 @@ export default async function BlogArticlePage({ params }: BlogArticlePageProps) 
     description: post.description,
     datePublished: post.publishedAt,
     dateModified: post.updatedAt,
-    author: {
-      "@type": "Organization",
-      name: "ILLCO AI",
-      url: blogSiteUrl,
-    },
-    publisher: {
-      "@type": "Organization",
-      name: "ILLCO Command",
-      url: blogSiteUrl,
-    },
+    author: { "@type": "Organization", name: "ILLCO AI", url: blogSiteUrl },
+    publisher: { "@type": "Organization", name: "ILLCO AI", url: blogSiteUrl },
     mainEntityOfPage: canonical,
     image: `${canonical}/opengraph-image`,
     keywords: [post.primaryKeyword, ...post.secondaryKeywords].join(", "),
@@ -84,24 +86,9 @@ export default async function BlogArticlePage({ params }: BlogArticlePageProps) 
     "@context": "https://schema.org",
     "@type": "BreadcrumbList",
     itemListElement: [
-      {
-        "@type": "ListItem",
-        position: 1,
-        name: "ILLCO Command",
-        item: blogSiteUrl,
-      },
-      {
-        "@type": "ListItem",
-        position: 2,
-        name: "Blog",
-        item: `${blogSiteUrl}/blog`,
-      },
-      {
-        "@type": "ListItem",
-        position: 3,
-        name: post.title,
-        item: canonical,
-      },
+      { "@type": "ListItem", position: 1, name: "ILLCO AI", item: blogSiteUrl },
+      { "@type": "ListItem", position: 2, name: "Blog", item: `${blogSiteUrl}/blog` },
+      { "@type": "ListItem", position: 3, name: post.title, item: canonical },
     ],
   };
   const faqJsonLd = {
@@ -110,13 +97,9 @@ export default async function BlogArticlePage({ params }: BlogArticlePageProps) 
     mainEntity: post.faqs.map((faq) => ({
       "@type": "Question",
       name: faq.question,
-      acceptedAnswer: {
-        "@type": "Answer",
-        text: faq.answer,
-      },
+      acceptedAnswer: { "@type": "Answer", text: faq.answer },
     })),
   };
-  const processSteps = extractProcessSteps(post);
 
   return (
     <main id="main-content" className="fallbackPage blogPage">
@@ -126,10 +109,7 @@ export default async function BlogArticlePage({ params }: BlogArticlePageProps) 
 
       <div className="workspace blogWorkspace">
         <nav className="appLandingNav" aria-label="Article navigation">
-          <a className="brandBlock" href="/">
-            <span className="brandGlyph">IC</span>
-            <strong>ILLCO Command</strong>
-          </a>
+          <a className="brandBlock" href="/"><span className="brandGlyph">IC</span><strong>ILLCO Command</strong></a>
           <div>
             <a className="button secondary" href="/blog">All Articles</a>
             <a className="button secondary" href="/commander#apps">Apps</a>
@@ -144,135 +124,71 @@ export default async function BlogArticlePage({ params }: BlogArticlePageProps) 
               <h1>{post.title}</h1>
               <p>{post.description}</p>
             </div>
-            <dl className="blogArticleFacts" aria-label="Article SEO facts">
-              <div>
-                <dt>Primary keyword</dt>
-                <dd>{post.primaryKeyword}</dd>
-              </div>
-              <div>
-                <dt>Audience</dt>
-                <dd>{post.audience}</dd>
-              </div>
-              <div>
-                <dt>Updated</dt>
-                <dd>{post.updatedAt}</dd>
-              </div>
-              <div>
-                <dt>Read time</dt>
-                <dd>{post.readingMinutes} min</dd>
-              </div>
+            <dl className="blogArticleFacts" aria-label="Article facts">
+              <div><dt>Primary keyword</dt><dd>{post.primaryKeyword}</dd></div>
+              <div><dt>Audience</dt><dd>{post.audience}</dd></div>
+              <div><dt>Updated</dt><dd>{post.updatedAt}</dd></div>
+              <div><dt>Read time</dt><dd>{post.readingMinutes} min</dd></div>
             </dl>
           </header>
 
-          <section className="blogIntentPanel" aria-label="SERP strategy">
-            <div>
-              <span>SERP intent</span>
-              <p>{post.serpIntent}</p>
-            </div>
-            <div>
-              <span>Rank angle</span>
-              <p>{post.rankAngle}</p>
-            </div>
+          <section className="blogIntentPanel" aria-label="Editorial strategy">
+            <div><span>SERP intent</span><p>{post.serpIntent}</p></div>
+            <div><span>Rank angle</span><p>{post.rankAngle}</p></div>
           </section>
 
           <section className="blogTakeaways" aria-labelledby="key-takeaways">
             <h2 id="key-takeaways">Key Takeaways</h2>
-            <ul>
-              {post.takeaways.map((takeaway) => (
-                <li key={takeaway}>{takeaway}</li>
-              ))}
-            </ul>
+            <ul>{post.takeaways.map((takeaway) => <li key={takeaway}>{takeaway}</li>)}</ul>
           </section>
 
           <div className="blogArticleLayout">
-          <aside className="blogToc" aria-label="Table of contents">
-            <strong>On this page</strong>
-            {post.sections.map((section) => (
-              <a href={`#${headingId(section.heading)}`} key={section.heading}>{section.heading}</a>
-            ))}
-            {processSteps.length ? <a href="#process">Process</a> : null}
-            <a href="#faq">FAQ</a>
-            <a href="#sources">Sources</a>
-          </aside>
+            <aside className="blogToc" aria-label="Table of contents">
+              <strong>On this page</strong>
+              {post.sections.map((section) => <a href={`#${headingId(section.heading)}`} key={section.heading}>{section.heading}</a>)}
+              <a href="#faq">FAQ</a>
+              <a href="#sources">Sources</a>
+            </aside>
 
             <div className="blogArticleBody">
               {post.sections.map((section) => (
                 <section id={headingId(section.heading)} key={section.heading}>
                   {section.eyebrow ? <span className="blogSectionEyebrow">{section.eyebrow}</span> : null}
                   <h2>{section.heading}</h2>
-                  {section.paragraphs.map((paragraph) => (
-                    <p key={paragraph}>{paragraph}</p>
-                  ))}
-                  {section.bullets ? (
-                    <ul>
-                      {section.bullets.map((bullet) => (
-                        <li key={bullet}>{bullet}</li>
-                      ))}
-                    </ul>
-                  ) : null}
+                  {section.paragraphs.map((paragraph) => <p key={paragraph}>{paragraph}</p>)}
+                  {section.bullets ? <ul>{section.bullets.map((bullet) => <li key={bullet}>{bullet}</li>)}</ul> : null}
                   {section.callout ? <div className="blogCallout">{section.callout}</div> : null}
                 </section>
               ))}
-              {processSteps.length ? (
-                <section id="process" className="blogTakeaways">
-                  <h2>Process</h2>
-                  <ol>
-                    {processSteps.map((step, index) => (
-                      <li key={`${step}-${index}`}>{step}</li>
-                    ))}
-                  </ol>
-                </section>
-              ) : null}
 
               <section id="faq" className="blogFaq">
                 <h2>FAQ</h2>
-                {post.faqs.map((faq) => (
-                  <details key={faq.question}>
-                    <summary>{faq.question}</summary>
-                    <p>{faq.answer}</p>
-                  </details>
-                ))}
+                {post.faqs.map((faq) => <details key={faq.question}><summary>{faq.question}</summary><p>{faq.answer}</p></details>)}
               </section>
 
               <section className="blogInternalLinks" aria-labelledby="recommended-next-steps">
                 <h2 id="recommended-next-steps">Recommended Next Steps</h2>
                 <div>
                   {post.internalLinks.map((link) => (
-                    <a href={link.href} key={link.href}>
-                      <strong>{link.label}</strong>
-                      <span>{link.description}</span>
-                    </a>
+                    <a href={link.href} key={`${link.href}-${link.label}`}><strong>{link.label}</strong><span>{link.description}</span></a>
                   ))}
                 </div>
               </section>
 
               <section id="sources" className="blogSources">
                 <h2>Sources</h2>
-                <ul>
-                  {post.sources.map((source) => (
-                    <li key={source.href}>
-                      <a href={source.href} target="_blank" rel="noreferrer">{source.label}</a>
-                    </li>
-                  ))}
-                </ul>
+                <ul>{post.sources.map((source) => <li key={source.href}><a href={source.href} target="_blank" rel="noreferrer">{source.label}</a></li>)}</ul>
               </section>
             </div>
           </div>
         </article>
 
         <section className="panel blogArticleList" aria-labelledby="related-guides">
-          <div className="panelHeader">
-            <div>
-              <h2 id="related-guides">Related Guides</h2>
-              <p>Keep the cluster tight with internal links across automation tools, agents, pricing, Notion, and lead follow-up.</p>
-            </div>
-          </div>
+          <div className="panelHeader"><div><h2 id="related-guides">Related Guides</h2><p>Continue through the ILLCO AI news and automation library.</p></div></div>
           <div className="blogCardGrid">
             {relatedPosts.map((related) => (
               <a className="blogPostCard" href={`/blog/${related.slug}`} key={related.slug}>
-                <span>{related.category}</span>
-                <h3>{related.title}</h3>
-                <p>{related.description}</p>
+                <span>{related.category}</span><h3>{related.title}</h3><p>{related.description}</p>
               </a>
             ))}
           </div>
@@ -280,23 +196,4 @@ export default async function BlogArticlePage({ params }: BlogArticlePageProps) 
       </div>
     </main>
   );
-}
-
-function extractProcessSteps(post: BlogPost) {
-  if (post.workflow && post.workflow.length) return post.workflow;
-
-  const workflowSection = post.sections.find((section) => {
-    const heading = section.heading.toLowerCase();
-    const eyebrow = section.eyebrow?.toLowerCase() || "";
-    return heading.includes("workflow") || heading.includes("process") || eyebrow.includes("workflow") || eyebrow.includes("process");
-  });
-  if (workflowSection?.bullets?.length) return workflowSection.bullets;
-
-  const explicitStepSection = post.sections.find((section) => section.heading.toLowerCase().includes("step"));
-  if (explicitStepSection?.bullets?.length) return explicitStepSection.bullets;
-
-  const fallbackSection = post.sections.find((section) => section.bullets?.length);
-  if (fallbackSection?.bullets?.length) return fallbackSection.bullets;
-
-  return post.takeaways.slice(0, 5);
 }

@@ -1,11 +1,17 @@
 name: Deploy ILLCO Command to Vercel
 
 on:
+  push:
+    branches:
+      - main
   workflow_dispatch:
 
 concurrency:
   group: illco-command-production
   cancel-in-progress: false
+
+permissions:
+  contents: read
 
 jobs:
   deploy:
@@ -52,5 +58,5 @@ jobs:
       - name: Deploy to Vercel
         run: npx vercel deploy --prebuilt --prod --token="${{ secrets.VERCEL_TOKEN }}"
 
-      - name: Verify Master Agent live route
-        run: npx tsx scripts/verify-master-agent-live.ts https://illco-command.vercel.app
+      - name: Verify ReelWorld GO live route
+        run: npx tsx scripts/verify-master-agent-live.ts https://illco-command.vercel.app/apps/reelworld-go

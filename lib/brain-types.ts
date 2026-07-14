@@ -29,10 +29,10 @@ export type BrainItem = {
   summary: string;
   status: BrainStatus;
   priority: BrainPriority;
-  progress: number;
-  nextAction: string;
-  pinned: boolean;
-  reviewAt: string | null;
+  progress?: number;
+  nextAction?: string;
+  pinned?: boolean;
+  reviewAt?: string | null;
   tags: string[];
   source: string;
   sourceUrl: string | null;

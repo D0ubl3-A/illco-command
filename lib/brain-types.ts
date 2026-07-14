@@ -81,20 +81,20 @@ export type BrainSourceSummary = {
 
 export type BrainSnapshot = {
   items: BrainItem[];
-  links: BrainLink[];
-  events: BrainEvent[];
-  brief: BrainBrief;
+  links?: BrainLink[];
+  events?: BrainEvent[];
+  brief?: BrainBrief;
   total: number;
   active: number;
   next: number;
   blocked: number;
   done: number;
-  overdue: number;
-  dueSoon: number;
-  stale: number;
+  overdue?: number;
+  dueSoon?: number;
+  stale?: number;
   areas: number;
-  connectedItems: number;
-  healthScore: number;
+  connectedItems?: number;
+  healthScore?: number;
   sources: BrainSourceSummary[];
 };
 

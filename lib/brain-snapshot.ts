@@ -1,5 +1,6 @@
 import "@/lib/server-only";
 
+import { seedDefaultBrainLinks } from "@/lib/brain-default-links";
 import { listBrainEvents, listBrainItems, listBrainLinks, seedBrain } from "@/lib/brain-store";
 import type { BrainBrief, BrainEvent, BrainItem, BrainLink, BrainSnapshot } from "@/lib/brain-types";
 
@@ -116,6 +117,12 @@ export async function getSafeBrainSnapshot(ownerEmail: string): Promise<BrainSna
     items = await listBrainItems(ownerEmail);
   }
 
-  const [links, events] = await Promise.all([listBrainLinks(ownerEmail), listBrainEvents(ownerEmail, 100)]);
+  let links = await listBrainLinks(ownerEmail);
+  if (!links.length && items.length) {
+    await seedDefaultBrainLinks(ownerEmail, items);
+    links = await listBrainLinks(ownerEmail);
+  }
+
+  const events = await listBrainEvents(ownerEmail, 100);
   return assembleBrainSnapshot(items, links, events);
 }

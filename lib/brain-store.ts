@@ -89,10 +89,7 @@ function deterministicId(ownerEmail: string, externalId: string) {
 }
 
 export async function ensureBrainSchema() {
-  if (!hasDatabase()) {
-    throw new Error("A database is required for persistent Brain OS storage.");
-  }
-
+  if (!hasDatabase()) throw new Error("A database is required for persistent Brain OS storage.");
   if (!brainSchemaReady) brainSchemaReady = createBrainSchema();
 
   try {
@@ -404,6 +401,7 @@ export async function updateBrainItem(ownerEmail: string, itemId: string, input:
   await ensureBrainSchema();
   const existing = await getBrainItem(ownerEmail, itemId);
   if (!existing) throw new Error("Brain memory not found.");
+
   await upsertBrainItem(ownerEmail, {
     id: existing.id,
     kind: input.kind ?? existing.kind,
@@ -412,14 +410,14 @@ export async function updateBrainItem(ownerEmail: string, itemId: string, input:
     summary: input.summary ?? existing.summary,
     status: input.status ?? existing.status,
     priority: input.priority ?? existing.priority,
-    progress: input.progress ?? existing.progress,
-    nextAction: input.nextAction ?? existing.nextAction,
-    pinned: input.pinned ?? existing.pinned,
-    reviewAt: input.reviewAt ?? existing.reviewAt,
+    progress: input.progress ?? existing.progress ?? 0,
+    nextAction: "nextAction" in input ? input.nextAction : existing.nextAction,
+    pinned: input.pinned ?? existing.pinned ?? false,
+    reviewAt: "reviewAt" in input ? input.reviewAt : existing.reviewAt,
     tags: input.tags ?? existing.tags,
     source: input.source ?? existing.source,
-    sourceUrl: input.sourceUrl ?? existing.sourceUrl,
-    dueAt: input.dueAt ?? existing.dueAt,
+    sourceUrl: "sourceUrl" in input ? input.sourceUrl : existing.sourceUrl,
+    dueAt: "dueAt" in input ? input.dueAt : existing.dueAt,
     metadata: input.metadata ?? existing.metadata,
   });
   await logBrainEvent(ownerEmail, { itemId, eventType: "updated", detail: `Updated ${existing.title}.` });
@@ -430,7 +428,7 @@ export async function updateBrainItemStatus(ownerEmail: string, itemId: string, 
   const item = await getBrainItem(ownerEmail, itemId);
   if (!item) throw new Error("Brain memory not found.");
   const nextStatus = validStatus(status);
-  const progress = nextStatus === "done" ? 100 : item.progress;
+  const progress = nextStatus === "done" ? 100 : item.progress ?? 0;
   const sql = getSql();
   await sql`
     UPDATE illco_brain_items
@@ -485,7 +483,11 @@ export async function createBrainLink(
 
 export async function importBrainItems(ownerEmail: string, input: unknown) {
   await ensureBrainSchema();
-  const parsed = Array.isArray(input) ? input : input && typeof input === "object" && Array.isArray((input as { items?: unknown }).items) ? (input as { items: unknown[] }).items : null;
+  const parsed = Array.isArray(input)
+    ? input
+    : input && typeof input === "object" && Array.isArray((input as { items?: unknown }).items)
+      ? (input as { items: unknown[] }).items
+      : null;
   if (!parsed) throw new Error("Import must be a JSON array or an object with an items array.");
   if (parsed.length > 500) throw new Error("Import is limited to 500 items per run.");
 
@@ -519,7 +521,7 @@ function scoreFocus(item: BrainItem, now: number) {
     if (Number.isFinite(due) && due < now) score += 12;
     else if (Number.isFinite(due) && due - now < 7 * 86_400_000) score += 7;
   }
-  score += Math.max(0, (100 - item.progress) / 25);
+  score += Math.max(0, (100 - (item.progress ?? 0)) / 25);
   return score;
 }
 
@@ -586,7 +588,7 @@ export async function executeBrainCommand(ownerEmail: string, rawCommand: string
     const query = command.slice(command.indexOf(":") + 1).trim().toLowerCase();
     const tokens = query.split(/\s+/).filter(Boolean);
     const matches = items.filter((item) => {
-      const haystack = [item.title, item.summary, item.area, item.kind, item.status, item.priority, item.nextAction, ...item.tags].join(" ").toLowerCase();
+      const haystack = [item.title, item.summary, item.area, item.kind, item.status, item.priority, item.nextAction || "", ...item.tags].join(" ").toLowerCase();
       return tokens.every((token) => haystack.includes(token));
     });
     return { command, mutation: "none", itemIds: matches.map((item) => item.id), message: `${matches.length} matching memories found for “${query}”.` };
@@ -646,7 +648,7 @@ export async function executeBrainCommand(ownerEmail: string, rawCommand: string
 
   const tokens = normalized.split(/\s+/).filter(Boolean);
   const matches = items.filter((item) => {
-    const haystack = [item.title, item.summary, item.area, item.kind, item.status, item.priority, item.nextAction, ...item.tags].join(" ").toLowerCase();
+    const haystack = [item.title, item.summary, item.area, item.kind, item.status, item.priority, item.nextAction || "", ...item.tags].join(" ").toLowerCase();
     return tokens.every((token) => haystack.includes(token));
   });
   return { command, mutation: "none", itemIds: matches.map((item) => item.id), message: `${matches.length} matching memories found.` };

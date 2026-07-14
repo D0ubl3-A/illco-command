@@ -1,11 +1,14 @@
 import type { MetadataRoute } from "next";
 
 import { blogPosts } from "@/lib/blog-posts";
+import { newsBlogPosts } from "@/lib/news-blog-posts";
+import { viralBlogPosts } from "@/lib/viral-blog-posts";
 import { products } from "@/lib/deployments";
 import { legalPages } from "@/lib/legal-pages";
 
 const siteUrl = "https://illcoai.tech";
 const lastModified = new Date();
+const allBlogPosts = [...viralBlogPosts, ...newsBlogPosts, ...blogPosts];
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const staticRoutes: MetadataRoute.Sitemap = [
@@ -54,7 +57,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     {
       url: `${siteUrl}/blog`,
       lastModified,
-      changeFrequency: "weekly",
+      changeFrequency: "daily",
       priority: 0.9,
     },
   ];
@@ -66,11 +69,11 @@ export default function sitemap(): MetadataRoute.Sitemap {
     priority: product.isLive ? 0.85 : 0.65,
   }));
 
-  const blogRoutes = blogPosts.map((post) => ({
+  const blogRoutes = allBlogPosts.map((post) => ({
     url: `${siteUrl}/blog/${post.slug}`,
     lastModified: new Date(post.updatedAt),
-    changeFrequency: "monthly" as const,
-    priority: post.slug === "best-ai-automation-tools-for-small-business" ? 0.95 : 0.86,
+    changeFrequency: post.publishedAt === post.updatedAt ? ("weekly" as const) : ("monthly" as const),
+    priority: post.slug === "ai-turned-lizard-into-hummingbird-image-enhancement-hallucination" ? 0.98 : 0.86,
   }));
 
   const legalRoutes = legalPages.map((page) => ({

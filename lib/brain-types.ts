@@ -98,7 +98,7 @@ export type BrainSnapshot = {
   sources: BrainSourceSummary[];
 };
 
-export type BrainImportItem = Partial<
+type BrainImportBase = Partial<
   Pick<
     BrainItem,
     | "id"
@@ -112,13 +112,14 @@ export type BrainImportItem = Partial<
     | "nextAction"
     | "pinned"
     | "reviewAt"
-    | "tags"
     | "source"
     | "sourceUrl"
     | "dueAt"
     | "metadata"
   >
 >;
+
+export type BrainImportItem = BrainImportBase & { tags?: string[] | string };
 
 export type BrainCommandResult = {
   message: string;

@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-labelledby="title desc">
+  <title id="title">ReelWorld GO</title>
+  <desc id="desc">A fishing hook and fish over blue water.</desc>
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#16c8f4"/>
+      <stop offset=".52" stop-color="#0875a7"/>
+      <stop offset="1" stop-color="#031923"/>
+    </linearGradient>
+    <linearGradient id="fish" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#d8ff68"/>
+      <stop offset="1" stop-color="#39efbd"/>
+    </linearGradient>
+  </defs>
+  <rect width="512" height="512" rx="116" fill="url(#bg)"/>
+  <path d="M0 350c81-48 143-44 214-4 74 42 150 46 298-35v201H0Z" fill="#062c3d" opacity=".9"/>
+  <path d="M49 377c82-38 143-30 211 8 64 36 122 35 203-3" fill="none" stroke="#62e8ff" stroke-width="18" stroke-linecap="round" opacity=".7"/>
+  <path d="M307 113v125c0 58-42 95-94 95-49 0-82-30-82-69 0-33 25-59 58-59 29 0 51 20 51 45 0 22-17 39-39 39-18 0-31-10-36-24" fill="none" stroke="#fff" stroke-width="30" stroke-linecap="round"/>
+  <path d="m307 113 49 35-49 35Z" fill="#ff6a3d"/>
+  <path d="M284 303c40-39 94-38 135 0-41 39-95 39-135 0Z" fill="url(#fish)"/>
+  <path d="m414 303 55-35v70Z" fill="#39efbd"/>
+  <circle cx="319" cy="294" r="8" fill="#06111a"/>
+  <path d="M334 318c20 8 42 7 61-3" fill="none" stroke="#0875a7" stroke-width="9" stroke-linecap="round"/>
+</svg>

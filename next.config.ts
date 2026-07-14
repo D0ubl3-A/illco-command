@@ -9,8 +9,8 @@ const nextConfig: NextConfig = {
     return [
       {
         source: "/:path*",
-        has: [{ type: "host", value: "illcoai.tech" }],
-        destination: "https://www.illcoai.tech/:path*",
+        has: [{ type: "host", value: "www.illcoai.tech" }],
+        destination: "https://illcoai.tech/:path*",
         permanent: true,
       },
       {

@@ -1,5 +1,7 @@
 import type { Metadata, Viewport } from "next";
 
+import "./bobber-overrides.css";
+
 export const metadata: Metadata = {
   title: "ReelWorld GO — Location-Based AR Fishing",
   description: "Explore mapped water, scan real water with your camera, catch animated fish, visit gas-station bait shops, buy game permits, and avoid ranger citations.",

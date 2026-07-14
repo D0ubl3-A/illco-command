@@ -5,7 +5,7 @@ import { StoreNavigation } from "@/components/layout/navigation";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://illco-ai-app-store.vercel.app"),
+  metadataBase: new URL("https://illcoai.tech"),
   title: {
     default: "ILLCO AI App Store",
     template: "%s | ILLCO AI",
@@ -22,7 +22,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "ILLCO AI App Store",
     description: "Browse working AI apps, sign in with Google, and open ChatGPT-backed tools from the same storefront.",
-    url: "https://illco-ai-app-store.vercel.app",
+    url: "https://illcoai.tech",
     siteName: "ILLCO AI App Store",
     images: [
       {

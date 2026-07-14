@@ -6,7 +6,7 @@
     "dev": "next dev",
     "build": "next build --webpack",
     "start": "next start",
-    "test": "tsx --test tests/**/*.test.ts",
+    "test": "tsx --test tests/*.test.ts",
     "audit:health": "tsx scripts/audit-project-health.ts",
     "audit:sources": "tsx scripts/audit-project-sources.ts",
     "readiness:ledger": "tsx scripts/write-readiness-ledger.ts",

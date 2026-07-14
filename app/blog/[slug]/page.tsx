@@ -3,10 +3,15 @@ import { notFound } from "next/navigation";
 
 import { type BlogPost, blogPosts, blogSiteUrl, headingId } from "@/lib/blog-posts";
 import { newsBlogPosts } from "@/lib/news-blog-posts";
+import { type VisualBlogPost, viralBlogPosts } from "@/lib/viral-blog-posts";
 
 type BlogArticlePageProps = { params: Promise<{ slug: string }> };
 
-const allBlogPosts: BlogPost[] = [...newsBlogPosts, ...blogPosts];
+const allBlogPosts: VisualBlogPost[] = [
+  ...viralBlogPosts,
+  ...(newsBlogPosts as VisualBlogPost[]),
+  ...(blogPosts as VisualBlogPost[]),
+];
 
 function getPost(slug: string) {
   return allBlogPosts.find((post) => post.slug === slug) || null;
@@ -37,6 +42,7 @@ export async function generateMetadata({ params }: BlogArticlePageProps): Promis
   const post = getPost(slug);
   if (!post) return {};
   const canonical = `${blogSiteUrl}/blog/${post.slug}`;
+  const socialImage = post.socialImage ? `${blogSiteUrl}${post.socialImage}` : `${canonical}/opengraph-image`;
   return {
     title: post.title,
     description: post.description,
@@ -50,13 +56,13 @@ export async function generateMetadata({ params }: BlogArticlePageProps): Promis
       publishedTime: post.publishedAt,
       modifiedTime: post.updatedAt,
       authors: ["ILLCO AI"],
-      images: [{ url: `${canonical}/opengraph-image`, width: 1200, height: 630, alt: `${post.title} - ILLCO AI` }],
+      images: [{ url: socialImage, width: 1200, height: 630, alt: `${post.title} - ILLCO AI` }],
     },
     twitter: {
       card: "summary_large_image",
       title: post.title,
       description: post.description,
-      images: [`${canonical}/opengraph-image`],
+      images: [socialImage],
     },
   };
 }
@@ -67,6 +73,7 @@ export default async function BlogArticlePage({ params }: BlogArticlePageProps) 
   if (!post) notFound();
 
   const canonical = `${blogSiteUrl}/blog/${post.slug}`;
+  const socialImage = post.socialImage ? `${blogSiteUrl}${post.socialImage}` : `${canonical}/opengraph-image`;
   const relatedPosts = getRelated(post);
   const articleJsonLd = {
     "@context": "https://schema.org",
@@ -78,7 +85,7 @@ export default async function BlogArticlePage({ params }: BlogArticlePageProps) 
     author: { "@type": "Organization", name: "ILLCO AI", url: blogSiteUrl },
     publisher: { "@type": "Organization", name: "ILLCO AI", url: blogSiteUrl },
     mainEntityOfPage: canonical,
-    image: `${canonical}/opengraph-image`,
+    image: socialImage,
     keywords: [post.primaryKeyword, ...post.secondaryKeywords].join(", "),
     about: post.category,
   };
@@ -132,6 +139,20 @@ export default async function BlogArticlePage({ params }: BlogArticlePageProps) 
             </dl>
           </header>
 
+          {post.heroImage ? (
+            <figure style={{ margin: "0 0 28px", overflow: "hidden", borderRadius: "24px", border: "1px solid rgba(255,255,255,0.12)", background: "#05070b" }}>
+              <img
+                src={post.heroImage.src}
+                alt={post.heroImage.alt}
+                width="1200"
+                height="630"
+                fetchPriority="high"
+                style={{ display: "block", width: "100%", height: "auto" }}
+              />
+              {post.heroImage.caption ? <figcaption style={{ padding: "14px 18px", color: "#aab6c4", fontSize: "0.95rem" }}>{post.heroImage.caption}</figcaption> : null}
+            </figure>
+          ) : null}
+
           <section className="blogIntentPanel" aria-label="Editorial strategy">
             <div><span>SERP intent</span><p>{post.serpIntent}</p></div>
             <div><span>Rank angle</span><p>{post.rankAngle}</p></div>
@@ -141,6 +162,25 @@ export default async function BlogArticlePage({ params }: BlogArticlePageProps) 
             <h2 id="key-takeaways">Key Takeaways</h2>
             <ul>{post.takeaways.map((takeaway) => <li key={takeaway}>{takeaway}</li>)}</ul>
           </section>
+
+          {post.comparisonImages?.length ? (
+            <section aria-labelledby="real-images-comparison" style={{ margin: "32px 0" }}>
+              <span className="blogSectionEyebrow">The actual images</span>
+              <h2 id="real-images-comparison">Original lizard vs. AI-generated hummingbird</h2>
+              <p>These are the real files from the experiment, not replacement stock photos.</p>
+              <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))", gap: "20px", marginTop: "20px" }}>
+                {post.comparisonImages.map((image) => (
+                  <figure key={image.src} style={{ margin: 0, overflow: "hidden", borderRadius: "20px", border: "1px solid rgba(255,255,255,0.12)", background: "rgba(255,255,255,0.03)" }}>
+                    <img src={image.src} alt={image.alt} loading="lazy" style={{ display: "block", width: "100%", height: "auto" }} />
+                    <figcaption style={{ padding: "16px 18px" }}>
+                      <strong style={{ display: "block", marginBottom: "8px", color: "#f5f7fa" }}>{image.label}</strong>
+                      <span style={{ color: "#aab6c4" }}>{image.caption}</span>
+                    </figcaption>
+                  </figure>
+                ))}
+              </div>
+            </section>
+          ) : null}
 
           <div className="blogArticleLayout">
             <aside className="blogToc" aria-label="Table of contents">
@@ -188,6 +228,7 @@ export default async function BlogArticlePage({ params }: BlogArticlePageProps) 
           <div className="blogCardGrid">
             {relatedPosts.map((related) => (
               <a className="blogPostCard" href={`/blog/${related.slug}`} key={related.slug}>
+                {related.heroImage ? <img src={related.heroImage.src} alt="" loading="lazy" style={{ width: "100%", height: "180px", objectFit: "cover", borderRadius: "14px", marginBottom: "14px" }} /> : null}
                 <span>{related.category}</span><h3>{related.title}</h3><p>{related.description}</p>
               </a>
             ))}

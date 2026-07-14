@@ -1,20 +1,50 @@
-name: Deploy ILLCO Command to Vercel
+name: Verify and deploy ILLCO Command
 
 on:
   push:
     branches:
       - main
+  pull_request:
+    branches:
+      - main
   workflow_dispatch:
 
 concurrency:
-  group: illco-command-production
-  cancel-in-progress: false
+  group: illco-command-${{ github.ref }}
+  cancel-in-progress: true
 
 permissions:
   contents: read
 
 jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Use Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Type check
+        run: npx tsc --noEmit --pretty false
+
+      - name: Test
+        run: npm test
+
+      - name: Build
+        run: npm run build
+
   deploy:
+    if: github.event_name != 'pull_request'
+    needs: verify
     runs-on: ubuntu-latest
     timeout-minutes: 30
     env:
@@ -27,10 +57,10 @@ jobs:
       - name: Use Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: 24
+          node-version: 22
           cache: npm
 
-      - name: Verify Vercel credentials
+      - name: Verify deployment credentials
         shell: bash
         run: |
           test -n "${{ secrets.VERCEL_TOKEN }}" || (echo "Missing VERCEL_TOKEN secret" && exit 1)
@@ -40,23 +70,30 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      - name: Type check
-        run: npx tsc --noEmit --pretty false
-
-      - name: Test
-        run: npx tsx --test tests/*.test.ts
-
-      - name: Build
-        run: npm run build
-
-      - name: Pull Vercel environment
-        run: npx vercel pull --yes --environment=production --token="${{ secrets.VERCEL_TOKEN }}"
+      - name: Pull production environment
+        run: npx --yes vercel pull --yes --environment=production --token="${{ secrets.VERCEL_TOKEN }}"
 
       - name: Build Vercel artifact
-        run: npx vercel build --prod --token="${{ secrets.VERCEL_TOKEN }}"
+        run: npx --yes vercel build --prod --token="${{ secrets.VERCEL_TOKEN }}"
 
-      - name: Deploy to Vercel
-        run: npx vercel deploy --prebuilt --prod --token="${{ secrets.VERCEL_TOKEN }}"
+      - name: Deploy production artifact
+        run: npx --yes vercel deploy --prebuilt --prod --token="${{ secrets.VERCEL_TOKEN }}"
 
-      - name: Verify ReelWorld GO live route
-        run: npx tsx scripts/verify-master-agent-live.ts https://illco-command.vercel.app/apps/reelworld-go
+      - name: Verify critical production routes
+        shell: bash
+        run: |
+          set -euo pipefail
+          routes=(
+            "https://illco-command.vercel.app/"
+            "https://illco-command.vercel.app/brain"
+            "https://illco-command.vercel.app/tools/lyric-video-forge"
+            "https://illco-command.vercel.app/tools/meme-mcp-server"
+            "https://illco-command.vercel.app/api/health"
+          )
+
+          for route in "${routes[@]}"; do
+            echo "Checking $route"
+            curl --fail --silent --show-error --location \
+              --retry 8 --retry-delay 5 --retry-all-errors \
+              --max-time 30 "$route" > /dev/null
+          done

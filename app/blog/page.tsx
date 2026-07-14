@@ -2,8 +2,13 @@ import type { Metadata } from "next";
 
 import { blogPosts, blogSiteUrl } from "@/lib/blog-posts";
 import { newsBlogPosts } from "@/lib/news-blog-posts";
+import { type VisualBlogPost, viralBlogPosts } from "@/lib/viral-blog-posts";
 
-const allBlogPosts = [...newsBlogPosts, ...blogPosts];
+const allBlogPosts: VisualBlogPost[] = [
+  ...viralBlogPosts,
+  ...(newsBlogPosts as VisualBlogPost[]),
+  ...(blogPosts as VisualBlogPost[]),
+];
 
 export const metadata: Metadata = {
   title: "ILLCO AI Blog | AI News, Automation and Small-Business Guides",
@@ -27,7 +32,7 @@ export const metadata: Metadata = {
 };
 
 export default function BlogIndexPage() {
-  const featured = newsBlogPosts.slice(0, 3);
+  const featured = allBlogPosts.slice(0, 3);
 
   return (
     <main id="main-content" className="fallbackPage blogPage">
@@ -40,7 +45,7 @@ export default function BlogIndexPage() {
           <div>
             <a className="button secondary" href="/#services">Services</a>
             <a className="button secondary" href="/commander#apps">Apps</a>
-            <a className="button primary" href={`/blog/${newsBlogPosts[0]?.slug || blogPosts[0].slug}`}>Latest Article</a>
+            <a className="button primary" href={`/blog/${allBlogPosts[0]?.slug || blogPosts[0].slug}`}>Latest Article</a>
           </div>
         </nav>
 
@@ -55,7 +60,7 @@ export default function BlogIndexPage() {
           </div>
           <div className="blogHeroStack" aria-label="Blog summary">
             <span><strong>{allBlogPosts.length}</strong> published guides</span>
-            <span><strong>{newsBlogPosts.length}</strong> current-news packages added</span>
+            <span><strong>{newsBlogPosts.length + viralBlogPosts.length}</strong> current and viral AI packages</span>
             <span><strong>Sources + analysis</strong> clearly separated</span>
           </div>
         </section>
@@ -63,6 +68,11 @@ export default function BlogIndexPage() {
         {featured.length ? (
           <section className="blogClusterGrid" aria-label="Featured AI news articles">
             <article className="panel blogPillarCard">
+              {featured[0].heroImage ? (
+                <a href={`/blog/${featured[0].slug}`} aria-label={`Read ${featured[0].title}`}>
+                  <img src={featured[0].heroImage.src} alt={featured[0].heroImage.alt} width="1200" height="630" style={{ display: "block", width: "100%", height: "auto", borderRadius: "18px", marginBottom: "20px" }} />
+                </a>
+              ) : null}
               <span className="blogEyebrow">Latest featured article</span>
               <h2>{featured[0].title}</h2>
               <p>{featured[0].description}</p>
@@ -74,6 +84,7 @@ export default function BlogIndexPage() {
             <div className="blogFeaturedStack">
               {featured.slice(1).map((post) => (
                 <a className="panel blogFeatureCard" href={`/blog/${post.slug}`} key={post.slug}>
+                  {post.heroImage ? <img src={post.heroImage.src} alt="" loading="lazy" style={{ width: "100%", height: "150px", objectFit: "cover", borderRadius: "14px", marginBottom: "14px" }} /> : null}
                   <span>{post.category}</span>
                   <strong>{post.title}</strong>
                   <p>{post.description}</p>
@@ -93,6 +104,7 @@ export default function BlogIndexPage() {
           <div className="blogCardGrid">
             {allBlogPosts.map((post) => (
               <a className="blogPostCard" href={`/blog/${post.slug}`} key={post.slug}>
+                {post.heroImage ? <img src={post.heroImage.src} alt="" loading="lazy" style={{ width: "100%", aspectRatio: "1200 / 630", objectFit: "cover", borderRadius: "14px", marginBottom: "14px" }} /> : null}
                 <span>{post.category}</span>
                 <h3>{post.title}</h3>
                 <p>{post.description}</p>

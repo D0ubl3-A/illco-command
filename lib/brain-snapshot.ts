@@ -1,7 +1,7 @@
 import "@/lib/server-only";
 
 import { listBrainEvents, listBrainItems, listBrainLinks, seedBrain } from "@/lib/brain-store";
-import type { BrainBrief, BrainItem, BrainSnapshot } from "@/lib/brain-types";
+import type { BrainBrief, BrainEvent, BrainItem, BrainLink, BrainSnapshot } from "@/lib/brain-types";
 
 const DAY_MS = 86_400_000;
 
@@ -23,7 +23,7 @@ function focusScore(item: BrainItem, now: number) {
     if (Number.isFinite(due) && due < now) score += 14;
     else if (Number.isFinite(due) && due - now <= 7 * DAY_MS) score += 8;
   }
-  score += Math.max(0, (100 - item.progress) / 25);
+  score += Math.max(0, (100 - (item.progress ?? 0)) / 25);
   return score;
 }
 
@@ -50,11 +50,7 @@ function buildBrief(items: BrainItem[]): BrainBrief {
   };
 }
 
-export function assembleBrainSnapshot(
-  items: BrainItem[],
-  links: BrainSnapshot["links"] = [],
-  events: BrainSnapshot["events"] = [],
-): BrainSnapshot {
+export function assembleBrainSnapshot(items: BrainItem[], links: BrainLink[] = [], events: BrainEvent[] = []): BrainSnapshot {
   const brief = buildBrief(items);
   const sourceMap = new Map<string, number>();
   for (const item of items) sourceMap.set(item.source, (sourceMap.get(item.source) || 0) + 1);

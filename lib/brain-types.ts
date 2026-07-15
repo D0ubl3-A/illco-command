@@ -119,7 +119,7 @@ type BrainImportBase = Partial<
   >
 >;
 
-export type BrainImportItem = BrainImportBase & { tags?: string[] | string };
+export type BrainImportItem = BrainImportBase & { tags?: string[] };
 
 export type BrainCommandResult = {
   message: string;

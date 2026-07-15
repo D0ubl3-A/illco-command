@@ -119,7 +119,11 @@ type BrainImportBase = Partial<
   >
 >;
 
-export type BrainImportItem = BrainImportBase & { tags?: string[] };
+/**
+ * Import and command inputs accept legacy comma-delimited strings or arrays.
+ * Every persistence path normalizes this boundary to `BrainItem.tags: string[]`.
+ */
+export type BrainImportItem = BrainImportBase & { tags?: any };
 
 export type BrainCommandResult = {
   message: string;

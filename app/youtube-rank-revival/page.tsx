@@ -16,6 +16,8 @@ import {
 } from "lucide-react";
 
 import { ProductIntakeForm } from "@/components/product-intake-form";
+import { retrieveCheckoutSession } from "@/lib/stripe";
+import { YOUTUBE_OPS_PRODUCT_ID } from "@/lib/youtube-ops-integration";
 
 const siteUrl = "https://illcoai.tech";
 const canonicalUrl = `${siteUrl}/youtube-rank-revival`;
@@ -96,12 +98,12 @@ const faqs = [
   {
     question: "What do I need to provide?",
     answer:
-      "Provide the video URL, channel URL, target audience, primary goal, and any available YouTube Studio screenshots that show impressions, click-through rate, average view duration, traffic sources, or search terms. No password is requested.",
+      "Provide the specific video URL, channel URL, target audience, primary goal, and any available YouTube Studio screenshots that show impressions, click-through rate, average view duration, traffic sources, or search terms. No password is requested.",
   },
   {
     question: "When is it delivered?",
     answer:
-      "Delivery is targeted within 24-72 hours after payment and a complete intake are received. Missing URLs, unclear goals, or unavailable source material pause the delivery window until resolved.",
+      "Delivery is targeted within 24-72 hours after verified payment and a complete intake are received. Missing URLs, unclear goals, or unavailable source material pause the delivery window until resolved.",
   },
   {
     question: "Are finished thumbnail files included?",
@@ -121,11 +123,31 @@ const faqs = [
 ];
 
 type PageProps = {
-  searchParams: Promise<{ checkout?: string }>;
+  searchParams: Promise<{ checkout?: string; session_id?: string; reason?: string }>;
 };
 
+async function verifyRankRevivalPayment(sessionId?: string) {
+  const normalizedSessionId = String(sessionId || "").trim();
+  if (!normalizedSessionId || !normalizedSessionId.startsWith("cs_")) return false;
+
+  try {
+    const session = await retrieveCheckoutSession(normalizedSessionId);
+    return (
+      session.mode === "payment" &&
+      session.payment_status === "paid" &&
+      session.metadata?.productId === YOUTUBE_OPS_PRODUCT_ID &&
+      session.metadata?.offerId === "youtube-rank-revival-ai-pro" &&
+      session.metadata?.amountCents === "5000" &&
+      Boolean(session.metadata?.intakeId)
+    );
+  } catch {
+    return false;
+  }
+}
+
 export default async function YoutubeRankRevivalPage({ searchParams }: PageProps) {
-  const { checkout } = await searchParams;
+  const { checkout, session_id: sessionId, reason } = await searchParams;
+  const paymentVerified = checkout === "success" ? await verifyRankRevivalPayment(sessionId) : false;
   const structuredData = {
     "@context": "https://schema.org",
     "@graph": [
@@ -159,14 +181,24 @@ export default async function YoutubeRankRevivalPage({ searchParams }: PageProps
     <main id="main-content" className="min-h-screen bg-slate-950 text-white">
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }} />
 
-      {checkout === "success" ? (
+      {paymentVerified ? (
         <div className="border-b border-emerald-300/20 bg-emerald-300/10 px-4 py-4 text-center text-sm font-medium text-emerald-50" role="status">
-          Payment received. Complete or confirm the intake below so delivery can begin.
+          Payment verified. The saved intake and Stripe purchase are linked; delivery can begin.
+        </div>
+      ) : null}
+      {checkout === "success" && !paymentVerified ? (
+        <div className="border-b border-amber-300/20 bg-amber-300/10 px-4 py-4 text-center text-sm font-medium text-amber-50" role="status">
+          Payment confirmation could not be verified yet. Check the Stripe receipt email or contact ILLCO before submitting another payment.
         </div>
       ) : null}
       {checkout === "cancelled" ? (
         <div className="border-b border-amber-300/20 bg-amber-300/10 px-4 py-4 text-center text-sm font-medium text-amber-50" role="status">
-          Checkout was cancelled. No charge was completed; your intake can still be saved below.
+          Checkout was cancelled. No completed payment was confirmed; the saved intake remains available for a new checkout attempt.
+        </div>
+      ) : null}
+      {checkout === "error" ? (
+        <div className="border-b border-rose-300/20 bg-rose-300/10 px-4 py-4 text-center text-sm font-medium text-rose-50" role="alert">
+          Checkout could not start{reason === "invalid-intake" ? " because the saved intake could not be verified" : ""}. Save the one-video intake below and try again.
         </div>
       ) : null}
 
@@ -175,7 +207,7 @@ export default async function YoutubeRankRevivalPage({ searchParams }: PageProps
           <div>
             <div className="inline-flex items-center gap-2 rounded-full border border-cyan-300/30 bg-cyan-300/10 px-4 py-2 text-sm font-semibold text-cyan-100">
               <Clock3 className="h-4 w-4" />
-              Target delivery: 24-72 hours after complete intake
+              Target delivery: 24-72 hours after verified payment and complete intake
             </div>
             <h1 className="mt-7 text-4xl font-semibold tracking-tight sm:text-6xl lg:text-7xl">
               Give one underperforming YouTube video a real relaunch plan.
@@ -229,7 +261,7 @@ export default async function YoutubeRankRevivalPage({ searchParams }: PageProps
               {[
                 "Secure Stripe checkout",
                 "No channel password required",
-                "Delivery acceptance checklist",
+                "Payment linked to the selected-video intake",
                 "One focused revision round",
               ].map((item) => (
                 <div key={item} className="flex gap-3">
@@ -239,14 +271,14 @@ export default async function YoutubeRankRevivalPage({ searchParams }: PageProps
               ))}
             </div>
             <a
-              href={checkoutHref}
+              href="#intake"
               className="mt-7 inline-flex min-h-12 w-full items-center justify-center gap-2 rounded-lg bg-cyan-300 px-5 font-semibold text-slate-950 transition hover:bg-cyan-200"
             >
-              Buy the $50 sprint
+              Save the one-video intake
               <ArrowRight className="h-5 w-5" />
             </a>
             <p className="mt-4 text-xs leading-5 text-slate-500">
-              Purchase creates the delivery record. Work begins when both payment and the complete intake are present.
+              The $50 checkout appears only after the intake backend issues a verified record ID, preventing anonymous or unlinked payments.
             </p>
           </aside>
         </div>
@@ -326,13 +358,13 @@ export default async function YoutubeRankRevivalPage({ searchParams }: PageProps
         <div className="grid gap-10 lg:grid-cols-[.9fr_1.1fr]">
           <div>
             <p className="text-sm font-semibold uppercase tracking-[0.2em] text-cyan-300">Delivery path</p>
-            <h2 className="mt-3 text-3xl font-semibold tracking-tight sm:text-4xl">From purchase to relaunch in four controlled steps.</h2>
+            <h2 className="mt-3 text-3xl font-semibold tracking-tight sm:text-4xl">From selected video to relaunch in four controlled steps.</h2>
           </div>
           <div className="grid gap-4 sm:grid-cols-2">
             {[
-              ["1", "Purchase", "Complete the one-time $50 Stripe checkout."],
-              ["2", "Intake", "Submit the selected video, audience, goal, and available performance evidence."],
-              ["3", "Analysis and delivery", "ILLCO prepares the seven deliverables within the 24-72 hour target window after complete intake."],
+              ["1", "Save intake", "Submit one selected video, audience, goal, and available performance evidence."],
+              ["2", "Purchase", "Use the linked one-time $50 Stripe checkout issued for that saved intake."],
+              ["3", "Analysis and delivery", "ILLCO prepares the seven deliverables within the 24-72 hour target window after verified payment and complete intake."],
               ["4", "Apply and refine", "Use the relaunch checklist, then request the included revision within seven days if needed."],
             ].map(([number, title, text]) => (
               <article key={number} className="rounded-xl border border-white/10 bg-white/[0.04] p-5">
@@ -348,17 +380,17 @@ export default async function YoutubeRankRevivalPage({ searchParams }: PageProps
       <section id="intake" className="scroll-mt-28 border-y border-white/10 bg-white/[0.025]">
         <div className="mx-auto grid max-w-7xl gap-10 px-4 py-16 sm:px-6 lg:grid-cols-[.82fr_1.18fr] lg:px-8">
           <div>
-            <p className="text-sm font-semibold uppercase tracking-[0.2em] text-cyan-300">Post-purchase intake</p>
+            <p className="text-sm font-semibold uppercase tracking-[0.2em] text-cyan-300">Pre-purchase intake</p>
             <h2 className="mt-3 text-3xl font-semibold tracking-tight sm:text-4xl">Submit the one video that matters most.</h2>
             <p className="mt-5 text-lg leading-8 text-slate-300">
-              The intake saves the video, audience, goal, available analytics, and timing in the ILLCO lead backend. No channel password is requested.
+              The intake saves the selected video, audience, goal, available analytics, and timing in the ILLCO lead backend. No channel password is requested.
             </p>
             <div className="mt-7 grid gap-3 text-sm text-slate-300">
               {[
                 "Choose one public or unlisted video",
                 "Add YouTube Studio screenshots only when available",
                 "State the actual audience and business goal",
-                "Continue to the matching $50 checkout after saving",
+                "Continue to the linked $50 checkout after saving",
               ].map((item) => (
                 <div key={item} className="flex gap-3">
                   <CheckCircle2 className="mt-0.5 h-5 w-5 shrink-0 text-emerald-300" />
@@ -372,7 +404,7 @@ export default async function YoutubeRankRevivalPage({ searchParams }: PageProps
             kind="youtube-revival"
             planId="youtube-rank-revival-ai-pro"
             productName="YouTube Rank Revival AI Pro"
-            submitLabel="Save video intake"
+            submitLabel="Save selected-video intake"
             checkoutHref={checkoutHref}
           />
         </div>

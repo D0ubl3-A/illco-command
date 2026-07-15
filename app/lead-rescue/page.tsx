@@ -13,9 +13,11 @@ import {
 } from "lucide-react";
 
 import { ProductIntakeForm } from "@/components/product-intake-form";
+import { retrieveCheckoutSession } from "@/lib/stripe";
 
 const siteUrl = "https://illcoai.tech";
 const canonicalUrl = `${siteUrl}/lead-rescue`;
+const checkoutHref = "/api/lead-recovery/checkout";
 
 export const metadata: Metadata = {
   title: "ILLCO Lead Recovery System | Turn Missed Calls Into Booked Customers",
@@ -110,7 +112,33 @@ const faqs = [
   },
 ];
 
-export default function LeadRescuePage() {
+type PageProps = {
+  searchParams: Promise<{ checkout?: string; session_id?: string; reason?: string }>;
+};
+
+async function verifyLeadRecoveryPayment(sessionId?: string) {
+  const normalizedSessionId = String(sessionId || "").trim();
+  if (!normalizedSessionId || !normalizedSessionId.startsWith("cs_")) return false;
+
+  try {
+    const session = await retrieveCheckoutSession(normalizedSessionId);
+    return (
+      session.mode === "subscription" &&
+      session.payment_status === "paid" &&
+      session.metadata?.productId === "lead-recovery-system" &&
+      session.metadata?.offerId === "lead-recovery-system" &&
+      session.metadata?.setupAmountCents === "75000" &&
+      session.metadata?.recurringAmountCents === "19900" &&
+      Boolean(session.metadata?.intakeId)
+    );
+  } catch {
+    return false;
+  }
+}
+
+export default async function LeadRescuePage({ searchParams }: PageProps) {
+  const { checkout, session_id: sessionId, reason } = await searchParams;
+  const paymentVerified = checkout === "success" ? await verifyLeadRecoveryPayment(sessionId) : false;
   const structuredData = {
     "@context": "https://schema.org",
     "@graph": [
@@ -169,6 +197,27 @@ export default function LeadRescuePage() {
     <main id="main-content" className="min-h-screen bg-slate-950 text-white">
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }} />
 
+      {paymentVerified ? (
+        <div className="border-b border-emerald-300/20 bg-emerald-300/10 px-4 py-4 text-center text-sm font-medium text-emerald-50" role="status">
+          Payment verified. The $750 setup and $199 monthly management subscription are linked to your saved intake.
+        </div>
+      ) : null}
+      {checkout === "success" && !paymentVerified ? (
+        <div className="border-b border-amber-300/20 bg-amber-300/10 px-4 py-4 text-center text-sm font-medium text-amber-50" role="status">
+          Payment confirmation could not be verified yet. Check the Stripe receipt email or contact ILLCO before submitting another payment.
+        </div>
+      ) : null}
+      {checkout === "cancelled" ? (
+        <div className="border-b border-amber-300/20 bg-amber-300/10 px-4 py-4 text-center text-sm font-medium text-amber-50" role="status">
+          Checkout was cancelled. No completed payment was confirmed; the saved intake remains available for a new checkout attempt.
+        </div>
+      ) : null}
+      {checkout === "error" ? (
+        <div className="border-b border-rose-300/20 bg-rose-300/10 px-4 py-4 text-center text-sm font-medium text-rose-50" role="alert">
+          Checkout could not start{reason === "invalid-intake" ? " because the saved intake could not be verified" : ""}. Save the intake below and try again.
+        </div>
+      ) : null}
+
       <section className="border-b border-white/10 bg-[radial-gradient(circle_at_18%_18%,rgba(34,211,238,0.16),transparent_32%),radial-gradient(circle_at_82%_14%,rgba(251,191,36,0.12),transparent_27%),linear-gradient(180deg,#070b12,#03050a)]">
         <div className="mx-auto grid max-w-7xl gap-12 px-4 py-16 sm:px-6 lg:grid-cols-[1.08fr_.92fr] lg:px-8 lg:py-24">
           <div>
@@ -207,7 +256,7 @@ export default function LeadRescuePage() {
                 href="#intake"
                 className="inline-flex min-h-12 items-center justify-center gap-2 rounded-lg bg-cyan-300 px-6 font-semibold text-slate-950 transition hover:bg-cyan-200"
               >
-                Reserve a founding-client setup
+                Save intake and start checkout
                 <ArrowRight className="h-5 w-5" />
               </a>
               <a
@@ -223,7 +272,7 @@ export default function LeadRescuePage() {
             </p>
           </div>
 
-          <div className="self-start rounded-2xl border border-white/10 bg-slate-900/80 p-6 shadow-2xl shadow-black/30 sm:p-8">
+          <div id="pricing" className="self-start rounded-2xl border border-white/10 bg-slate-900/80 p-6 shadow-2xl shadow-black/30 sm:p-8">
             <p className="text-xs font-semibold uppercase tracking-[0.2em] text-cyan-300">Exactly what is included</p>
             <div className="mt-5 grid gap-4">
               {included.map((item) => (
@@ -234,7 +283,7 @@ export default function LeadRescuePage() {
               ))}
             </div>
             <div className="mt-7 rounded-xl border border-amber-200/20 bg-amber-200/10 p-4 text-sm leading-6 text-amber-50">
-              This is a managed installation, not a template download. Scope, ownership, third-party costs, acceptance tests, and support terms are documented before payment.
+              Checkout charges the listed $750 setup on the first invoice and starts the $199 monthly management subscription. Third-party vendor charges remain separate and are disclosed during onboarding.
             </div>
           </div>
         </div>
@@ -356,17 +405,17 @@ export default function LeadRescuePage() {
       <section id="intake" className="scroll-mt-28 border-y border-white/10 bg-white/[0.025]">
         <div className="mx-auto grid max-w-7xl gap-10 px-4 py-16 sm:px-6 lg:grid-cols-[.82fr_1.18fr] lg:px-8">
           <div>
-            <p className="text-sm font-semibold uppercase tracking-[0.2em] text-cyan-300">Founding-client intake</p>
-            <h2 className="mt-3 text-3xl font-semibold tracking-tight sm:text-4xl">Confirm fit before money changes hands.</h2>
+            <p className="text-sm font-semibold uppercase tracking-[0.2em] text-cyan-300">Founding-client intake and checkout</p>
+            <h2 className="mt-3 text-3xl font-semibold tracking-tight sm:text-4xl">Save the business details, then pay for the exact standard package.</h2>
             <p className="mt-5 text-lg leading-8 text-slate-300">
-              Submit the current phone, booking, and lead-volume details. ILLCO responds with the exact connection plan, included scope, third-party costs, access checklist, payment path, and launch date.
+              The intake links the business, phone, booking, lead volume, and current tools to the Stripe purchase. The checkout appears only after the database returns a verified intake ID.
             </p>
             <div className="mt-7 grid gap-3 text-sm text-slate-300">
               {[
                 "One canonical offer: $750 setup + $199 monthly",
-                "Written scope and acceptance tests before checkout",
+                "The setup and subscription appear together in Stripe Checkout",
                 "No passwords collected through this form",
-                "One-business-day fit and installation response target",
+                "One-business-day onboarding response target after verified payment",
               ].map((item) => (
                 <div key={item} className="flex gap-3">
                   <CheckCircle2 className="mt-0.5 h-5 w-5 shrink-0 text-emerald-300" />
@@ -380,7 +429,8 @@ export default function LeadRescuePage() {
             kind="lead-recovery"
             planId="lead-recovery-system"
             productName="ILLCO Lead Recovery System"
-            submitLabel="Request the installation plan"
+            submitLabel="Save intake and unlock checkout"
+            checkoutHref={checkoutHref}
           />
         </div>
       </section>

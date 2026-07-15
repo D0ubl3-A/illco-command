@@ -10,7 +10,7 @@
     "audit:health": "tsx scripts/audit-project-health.ts",
     "audit:sources": "tsx scripts/audit-project-sources.ts",
     "readiness:ledger": "tsx scripts/write-readiness-ledger.ts",
-    "db:setup": "tsx scripts/setup-db.ts",
+    "db:setup": "tsx scripts/setup-db.ts && tsx scripts/setup-service-orders.ts",
     "monetization:sync": "tsx scripts/sync-monetization-plan.ts",
     "youtube:search-demos": "tsx scripts/search-youtube-demos.ts",
     "demo:record": "tsx scripts/record-tutorial-videos.ts",

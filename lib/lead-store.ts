@@ -18,8 +18,11 @@ export type StoredLead = {
 
 export type StoredLeadReference = {
   id: string;
+  name: string;
   email: string;
+  company: string;
   planId: string;
+  message: string;
 };
 
 export async function recordLead(lead: FunnelLead): Promise<StoredLead> {
@@ -69,8 +72,11 @@ export async function getLeadReference(leadId: string): Promise<StoredLeadRefere
   const rows = (await sql`
     SELECT
       id::text AS id,
+      COALESCE(name, '') AS name,
       email,
-      COALESCE(plan_id, '') AS "planId"
+      COALESCE(company, '') AS company,
+      COALESCE(plan_id, '') AS "planId",
+      COALESCE(message, '') AS message
     FROM illco_command_leads
     WHERE id::text = ${normalizedLeadId}
     LIMIT 1

@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 
+import { sendServiceOrderEvent } from "@/lib/service-order-events";
 import { submitServiceOrderProof } from "@/lib/service-orders";
 
 export const dynamic = "force-dynamic";
@@ -30,13 +31,18 @@ export async function POST(request: Request, context: RouteContext) {
   const permission = String(formData?.get("permission") || "").trim() === "yes";
 
   try {
-    await submitServiceOrderProof(orderId, token, {
+    const updated = await submitServiceOrderProof(orderId, token, {
       rating,
       quote,
       attribution,
       permission,
       metrics: metricsNotes ? { notes: metricsNotes } : undefined,
     });
+    try {
+      await sendServiceOrderEvent(updated, "proof-received");
+    } catch (error) {
+      console.error("Proof notification failed", error);
+    }
     return NextResponse.redirect(deliveryUrl(request, orderId, token, "received"), 303);
   } catch {
     return NextResponse.redirect(deliveryUrl(request, orderId, token, "error"), 303);

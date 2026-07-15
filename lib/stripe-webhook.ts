@@ -4,6 +4,7 @@ import type Stripe from "stripe";
 import { completeCheckoutSession } from "@/lib/checkout-store";
 import { summarizeCheckoutSession } from "@/lib/checkout-success";
 import { hasDatabase } from "@/lib/db";
+import { notifyServiceOrderCreated, upsertServiceOrderFromCheckout } from "@/lib/service-orders";
 import { constructStripeWebhookEvent } from "@/lib/stripe";
 
 async function persistCheckoutEvent(session: Stripe.Checkout.Session) {
@@ -18,6 +19,13 @@ async function persistCheckoutEvent(session: Stripe.Checkout.Session) {
     status: summary.checkoutStatus,
     rawPayload: session as unknown as Record<string, unknown>,
   });
+
+  const order = await upsertServiceOrderFromCheckout(session);
+  try {
+    await notifyServiceOrderCreated(order);
+  } catch (error) {
+    console.error("Service-order notification failed", error);
+  }
 }
 
 export async function handleStripeWebhook(request: Request) {

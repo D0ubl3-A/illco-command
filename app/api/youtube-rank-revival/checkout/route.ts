@@ -93,7 +93,7 @@ export async function POST(request: Request) {
       description:
         "One-video optimization sprint with titles, description, keyword positioning, thumbnail direction, hook feedback, audience notes, and a relaunch checklist.",
       amountCents: offerPriceCents,
-      returnPath: "/youtube-rank-revival?checkout=success#intake",
+      returnPath: "/delivery/checkout?offer=youtube-rank-revival-ai-pro",
       cancelPath: "/youtube-rank-revival?checkout=cancelled#pricing",
       metadata,
     });

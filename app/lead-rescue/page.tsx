@@ -1,174 +1,312 @@
 import type { Metadata } from "next";
-import Link from "next/link";
 import {
   ArrowRight,
+  BarChart3,
   CalendarCheck2,
   CheckCircle2,
   Clock3,
   MessageSquareText,
   PhoneMissed,
   ShieldCheck,
+  SlidersHorizontal,
   Workflow,
 } from "lucide-react";
+
+import { ProductIntakeForm } from "@/components/product-intake-form";
+
+const siteUrl = "https://illcoai.tech";
+const canonicalUrl = `${siteUrl}/lead-rescue`;
 
 export const metadata: Metadata = {
   title: "ILLCO Lead Recovery System | Turn Missed Calls Into Booked Customers",
   description:
-    "ILLCO AI installs a missed-call recovery system that texts leads immediately, qualifies them, books appointments, confirms attendance, and follows up automatically.",
-  alternates: { canonical: "https://illcoai.tech/lead-rescue" },
+    "A managed missed-call recovery system for service businesses: immediate text-back, qualification, appointment booking, confirmation, follow-up, owner alerts, launch testing, and monthly optimization.",
+  alternates: { canonical: canonicalUrl },
+  robots: { index: true, follow: true },
   openGraph: {
     title: "Turn Missed Calls Into Booked Customers",
     description:
-      "Instant text-back, qualification, booking, confirmation, and follow-up for service businesses.",
-    url: "https://illcoai.tech/lead-rescue",
+      "ILLCO installs and manages one complete missed-call recovery system for service businesses.",
+    url: canonicalUrl,
     type: "website",
+    images: [
+      {
+        url: "/media/illco-command-header-loop-poster.jpg",
+        width: 1200,
+        height: 630,
+        alt: "ILLCO Lead Recovery System",
+      },
+    ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "Turn Missed Calls Into Booked Customers",
-    description:
-      "ILLCO Lead Recovery System for service businesses that cannot afford to lose phone leads.",
+    title: "ILLCO Lead Recovery System",
+    description: "Immediate text-back, qualification, booking, confirmation, and follow-up in one managed installation.",
+    images: ["/media/illco-command-header-loop-poster.jpg"],
   },
 };
 
 const included = [
-  "Instant missed-call text-back",
-  "Lead intake and qualification",
-  "Appointment booking and confirmation",
-  "Automated follow-up for unresponsive leads",
-  "Owner alerts and lead-routing rules",
-  "Launch testing, handoff, and optimization",
+  "Missed-call detection and immediate branded text-back",
+  "Lead questions, qualification rules, and owner escalation",
+  "Appointment booking, confirmation, and reminder flow",
+  "Follow-up for leads who do not reply or book",
+  "CRM or lead-sheet logging with owner notifications",
+  "Launch test suite, handoff guide, and monthly optimization",
 ];
 
-const steps = [
+const launchSteps = [
   {
-    title: "A lead calls",
-    text: "When your team cannot answer, the system detects the missed opportunity.",
-    icon: PhoneMissed,
+    day: "Day 1",
+    title: "Intake and system map",
+    text: "ILLCO confirms the phone, CRM, calendar, service area, qualification rules, escalation owner, and approved message language.",
   },
   {
-    title: "The lead gets a fast text",
-    text: "A branded reply starts the conversation while the customer is still looking for help.",
-    icon: MessageSquareText,
+    day: "Days 2-4",
+    title: "Build and connect",
+    text: "The missed-call trigger, text conversation, routing, booking, notifications, and lead record are connected in one managed path.",
   },
   {
-    title: "The system qualifies and books",
-    text: "It gathers the right details, routes the lead, and moves qualified prospects toward an appointment.",
-    icon: CalendarCheck2,
+    day: "Days 5-7",
+    title: "Test and launch",
+    text: "The system is tested against normal, duplicate, invalid, opt-out, after-hours, booking, and escalation scenarios before launch approval.",
   },
 ];
 
-const requestHref = "/?plan=lead-recovery-system&source=lead-rescue#request";
+const monthlyMetrics = [
+  "Median response time",
+  "Missed callers contacted",
+  "Two-way conversations",
+  "Qualified opportunities",
+  "Appointments booked",
+  "Show rate and estimated recovered revenue",
+];
+
+const faqs = [
+  {
+    question: "What is the exact price?",
+    answer:
+      "The founding-client offer is $750 for setup and $199 per month for management and optimization. Any third-party phone, messaging, CRM, or calendar charges are disclosed before launch and remain separate unless the written proposal says otherwise.",
+  },
+  {
+    question: "How quickly can it launch?",
+    answer:
+      "The target is seven business days after ILLCO receives the completed intake, approved message language, required access, and a working booking destination. Delays in access or approvals pause the timeline.",
+  },
+  {
+    question: "Do I have to replace my current phone or CRM?",
+    answer:
+      "Not necessarily. ILLCO first maps the tools already in use and recommends the smallest reliable connection path. A replacement is proposed only when the current tool cannot support the required trigger, routing, or recordkeeping.",
+  },
+  {
+    question: "Does ILLCO guarantee bookings or revenue?",
+    answer:
+      "No. ILLCO guarantees the documented installation, testing, reporting, and optimization work in the agreement. Customer demand, lead quality, offer strength, availability, and sales follow-through remain business variables.",
+  },
+  {
+    question: "How are consent and opt-outs handled?",
+    answer:
+      "The launch test includes opt-out handling and approved message language. The business remains responsible for its industry, carrier, privacy, and marketing obligations, and should have counsel review requirements that apply to its use case.",
+  },
+];
 
 export default function LeadRescuePage() {
   const structuredData = {
     "@context": "https://schema.org",
-    "@type": "Service",
-    name: "ILLCO Lead Recovery System",
-    provider: {
-      "@type": "Organization",
-      name: "ILLCO AI",
-      url: "https://illcoai.tech",
-    },
-    areaServed: "US",
-    serviceType: "Missed-call recovery and appointment-booking automation",
-    offers: {
-      "@type": "Offer",
-      priceCurrency: "USD",
-      price: "750",
-      description: "$750 founding-client setup plus $199 monthly management.",
-      availability: "https://schema.org/LimitedAvailability",
-      url: "https://illcoai.tech/lead-rescue",
-    },
+    "@graph": [
+      {
+        "@type": "Service",
+        "@id": `${canonicalUrl}#service`,
+        name: "ILLCO Lead Recovery System",
+        description:
+          "Managed missed-call text-back, qualification, booking, confirmation, follow-up, routing, testing, reporting, and optimization for service businesses.",
+        provider: {
+          "@type": "Organization",
+          name: "ILLCO AI",
+          url: siteUrl,
+        },
+        areaServed: "US",
+        serviceType: "Missed-call recovery and appointment-booking automation",
+        offers: {
+          "@type": "Offer",
+          priceCurrency: "USD",
+          price: "750",
+          description: "$750 setup plus $199 monthly management and optimization.",
+          availability: "https://schema.org/LimitedAvailability",
+          url: canonicalUrl,
+          priceSpecification: [
+            {
+              "@type": "UnitPriceSpecification",
+              name: "One-time setup",
+              price: "750",
+              priceCurrency: "USD",
+              unitText: "installation",
+            },
+            {
+              "@type": "UnitPriceSpecification",
+              name: "Monthly management and optimization",
+              price: "199",
+              priceCurrency: "USD",
+              unitCode: "MON",
+              unitText: "month",
+              billingDuration: 1,
+            },
+          ],
+        },
+      },
+      {
+        "@type": "FAQPage",
+        mainEntity: faqs.map((item) => ({
+          "@type": "Question",
+          name: item.question,
+          acceptedAnswer: { "@type": "Answer", text: item.answer },
+        })),
+      },
+    ],
   };
 
   return (
     <main id="main-content" className="min-h-screen bg-slate-950 text-white">
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
-      />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }} />
 
       <section className="border-b border-white/10 bg-[radial-gradient(circle_at_18%_18%,rgba(34,211,238,0.16),transparent_32%),radial-gradient(circle_at_82%_14%,rgba(251,191,36,0.12),transparent_27%),linear-gradient(180deg,#070b12,#03050a)]">
-        <div className="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8 lg:py-24">
-          <div className="max-w-4xl">
+        <div className="mx-auto grid max-w-7xl gap-12 px-4 py-16 sm:px-6 lg:grid-cols-[1.08fr_.92fr] lg:px-8 lg:py-24">
+          <div>
             <div className="inline-flex items-center gap-2 rounded-full border border-cyan-300/30 bg-cyan-300/10 px-4 py-2 text-sm font-semibold text-cyan-100">
               <Clock3 className="h-4 w-4" />
               Three founding-client installations available
             </div>
-            <h1 className="mt-7 text-5xl font-semibold tracking-tight sm:text-6xl lg:text-7xl">
+            <h1 className="mt-7 text-4xl font-semibold tracking-tight sm:text-6xl lg:text-7xl">
               Turn missed calls into booked customers.
             </h1>
             <p className="mt-7 max-w-3xl text-lg leading-8 text-slate-300 sm:text-xl">
-              ILLCO Lead Recovery texts missed callers immediately, qualifies the opportunity,
-              books appointments, confirms attendance, and follows up so valuable phone leads do
-              not disappear into voicemail.
+              ILLCO installs one managed recovery path that texts missed callers immediately, qualifies the opportunity,
+              books appointments, confirms attendance, follows up, alerts the owner, and records the result.
             </p>
 
-            <div className="mt-9 flex flex-wrap gap-4">
-              <Link
-                href={requestHref}
-                className="inline-flex items-center gap-2 rounded-lg bg-cyan-300 px-6 py-3.5 text-base font-semibold text-slate-950 transition hover:bg-cyan-200"
+            <div className="mt-8 grid max-w-2xl gap-3 sm:grid-cols-3">
+              <div className="rounded-xl border border-white/10 bg-white/[0.05] p-4">
+                <div className="text-xs uppercase tracking-[0.18em] text-slate-400">Setup</div>
+                <div className="mt-2 text-3xl font-semibold text-cyan-200">$750</div>
+                <div className="mt-1 text-sm text-slate-400">One-time installation</div>
+              </div>
+              <div className="rounded-xl border border-white/10 bg-white/[0.05] p-4">
+                <div className="text-xs uppercase tracking-[0.18em] text-slate-400">Management</div>
+                <div className="mt-2 text-3xl font-semibold text-cyan-200">$199</div>
+                <div className="mt-1 text-sm text-slate-400">Per month</div>
+              </div>
+              <div className="rounded-xl border border-white/10 bg-white/[0.05] p-4">
+                <div className="text-xs uppercase tracking-[0.18em] text-slate-400">Target launch</div>
+                <div className="mt-2 text-3xl font-semibold text-cyan-200">7 business days</div>
+                <div className="mt-1 text-sm text-slate-400">After access and approval</div>
+              </div>
+            </div>
+
+            <div className="mt-9 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
+              <a
+                href="#intake"
+                className="inline-flex min-h-12 items-center justify-center gap-2 rounded-lg bg-cyan-300 px-6 font-semibold text-slate-950 transition hover:bg-cyan-200"
               >
                 Reserve a founding-client setup
                 <ArrowRight className="h-5 w-5" />
-              </Link>
-              <Link
-                href={requestHref}
-                className="inline-flex items-center gap-2 rounded-lg border border-white/15 bg-white/[0.05] px-6 py-3.5 text-base font-semibold text-white transition hover:border-cyan-300/40 hover:bg-white/[0.09]"
+              </a>
+              <a
+                href="#workflow"
+                className="inline-flex min-h-12 items-center justify-center gap-2 rounded-lg border border-white/15 bg-white/[0.05] px-6 font-semibold text-white transition hover:border-cyan-300/40 hover:bg-white/[0.09]"
               >
-                Request the 2-minute demo
-              </Link>
+                View the 2-minute workflow
+              </a>
             </div>
 
-            <div className="mt-8 flex flex-wrap gap-x-7 gap-y-3 text-sm text-slate-300">
-              <span className="inline-flex items-center gap-2">
-                <CheckCircle2 className="h-4 w-4 text-emerald-300" /> $750 setup
-              </span>
-              <span className="inline-flex items-center gap-2">
-                <CheckCircle2 className="h-4 w-4 text-emerald-300" /> $199 monthly management
-              </span>
-              <span className="inline-flex items-center gap-2">
-                <CheckCircle2 className="h-4 w-4 text-emerald-300" /> Built for service businesses
-              </span>
+            <p className="mt-5 max-w-2xl text-sm leading-6 text-slate-400">
+              Built for service businesses that receive phone leads and already have a person, calendar, or team capable of handling booked work.
+            </p>
+          </div>
+
+          <div className="self-start rounded-2xl border border-white/10 bg-slate-900/80 p-6 shadow-2xl shadow-black/30 sm:p-8">
+            <p className="text-xs font-semibold uppercase tracking-[0.2em] text-cyan-300">Exactly what is included</p>
+            <div className="mt-5 grid gap-4">
+              {included.map((item) => (
+                <div key={item} className="flex gap-3 text-sm leading-6 text-slate-300">
+                  <CheckCircle2 className="mt-0.5 h-5 w-5 shrink-0 text-emerald-300" />
+                  <span>{item}</span>
+                </div>
+              ))}
+            </div>
+            <div className="mt-7 rounded-xl border border-amber-200/20 bg-amber-200/10 p-4 text-sm leading-6 text-amber-50">
+              This is a managed installation, not a template download. Scope, ownership, third-party costs, acceptance tests, and support terms are documented before payment.
             </div>
           </div>
         </div>
       </section>
 
-      <section className="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
-        <div className="grid gap-6 lg:grid-cols-3">
-          {steps.map(({ title, text, icon: Icon }) => (
+      <section id="workflow" className="mx-auto max-w-7xl scroll-mt-28 px-4 py-16 sm:px-6 lg:px-8">
+        <div className="max-w-3xl">
+          <p className="text-sm font-semibold uppercase tracking-[0.2em] text-cyan-300">2-minute workflow</p>
+          <h2 className="mt-3 text-3xl font-semibold tracking-tight sm:text-4xl">One missed call. One controlled recovery path.</h2>
+          <p className="mt-4 text-lg leading-8 text-slate-400">
+            The demonstration below shows the exact operating sequence the installation must pass before launch.
+          </p>
+        </div>
+
+        <div className="mt-10 grid gap-5 lg:grid-cols-4">
+          {[
+            {
+              title: "1. Missed call detected",
+              text: "The trigger records the caller, time, source, and routing context without waiting for voicemail review.",
+              icon: PhoneMissed,
+            },
+            {
+              title: "2. Branded text sent",
+              text: "The caller receives approved language, identifies the business, and gets a clear next step while intent is still active.",
+              icon: MessageSquareText,
+            },
+            {
+              title: "3. Lead qualified and booked",
+              text: "The workflow asks only required questions, routes exceptions to a person, and offers the correct booking destination.",
+              icon: CalendarCheck2,
+            },
+            {
+              title: "4. Owner and record updated",
+              text: "The conversation, qualification status, appointment, and escalation state are logged and surfaced to the owner.",
+              icon: Workflow,
+            },
+          ].map(({ title, text, icon: Icon }) => (
             <article key={title} className="rounded-xl border border-white/10 bg-white/[0.04] p-6">
               <Icon className="h-7 w-7 text-cyan-300" />
-              <h2 className="mt-5 text-xl font-semibold">{title}</h2>
-              <p className="mt-3 leading-7 text-slate-400">{text}</p>
+              <h3 className="mt-5 text-lg font-semibold">{title}</h3>
+              <p className="mt-3 text-sm leading-6 text-slate-400">{text}</p>
             </article>
           ))}
         </div>
       </section>
 
       <section className="border-y border-white/10 bg-white/[0.025]">
-        <div className="mx-auto grid max-w-7xl gap-10 px-4 py-16 sm:px-6 lg:grid-cols-[1.05fr_.95fr] lg:px-8">
-          <div>
-            <div className="inline-flex items-center gap-2 text-sm font-semibold uppercase tracking-[0.18em] text-cyan-300">
-              <Workflow className="h-4 w-4" /> One complete recovery system
+        <div className="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
+          <div className="grid gap-10 lg:grid-cols-[.9fr_1.1fr]">
+            <div>
+              <p className="text-sm font-semibold uppercase tracking-[0.2em] text-cyan-300">Launch acceptance standard</p>
+              <h2 className="mt-3 text-3xl font-semibold tracking-tight sm:text-4xl">Proof is a test record, not a promise.</h2>
+              <p className="mt-5 text-lg leading-8 text-slate-300">
+                A founding-client installation is not marked launched until the critical path is tested and the owner receives the results.
+                No fabricated customer numbers or anonymous testimonials are used as proof.
+              </p>
+              <div className="mt-6 rounded-xl border border-emerald-300/20 bg-emerald-300/10 p-5 text-sm leading-6 text-emerald-50">
+                The public case study is published only after a client approves attribution and at least 30 days of measured production data exists.
+              </div>
             </div>
-            <h2 className="mt-4 text-3xl font-semibold tracking-tight sm:text-4xl">
-              Stop buying disconnected tools.
-            </h2>
-            <p className="mt-5 max-w-2xl text-lg leading-8 text-slate-300">
-              This combines the lead intake, missed-call text-back, qualification, appointment
-              booking, confirmation, and follow-up workflows into one managed installation.
-            </p>
-          </div>
 
-          <div className="rounded-xl border border-white/10 bg-slate-900/70 p-6">
-            <h3 className="text-xl font-semibold">Included in the founding-client package</h3>
-            <div className="mt-5 grid gap-3">
-              {included.map((item) => (
-                <div key={item} className="flex gap-3 text-slate-300">
-                  <CheckCircle2 className="mt-0.5 h-5 w-5 shrink-0 text-emerald-300" />
+            <div className="grid gap-4 sm:grid-cols-2">
+              {[
+                "20 consecutive end-to-end test calls complete without an unhandled error",
+                "Text-back is recorded within 30 seconds under the agreed production conditions",
+                "Lead details, qualification state, and source are stored correctly",
+                "Booking, confirmation, owner alert, escalation, and opt-out paths pass",
+                "Duplicate and invalid-number handling do not create uncontrolled follow-up",
+                "Owner receives the launch report, workflow map, and support route",
+              ].map((item) => (
+                <div key={item} className="flex gap-3 rounded-xl border border-white/10 bg-slate-950/60 p-5 text-sm leading-6 text-slate-300">
+                  <ShieldCheck className="mt-0.5 h-5 w-5 shrink-0 text-emerald-300" />
                   <span>{item}</span>
                 </div>
               ))}
@@ -177,22 +315,89 @@ export default function LeadRescuePage() {
         </div>
       </section>
 
-      <section className="mx-auto max-w-5xl px-4 py-16 text-center sm:px-6 lg:px-8">
-        <ShieldCheck className="mx-auto h-9 w-9 text-cyan-300" />
-        <h2 className="mt-5 text-3xl font-semibold tracking-tight sm:text-4xl">
-          Start with the calls you are already paying to generate.
-        </h2>
-        <p className="mx-auto mt-5 max-w-2xl text-lg leading-8 text-slate-300">
-          The founding-client offer is limited to three installations at $750 setup and $199 per
-          month for management and optimization.
-        </p>
-        <Link
-          href={requestHref}
-          className="mt-8 inline-flex items-center gap-2 rounded-lg bg-cyan-300 px-6 py-3.5 text-base font-semibold text-slate-950 transition hover:bg-cyan-200"
-        >
-          Claim a founding-client slot
-          <ArrowRight className="h-5 w-5" />
-        </Link>
+      <section className="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
+        <div className="grid gap-12 lg:grid-cols-2">
+          <div>
+            <p className="text-sm font-semibold uppercase tracking-[0.2em] text-cyan-300">Onboarding and delivery</p>
+            <h2 className="mt-3 text-3xl font-semibold tracking-tight sm:text-4xl">A visible seven-business-day installation plan.</h2>
+            <div className="mt-8 grid gap-4">
+              {launchSteps.map((step) => (
+                <article key={step.day} className="rounded-xl border border-white/10 bg-white/[0.04] p-5">
+                  <div className="text-xs font-semibold uppercase tracking-[0.18em] text-cyan-300">{step.day}</div>
+                  <h3 className="mt-2 text-lg font-semibold">{step.title}</h3>
+                  <p className="mt-2 text-sm leading-6 text-slate-400">{step.text}</p>
+                </article>
+              ))}
+            </div>
+          </div>
+
+          <div>
+            <p className="text-sm font-semibold uppercase tracking-[0.2em] text-cyan-300">Retention and optimization</p>
+            <h2 className="mt-3 text-3xl font-semibold tracking-tight sm:text-4xl">The monthly fee has a measurable job.</h2>
+            <p className="mt-5 text-lg leading-8 text-slate-300">
+              Monthly management covers monitoring, failure review, copy and routing adjustments, booking-path checks, and a performance report built around the metrics below.
+            </p>
+            <div className="mt-7 grid gap-3 sm:grid-cols-2">
+              {monthlyMetrics.map((metric) => (
+                <div key={metric} className="flex items-center gap-3 rounded-xl border border-white/10 bg-white/[0.04] p-4 text-sm text-slate-300">
+                  <BarChart3 className="h-5 w-5 text-cyan-300" />
+                  <span>{metric}</span>
+                </div>
+              ))}
+            </div>
+            <div className="mt-6 flex gap-3 rounded-xl border border-white/10 bg-slate-900/80 p-5 text-sm leading-6 text-slate-300">
+              <SlidersHorizontal className="mt-0.5 h-5 w-5 shrink-0 text-cyan-300" />
+              <span>Changes outside the documented workflow scope are quoted before work begins; routine optimization inside the installed path is included.</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="intake" className="scroll-mt-28 border-y border-white/10 bg-white/[0.025]">
+        <div className="mx-auto grid max-w-7xl gap-10 px-4 py-16 sm:px-6 lg:grid-cols-[.82fr_1.18fr] lg:px-8">
+          <div>
+            <p className="text-sm font-semibold uppercase tracking-[0.2em] text-cyan-300">Founding-client intake</p>
+            <h2 className="mt-3 text-3xl font-semibold tracking-tight sm:text-4xl">Confirm fit before money changes hands.</h2>
+            <p className="mt-5 text-lg leading-8 text-slate-300">
+              Submit the current phone, booking, and lead-volume details. ILLCO responds with the exact connection plan, included scope, third-party costs, access checklist, payment path, and launch date.
+            </p>
+            <div className="mt-7 grid gap-3 text-sm text-slate-300">
+              {[
+                "One canonical offer: $750 setup + $199 monthly",
+                "Written scope and acceptance tests before checkout",
+                "No passwords collected through this form",
+                "One-business-day fit and installation response target",
+              ].map((item) => (
+                <div key={item} className="flex gap-3">
+                  <CheckCircle2 className="mt-0.5 h-5 w-5 shrink-0 text-emerald-300" />
+                  <span>{item}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          <ProductIntakeForm
+            kind="lead-recovery"
+            planId="lead-recovery-system"
+            productName="ILLCO Lead Recovery System"
+            submitLabel="Request the installation plan"
+          />
+        </div>
+      </section>
+
+      <section className="mx-auto max-w-5xl px-4 py-16 sm:px-6 lg:px-8">
+        <div className="text-center">
+          <p className="text-sm font-semibold uppercase tracking-[0.2em] text-cyan-300">Frequently asked questions</p>
+          <h2 className="mt-3 text-3xl font-semibold tracking-tight sm:text-4xl">Know the terms before starting.</h2>
+        </div>
+        <div className="mt-10 grid gap-4">
+          {faqs.map((item) => (
+            <details key={item.question} className="group rounded-xl border border-white/10 bg-white/[0.04] p-5 open:bg-white/[0.06]">
+              <summary className="cursor-pointer list-none pr-8 text-lg font-semibold text-white">{item.question}</summary>
+              <p className="mt-4 max-w-4xl text-sm leading-7 text-slate-400">{item.answer}</p>
+            </details>
+          ))}
+        </div>
       </section>
     </main>
   );

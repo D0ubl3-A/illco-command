@@ -25,6 +25,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
       priority: 0.99,
     },
     {
+      url: `${siteUrl}/youtube-rank-revival`,
+      lastModified,
+      changeFrequency: "weekly",
+      priority: 0.98,
+    },
+    {
       url: `${siteUrl}/tools`,
       lastModified,
       changeFrequency: "weekly",

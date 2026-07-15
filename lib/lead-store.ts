@@ -16,6 +16,12 @@ export type StoredLead = {
   createdAt: string;
 };
 
+export type StoredLeadReference = {
+  id: string;
+  email: string;
+  planId: string;
+};
+
 export async function recordLead(lead: FunnelLead): Promise<StoredLead> {
   const sql = getSql();
   const submittedAt = lead.submittedAt || new Date().toISOString();
@@ -53,4 +59,22 @@ export async function recordLead(lead: FunnelLead): Promise<StoredLead> {
   }
 
   return storedLead;
+}
+
+export async function getLeadReference(leadId: string): Promise<StoredLeadReference | null> {
+  const normalizedLeadId = String(leadId || "").trim();
+  if (!normalizedLeadId || normalizedLeadId.length > 80) return null;
+
+  const sql = getSql();
+  const rows = (await sql`
+    SELECT
+      id::text AS id,
+      email,
+      COALESCE(plan_id, '') AS "planId"
+    FROM illco_command_leads
+    WHERE id::text = ${normalizedLeadId}
+    LIMIT 1
+  `) as StoredLeadReference[];
+
+  return rows[0] || null;
 }

@@ -8,6 +8,7 @@ export type CheckoutSessionRecord = {
   userId?: string | null;
   email?: string | null;
   checkoutUrl?: string | null;
+  metadata?: Record<string, string>;
 };
 
 export type CheckoutSessionCompletionRecord = {
@@ -27,6 +28,7 @@ export async function recordCheckoutSession(input: CheckoutSessionRecord) {
     planId: input.planId,
     productId: input.productId,
     email: input.email || null,
+    metadata: input.metadata || {},
   };
 
   const rows = (await sql`

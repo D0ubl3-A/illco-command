@@ -18,14 +18,6 @@ export type CheckoutProduct = {
 
 export const checkoutProducts = [
   {
-    id: "doomsday-command",
-    appProductId: "doomsday-command",
-    name: "Doomsday Command: Aftermath Protocol",
-    category: "Command & AI Operators",
-    summary:
-      "A browser-based global nuclear command strategy simulator with deterrence, fallout, AI factions, mission recording, replay, and MP4 export.",
-  },
-  {
     id: "ai-music-mastering-pro",
     appProductId: "mastering-studio-platform",
     name: "AI Music Mastering Pro",
@@ -51,14 +43,16 @@ export const checkoutProducts = [
     appProductId: "youtube-ops-vercel",
     name: "YouTube Rank Revival AI Pro",
     category: "Video & Creator Growth",
-    summary: "YouTube optimization workflow for reviving older uploads and improving content discoverability.",
+    summary:
+      "$50 one-video optimization sprint with three title options, a rewritten description, keyword positioning, thumbnail direction, hook feedback, audience notes, a relaunch checklist, and one revision.",
   },
   {
     id: "instant-lead-rescue-text-back-ai",
     appProductId: "automateflow",
-    name: "Instant Lead Rescue Text-Back AI",
+    name: "ILLCO Lead Recovery System",
     category: "Sales & Lead Recovery",
-    summary: "Fast text-back assistant for businesses that need to recover missed or delayed leads.",
+    summary:
+      "Managed missed-call recovery for service businesses: immediate text-back, qualification, booking, confirmation, follow-up, owner alerts, testing, reporting, and monthly optimization.",
   },
   {
     id: "ai-workflow-mastery",

@@ -34,13 +34,49 @@ jobs:
         run: npm ci
 
       - name: Type check
-        run: npx tsc --noEmit --pretty false
+        id: typecheck
+        shell: bash
+        run: |
+          set -o pipefail
+          npx tsc --noEmit --pretty false 2>&1 | tee typecheck.log
+
+      - name: Upload type-check failure log
+        if: failure() && steps.typecheck.outcome == 'failure'
+        uses: actions/upload-artifact@v4
+        with:
+          name: typecheck-failure-log
+          path: typecheck.log
+          retention-days: 7
 
       - name: Test
-        run: npm test
+        id: test
+        shell: bash
+        run: |
+          set -o pipefail
+          npm test 2>&1 | tee test.log
+
+      - name: Upload test failure log
+        if: failure() && steps.test.outcome == 'failure'
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-failure-log
+          path: test.log
+          retention-days: 7
 
       - name: Build
-        run: npm run build
+        id: build
+        shell: bash
+        run: |
+          set -o pipefail
+          npm run build 2>&1 | tee build.log
+
+      - name: Upload build failure log
+        if: failure() && steps.build.outcome == 'failure'
+        uses: actions/upload-artifact@v4
+        with:
+          name: build-failure-log
+          path: build.log
+          retention-days: 7
 
   deploy:
     if: github.event_name != 'pull_request'
@@ -85,6 +121,8 @@ jobs:
           set -euo pipefail
           routes=(
             "https://illco-command.vercel.app/"
+            "https://illco-command.vercel.app/lead-rescue"
+            "https://illco-command.vercel.app/youtube-rank-revival"
             "https://illco-command.vercel.app/brain"
             "https://illco-command.vercel.app/tools/lyric-video-forge"
             "https://illco-command.vercel.app/tools/meme-mcp-server"

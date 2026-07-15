@@ -40,6 +40,7 @@ export function ProductIntakeForm({
 }: ProductIntakeFormProps) {
   const [status, setStatus] = useState<"idle" | "submitting" | "success" | "error">("idle");
   const [message, setMessage] = useState("");
+  const [intakeId, setIntakeId] = useState("");
 
   const isLeadRecovery = kind === "lead-recovery";
 
@@ -49,13 +50,15 @@ export function ProductIntakeForm({
     const formData = new FormData(form);
     setStatus("submitting");
     setMessage("");
+    setIntakeId("");
 
     const details = [
       `Product: ${productName}`,
       `Source: ${kind}-sales-page`,
       `Phone: ${fieldValue(formData, "phone") || "Not provided"}`,
-      `${isLeadRecovery ? "Business website" : "YouTube channel"}: ${fieldValue(formData, "productUrl") || "Not provided"}`,
-      `${isLeadRecovery ? "Missed calls per month" : "Videos to revive"}: ${fieldValue(formData, "volume") || "Not provided"}`,
+      `${isLeadRecovery ? "Business website" : "YouTube video"}: ${fieldValue(formData, "productUrl") || "Not provided"}`,
+      ...(isLeadRecovery ? [] : [`YouTube channel: ${fieldValue(formData, "channelUrl") || "Not provided"}`]),
+      `${isLeadRecovery ? "Missed calls per month" : "Videos in purchased scope"}: ${fieldValue(formData, "volume") || "Not provided"}`,
       `Primary goal: ${fieldValue(formData, "goal") || "Not provided"}`,
       `Current tools/access: ${fieldValue(formData, "tools") || "Not provided"}`,
       `Target start: ${fieldValue(formData, "timeline") || "Not provided"}`,
@@ -82,11 +85,15 @@ export function ProductIntakeForm({
         return;
       }
 
+      const savedIntakeId = String(payload.leadId || "").trim();
+      setIntakeId(savedIntakeId);
       setStatus("success");
       setMessage(
         isLeadRecovery
           ? "Intake received. ILLCO will review fit and send the installation plan within one business day."
-          : "Intake received. Your channel details are saved and ready for the checkout handoff.",
+          : savedIntakeId
+            ? "Intake received. Your selected video is saved and linked to the secure checkout below."
+            : "Intake received, but secure checkout could not be linked to a stored record. ILLCO will contact you instead of creating an unlinked payment.",
       );
       form.reset();
     } catch {
@@ -149,43 +156,54 @@ export function ProductIntakeForm({
         </div>
 
         <label className="grid gap-2 text-sm font-medium text-slate-200">
-          {isLeadRecovery ? "Business website" : "YouTube channel URL"}
+          {isLeadRecovery ? "Business website" : "Specific YouTube video URL"}
           <input
             className="min-h-12 rounded-lg border border-white/10 bg-slate-950 px-3 text-white outline-none transition focus:border-cyan-300"
             name="productUrl"
             type="url"
             required
-            placeholder={isLeadRecovery ? "https://yourbusiness.com" : "https://youtube.com/@yourchannel"}
+            placeholder={isLeadRecovery ? "https://yourbusiness.com" : "https://youtube.com/watch?v=..."}
           />
         </label>
 
-        <div className="grid gap-4 sm:grid-cols-2">
+        {!isLeadRecovery ? (
           <label className="grid gap-2 text-sm font-medium text-slate-200">
-            {isLeadRecovery ? "Estimated missed calls per month" : "How many videos need revival?"}
-            <select
+            YouTube channel URL <span className="text-xs font-normal text-slate-500">Optional when the video URL identifies the channel</span>
+            <input
               className="min-h-12 rounded-lg border border-white/10 bg-slate-950 px-3 text-white outline-none transition focus:border-cyan-300"
-              name="volume"
-              required
-            >
-              <option value="">Choose one</option>
-              {isLeadRecovery ? (
-                <>
-                  <option>1-10</option>
-                  <option>11-30</option>
-                  <option>31-75</option>
-                  <option>76+</option>
-                  <option>Unknown</option>
-                </>
-              ) : (
-                <>
-                  <option>1-5</option>
-                  <option>6-15</option>
-                  <option>16-50</option>
-                  <option>51+</option>
-                </>
-              )}
-            </select>
+              name="channelUrl"
+              type="url"
+              placeholder="https://youtube.com/@yourchannel"
+            />
           </label>
+        ) : null}
+
+        <div className="grid gap-4 sm:grid-cols-2">
+          {isLeadRecovery ? (
+            <label className="grid gap-2 text-sm font-medium text-slate-200">
+              Estimated missed calls per month
+              <select
+                className="min-h-12 rounded-lg border border-white/10 bg-slate-950 px-3 text-white outline-none transition focus:border-cyan-300"
+                name="volume"
+                required
+              >
+                <option value="">Choose one</option>
+                <option>1-10</option>
+                <option>11-30</option>
+                <option>31-75</option>
+                <option>76+</option>
+                <option>Unknown</option>
+              </select>
+            </label>
+          ) : (
+            <div className="grid gap-2 text-sm font-medium text-slate-200">
+              Purchased scope
+              <input type="hidden" name="volume" value="1" />
+              <div className="flex min-h-12 items-center rounded-lg border border-emerald-300/20 bg-emerald-300/10 px-3 text-emerald-100">
+                One selected video
+              </div>
+            </div>
+          )}
           <label className="grid gap-2 text-sm font-medium text-slate-200">
             Target start
             <select
@@ -211,17 +229,17 @@ export function ProductIntakeForm({
             placeholder={
               isLeadRecovery
                 ? "Example: book more estimates without adding office staff"
-                : "Example: revive older tutorials and increase qualified search traffic"
+                : "Example: revive this tutorial and increase qualified search traffic"
             }
           />
         </label>
 
         <label className="grid gap-2 text-sm font-medium text-slate-200">
-          {isLeadRecovery ? "Current phone, CRM, and calendar tools" : "Analytics access available"}
+          {isLeadRecovery ? "Current phone, CRM, and calendar tools" : "Analytics evidence available"}
           <input
             className="min-h-12 rounded-lg border border-white/10 bg-slate-950 px-3 text-white outline-none transition focus:border-cyan-300"
             name="tools"
-            placeholder={isLeadRecovery ? "Example: RingCentral, Jobber, Google Calendar" : "Example: public URLs plus YouTube Studio screenshots"}
+            placeholder={isLeadRecovery ? "Example: RingCentral, Jobber, Google Calendar" : "Example: YouTube Studio CTR and retention screenshots"}
           />
         </label>
 
@@ -248,32 +266,36 @@ export function ProductIntakeForm({
           {status === "submitting" ? <Loader2 className="h-5 w-5 animate-spin" /> : <ArrowRight className="h-5 w-5" />}
           {status === "submitting" ? "Saving intake..." : submitLabel}
         </button>
+      </form>
 
-        {message ? (
-          <div
-            className={`rounded-lg border p-4 text-sm leading-6 ${
-              status === "success"
-                ? "border-emerald-300/30 bg-emerald-300/10 text-emerald-100"
-                : "border-rose-300/30 bg-rose-300/10 text-rose-100"
-            }`}
-            role="status"
-          >
-            <div className="flex items-start gap-2">
-              {status === "success" ? <CheckCircle2 className="mt-0.5 h-5 w-5 shrink-0" /> : null}
-              <span>{message}</span>
-            </div>
-            {status === "success" && checkoutHref ? (
-              <a
-                className="mt-4 inline-flex min-h-11 items-center gap-2 rounded-lg bg-white px-4 font-semibold text-slate-950"
-                href={checkoutHref}
+      {message ? (
+        <div
+          className={`mt-4 rounded-lg border p-4 text-sm leading-6 ${
+            status === "success"
+              ? "border-emerald-300/30 bg-emerald-300/10 text-emerald-100"
+              : "border-rose-300/30 bg-rose-300/10 text-rose-100"
+          }`}
+          role="status"
+          aria-live="polite"
+        >
+          <div className="flex items-start gap-2">
+            {status === "success" ? <CheckCircle2 className="mt-0.5 h-5 w-5 shrink-0" /> : null}
+            <span>{message}</span>
+          </div>
+          {status === "success" && checkoutHref && intakeId ? (
+            <form className="mt-4" action={checkoutHref} method="post">
+              <input type="hidden" name="intakeId" value={intakeId} />
+              <button
+                className="inline-flex min-h-11 items-center gap-2 rounded-lg bg-white px-4 font-semibold text-slate-950"
+                type="submit"
               >
                 Continue to secure checkout
                 <ArrowRight className="h-4 w-4" />
-              </a>
-            ) : null}
-          </div>
-        ) : null}
-      </form>
+              </button>
+            </form>
+          ) : null}
+        </div>
+      ) : null}
     </div>
   );
 }

@@ -37,6 +37,21 @@ const featuredCheckoutIds = new Set([
   "custom-build-sprint",
 ]);
 
+const dedicatedSalesPages: Record<string, string> = {
+  "instant-lead-rescue-text-back-ai": "/lead-rescue",
+  "youtube-rank-revival-ai-pro": "/youtube-rank-revival",
+};
+
+const priorityOfferPrices: Record<string, string> = {
+  "instant-lead-rescue-text-back-ai": "$750 setup",
+  "youtube-rank-revival-ai-pro": "$50",
+};
+
+const priorityOfferTurnaround: Record<string, string> = {
+  "instant-lead-rescue-text-back-ai": "7 business days",
+  "youtube-rank-revival-ai-pro": "24-72 hours",
+};
+
 const helloskipBlogPosts = [
   {
     title: "The Full-Life SaaS Ecosystem Grid (21-40): A Structured Blueprint for the Modern Age",
@@ -194,7 +209,6 @@ function bestFor(category: CheckoutProductCategory) {
     "App Conversion": "App launches",
     "Voice & Memory": "Voice systems",
   };
-
   return value[category];
 }
 
@@ -203,7 +217,8 @@ function toStoreProducts() {
     const offerProduct = getProductById(checkoutProduct.id);
     const appProduct = getProductById(checkoutProduct.appProductId) || offerProduct;
     const displayProduct = offerProduct || appProduct;
-    const priceLabel = displayProduct ? getPublicProductPriceLabel(displayProduct) : "Custom";
+    const defaultPriceLabel = displayProduct ? getPublicProductPriceLabel(displayProduct) : "Custom";
+    const priceLabel = priorityOfferPrices[checkoutProduct.id] || defaultPriceLabel;
     const theme = categoryTheme[checkoutProduct.category];
     const featured = featuredCheckoutIds.has(checkoutProduct.id) || index < 4;
 
@@ -221,14 +236,14 @@ function toStoreProducts() {
       details: [
         { label: "Best for", value: bestFor(checkoutProduct.category) },
         { label: "Includes", value: productChips(checkoutProduct.category, appProduct?.subscriptionTier, appProduct?.isLive).slice(0, 2).join(" + ") },
-        { label: "Turnaround", value: appProduct?.isLive ? "Ready lane" : "Guided setup" },
+        { label: "Turnaround", value: priorityOfferTurnaround[checkoutProduct.id] || (appProduct?.isLive ? "Ready lane" : "Guided setup") },
       ],
       featured,
       accent: theme.accent,
       accent2: theme.accent2,
       code: productCode(checkoutProduct.name),
       image: displayProduct ? storefrontProductImage(displayProduct) : getCheckoutProductImagePath(checkoutProduct),
-      appHref: `/apps/${encodeURIComponent(displayProduct?.id || checkoutProduct.id)}`,
+      appHref: dedicatedSalesPages[checkoutProduct.id] || `/apps/${encodeURIComponent(displayProduct?.id || checkoutProduct.id)}`,
       skipHref: skipProductHref(checkoutProduct.name),
     };
   });

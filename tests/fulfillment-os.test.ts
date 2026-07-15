@@ -21,6 +21,8 @@ test("verified priority checkouts enter the tracked delivery portal", () => {
   assert.match(deliveryCheckout, /session\.metadata\?\.intakeId/);
   assert.match(deliveryCheckout, /upsertServiceOrderFromCheckout/);
   assert.match(deliveryCheckout, /buildDeliveryHref/);
+  assert.match(deliveryCheckout, /Do not submit another payment/);
+  assert.match(deliveryCheckout, /Stripe confirmed the payment/);
 });
 
 test("Stripe completion creates an idempotent fulfillment order and owner alert", () => {
@@ -47,16 +49,18 @@ test("customers receive a private noindex delivery, result, and proof portal", (
   assert.match(portal, /Measured outcome/);
   assert.match(portal, /Submit verified feedback/);
   assert.match(proofRoute, /submitServiceOrderProof/);
-  assert.match(proofRoute, /method|POST/);
+  assert.match(proofRoute, /sendServiceOrderEvent/);
+  assert.match(proofRoute, /proof-received/);
   assert.match(orders, /createHmac\("sha256"/);
   assert.match(orders, /timingSafeEqual/);
   assert.match(orders, /proof_permission/);
 });
 
-test("admin has a protected fulfillment queue with checklist, metrics, and proof controls", () => {
+test("admin has a protected fulfillment queue with checklist, metrics, proof, and lifecycle alerts", () => {
   const admin = read("app/admin/page.tsx");
   const queue = read("app/admin/orders/page.tsx");
   const actions = read("app/admin/orders/actions.ts");
+  const events = read("lib/service-order-events.ts");
 
   assert.match(admin, /href="\/admin\/orders"/);
   assert.match(queue, /Fulfillment and proof queue/);
@@ -67,13 +71,22 @@ test("admin has a protected fulfillment queue with checklist, metrics, and proof
   assert.match(queue, /Proof status/);
   assert.match(actions, /isAdminAuthenticated/);
   assert.match(actions, /updateServiceOrder/);
+  assert.match(actions, /sendServiceOrderEvent/);
+  assert.match(actions, /order-delivered/);
   assert.match(actions, /revalidatePath\("\/admin\/orders"\)/);
+  assert.match(events, /illco\.fulfillment/);
+  assert.match(events, /deliveryUrl/);
 });
 
-test("fulfillment runtime configuration is explicit", () => {
+test("fulfillment runtime configuration and database bootstrap are explicit", () => {
   const env = read("lib/env.ts");
+  const packageJson = read("package.json");
+  const setup = read("scripts/setup-service-orders.ts");
+
   assert.match(env, /SERVICE_ORDER_ACCESS_SECRET/);
   assert.match(env, /FULFILLMENT_NOTIFICATION_WEBHOOK_URL/);
   assert.match(env, /deliveryPortalReady/);
   assert.match(env, /fulfillmentNotificationsReady/);
+  assert.match(packageJson, /setup-service-orders\.ts/);
+  assert.match(setup, /ensureServiceOrderSchema/);
 });

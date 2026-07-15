@@ -19,6 +19,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
       priority: 1,
     },
     {
+      url: `${siteUrl}/lead-rescue`,
+      lastModified,
+      changeFrequency: "weekly",
+      priority: 0.99,
+    },
+    {
       url: `${siteUrl}/tools`,
       lastModified,
       changeFrequency: "weekly",

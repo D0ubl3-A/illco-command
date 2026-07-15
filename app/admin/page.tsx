@@ -40,7 +40,17 @@ export default async function AdminPage({
       import("@/lib/proof-audit"),
     ]);
 
-    return <AdminClient products={products} config={getConfigurationStatus()} proofAudit={getProofAuditSnapshot()} />;
+    return (
+      <>
+        <a
+          className="fixed right-4 top-4 z-[80] inline-flex min-h-11 items-center rounded-lg bg-cyan-300 px-4 text-sm font-semibold text-slate-950 shadow-xl shadow-black/30"
+          href="/admin/orders"
+        >
+          Fulfillment Orders
+        </a>
+        <AdminClient products={products} config={getConfigurationStatus()} proofAudit={getProofAuditSnapshot()} />
+      </>
+    );
   }
 
   return (

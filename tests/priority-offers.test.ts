@@ -45,6 +45,7 @@ test("Lead Recovery page contains conversion, onboarding, delivery, proof, reten
 test("Rank Revival page and checkout match the $50 one-video service", () => {
   const page = read("app/youtube-rank-revival/page.tsx");
   const checkout = read("app/api/youtube-rank-revival/checkout/route.ts");
+  const intake = read("components/product-intake-form.tsx");
   const stripe = read("lib/stripe.ts");
 
   assert.match(page, /\$50 one-time/i);
@@ -56,10 +57,27 @@ test("Rank Revival page and checkout match the $50 one-video service", () => {
   assert.match(page, /One revision round/i);
   assert.match(page, /No channel password required/i);
   assert.match(page, /FAQPage/);
+  assert.match(page, /verifyRankRevivalPayment/);
+  assert.match(page, /session\.payment_status === "paid"/);
+  assert.match(page, /session\.metadata\?\.intakeId/);
+  assert.doesNotMatch(page, /href=\{checkoutHref\}/);
 
+  assert.match(checkout, /export async function POST/);
+  assert.match(checkout, /export async function GET\(\)/);
+  assert.match(checkout, /status: 405/);
+  assert.match(checkout, /getLeadReference/);
+  assert.match(checkout, /lead\.planId !== offerId/);
   assert.match(checkout, /offerPriceCents = 5000/);
   assert.match(checkout, /createOneTimeCheckoutSession/);
+  assert.match(checkout, /intakeId: lead\.id/);
   assert.match(checkout, /videoCount: "1"/);
+
+  assert.match(intake, /Specific YouTube video URL/);
+  assert.match(intake, /name="channelUrl"/);
+  assert.match(intake, /name="volume" value="1"/);
+  assert.match(intake, /method="post"/);
+  assert.match(intake, /name="intakeId" value=\{intakeId\}/);
+
   assert.match(stripe, /mode: "payment"/);
   assert.match(stripe, /purchaseType: "one-time-service"/);
 });

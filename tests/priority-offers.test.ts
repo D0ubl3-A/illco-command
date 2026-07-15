@@ -28,18 +28,43 @@ test("priority offers use one canonical name, scope, and sales route", () => {
   assert.match(storefront, /"youtube-rank-revival-ai-pro": "\$50"/);
 });
 
-test("Lead Recovery page contains conversion, onboarding, delivery, proof, retention, SEO, and mobile-first requirements", () => {
+test("Lead Recovery has linked setup-plus-subscription checkout and verified confirmation", () => {
   const page = read("app/lead-rescue/page.tsx");
+  const checkout = read("app/api/lead-recovery/checkout/route.ts");
+  const intake = read("components/product-intake-form.tsx");
+  const stripe = read("lib/stripe.ts");
 
   assert.doesNotMatch(page, /#request|requestHref/);
   assert.match(page, /ProductIntakeForm/);
+  assert.match(page, /checkoutHref=\{checkoutHref\}/);
+  assert.match(page, /verifyLeadRecoveryPayment/);
+  assert.match(page, /session\.mode === "subscription"/);
+  assert.match(page, /session\.payment_status === "paid"/);
+  assert.match(page, /session\.metadata\?\.intakeId/);
   assert.match(page, /\$750/);
   assert.match(page, /\$199/);
   assert.match(page, /seven business days/i);
   assert.match(page, /20 consecutive end-to-end test calls/i);
   assert.match(page, /Median response time/);
+  assert.match(page, /UnitPriceSpecification/);
   assert.match(page, /FAQPage/);
   assert.match(page, /sm:grid|lg:grid/);
+
+  assert.match(checkout, /export async function POST/);
+  assert.match(checkout, /export async function GET\(\)/);
+  assert.match(checkout, /status: 405/);
+  assert.match(checkout, /getLeadReference/);
+  assert.match(checkout, /lead\.planId !== productId/);
+  assert.match(checkout, /setupAmountCents = 75_000/);
+  assert.match(checkout, /recurringAmountCents = 19_900/);
+  assert.match(checkout, /createSetupPlusSubscriptionCheckoutSession/);
+  assert.match(checkout, /intakeId: lead\.id/);
+  assert.match(checkout, /planId: "suite"/);
+
+  assert.match(intake, /method="post"/);
+  assert.match(intake, /name="intakeId" value=\{intakeId\}/);
+  assert.match(stripe, /purchaseType: "setup-plus-subscription"/);
+  assert.match(stripe, /recurring: \{ interval: "month" \}/);
 });
 
 test("Rank Revival page and checkout match the $50 one-video service", () => {

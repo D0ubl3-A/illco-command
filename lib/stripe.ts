@@ -164,6 +164,81 @@ export async function createOneTimeCheckoutSession(input: {
   };
 }
 
+export async function createSetupPlusSubscriptionCheckoutSession(input: {
+  email?: string | null;
+  productId: string;
+  setupName: string;
+  setupDescription: string;
+  setupAmountCents: number;
+  recurringName: string;
+  recurringDescription: string;
+  recurringAmountCents: number;
+  returnPath?: string | null;
+  cancelPath?: string | null;
+  metadata?: Record<string, string>;
+}) {
+  for (const [label, value] of [
+    ["setup", input.setupAmountCents],
+    ["recurring", input.recurringAmountCents],
+  ] as const) {
+    if (!Number.isInteger(value) || value < 50 || value > 10_000_000) {
+      throw new Error(`A valid ${label} checkout amount is required.`);
+    }
+  }
+
+  const stripe = getStripeClient();
+  const metadata = {
+    planId: "suite",
+    productId: input.productId,
+    purchaseType: "setup-plus-subscription",
+    setupAmountCents: String(input.setupAmountCents),
+    recurringAmountCents: String(input.recurringAmountCents),
+    ...input.metadata,
+  };
+
+  const session = await stripe.checkout.sessions.create({
+    mode: "subscription",
+    allow_promotion_codes: true,
+    billing_address_collection: "auto",
+    customer_email: input.email || undefined,
+    client_reference_id: input.productId,
+    success_url: buildSuccessUrl({ returnPath: input.returnPath, productId: input.productId }),
+    cancel_url: absoluteUrl(input.cancelPath || env.stripeCancelPath),
+    line_items: [
+      {
+        quantity: 1,
+        price_data: {
+          currency: "usd",
+          unit_amount: input.setupAmountCents,
+          product_data: {
+            name: input.setupName,
+            description: input.setupDescription,
+          },
+        },
+      },
+      {
+        quantity: 1,
+        price_data: {
+          currency: "usd",
+          unit_amount: input.recurringAmountCents,
+          recurring: { interval: "month" },
+          product_data: {
+            name: input.recurringName,
+            description: input.recurringDescription,
+          },
+        },
+      },
+    ],
+    metadata,
+    subscription_data: { metadata },
+  });
+
+  return {
+    id: session.id,
+    url: requireEnv(session.url || "", "Stripe checkout session url"),
+  };
+}
+
 export async function retrieveCheckoutSession(sessionId: string) {
   const stripe = getStripeClient();
   return stripe.checkout.sessions.retrieve(sessionId);

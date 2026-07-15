@@ -134,6 +134,24 @@ export default function LeadRescuePage() {
           description: "$750 setup plus $199 monthly management and optimization.",
           availability: "https://schema.org/LimitedAvailability",
           url: canonicalUrl,
+          priceSpecification: [
+            {
+              "@type": "UnitPriceSpecification",
+              name: "One-time setup",
+              price: "750",
+              priceCurrency: "USD",
+              unitText: "installation",
+            },
+            {
+              "@type": "UnitPriceSpecification",
+              name: "Monthly management and optimization",
+              price: "199",
+              priceCurrency: "USD",
+              unitCode: "MON",
+              unitText: "month",
+              billingDuration: 1,
+            },
+          ],
         },
       },
       {
@@ -179,7 +197,7 @@ export default function LeadRescuePage() {
               </div>
               <div className="rounded-xl border border-white/10 bg-white/[0.05] p-4">
                 <div className="text-xs uppercase tracking-[0.18em] text-slate-400">Target launch</div>
-                <div className="mt-2 text-3xl font-semibold text-cyan-200">7 days</div>
+                <div className="mt-2 text-3xl font-semibold text-cyan-200">7 business days</div>
                 <div className="mt-1 text-sm text-slate-400">After access and approval</div>
               </div>
             </div>
@@ -301,7 +319,7 @@ export default function LeadRescuePage() {
         <div className="grid gap-12 lg:grid-cols-2">
           <div>
             <p className="text-sm font-semibold uppercase tracking-[0.2em] text-cyan-300">Onboarding and delivery</p>
-            <h2 className="mt-3 text-3xl font-semibold tracking-tight sm:text-4xl">A visible seven-day installation plan.</h2>
+            <h2 className="mt-3 text-3xl font-semibold tracking-tight sm:text-4xl">A visible seven-business-day installation plan.</h2>
             <div className="mt-8 grid gap-4">
               {launchSteps.map((step) => (
                 <article key={step.day} className="rounded-xl border border-white/10 bg-white/[0.04] p-5">

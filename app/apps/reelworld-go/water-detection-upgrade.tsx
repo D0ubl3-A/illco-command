@@ -210,6 +210,7 @@ export function WaterDetectionUpgrade() {
     const originalGetImageData = prototype.getImageData;
 
     prototype.getImageData = function enhancedGetImageData(
+      this: CanvasRenderingContext2D,
       sx: number,
       sy: number,
       sw: number,

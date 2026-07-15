@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
 
 import "./bobber-overrides.css";
+import { WaterDetectionUpgrade } from "./water-detection-upgrade";
 
 export const metadata: Metadata = {
   title: "ReelWorld GO — Location-Based AR Fishing",
@@ -18,5 +19,10 @@ export const viewport: Viewport = {
 };
 
 export default function ReelWorldLayout({ children }: Readonly<{ children: React.ReactNode }>) {
-  return children;
+  return (
+    <>
+      <WaterDetectionUpgrade />
+      {children}
+    </>
+  );
 }

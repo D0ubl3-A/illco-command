@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
 
 import { StoreFooter } from "@/components/layout/footer";
+import { LeadRecoveryBanner } from "@/components/layout/lead-recovery-banner";
 import { StoreNavigation } from "@/components/layout/navigation";
 import "./globals.css";
 
@@ -57,6 +58,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
       <body>
         <a className="skipLink" href="#main-content">Skip to content</a>
         <StoreNavigation />
+        <LeadRecoveryBanner />
         {children}
         <StoreFooter />
       </body>

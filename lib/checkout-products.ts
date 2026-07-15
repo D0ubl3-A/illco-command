@@ -18,14 +18,6 @@ export type CheckoutProduct = {
 
 export const checkoutProducts = [
   {
-    id: "doomsday-command",
-    appProductId: "doomsday-command",
-    name: "Doomsday Command: Aftermath Protocol",
-    category: "Command & AI Operators",
-    summary:
-      "A browser-based global nuclear command strategy simulator with deterrence, fallout, AI factions, mission recording, replay, and MP4 export.",
-  },
-  {
     id: "ai-music-mastering-pro",
     appProductId: "mastering-studio-platform",
     name: "AI Music Mastering Pro",

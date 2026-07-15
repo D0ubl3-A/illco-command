@@ -79,7 +79,7 @@ export async function POST(request: Request) {
       recurringDescription:
         "Monthly monitoring, failure review, in-scope optimization, booking-path checks, and performance reporting.",
       recurringAmountCents,
-      returnPath: "/lead-rescue?checkout=success#intake",
+      returnPath: "/delivery/checkout?offer=lead-recovery-system",
       cancelPath: "/lead-rescue?checkout=cancelled#pricing",
       metadata,
     });

@@ -58,6 +58,10 @@ const configuredLeadAdminEmails = uniqueEmailList([
   process.env.MASTER_ADMIN_EMAIL,
   "admin@illcoai.tech",
 ]);
+const configuredLeadAdminNotificationWebhookUrl = readEnvValue(
+  process.env.LEAD_ADMIN_NOTIFICATION_WEBHOOK_URL,
+  process.env.LEAD_NOTIFICATION_WEBHOOK_URL,
+);
 
 export const env = {
   appBaseUrl: readEnvValue(
@@ -75,6 +79,12 @@ export const env = {
   stripeSecretKey: readEnvValue(process.env.STRIPE_SECRET_KEY, process.env.STRIPE_SECRET),
   stripeWebhookSecret: readEnvValue(process.env.STRIPE_WEBHOOK_SECRET, process.env.STRIPE_WEBHOOK_SIGNING_SECRET, process.env.WEBHOOK_SECRET),
   checkoutSessionSecret: readEnvValue(process.env.CHECKOUT_SESSION_SECRET, process.env.SESSION_SECRET, process.env.LICENSE_SIGNING_SECRET),
+  serviceOrderAccessSecret: readEnvValue(
+    process.env.SERVICE_ORDER_ACCESS_SECRET,
+    process.env.CHECKOUT_SESSION_SECRET,
+    process.env.LICENSE_SIGNING_SECRET,
+    process.env.STRIPE_WEBHOOK_SECRET,
+  ),
   stripePriceId: readEnvValue(process.env.STRIPE_PRICE_ID, process.env.STRIPE_PLAN_PRICE_ID),
   stripePriceCoreId: readEnvValue(process.env.STRIPE_PRICE_CORE_ID, process.env.CORE_PRICE_ID, process.env.STRIPE_PRICE_ID),
   stripePriceStudioId: readEnvValue(process.env.STRIPE_PRICE_STUDIO_ID, process.env.STUDIO_PRICE_ID, process.env.STRIPE_PRICE_ID),
@@ -87,9 +97,11 @@ export const env = {
   stripeCancelPath: readEnvValue(process.env.STRIPE_CANCEL_PATH, "/?checkout=cancelled"),
   leadWebhookUrl: configuredLeadWebhookUrl,
   leadSpreadsheetWebhookUrl: configuredLeadWebhookUrl,
-  leadAdminNotificationWebhookUrl: readEnvValue(
-    process.env.LEAD_ADMIN_NOTIFICATION_WEBHOOK_URL,
-    process.env.LEAD_NOTIFICATION_WEBHOOK_URL,
+  leadAdminNotificationWebhookUrl: configuredLeadAdminNotificationWebhookUrl,
+  fulfillmentNotificationWebhookUrl: readEnvValue(
+    process.env.FULFILLMENT_NOTIFICATION_WEBHOOK_URL,
+    process.env.SERVICE_ORDER_NOTIFICATION_WEBHOOK_URL,
+    configuredLeadAdminNotificationWebhookUrl,
   ),
   leadAdminEmails: configuredLeadAdminEmails,
   groqApiKey: readEnvValue(process.env.GROQ_API_KEY, process.env.GROQ_SECRET_KEY),
@@ -140,8 +152,9 @@ export function getConfigurationStatus() {
   return {
     subscriptionsReady: Boolean(env.stripeSecretKey && Object.values(planPrices).some(Boolean)),
     stripeWebhooksReady: Boolean(env.stripeSecretKey && env.stripeWebhookSecret),
-    stripeMode,
     customerPortalReady: Boolean(env.stripeSecretKey && env.checkoutSessionSecret),
+    deliveryPortalReady: Boolean(env.serviceOrderAccessSecret),
+    fulfillmentNotificationsReady: Boolean(env.fulfillmentNotificationWebhookUrl),
     licenseIssuingReady: Boolean(env.adminApiKey && env.licenseSigningSecret),
     manualLicenseValidationReady: Boolean(env.masterLicenseKey || env.licenseKeys),
     leadCaptureReady: Boolean(env.leadSpreadsheetWebhookUrl || env.leadAdminNotificationWebhookUrl),

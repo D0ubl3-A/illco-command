@@ -109,6 +109,61 @@ export async function createCheckoutSession(input: {
   };
 }
 
+export async function createOneTimeCheckoutSession(input: {
+  email?: string | null;
+  productId: string;
+  productName: string;
+  description: string;
+  amountCents: number;
+  returnPath?: string | null;
+  cancelPath?: string | null;
+  metadata?: Record<string, string>;
+}) {
+  if (!Number.isInteger(input.amountCents) || input.amountCents < 50 || input.amountCents > 10_000_000) {
+    throw new Error("A valid one-time checkout amount is required.");
+  }
+
+  const stripe = getStripeClient();
+  const metadata = {
+    planId: "core",
+    productId: input.productId,
+    purchaseType: "one-time-service",
+    amountCents: String(input.amountCents),
+    ...input.metadata,
+  };
+
+  const session = await stripe.checkout.sessions.create({
+    mode: "payment",
+    allow_promotion_codes: true,
+    billing_address_collection: "auto",
+    customer_email: input.email || undefined,
+    customer_creation: "always",
+    client_reference_id: input.productId,
+    success_url: buildSuccessUrl({ returnPath: input.returnPath, productId: input.productId }),
+    cancel_url: absoluteUrl(input.cancelPath || env.stripeCancelPath),
+    line_items: [
+      {
+        quantity: 1,
+        price_data: {
+          currency: "usd",
+          unit_amount: input.amountCents,
+          product_data: {
+            name: input.productName,
+            description: input.description,
+          },
+        },
+      },
+    ],
+    metadata,
+    payment_intent_data: { metadata },
+  });
+
+  return {
+    id: session.id,
+    url: requireEnv(session.url || "", "Stripe checkout session url"),
+  };
+}
+
 export async function retrieveCheckoutSession(sessionId: string) {
   const stripe = getStripeClient();
   return stripe.checkout.sessions.retrieve(sessionId);
@@ -157,7 +212,6 @@ export function constructStripeWebhookEvent(payload: string, signatureHeader: st
   if (!signatureHeader) {
     throw new Error("Missing Stripe-Signature header.");
   }
-
   return getStripeClient().webhooks.constructEvent(payload, signatureHeader, stripeWebhookSecret);
 }
 

@@ -3,6 +3,7 @@
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 
+import { sendServiceOrderEvent, type ServiceOrderEventType } from "@/lib/service-order-events";
 import {
   getServiceOrder,
   serviceOrderPriorities,
@@ -37,6 +38,12 @@ function normalizedDueAt(value: string) {
   return Number.isNaN(date.getTime()) ? null : date.toISOString();
 }
 
+function updateEvent(status: ServiceOrderStatus): ServiceOrderEventType {
+  if (status === "delivered") return "order-delivered";
+  if (status === "live") return "order-live";
+  return "order-updated";
+}
+
 export async function updateServiceOrderAction(formData: FormData) {
   if (!(await isAdminAuthenticated())) redirect("/admin");
 
@@ -46,9 +53,10 @@ export async function updateServiceOrderAction(formData: FormData) {
 
   const doneSteps = new Set(formData.getAll("doneStep").map((value) => String(value)));
   const checklist = existing.checklist.map((item) => ({ ...item, done: doneSteps.has(item.id) }));
+  const status = validStatus(text(formData, "status", 40));
 
-  await updateServiceOrder(orderId, {
-    status: validStatus(text(formData, "status", 40)),
+  const updated = await updateServiceOrder(orderId, {
+    status,
     priority: validPriority(text(formData, "priority", 40)),
     ownerEmail: text(formData, "ownerEmail", 180),
     dueAt: normalizedDueAt(text(formData, "dueAt", 80)),
@@ -70,6 +78,12 @@ export async function updateServiceOrderAction(formData: FormData) {
       notes: text(formData, "metricsNotes", 1200),
     },
   });
+
+  try {
+    await sendServiceOrderEvent(updated, updateEvent(status));
+  } catch (error) {
+    console.error("Service-order update notification failed", error);
+  }
 
   revalidatePath("/admin/orders");
   revalidatePath(`/delivery/${orderId}`);

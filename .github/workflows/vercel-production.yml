@@ -125,6 +125,7 @@ jobs:
             "https://illco-command.vercel.app/youtube-rank-revival"
             "https://illco-command.vercel.app/brain"
             "https://illco-command.vercel.app/label-command"
+            "https://illco-command.vercel.app/api/label-command/health"
             "https://illco-command.vercel.app/tools/lyric-video-forge"
             "https://illco-command.vercel.app/tools/meme-mcp-server"
             "https://illco-command.vercel.app/api/health"

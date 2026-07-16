@@ -2,7 +2,9 @@ import { NextResponse } from "next/server";
 import { z } from "zod";
 
 import { hasDatabase } from "@/lib/db";
-import { archiveLabelRelease, updateLabelRelease } from "@/lib/label-command-store";
+import { labelReleaseStages } from "@/lib/label-command-domain";
+import { updateLabelReleaseStage } from "@/lib/label-command-release-stage";
+import { archiveLabelRelease } from "@/lib/label-command-store";
 import { isSameOriginRequest } from "@/lib/same-origin-request";
 import { getCurrentUser } from "@/lib/user-accounts";
 
@@ -13,18 +15,10 @@ type RouteContext = {
 };
 
 const releaseIdSchema = z.string().uuid();
-const updateRequestSchema = z
-  .object({
-    workspaceId: z.string().uuid(),
-    title: z.string().optional(),
-    artistId: z.string().uuid().nullable().optional(),
-    releaseType: z.string().optional(),
-    stage: z.string().optional(),
-    targetDate: z.string().nullable().optional(),
-    explicit: z.boolean().optional(),
-    notes: z.string().optional(),
-  })
-  .refine((value) => Object.keys(value).some((key) => key !== "workspaceId"), "At least one release field is required.");
+const stageUpdateSchema = z.object({
+  workspaceId: z.string().uuid(),
+  stage: z.enum(labelReleaseStages),
+});
 
 export async function PATCH(request: Request, context: RouteContext) {
   if (!isSameOriginRequest(request)) {
@@ -42,16 +36,15 @@ export async function PATCH(request: Request, context: RouteContext) {
 
     const { releaseId: rawReleaseId } = await context.params;
     const releaseId = releaseIdSchema.parse(rawReleaseId);
-    const body = updateRequestSchema.parse(await request.json());
-    const { workspaceId, ...changes } = body;
-    const release = await updateLabelRelease(user.id, workspaceId, releaseId, changes);
+    const body = stageUpdateSchema.parse(await request.json());
+    const release = await updateLabelReleaseStage(user.id, body.workspaceId, releaseId, body.stage);
     return NextResponse.json({ ok: true, release });
   } catch (error) {
     if (error instanceof z.ZodError) {
-      return NextResponse.json({ ok: false, error: "Release update is invalid.", issues: error.issues }, { status: 400 });
+      return NextResponse.json({ ok: false, error: "Release stage update is invalid.", issues: error.issues }, { status: 400 });
     }
     return NextResponse.json(
-      { ok: false, error: error instanceof Error ? error.message : "Release update failed." },
+      { ok: false, error: error instanceof Error ? error.message : "Release stage update failed." },
       { status: 400 },
     );
   }

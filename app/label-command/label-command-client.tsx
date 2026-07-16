@@ -179,9 +179,16 @@ export function LabelCommandClient() {
               <summary>{group.label}</summary>
               <nav>
                 {group.items.map((item) => (
-                  <a key={item} href={`#${item.toLowerCase().replaceAll(" ", "-").replaceAll("&", "and")}`} onClick={() => setMobileNavOpen(false)}>
+                  <button
+                    key={item}
+                    type="button"
+                    onClick={() => {
+                      setMobileNavOpen(false);
+                      runAction(item);
+                    }}
+                  >
                     {item}
-                  </a>
+                  </button>
                 ))}
               </nav>
             </details>

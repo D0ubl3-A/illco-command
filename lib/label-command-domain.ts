@@ -32,9 +32,15 @@ const cleanText = (max: number) =>
     .max(max)
     .transform((value) => value.replace(/\s+/g, " "));
 
-const nullableDate = z
-  .union([z.string().date(), z.literal(""), z.null(), z.undefined()])
-  .transform((value) => (value ? value : null));
+const createNullableDate = z.preprocess(
+  (value) => (value === undefined || value === null || value === "" ? null : value),
+  z.string().date().nullable(),
+);
+
+const updateNullableDate = z.preprocess(
+  (value) => (value === null || value === "" ? null : value),
+  z.string().date().nullable(),
+);
 
 export const createArtistInputSchema = z.object({
   name: cleanText(120),
@@ -47,15 +53,21 @@ export const createReleaseInputSchema = z.object({
   artistId: z.string().uuid().nullable().optional().default(null),
   releaseType: z.enum(labelReleaseTypes).optional().default("single"),
   stage: z.enum(labelReleaseStages).optional().default("draft"),
-  targetDate: nullableDate,
+  targetDate: createNullableDate.optional().default(null),
   explicit: z.boolean().optional().default(false),
   notes: z.string().trim().max(5000).optional().default(""),
 });
 
-export const updateReleaseInputSchema = createReleaseInputSchema
-  .partial()
-  .extend({
+export const updateReleaseInputSchema = z
+  .object({
     id: z.string().uuid(),
+    title: cleanText(180).optional(),
+    artistId: z.string().uuid().nullable().optional(),
+    releaseType: z.enum(labelReleaseTypes).optional(),
+    stage: z.enum(labelReleaseStages).optional(),
+    targetDate: updateNullableDate.optional(),
+    explicit: z.boolean().optional(),
+    notes: z.string().trim().max(5000).optional(),
   })
   .refine(
     (value) => Object.keys(value).some((key) => key !== "id"),

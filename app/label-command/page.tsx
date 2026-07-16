@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 
 import { LabelCommandClient } from "./label-command-client";
+import persistenceStyles from "./persistence.module.css";
 
 export const metadata: Metadata = {
   title: "Label Command",
@@ -12,5 +13,9 @@ export const metadata: Metadata = {
 };
 
 export default function LabelCommandPage() {
-  return <LabelCommandClient />;
+  return (
+    <div className={persistenceStyles.persistenceRoot}>
+      <LabelCommandClient />
+    </div>
+  );
 }

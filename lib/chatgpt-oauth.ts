@@ -9,7 +9,12 @@ import { getSql } from "@/lib/db";
 import { findUserById, listUserPurchases, type UserAccount } from "@/lib/user-accounts";
 
 export const CHATGPT_OAUTH_CLIENT_ID = "illco-chatgpt-lyric-video-forge";
-export const CHATGPT_OAUTH_RESOURCE = "https://www.illcoai.tech/api/chatgpt/lyric-video-forge/mcp";
+// Keep the OAuth resource byte-for-byte identical to the canonical MCP URL.
+// `www.illcoai.tech` permanently redirects to the apex domain, and OAuth
+// clients key bearer tokens by protected-resource URL. Advertising the www
+// URL while serving the MCP endpoint from the apex causes an otherwise
+// successful authorization to be followed by another authentication challenge.
+export const CHATGPT_OAUTH_RESOURCE = "https://illcoai.tech/api/chatgpt/lyric-video-forge/mcp";
 export const CHATGPT_OAUTH_SCOPES = [
   "openid",
   "email",

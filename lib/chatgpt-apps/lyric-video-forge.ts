@@ -51,7 +51,7 @@ export type JsonRpcRequest = {
 const MCP_PROTOCOL_VERSION = "2025-06-18";
 const APP_WIDGET_URI = LYRIC_VIDEO_FORGE_APP.widgetUri;
 const MCP_WIDGET_MIME_TYPE = "text/html;profile=mcp-app";
-const APP_WIDGET_DOMAIN = "https://www.illcoai.tech";
+const APP_WIDGET_DOMAIN = "https://illcoai.tech";
 const APP_RESOURCE_DOMAINS = [APP_WIDGET_DOMAIN];
 const APP_CONNECT_DOMAINS = [APP_WIDGET_DOMAIN];
 const MCP_INSTRUCTIONS =
@@ -188,6 +188,10 @@ function toolMetaWithResource() {
   };
 }
 
+function toolSecuritySchemes() {
+  return toolMetaWithResource().securitySchemes;
+}
+
 function estimateCredits(mode: string, imageCount: number, editCount: number) {
   const selectedImageCredits = 2 + imageCount * 5;
   const selectedEditCredits = editCount * 3;
@@ -290,7 +294,7 @@ function unauthorizedToolOutput(scope: string) {
       },
     ],
     _meta: {
-      "mcp/www_authenticate": `Bearer resource_metadata="https://www.illcoai.tech/.well-known/oauth-protected-resource", scope="${scope}"`,
+      "mcp/www_authenticate": `Bearer resource_metadata="${APP_WIDGET_DOMAIN}/.well-known/oauth-protected-resource", scope="${scope}"`,
     },
   };
 }
@@ -572,6 +576,7 @@ export function getLyricVideoForgeTools() {
         additionalProperties: false,
       },
       outputSchema: TOOL_OUTPUT_SCHEMA,
+      securitySchemes: toolSecuritySchemes(),
       annotations: { readOnlyHint: true, openWorldHint: false, destructiveHint: false },
       _meta: toolMetaWithResource(),
     },
@@ -591,6 +596,7 @@ export function getLyricVideoForgeTools() {
         additionalProperties: false,
       },
       outputSchema: TOOL_OUTPUT_SCHEMA,
+      securitySchemes: toolSecuritySchemes(),
       annotations: { readOnlyHint: true, openWorldHint: false, destructiveHint: false },
       _meta: toolMetaWithResource(),
     },
@@ -614,6 +620,7 @@ export function getLyricVideoForgeTools() {
         additionalProperties: false,
       },
       outputSchema: TOOL_OUTPUT_SCHEMA,
+      securitySchemes: toolSecuritySchemes(),
       annotations: { readOnlyHint: true, openWorldHint: false, destructiveHint: false },
       _meta: toolMetaWithResource(),
     },
@@ -652,6 +659,7 @@ export function getLyricVideoForgeTools() {
         additionalProperties: false,
       },
       outputSchema: TOOL_OUTPUT_SCHEMA,
+      securitySchemes: toolSecuritySchemes(),
       annotations: { readOnlyHint: true, openWorldHint: false, destructiveHint: false, idempotentHint: true },
       _meta: toolMetaWithResource(),
     },
@@ -690,6 +698,7 @@ export function getLyricVideoForgeTools() {
         additionalProperties: false,
       },
       outputSchema: TOOL_OUTPUT_SCHEMA,
+      securitySchemes: toolSecuritySchemes(),
       annotations: { readOnlyHint: false, openWorldHint: false, destructiveHint: false, idempotentHint: true },
       _meta: {
         ...toolMetaWithResource(),
@@ -713,6 +722,7 @@ export function getLyricVideoForgeTools() {
         additionalProperties: false,
       },
       outputSchema: TOOL_OUTPUT_SCHEMA,
+      securitySchemes: toolSecuritySchemes(),
       annotations: { readOnlyHint: false, openWorldHint: false, destructiveHint: false, idempotentHint: true },
       _meta: toolMetaWithResource(),
     },
@@ -739,6 +749,7 @@ export function getLyricVideoForgeTools() {
         additionalProperties: false,
       },
       outputSchema: TOOL_OUTPUT_SCHEMA,
+      securitySchemes: toolSecuritySchemes(),
       annotations: { readOnlyHint: false, openWorldHint: false, destructiveHint: false, idempotentHint: true },
       _meta: toolMetaWithResource(),
     },
@@ -781,6 +792,7 @@ export function getLyricVideoForgeTools() {
         additionalProperties: false,
       },
       outputSchema: TOOL_OUTPUT_SCHEMA,
+      securitySchemes: toolSecuritySchemes(),
       annotations: { readOnlyHint: false, openWorldHint: false, destructiveHint: false },
       _meta: toolMetaWithResource(),
     },

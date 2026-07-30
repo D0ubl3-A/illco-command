@@ -8,6 +8,16 @@ import {
   verifyEvidence,
 } from "../lib/sprite-pipeline/state-machine";
 
+const validEvidence = () => ({
+  controlId: "STATE-001",
+  testVersion: "1.0.0",
+  rawResult: "pass",
+  passed: true,
+  evidencePath: "evidence/run-1/state-001.json",
+  evidenceHash: "a".repeat(64),
+  createdAt: "2026-07-30T12:00:00.000Z",
+});
+
 test("character ownership covers exactly 20 IDs per surgeon", () => {
   assert.equal(ownerForAsset("character", 1), 1);
   assert.equal(ownerForAsset("character", 20), 1);
@@ -57,27 +67,35 @@ test("operation key is deterministic and attempt-sensitive", () => {
   assert.notEqual(buildOperationKey(base), buildOperationKey({ ...base, attempt: 2 }));
 });
 
-test("evidence must contain a valid hash and timestamp", () => {
-  assert.doesNotThrow(() =>
-    verifyEvidence({
-      controlId: "STATE-001",
-      testVersion: "1.0.0",
-      rawResult: "pass",
-      passed: true,
-      evidencePath: "evidence/run-1/state-001.json",
-      evidenceHash: "a".repeat(64),
-      createdAt: new Date().toISOString(),
-    }),
+test("evidence accepts a complete canonical record", () => {
+  assert.doesNotThrow(() => verifyEvidence(validEvidence()));
+});
+
+test("evidence rejects malformed hashes", () => {
+  assert.throws(() => verifyEvidence({ ...validEvidence(), evidenceHash: "bad" }), /SHA-256/);
+});
+
+test("evidence rejects blank raw results", () => {
+  assert.throws(() => verifyEvidence({ ...validEvidence(), rawResult: "" }), /rawResult/);
+  assert.throws(() => verifyEvidence({ ...validEvidence(), rawResult: "   " }), /rawResult/);
+});
+
+test("evidence rejects non-boolean outcomes from deserialized input", () => {
+  const malformed = { ...validEvidence(), passed: "true" } as unknown as Parameters<typeof verifyEvidence>[0];
+  assert.throws(() => verifyEvidence(malformed), /boolean/);
+});
+
+test("evidence rejects non-canonical and impossible timestamps", () => {
+  assert.throws(
+    () => verifyEvidence({ ...validEvidence(), createdAt: "July 30, 2026 12:00:00 UTC" }),
+    /canonical UTC ISO timestamp/,
   );
-  assert.throws(() =>
-    verifyEvidence({
-      controlId: "STATE-001",
-      testVersion: "1.0.0",
-      rawResult: "pass",
-      passed: true,
-      evidencePath: "evidence/run-1/state-001.json",
-      evidenceHash: "bad",
-      createdAt: new Date().toISOString(),
-    }),
+  assert.throws(
+    () => verifyEvidence({ ...validEvidence(), createdAt: "2026-02-30T12:00:00.000Z" }),
+    /valid calendar timestamp/,
+  );
+  assert.throws(
+    () => verifyEvidence({ ...validEvidence(), createdAt: "2026-07-30T05:00:00.000-07:00" }),
+    /canonical UTC ISO timestamp/,
   );
 });

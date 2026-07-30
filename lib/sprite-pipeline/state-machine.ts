@@ -112,14 +112,32 @@ export type EvidenceRecord = {
   createdAt: string;
 };
 
+const CANONICAL_UTC_TIMESTAMP = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{3}Z$/;
+
 export function verifyEvidence(record: EvidenceRecord): void {
-  if (!record.controlId.trim()) throw new Error("controlId is required");
-  if (!record.testVersion.trim()) throw new Error("testVersion is required");
-  if (!record.evidencePath.trim()) throw new Error("evidencePath is required");
+  if (typeof record.controlId !== "string" || !record.controlId.trim()) {
+    throw new Error("controlId is required");
+  }
+  if (typeof record.testVersion !== "string" || !record.testVersion.trim()) {
+    throw new Error("testVersion is required");
+  }
+  if (typeof record.rawResult !== "string" || !record.rawResult.trim()) {
+    throw new Error("rawResult is required");
+  }
+  if (typeof record.passed !== "boolean") {
+    throw new Error("passed must be a boolean");
+  }
+  if (typeof record.evidencePath !== "string" || !record.evidencePath.trim()) {
+    throw new Error("evidencePath is required");
+  }
   if (!/^[a-f0-9]{64}$/i.test(record.evidenceHash)) {
     throw new Error("evidenceHash must be a SHA-256 hex digest");
   }
-  if (Number.isNaN(Date.parse(record.createdAt))) {
-    throw new Error("createdAt must be a valid timestamp");
+  if (!CANONICAL_UTC_TIMESTAMP.test(record.createdAt)) {
+    throw new Error("createdAt must be a canonical UTC ISO timestamp");
+  }
+  const parsed = new Date(record.createdAt);
+  if (Number.isNaN(parsed.getTime()) || parsed.toISOString() !== record.createdAt) {
+    throw new Error("createdAt must be a valid calendar timestamp");
   }
 }

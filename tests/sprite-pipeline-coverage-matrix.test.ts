@@ -19,6 +19,17 @@ test("allocates coverage deterministically without duplicate IDs", () => {
   assert.doesNotThrow(() => assertCoverageComplete(first));
 });
 
+test("traverses every value when a later dimension has seven values", () => {
+  const result = allocateCoverage(Array.from({ length: 14 }, (_, index) => `fx-${String(index + 1).padStart(5, "0")}`), [
+    { name: "a", values: ["a0", "a1"], minimumPerValue: 0 },
+    { name: "b", values: ["b0", "b1", "b2"], minimumPerValue: 0 },
+    { name: "c", values: ["c0", "c1", "c2", "c3", "c4"], minimumPerValue: 0 },
+    { name: "seven", values: ["v0", "v1", "v2", "v3", "v4", "v5", "v6"], minimumPerValue: 2 },
+  ]);
+  assert.deepEqual(Object.values(result.counts.seven), [2, 2, 2, 2, 2, 2, 2]);
+  assert.deepEqual(result.deficits, []);
+});
+
 test("reports measurable deficits instead of claiming completion", () => {
   const result = allocateCoverage(ids.slice(0, 2), [
     { name: "action", values: ["jab", "kick", "throw"], minimumPerValue: 2 },

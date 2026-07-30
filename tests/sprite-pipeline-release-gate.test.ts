@@ -2,11 +2,13 @@ import assert from "node:assert/strict";
 import test from "node:test";
 import { evaluateReleaseGate, SCORE_WEIGHTS, type CategoryEvidence, type ReleaseGateInput } from "../lib/sprite-pipeline/release-gate";
 
+const HASH = "a".repeat(64);
+
 function completeCategories(): CategoryEvidence[] {
   return Object.entries(SCORE_WEIGHTS).map(([category, earned]) => ({
     category: category as keyof typeof SCORE_WEIGHTS,
     earned,
-    evidencePaths: [`evidence/${category}.json`],
+    evidence: [{ path: `evidence/${category}.json`, sha256: HASH }],
     mandatoryTestsExecuted: true,
   }));
 }
@@ -46,11 +48,46 @@ test("passes only the complete evidence-backed 10K gate", () => {
 
 test("refuses points without evidence", () => {
   const input = passingInput();
-  input.categories[0] = { ...input.categories[0], evidencePaths: [] };
+  input.categories[0] = { ...input.categories[0], evidence: [] };
   const result = evaluateReleaseGate(input);
   assert.equal(result.passed, false);
   assert.match(result.failures.join("\n"), /Missing executable evidence/);
   assert.equal(result.score < 10_000, true);
+});
+
+test("rejects malformed evidence hashes", () => {
+  const input = passingInput();
+  input.categories[0] = {
+    ...input.categories[0],
+    evidence: [{ path: "evidence/architecture.json", sha256: "not-a-hash" }],
+  };
+  const result = evaluateReleaseGate(input);
+  assert.equal(result.passed, false);
+  assert.match(result.failures.join("\n"), /Invalid evidence SHA-256/);
+  assert.equal(result.score < 10_000, true);
+});
+
+test("rejects evidence path reuse across categories", () => {
+  const input = passingInput();
+  input.categories[1] = {
+    ...input.categories[1],
+    evidence: [{ path: input.categories[0].evidence[0].path, sha256: HASH }],
+  };
+  const result = evaluateReleaseGate(input);
+  assert.equal(result.passed, false);
+  assert.match(result.failures.join("\n"), /reused across categories/);
+  assert.equal(result.score < 10_000, true);
+});
+
+test("rejects unsafe evidence paths", () => {
+  const input = passingInput();
+  input.categories[0] = {
+    ...input.categories[0],
+    evidence: [{ path: "../evidence.json", sha256: HASH }],
+  };
+  const result = evaluateReleaseGate(input);
+  assert.equal(result.passed, false);
+  assert.match(result.failures.join("\n"), /Unsafe evidence path/);
 });
 
 test("fails on a single blocker even with a nominal 10K score", () => {

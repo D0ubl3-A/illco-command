@@ -47,6 +47,19 @@ test("rejects truncated or forged PNG data", () => {
   assert.match(result.failures.join("\n"), /truncated|missing/i);
 });
 
+test("returns failures instead of throwing for a short IHDR payload", () => {
+  const signature = Buffer.from([137, 80, 78, 71, 13, 10, 26, 10]);
+  const malformed = Buffer.concat([
+    signature,
+    chunk("IHDR", Buffer.from([0, 0, 1])),
+    chunk("IDAT", Buffer.from([1])),
+    chunk("IEND", Buffer.alloc(0)),
+  ]);
+  const result = inspectPng(malformed);
+  assert.equal(result.passed, false);
+  assert.match(result.failures.join("\n"), /IHDR placement or size/i);
+});
+
 test("rejects non-PNG bytes", () => {
   const result = inspectPng(Buffer.from("not a png"));
   assert.equal(result.passed, false);

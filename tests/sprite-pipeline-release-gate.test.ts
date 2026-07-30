@@ -4,11 +4,15 @@ import { evaluateReleaseGate, SCORE_WEIGHTS, type CategoryEvidence, type Release
 
 const HASH = "a".repeat(64);
 
+function evidenceSlug(category: string): string {
+  return category.replace(/[A-Z]/g, (letter) => `-${letter.toLowerCase()}`);
+}
+
 function completeCategories(): CategoryEvidence[] {
   return Object.entries(SCORE_WEIGHTS).map(([category, earned]) => ({
     category: category as keyof typeof SCORE_WEIGHTS,
     earned,
-    evidence: [{ path: `evidence/${category}.json`, sha256: HASH }],
+    evidence: [{ path: `evidence/${evidenceSlug(category)}.json`, sha256: HASH }],
     mandatoryTestsExecuted: true,
   }));
 }

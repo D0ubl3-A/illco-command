@@ -5,7 +5,8 @@ import { parseJsonMetadata, validateUntrustedMetadata } from "../lib/sprite-pipe
 test("accepts bounded plain production metadata", () => {
   const result = validateUntrustedMetadata({ assetId: "character-00001", tags: ["clay", "idle"], provider: { model: "v1", seed: 42 } });
   assert.equal(result.passed, true, result.failures.join("\n"));
-  assert.equal(result.keyCount, 6);
+  // Object keys only: assetId, tags, provider, model, seed. Array entries are values, not keys.
+  assert.equal(result.keyCount, 5);
 });
 
 test("rejects prompt injection and active script payloads", () => {

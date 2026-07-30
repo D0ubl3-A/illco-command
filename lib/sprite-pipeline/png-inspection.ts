@@ -44,16 +44,21 @@ export function inspectPng(bytes: Uint8Array): PngInspection {
     }
     const payload = data.subarray(offset + 8, offset + 8 + length);
     if (type === "IHDR") {
-      if (sawIhdr || offset !== 8 || length !== 13) failures.push("Invalid IHDR placement or size");
+      const validIhdr = !sawIhdr && offset === 8 && length === 13;
+      if (!validIhdr) {
+        failures.push("Invalid IHDR placement or size");
+      }
       sawIhdr = true;
-      width = payload.readUInt32BE(0);
-      height = payload.readUInt32BE(4);
-      bitDepth = payload[8];
-      colorType = payload[9];
-      interlaced = payload[12] === 1;
-      if (width < 1 || height < 1) failures.push("PNG dimensions must be positive");
-      if (![0, 2, 3, 4, 6].includes(colorType)) failures.push(`Unsupported PNG color type: ${colorType}`);
-      if (![1, 2, 4, 8, 16].includes(bitDepth)) failures.push(`Unsupported PNG bit depth: ${bitDepth}`);
+      if (validIhdr) {
+        width = payload.readUInt32BE(0);
+        height = payload.readUInt32BE(4);
+        bitDepth = payload[8];
+        colorType = payload[9];
+        interlaced = payload[12] === 1;
+        if (width < 1 || height < 1) failures.push("PNG dimensions must be positive");
+        if (![0, 2, 3, 4, 6].includes(colorType)) failures.push(`Unsupported PNG color type: ${colorType}`);
+        if (![1, 2, 4, 8, 16].includes(bitDepth)) failures.push(`Unsupported PNG bit depth: ${bitDepth}`);
+      }
     } else if (type === "IDAT") {
       idatBytes += length;
     } else if (type === "IEND") {

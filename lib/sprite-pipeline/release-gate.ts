@@ -13,10 +13,15 @@ export const SCORE_WEIGHTS = {
 
 export type ScoreCategory = keyof typeof SCORE_WEIGHTS;
 
+export type EvidenceReference = {
+  path: string;
+  sha256: string;
+};
+
 export type CategoryEvidence = {
   category: ScoreCategory;
   earned: number;
-  evidencePaths: string[];
+  evidence: EvidenceReference[];
   mandatoryTestsExecuted: boolean;
 };
 
@@ -52,10 +57,50 @@ export type ReleaseGateResult = {
   categoryScores: Record<ScoreCategory, number>;
 };
 
+const SHA256 = /^[a-f0-9]{64}$/i;
+const SAFE_EVIDENCE_PATH = /^[a-z0-9][a-z0-9._/-]*$/;
+
+function validateEvidenceReferences(
+  category: ScoreCategory,
+  references: EvidenceReference[],
+  globallySeenPaths: Set<string>,
+  failures: string[],
+): boolean {
+  if (references.length === 0) {
+    failures.push(`Missing executable evidence for ${category}`);
+    return false;
+  }
+
+  let valid = true;
+  const localPaths = new Set<string>();
+  for (const reference of references) {
+    if (!reference.path || !SAFE_EVIDENCE_PATH.test(reference.path) || reference.path.startsWith("/") || reference.path.includes("..") || reference.path.includes("\\")) {
+      failures.push(`Unsafe evidence path for ${category}: ${reference.path}`);
+      valid = false;
+    }
+    if (!SHA256.test(reference.sha256)) {
+      failures.push(`Invalid evidence SHA-256 for ${category}: ${reference.path}`);
+      valid = false;
+    }
+    if (localPaths.has(reference.path)) {
+      failures.push(`Duplicate evidence path within ${category}: ${reference.path}`);
+      valid = false;
+    }
+    localPaths.add(reference.path);
+    if (globallySeenPaths.has(reference.path)) {
+      failures.push(`Evidence path reused across categories: ${reference.path}`);
+      valid = false;
+    }
+    globallySeenPaths.add(reference.path);
+  }
+  return valid;
+}
+
 export function evaluateReleaseGate(input: ReleaseGateInput): ReleaseGateResult {
   const failures: string[] = [];
   const categoryScores = Object.fromEntries(Object.keys(SCORE_WEIGHTS).map((key) => [key, 0])) as Record<ScoreCategory, number>;
   const seen = new Set<ScoreCategory>();
+  const globallySeenEvidencePaths = new Set<string>();
 
   for (const evidence of input.categories) {
     if (seen.has(evidence.category)) failures.push(`Duplicate score category: ${evidence.category}`);
@@ -65,8 +110,16 @@ export function evaluateReleaseGate(input: ReleaseGateInput): ReleaseGateResult 
       failures.push(`Invalid score for ${evidence.category}`);
       continue;
     }
-    if (evidence.earned > 0 && (!evidence.mandatoryTestsExecuted || evidence.evidencePaths.length === 0)) {
-      failures.push(`Missing executable evidence for ${evidence.category}`);
+
+    const referencesValid = validateEvidenceReferences(
+      evidence.category,
+      evidence.evidence,
+      globallySeenEvidencePaths,
+      failures,
+    );
+
+    if (evidence.earned > 0 && (!evidence.mandatoryTestsExecuted || !referencesValid)) {
+      if (!evidence.mandatoryTestsExecuted) failures.push(`Mandatory tests not executed for ${evidence.category}`);
       continue;
     }
     categoryScores[evidence.category] = evidence.earned;
@@ -103,8 +156,8 @@ export function evaluateReleaseGate(input: ReleaseGateInput): ReleaseGateResult 
   ];
   for (const [passed, label] of requiredFlags) if (!passed) failures.push(label);
 
-  if (input.overallPassRate < 0.99 || input.overallPassRate > 1) failures.push("Overall pass rate below 99%");
-  if (input.publicationFailureRate < 0 || input.publicationFailureRate > 0.02) failures.push("Publication failure rate above 2%");
+  if (!Number.isFinite(input.overallPassRate) || input.overallPassRate < 0.99 || input.overallPassRate > 1) failures.push("Overall pass rate below 99%");
+  if (!Number.isFinite(input.publicationFailureRate) || input.publicationFailureRate < 0 || input.publicationFailureRate > 0.02) failures.push("Publication failure rate above 2%");
 
   const score = (Object.keys(categoryScores) as ScoreCategory[]).reduce((sum, key) => sum + categoryScores[key], 0);
   if (score !== 10_000) failures.push(`Evidence-backed score is ${score}, not 10000`);

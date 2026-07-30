@@ -11,6 +11,11 @@ function manifest(): SpriteManifest {
   });
 }
 
+function resign(value: SpriteManifest): void {
+  const { manifestSha256: _discarded, ...unsigned } = value;
+  value.manifestSha256 = signManifest(unsigned).manifestSha256;
+}
+
 test("accepts a complete signed sprite manifest", () => {
   const result = validateManifest(manifest());
   assert.equal(result.passed, true, result.failures.join("\n"));
@@ -28,7 +33,7 @@ test("rejects cross-range ownership and path escape", () => {
   const value = manifest();
   value.ownershipRange = [21, 40];
   value.relativePath = "../escape.png";
-  value.manifestSha256 = signManifest({ ...value, manifestSha256: undefined as never }).manifestSha256;
+  resign(value);
   const result = validateManifest(value);
   assert.equal(result.passed, false);
   assert.match(result.failures.join("\n"), /ownership range/);
@@ -39,7 +44,7 @@ test("requires complete sequence metadata and controlled duplicate exceptions", 
   const value = manifest();
   value.sequenceId = "seq-1";
   value.duplicateDecision = "exception";
-  value.manifestSha256 = signManifest({ ...value, manifestSha256: undefined as never }).manifestSha256;
+  resign(value);
   const result = validateManifest(value);
   assert.equal(result.passed, false);
   assert.match(result.failures.join("\n"), /sequence metadata/);

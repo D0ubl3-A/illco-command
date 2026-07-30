@@ -41,9 +41,11 @@ export type IntegrityResult = {
 };
 
 function canonicalJson(value: unknown): string {
+  if (value === undefined) return "";
   if (Array.isArray(value)) return `[${value.map(canonicalJson).join(",")}]`;
   if (value && typeof value === "object") {
     const entries = Object.entries(value as Record<string, unknown>)
+      .filter(([, child]) => child !== undefined)
       .sort(([a], [b]) => a.localeCompare(b))
       .map(([key, child]) => `${JSON.stringify(key)}:${canonicalJson(child)}`);
     return `{${entries.join(",")}}`;
@@ -84,6 +86,14 @@ function validateFiles(files: ArchiveFile[], failures: string[]): void {
   }
 }
 
+export function archiveSigningPayload(manifest: Omit<ArchiveManifest, "manifestSha256">): Omit<ArchiveManifest, "manifestSha256"> {
+  return manifest;
+}
+
+export function packageSigningPayload(pkg: Omit<EnginePackage, "packageSha256">): Omit<EnginePackage, "packageSha256"> {
+  return pkg;
+}
+
 export function verifyArchiveManifest(manifest: ArchiveManifest): IntegrityResult {
   const failures: string[] = [];
   if (!manifest.archiveId.trim()) failures.push("archiveId is required");
@@ -93,8 +103,9 @@ export function verifyArchiveManifest(manifest: ArchiveManifest): IntegrityResul
   if (!manifest.schemaVersion.trim()) failures.push("schemaVersion is required");
   if (manifest.files.length === 0) failures.push("Archive must contain files");
   validateFiles(manifest.files, failures);
-  const computedHash = sha256Canonical({ ...manifest, manifestSha256: undefined });
-  if (!SHA256.test(manifest.manifestSha256) || computedHash !== manifest.manifestSha256) {
+  const { manifestSha256, ...payload } = manifest;
+  const computedHash = sha256Canonical(payload);
+  if (!SHA256.test(manifestSha256) || computedHash !== manifestSha256) {
     failures.push("Archive manifest hash mismatch");
   }
   return { passed: failures.length === 0, failures, computedHash };
@@ -121,8 +132,9 @@ export function verifyEnginePackage(pkg: EnginePackage): IntegrityResult {
   for (const key of requiredMetadataKeys(pkg.target)) {
     if (!(key in pkg.metadata)) failures.push(`Missing ${pkg.target} metadata key: ${key}`);
   }
-  const computedHash = sha256Canonical({ ...pkg, packageSha256: undefined });
-  if (!SHA256.test(pkg.packageSha256) || computedHash !== pkg.packageSha256) {
+  const { packageSha256, ...payload } = pkg;
+  const computedHash = sha256Canonical(payload);
+  if (!SHA256.test(packageSha256) || computedHash !== packageSha256) {
     failures.push("Package hash mismatch");
   }
   return { passed: failures.length === 0, failures, computedHash };

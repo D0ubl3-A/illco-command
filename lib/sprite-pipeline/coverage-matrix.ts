@@ -40,8 +40,7 @@ export function allocateCoverage(assetIds: string[], dimensions: CoverageDimensi
   const assignments = assetIds.map((assetId, assetIndex) => {
     const selected: Record<string, string> = {};
     dimensions.forEach((dimension, dimensionIndex) => {
-      const stride = dimension.values.length === 1 ? 1 : 1 + (dimensionIndex * 2);
-      const value = dimension.values[(assetIndex * stride + dimensionIndex) % dimension.values.length];
+      const value = dimension.values[(assetIndex + dimensionIndex) % dimension.values.length];
       selected[dimension.name] = value;
       counts[dimension.name][value] += 1;
     });

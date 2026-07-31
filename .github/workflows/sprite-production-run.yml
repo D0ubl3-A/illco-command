@@ -1,0 +1,76 @@
+name: Sprite production run
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - repair/sprite-pipeline-10k-core
+    paths:
+      - "scripts/run-sprite-production.ts"
+      - "lib/sprite-pipeline/**"
+      - ".github/workflows/sprite-production-run.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  produce:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Use Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Type check production runner
+        run: npx tsc --noEmit --pretty false
+
+      - name: Render and validate 48 real assets
+        env:
+          SPRITE_RUN_ID: github-${{ github.run_id }}-${{ github.run_attempt }}
+          SPRITE_OUTPUT_ROOT: artifacts/sprite-production
+        run: npx tsx scripts/run-sprite-production.ts | tee sprite-production.log
+
+      - name: Verify artifact accounting
+        run: |
+          node - <<'NODE'
+          const fs = require('node:fs');
+          const path = 'artifacts/sprite-production/run-report.json';
+          const report = JSON.parse(fs.readFileSync(path, 'utf8'));
+          if (report.generated !== 48) throw new Error(`Expected 48 generated, received ${report.generated}`);
+          if (report.validated !== 48) throw new Error(`Expected 48 validated, received ${report.validated}`);
+          if (report.rejected !== 0) throw new Error(`Expected zero rejected, received ${report.rejected}`);
+          if (report.characterValidated !== 24 || report.fxValidated !== 24) {
+            throw new Error(`Expected 24 character and 24 FX assets, received ${report.characterValidated}/${report.fxValidated}`);
+          }
+          const pngs = [];
+          function walk(dir) {
+            for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {
+              const full = `${dir}/${entry.name}`;
+              if (entry.isDirectory()) walk(full);
+              else if (entry.name.endsWith('.png')) pngs.push(full);
+            }
+          }
+          walk('artifacts/sprite-production/objects');
+          if (pngs.length !== 48) throw new Error(`Expected 48 PNG files, found ${pngs.length}`);
+          console.log(JSON.stringify({ generated: report.generated, validated: report.validated, pngFiles: pngs.length, continuityPointer: report.continuityPointer }, null, 2));
+          NODE
+
+      - name: Upload production assets and evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: sprite-production-${{ github.run_id }}-${{ github.run_attempt }}
+          path: |
+            artifacts/sprite-production
+            sprite-production.log
+          if-no-files-found: error
+          retention-days: 30
+          compression-level: 6

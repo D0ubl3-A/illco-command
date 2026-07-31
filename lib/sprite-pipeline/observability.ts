@@ -25,6 +25,11 @@ export type AlertThresholds = {
   maxFailureRate: number;
   maxRetryRate: number;
   maxDuplicateRate: number;
+  maxChromaFailureRate: number;
+  maxAlphaFailureRate: number;
+  maxClippingFailureRate: number;
+  maxIpRiskRate: number;
+  maxSequenceFailureRate: number;
   maxLockContentionRate: number;
   maxQueueDepth: number;
   maxScoreRegression: number;
@@ -42,6 +47,11 @@ export const DEFAULT_ALERT_THRESHOLDS: AlertThresholds = {
   maxFailureRate: 0.05,
   maxRetryRate: 0.1,
   maxDuplicateRate: 0.02,
+  maxChromaFailureRate: 0.02,
+  maxAlphaFailureRate: 0.02,
+  maxClippingFailureRate: 0.01,
+  maxIpRiskRate: 0.005,
+  maxSequenceFailureRate: 0.01,
   maxLockContentionRate: 0.1,
   maxQueueDepth: 50_000,
   maxScoreRegression: 0,
@@ -78,6 +88,11 @@ export function evaluatePipelineAlerts(current: PipelineMetricSnapshot, previous
   if (current.failureRate > thresholds.maxFailureRate) alerts.push({ code: "FAILURE-SPIKE", severity: 9, message: `Failure rate ${current.failureRate} exceeds ${thresholds.maxFailureRate}`, blocker: true });
   if (current.retryRate > thresholds.maxRetryRate) alerts.push({ code: "RETRY-SPIKE", severity: 8, message: `Retry rate ${current.retryRate} exceeds ${thresholds.maxRetryRate}`, blocker: false });
   if (current.duplicateRate > thresholds.maxDuplicateRate) alerts.push({ code: "DUPLICATE-SPIKE", severity: 9, message: `Duplicate rate ${current.duplicateRate} exceeds ${thresholds.maxDuplicateRate}`, blocker: true });
+  if (current.chromaFailureRate > thresholds.maxChromaFailureRate) alerts.push({ code: "CHROMA-FAILURE-SPIKE", severity: 9, message: `Chroma failure rate ${current.chromaFailureRate} exceeds ${thresholds.maxChromaFailureRate}`, blocker: true });
+  if (current.alphaFailureRate > thresholds.maxAlphaFailureRate) alerts.push({ code: "ALPHA-FAILURE-SPIKE", severity: 9, message: `Alpha failure rate ${current.alphaFailureRate} exceeds ${thresholds.maxAlphaFailureRate}`, blocker: true });
+  if (current.clippingFailureRate > thresholds.maxClippingFailureRate) alerts.push({ code: "CLIPPING-FAILURE-SPIKE", severity: 9, message: `Clipping failure rate ${current.clippingFailureRate} exceeds ${thresholds.maxClippingFailureRate}`, blocker: true });
+  if (current.ipRiskRate > thresholds.maxIpRiskRate) alerts.push({ code: "IP-RISK-SPIKE", severity: 10, message: `IP risk rate ${current.ipRiskRate} exceeds ${thresholds.maxIpRiskRate}`, blocker: true });
+  if (current.sequenceFailureRate > thresholds.maxSequenceFailureRate) alerts.push({ code: "SEQUENCE-FAILURE-SPIKE", severity: 9, message: `Sequence failure rate ${current.sequenceFailureRate} exceeds ${thresholds.maxSequenceFailureRate}`, blocker: true });
   if (current.lockContentionRate > thresholds.maxLockContentionRate) alerts.push({ code: "LOCK-CONTENTION", severity: 8, message: `Lock contention ${current.lockContentionRate} exceeds ${thresholds.maxLockContentionRate}`, blocker: false });
   if (current.queueDepth > thresholds.maxQueueDepth) alerts.push({ code: "QUEUE-BACKLOG", severity: 8, message: `Queue depth ${current.queueDepth} exceeds ${thresholds.maxQueueDepth}`, blocker: false });
   if (!current.archiveHealthy) alerts.push({ code: "ARCHIVE-UNHEALTHY", severity: 10, message: "Archive integrity health check failed", blocker: true });

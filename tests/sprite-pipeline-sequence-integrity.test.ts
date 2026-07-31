@@ -37,6 +37,16 @@ test("rejects gaps, bad timing, and failed engine checks", () => {
   assert.match(result.failures.join("\n"), /engine validation failed/);
 });
 
+test("rejects missing and repeated frame asset IDs", () => {
+  const value = sequence();
+  value.frames[1].assetId = "   ";
+  value.frames[3].assetId = value.frames[2].assetId;
+  const result = validateSequence(value);
+  assert.equal(result.passed, false);
+  assert.match(result.failures.join("\n"), /missing assetId for frame 1/);
+  assert.match(result.failures.join("\n"), /duplicate frame assetId character-00003/);
+});
+
 test("requires an origin for FX sequences", () => {
   const value = sequence();
   value.kind = "fx";

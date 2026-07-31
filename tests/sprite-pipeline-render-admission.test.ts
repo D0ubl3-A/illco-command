@@ -1,14 +1,50 @@
 import assert from "node:assert/strict";
 import test from "node:test";
+import { deflateSync } from "node:zlib";
 import {
   admitRenderedPng,
   validateRenderedPngForPromotion,
 } from "../lib/sprite-pipeline/render-admission";
 
-const PNG = Buffer.from(
-  "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z8BQDwAFgwJ/lc1ZAAAAAElFTkSuQmCC",
-  "base64",
-);
+function crc32(input: Buffer): number {
+  let crc = 0xffffffff;
+  for (const byte of input) {
+    crc ^= byte;
+    for (let i = 0; i < 8; i++) crc = (crc >>> 1) ^ (0xedb88320 & -(crc & 1));
+  }
+  return (crc ^ 0xffffffff) >>> 0;
+}
+
+function chunk(type: string, payload: Buffer): Buffer {
+  const name = Buffer.from(type, "ascii");
+  const length = Buffer.alloc(4);
+  length.writeUInt32BE(payload.length);
+  const crc = Buffer.alloc(4);
+  crc.writeUInt32BE(crc32(Buffer.concat([name, payload])));
+  return Buffer.concat([length, name, payload, crc]);
+}
+
+function rgbaPng(width: number, height: number, rgba: [number, number, number, number]): Buffer {
+  const signature = Buffer.from([137, 80, 78, 71, 13, 10, 26, 10]);
+  const ihdr = Buffer.alloc(13);
+  ihdr.writeUInt32BE(width, 0);
+  ihdr.writeUInt32BE(height, 4);
+  ihdr[8] = 8;
+  ihdr[9] = 6;
+  const scanlines: number[] = [];
+  for (let y = 0; y < height; y++) {
+    scanlines.push(0);
+    for (let x = 0; x < width; x++) scanlines.push(...rgba);
+  }
+  return Buffer.concat([
+    signature,
+    chunk("IHDR", ihdr),
+    chunk("IDAT", deflateSync(Buffer.from(scanlines))),
+    chunk("IEND", Buffer.alloc(0)),
+  ]);
+}
+
+const PNG = rgbaPng(1, 1, [0, 255, 0, 255]);
 
 const manifestBase = {
   kind: "character" as const,

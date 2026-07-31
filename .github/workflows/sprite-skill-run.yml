@@ -48,13 +48,14 @@ jobs:
           RUN_ID: skill-${{ github.run_id }}-${{ github.run_attempt }}
         run: |
           set -euo pipefail
-          npm run sprite:skill -- \
+          npm run --silent sprite:skill -- \
             --root .sprite-skill-output \
             --run-id "$RUN_ID" \
             --characters "$CHARACTER_COUNT" \
             --fx "$FX_COUNT" \
             --character-start 1 \
-            --fx-start 1 | tee sprite-skill-report.json
+            --fx-start 1 > sprite-skill-report.json
+          node -e "JSON.parse(require('fs').readFileSync('sprite-skill-report.json', 'utf8')); console.log('skill report JSON parsed')"
 
       - name: Verify exact production counts
         env:
@@ -77,6 +78,7 @@ jobs:
             if (!fs.existsSync(asset.path)) throw new Error(`missing object ${asset.path}`);
             if (!fs.existsSync(asset.evidencePath)) throw new Error(`missing evidence ${asset.evidencePath}`);
           }
+          if (!report.summaryPath || !fs.existsSync(report.summaryPath)) throw new Error('missing durable summary');
           console.log(JSON.stringify({ passed: true, expected, continuityPointer: report.continuityPointer }, null, 2));
           NODE
 

@@ -40,13 +40,17 @@ export type IntegrityResult = {
   computedHash: string;
 };
 
-function canonicalJson(value: unknown): string {
+function compareCodePoints(a: string, b: string): number {
+  return a < b ? -1 : a > b ? 1 : 0;
+}
+
+export function canonicalJson(value: unknown): string {
   if (value === undefined) return "";
   if (Array.isArray(value)) return `[${value.map(canonicalJson).join(",")}]`;
   if (value && typeof value === "object") {
     const entries = Object.entries(value as Record<string, unknown>)
       .filter(([, child]) => child !== undefined)
-      .sort(([a], [b]) => a.localeCompare(b))
+      .sort(([a], [b]) => compareCodePoints(a, b))
       .map(([key, child]) => `${JSON.stringify(key)}:${canonicalJson(child)}`);
     return `{${entries.join(",")}}`;
   }
@@ -120,6 +124,45 @@ function requiredMetadataKeys(target: EngineTarget): string[] {
   }
 }
 
+function isFinitePositiveNumber(value: unknown): value is number {
+  return typeof value === "number" && Number.isFinite(value) && value > 0;
+}
+
+function isNormalizedPivot(value: unknown): value is [number, number] {
+  return Array.isArray(value)
+    && value.length === 2
+    && value.every((part) => typeof part === "number" && Number.isFinite(part) && part >= 0 && part <= 1);
+}
+
+function validateEngineMetadata(target: EngineTarget, metadata: Record<string, unknown>, failures: string[]): void {
+  for (const key of requiredMetadataKeys(target)) {
+    if (!(key in metadata)) failures.push(`Missing ${target} metadata key: ${key}`);
+  }
+
+  if ("pivot" in metadata && !isNormalizedPivot(metadata.pivot)) {
+    failures.push("pivot metadata must be a normalized numeric [x, y] tuple");
+  }
+
+  switch (target) {
+    case "unity":
+      if ("pixelsPerUnit" in metadata && !isFinitePositiveNumber(metadata.pixelsPerUnit)) failures.push("unity pixelsPerUnit must be a positive finite number");
+      if ("filterMode" in metadata && !["Point", "Bilinear", "Trilinear"].includes(String(metadata.filterMode))) failures.push("unity filterMode is invalid");
+      break;
+    case "godot":
+      if ("region" in metadata && typeof metadata.region !== "boolean") failures.push("godot region must be boolean");
+      if ("filter" in metadata && typeof metadata.filter !== "boolean") failures.push("godot filter must be boolean");
+      break;
+    case "unreal":
+      if ("pixelsPerUnrealUnit" in metadata && !isFinitePositiveNumber(metadata.pixelsPerUnrealUnit)) failures.push("unreal pixelsPerUnrealUnit must be a positive finite number");
+      if ("compression" in metadata && !["UserInterface2D", "Default", "Masks"].includes(String(metadata.compression))) failures.push("unreal compression is invalid");
+      break;
+    case "generic":
+      if ("frameRate" in metadata && !isFinitePositiveNumber(metadata.frameRate)) failures.push("generic frameRate must be a positive finite number");
+      if ("coordinateSystem" in metadata && !["y-up", "y-down"].includes(String(metadata.coordinateSystem))) failures.push("generic coordinateSystem is invalid");
+      break;
+  }
+}
+
 export function verifyEnginePackage(pkg: EnginePackage): IntegrityResult {
   const failures: string[] = [];
   if (!pkg.packageId.trim()) failures.push("packageId is required");
@@ -129,9 +172,7 @@ export function verifyEnginePackage(pkg: EnginePackage): IntegrityResult {
   if (new Set(pkg.assetIds).size !== pkg.assetIds.length) failures.push("Duplicate asset IDs in package");
   if (pkg.files.length === 0) failures.push("Package must contain files");
   validateFiles(pkg.files, failures);
-  for (const key of requiredMetadataKeys(pkg.target)) {
-    if (!(key in pkg.metadata)) failures.push(`Missing ${pkg.target} metadata key: ${key}`);
-  }
+  validateEngineMetadata(pkg.target, pkg.metadata, failures);
   const { packageSha256, ...payload } = pkg;
   const computedHash = sha256Canonical(payload);
   if (!SHA256.test(packageSha256) || computedHash !== packageSha256) {

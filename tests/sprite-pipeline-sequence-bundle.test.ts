@@ -61,6 +61,14 @@ test("rejects out-of-order action phase markers", () => {
   assert.match(result.failures.join("\n"), /followThrough frame must follow/);
 });
 
+test("rejects markers that point at frames with the wrong declared phase", () => {
+  const value = characterBundle();
+  value.frames[1].phase = "recovery";
+  const result = validateSequenceBundle(value);
+  assert.equal(result.passed, false);
+  assert.match(result.failures.join("\n"), /contact marker phase mismatch/);
+});
+
 test("requires FX origin, direction, and scale", () => {
   const value: SequenceBundle = {
     ...characterBundle(),

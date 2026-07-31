@@ -58,7 +58,7 @@ export type ReleaseGateResult = {
 };
 
 const SHA256 = /^[a-f0-9]{64}$/i;
-const SAFE_EVIDENCE_PATH = /^[a-z0-9][a-z0-9._/-]*$/;
+const SAFE_EVIDENCE_PATH = /^[a-z0-9][a-z0-9._/-]*$/i;
 
 function validateEvidenceReferences(
   category: ScoreCategory,

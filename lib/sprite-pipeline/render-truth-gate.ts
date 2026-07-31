@@ -1,6 +1,6 @@
 import { createHash } from "node:crypto";
-import { inspectPngBytes } from "./png-inspection";
-import { decodePngPixels, analyzePixels } from "./png-pixels";
+import { inspectPng } from "./png-inspection";
+import { decodePngPixels, measurePixelMetrics } from "./png-pixels";
 import type { AssetState } from "./state-machine";
 
 export type RenderTruthInput = {
@@ -38,16 +38,15 @@ export function verifyRenderedAsset(input: RenderTruthInput): RenderTruthResult 
   let alphaCoverage: number | null = null;
   let chromaPurity: number | null = null;
 
-  if (!RENDERED_STATES.has(input.state)) {
-    failures.push(`Asset state ${input.state} is not a rendered state`);
-  }
+  if (!input.assetId.trim()) failures.push("assetId is required");
+  if (!RENDERED_STATES.has(input.state)) failures.push(`Asset state ${input.state} is not rendered`);
   if (input.bytes.length === 0) failures.push("Rendered asset file is empty");
   if (input.registeredSha256 && input.registeredSha256 !== sha256) {
     failures.push("Registered SHA-256 does not match file bytes");
   }
 
   try {
-    const inspection = inspectPngBytes(input.bytes);
+    const inspection = inspectPng(input.bytes);
     if (!inspection.passed) failures.push(...inspection.failures);
     width = inspection.width;
     height = inspection.height;
@@ -59,18 +58,21 @@ export function verifyRenderedAsset(input: RenderTruthInput): RenderTruthResult 
     }
 
     const decoded = decodePngPixels(input.bytes);
-    const metrics = analyzePixels(decoded);
+    const metrics = measurePixelMetrics(decoded);
     alphaCoverage = metrics.alphaCoverage;
     chromaPurity = metrics.chromaPurity;
 
     if (input.backgroundMode === "transparent") {
-      if (!decoded.hasAlpha) failures.push("Transparent render has no alpha channel");
+      if (decoded.channels !== 4) failures.push("Transparent render has no alpha channel");
+      if (!metrics.alphaBoundsNonEmpty) failures.push("Transparent render has empty alpha bounds");
       if (metrics.alphaCoverage <= 0 || metrics.alphaCoverage >= 1) {
-        failures.push("Transparent render must contain both transparent and visible pixels");
+        failures.push("Transparent render must contain transparent and visible pixels");
       }
+      if (metrics.clippingScore > 0.01) failures.push("Transparent render clipping exceeds 0.01");
     } else {
       if (metrics.chromaPurity < 0.985) failures.push("Chroma background purity is below 0.985");
-      if (metrics.greenSpill > 0.025) failures.push("Green spill exceeds 0.025");
+      if (metrics.chromaSpill > 0.025) failures.push("Chroma spill exceeds 0.025");
+      if (metrics.edgeContamination > 0.025) failures.push("Chroma edge contamination exceeds 0.025");
     }
   } catch (error) {
     failures.push(error instanceof Error ? error.message : String(error));

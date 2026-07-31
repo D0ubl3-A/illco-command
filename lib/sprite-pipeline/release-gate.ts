@@ -64,6 +64,7 @@ function validateEvidenceReferences(
   category: ScoreCategory,
   references: EvidenceReference[],
   globallySeenPaths: Set<string>,
+  globallySeenHashes: Set<string>,
   failures: string[],
 ): boolean {
   if (references.length === 0) {
@@ -73,6 +74,7 @@ function validateEvidenceReferences(
 
   let valid = true;
   const localPaths = new Set<string>();
+  const localHashes = new Set<string>();
   for (const reference of references) {
     if (!reference.path || !SAFE_EVIDENCE_PATH.test(reference.path) || reference.path.startsWith("/") || reference.path.includes("..") || reference.path.includes("\\")) {
       failures.push(`Unsafe evidence path for ${category}: ${reference.path}`);
@@ -86,12 +88,22 @@ function validateEvidenceReferences(
       failures.push(`Duplicate evidence path within ${category}: ${reference.path}`);
       valid = false;
     }
+    if (localHashes.has(reference.sha256)) {
+      failures.push(`Duplicate evidence content within ${category}: ${reference.sha256}`);
+      valid = false;
+    }
     localPaths.add(reference.path);
+    localHashes.add(reference.sha256);
     if (globallySeenPaths.has(reference.path)) {
       failures.push(`Evidence path reused across categories: ${reference.path}`);
       valid = false;
     }
+    if (globallySeenHashes.has(reference.sha256)) {
+      failures.push(`Evidence content reused across categories: ${reference.sha256}`);
+      valid = false;
+    }
     globallySeenPaths.add(reference.path);
+    globallySeenHashes.add(reference.sha256);
   }
   return valid;
 }
@@ -101,6 +113,7 @@ export function evaluateReleaseGate(input: ReleaseGateInput): ReleaseGateResult 
   const categoryScores = Object.fromEntries(Object.keys(SCORE_WEIGHTS).map((key) => [key, 0])) as Record<ScoreCategory, number>;
   const seen = new Set<ScoreCategory>();
   const globallySeenEvidencePaths = new Set<string>();
+  const globallySeenEvidenceHashes = new Set<string>();
 
   for (const evidence of input.categories) {
     if (seen.has(evidence.category)) failures.push(`Duplicate score category: ${evidence.category}`);
@@ -115,6 +128,7 @@ export function evaluateReleaseGate(input: ReleaseGateInput): ReleaseGateResult 
       evidence.category,
       evidence.evidence,
       globallySeenEvidencePaths,
+      globallySeenEvidenceHashes,
       failures,
     );
 

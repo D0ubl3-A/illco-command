@@ -1,4 +1,5 @@
 import { createHash } from "node:crypto";
+import { canonicalJson } from "./archive-package";
 
 export type SimilaritySignal = {
   sourceId: string;
@@ -55,17 +56,6 @@ function bounded(value: number): boolean {
   return Number.isFinite(value) && value >= 0 && value <= 1;
 }
 
-function canonical(value: unknown): string {
-  if (Array.isArray(value)) return `[${value.map(canonical).join(",")}]`;
-  if (value && typeof value === "object") {
-    return `{${Object.entries(value as Record<string, unknown>)
-      .sort(([a], [b]) => a.localeCompare(b))
-      .map(([key, child]) => `${JSON.stringify(key)}:${canonical(child)}`)
-      .join(",")}}`;
-  }
-  return JSON.stringify(value);
-}
-
 function composite(signal: SimilaritySignal): number {
   return (
     signal.likeness * 0.30 +
@@ -97,7 +87,11 @@ export function reviewOriginality(
     sourceIds.add(signal.sourceId);
     if (!signal.reviewerTool.trim() || !signal.reviewerVersion.trim()) failures.push(`tool provenance missing for ${signal.sourceId}`);
     const metrics = [signal.likeness, signal.wardrobe, signal.facialGeometry, signal.silhouette, signal.palette, signal.nameSimilarity];
-    if (metrics.some((value) => !bounded(value))) failures.push(`invalid similarity score for ${signal.sourceId}`);
+    const metricsValid = metrics.every((value) => bounded(value));
+    if (!metricsValid) {
+      failures.push(`invalid similarity score for ${signal.sourceId}`);
+      continue;
+    }
     const risk = composite(signal);
     highestRisk = Math.max(highestRisk, risk, signal.likeness);
     if (signal.sourceType === "real-person" && signal.likeness > thresholds.maxRealPersonLikeness) {
@@ -124,6 +118,6 @@ export function reviewOriginality(
     }
   }
 
-  const evidenceHash = createHash("sha256").update(canonical(input)).digest("hex");
+  const evidenceHash = createHash("sha256").update(canonicalJson(input)).digest("hex");
   return { passed: failures.length === 0, blocked: failures.length > 0, failures, highestRisk, evidenceHash };
 }

@@ -39,21 +39,31 @@ export function decodePngPixels(bytes: Uint8Array): DecodedPng {
 
   const data = Buffer.from(bytes);
   const idat: Buffer[] = [];
+  let hasTransparencyChunk = false;
   let offset = 8;
   while (offset + 12 <= data.length) {
     const length = data.readUInt32BE(offset);
     const type = data.toString("ascii", offset + 4, offset + 8);
     const payloadStart = offset + 8;
     const payloadEnd = payloadStart + length;
+    if (payloadEnd + 4 > data.length) throw new Error(`Truncated PNG chunk ${type}`);
     if (type === "IDAT") idat.push(data.subarray(payloadStart, payloadEnd));
+    if (type === "tRNS") hasTransparencyChunk = true;
     offset = payloadEnd + 4;
     if (type === "IEND") break;
   }
 
+  if (inspection.colorType === 2 && hasTransparencyChunk) {
+    throw new Error("RGB PNGs using tRNS transparency are not supported; convert to RGBA before validation");
+  }
+
   const channels = inspection.colorType === 6 ? 4 : 3;
   const rowBytes = inspection.width * channels;
-  const inflated = inflateSync(Buffer.concat(idat));
   const expected = inspection.height * (rowBytes + 1);
+  if (!Number.isSafeInteger(expected) || expected <= 0) {
+    throw new Error("Decoded PNG size exceeds safe integer limits");
+  }
+  const inflated = inflateSync(Buffer.concat(idat), { maxOutputLength: expected });
   if (inflated.length !== expected) {
     throw new Error(`Unexpected inflated PNG size: expected ${expected}, received ${inflated.length}`);
   }

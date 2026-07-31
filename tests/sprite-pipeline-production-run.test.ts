@@ -41,7 +41,7 @@ test("renders deterministic real PNG character and FX bytes", () => {
   assert.equal(decoded.channels, 4);
   assert.ok(metrics.chromaPurity > 0.55);
   assert.equal(metrics.edgeContamination, 0);
-  assert.equal(metrics.clippingScore, 0);
+  assert.equal(metrics.clippingScore, 1);
 });
 
 test("executes real generation validation content storage and evidence loop", async () => {

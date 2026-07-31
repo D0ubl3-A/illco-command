@@ -130,9 +130,9 @@ export function validateManifest(value: SpriteManifest): ManifestResult {
   if (value.duplicateDecision !== "exception" && value.duplicateExceptionId) failures.push("duplicate exception ID is only allowed for exception decisions");
   if (!Number.isInteger(value.retryCount) || value.retryCount < 0) failures.push("retryCount is invalid");
   if (Number.isNaN(Date.parse(value.createdAt)) || Number.isNaN(Date.parse(value.updatedAt)) || Date.parse(value.updatedAt) < Date.parse(value.createdAt)) failures.push("timestamps are invalid");
-  if (new Set(value.tags).size !== value.tags.length) failures.push("tags contain duplicates");
-  if (new Set(value.packageIds).size !== value.packageIds.length) failures.push("package IDs contain duplicates");
-  if (new Set(value.evidencePaths).size !== value.evidencePaths.length || value.evidencePaths.some((path) => !safePath(path))) failures.push("evidence paths are invalid");
+  if (!Array.isArray(value.tags) || value.tags.some((tag) => typeof tag !== "string" || !tag.trim()) || new Set(value.tags).size !== value.tags.length) failures.push("tags are missing, malformed, or contain duplicates");
+  if (!Array.isArray(value.packageIds) || value.packageIds.some((id) => typeof id !== "string" || !id.trim()) || new Set(value.packageIds).size !== value.packageIds.length) failures.push("package IDs are missing, malformed, or contain duplicates");
+  if (!Array.isArray(value.evidencePaths) || value.evidencePaths.some((path) => typeof path !== "string" || !safePath(path)) || new Set(value.evidencePaths).size !== value.evidencePaths.length) failures.push("evidence paths are invalid or missing");
   const computedHash = hashUnsigned(value);
   if (!SHA256.test(value.manifestSha256) || value.manifestSha256 !== computedHash) failures.push("manifest hash mismatch");
   return { passed: failures.length === 0, failures, computedHash };

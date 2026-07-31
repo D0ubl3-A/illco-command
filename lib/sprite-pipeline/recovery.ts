@@ -111,12 +111,28 @@ export function reconcileReplay(checkpoints: ReplayCheckpoint[]): ReplayCheckpoi
   if (assetIds.size !== 1) throw new Error("Replay checkpoints contain multiple asset IDs");
 
   const committed = checkpoints.filter((checkpoint) => checkpoint.committed);
-  const resultIds = new Set(committed.map((checkpoint) => checkpoint.canonicalResultId).filter(Boolean));
-  const fileHashes = new Set(committed.map((checkpoint) => checkpoint.fileSha256).filter(Boolean));
+  for (const checkpoint of committed) {
+    if (!checkpoint.canonicalResultId?.trim() || !checkpoint.fileSha256) {
+      throw new Error("Committed replay checkpoint is missing a canonical result ID or file hash");
+    }
+    if (!SHA256.test(checkpoint.fileSha256)) {
+      throw new Error("Committed file hash is invalid");
+    }
+  }
+
+  const resultIds = new Set(committed.map((checkpoint) => checkpoint.canonicalResultId as string));
+  const fileHashes = new Set(committed.map((checkpoint) => checkpoint.fileSha256 as string));
   if (resultIds.size > 1) throw new Error("Replay produced multiple canonical result IDs");
   if (fileHashes.size > 1) throw new Error("Replay produced multiple committed file hashes");
-  for (const hash of fileHashes) {
-    if (!SHA256.test(hash as string)) throw new Error("Committed file hash is invalid");
+
+  if (committed.length > 0) {
+    const canonicalResultId = committed[0]!.canonicalResultId;
+    const fileSha256 = committed[0]!.fileSha256;
+    for (const checkpoint of committed) {
+      if (checkpoint.canonicalResultId !== canonicalResultId || checkpoint.fileSha256 !== fileSha256) {
+        throw new Error("Committed replay checkpoints do not share one canonical result/hash pair");
+      }
+    }
   }
 
   return committed.at(-1) ?? checkpoints.at(-1)!;

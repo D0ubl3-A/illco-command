@@ -36,10 +36,15 @@ export type SequenceValidationResult = {
 
 const SHA256 = /^[a-f0-9]{64}$/;
 
+function normalizePhase(value: string): string {
+  return value.trim().toLowerCase().replace(/[\s_-]+/g, "");
+}
+
 export function validateSequenceBundle(bundle: SequenceBundle): SequenceValidationResult {
   const failures: string[] = [];
   if (!bundle.sequenceId.trim()) failures.push("sequenceId is required");
   if (!bundle.characterId && !bundle.fxFamilyId) failures.push("characterId or fxFamilyId is required");
+  if (bundle.characterId && bundle.fxFamilyId) failures.push("sequence cannot target both characterId and fxFamilyId");
   if (!bundle.camera.trim()) failures.push("camera is required");
   if (!Number.isFinite(bundle.frameRate) || bundle.frameRate <= 0 || bundle.frameRate > 240) failures.push("frameRate must be within 0..240");
   if (!Number.isInteger(bundle.durationMs) || bundle.durationMs <= 0) failures.push("durationMs must be a positive integer");
@@ -66,9 +71,23 @@ export function validateSequenceBundle(bundle: SequenceBundle): SequenceValidati
   for (const index of expectedIndexes) if (!indexes.has(index)) failures.push(`missing frame index ${index}`);
   if (computedDurationMs !== bundle.durationMs) failures.push(`duration mismatch: declared ${bundle.durationMs}, computed ${computedDurationMs}`);
 
-  const markers = [bundle.anticipationFrame, bundle.contactFrame, bundle.followThroughFrame, bundle.recoveryFrame];
+  const markerDefinitions = [
+    ["anticipation", bundle.anticipationFrame, "anticipation"],
+    ["contact", bundle.contactFrame, "contact"],
+    ["followThrough", bundle.followThroughFrame, "followthrough"],
+    ["recovery", bundle.recoveryFrame, "recovery"],
+  ] as const;
+  const markers = markerDefinitions.map(([, marker]) => marker);
   if (markers.some((marker) => !Number.isInteger(marker) || marker < 0 || marker >= bundle.frames.length)) failures.push("phase marker is outside frame range");
   if (!(bundle.anticipationFrame <= bundle.contactFrame && bundle.contactFrame <= bundle.followThroughFrame && bundle.followThroughFrame <= bundle.recoveryFrame)) failures.push("phase markers are out of order");
+  for (const [name, marker, expectedPhase] of markerDefinitions) {
+    const frame = bundle.frames.find((candidate) => candidate.index === marker);
+    if (!frame) {
+      failures.push(`${name} marker does not reference an existing frame`);
+      continue;
+    }
+    if (normalizePhase(frame.phase) !== expectedPhase) failures.push(`${name} marker phase mismatch: frame ${marker} declares ${frame.phase}`);
+  }
 
   if (bundle.fxFamilyId) {
     if (!bundle.fxOrigin || !bundle.fxDirection || bundle.fxScale === undefined) failures.push("FX sequence requires origin, direction, and scale");

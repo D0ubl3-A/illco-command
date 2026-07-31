@@ -69,3 +69,19 @@ test("requires complete FX synchronization metadata", () => {
   assert.equal(result.passed, false);
   assert.match(result.failures.join("\n"), /FX sequence requires origin, direction, and scale/);
 });
+
+test("rejects marker-to-frame phase disagreement", () => {
+  const value = validBundle();
+  value.frames[1].phase = "recovery";
+  const result = validateSequenceBundle(value);
+  assert.equal(result.passed, false);
+  assert.match(result.failures.join("\n"), /contact marker phase mismatch/);
+});
+
+test("rejects ambiguous character and FX identity", () => {
+  const value = validBundle();
+  value.fxFamilyId = "fx-family-00001";
+  const result = validateSequenceBundle(value);
+  assert.equal(result.passed, false);
+  assert.match(result.failures.join("\n"), /cannot target both characterId and fxFamilyId/);
+});

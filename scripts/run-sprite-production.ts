@@ -53,7 +53,6 @@ async function main(): Promise<void> {
 
   const report = {
     theme: "original-claymation-celebrity-brawl-parody",
-    runId,
     startedAt,
     completedAt,
     requested: requests.length,

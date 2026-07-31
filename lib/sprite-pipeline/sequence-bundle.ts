@@ -47,6 +47,10 @@ function canonical(value: unknown): string {
   return JSON.stringify(value);
 }
 
+function normalizePhase(value: string): string {
+  return value.trim().toLowerCase().replace(/[\s_-]+/g, "");
+}
+
 export function validateSequenceBundle(bundle: SequenceBundle): SequenceValidationResult {
   const failures: string[] = [];
   if (!bundle.sequenceId.trim()) failures.push("sequenceId is required");
@@ -87,17 +91,28 @@ export function validateSequenceBundle(bundle: SequenceBundle): SequenceValidati
   }
 
   const phaseFrames = [
-    ["anticipation", bundle.anticipationFrame],
-    ["contact", bundle.contactFrame],
-    ["followThrough", bundle.followThroughFrame],
-    ["recovery", bundle.recoveryFrame],
+    ["anticipation", bundle.anticipationFrame, "anticipation"],
+    ["contact", bundle.contactFrame, "contact"],
+    ["followThrough", bundle.followThroughFrame, "followthrough"],
+    ["recovery", bundle.recoveryFrame, "recovery"],
   ] as const;
   let previous = -1;
-  for (const [name, index] of phaseFrames) {
+  for (const [name, index, expectedPhase] of phaseFrames) {
     if (index === null) continue;
-    if (!Number.isInteger(index) || index < 0 || index >= bundle.frames.length) failures.push(`${name} frame is out of range`);
+    if (!Number.isInteger(index) || index < 0 || index >= bundle.frames.length) {
+      failures.push(`${name} frame is out of range`);
+      continue;
+    }
     if (index <= previous) failures.push(`${name} frame must follow prior declared phase frame`);
     previous = index;
+    const frame = bundle.frames.find((candidate) => candidate.index === index);
+    if (!frame) {
+      failures.push(`${name} marker does not reference an existing frame`);
+      continue;
+    }
+    if (normalizePhase(frame.phase) !== expectedPhase) {
+      failures.push(`${name} marker phase mismatch: frame ${index} declares ${frame.phase}`);
+    }
   }
 
   if (bundle.kind === "fx") {

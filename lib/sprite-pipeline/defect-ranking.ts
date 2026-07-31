@@ -1,3 +1,5 @@
+import { SCORE_CATEGORIES, SCORE_WEIGHTS, type ScoreCategory } from "./score-weights";
+
 export type DefectStatus = "open" | "repairing" | "blocked" | "closed" | "accepted_exception";
 
 export type DefectRecord = {
@@ -62,19 +64,14 @@ export function rankDefects(defects: DefectRecord[]): RankedDefect[] {
   return ranked.sort((a, b) => b.priority - a.priority || b.voteCount - a.voteCount || a.issueId.localeCompare(b.issueId));
 }
 
-export type ScoreCategory = "architecture" | "continuity" | "manifest" | "renderTruthfulness" | "duplication" | "characterCoverage" | "fxCoverage" | "visualQuality" | "operations" | "commercialReadiness";
-
-export const SCORE_MAX: Record<ScoreCategory, number> = {
-  architecture: 1200, continuity: 1000, manifest: 1000, renderTruthfulness: 1200, duplication: 1000,
-  characterCoverage: 900, fxCoverage: 900, visualQuality: 1000, operations: 900, commercialReadiness: 900,
-};
+export { SCORE_WEIGHTS as SCORE_MAX, type ScoreCategory } from "./score-weights";
 
 export function evidenceBackedScore(requested: Partial<Record<ScoreCategory, number>>, evidenceCounts: Partial<Record<ScoreCategory, number>>, unresolved: DefectRecord[]): { total: number; categories: Record<ScoreCategory, number>; gatePassed: boolean } {
   const categories = {} as Record<ScoreCategory, number>;
-  for (const category of Object.keys(SCORE_MAX) as ScoreCategory[]) {
+  for (const category of SCORE_CATEGORIES) {
     const value = requested[category] ?? 0;
     const evidence = evidenceCounts[category] ?? 0;
-    categories[category] = evidence > 0 ? Math.max(0, Math.min(SCORE_MAX[category], Math.floor(value))) : 0;
+    categories[category] = evidence > 0 ? Math.max(0, Math.min(SCORE_WEIGHTS[category], Math.floor(value))) : 0;
   }
   const blockers = unresolved.filter((d) => d.status !== "closed" && d.status !== "accepted_exception" && (d.blocker || d.severity >= 9));
   let total = Object.values(categories).reduce((sum, value) => sum + value, 0);

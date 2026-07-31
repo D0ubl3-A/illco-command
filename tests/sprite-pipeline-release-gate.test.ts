@@ -1,18 +1,21 @@
 import assert from "node:assert/strict";
 import test from "node:test";
+import { createHash } from "node:crypto";
 import { evaluateReleaseGate, SCORE_WEIGHTS, type CategoryEvidence, type ReleaseGateInput } from "../lib/sprite-pipeline/release-gate";
-
-const HASH = "a".repeat(64);
 
 function evidenceSlug(category: string): string {
   return category.replace(/[A-Z]/g, (letter) => `-${letter.toLowerCase()}`);
+}
+
+function evidenceHash(category: string): string {
+  return createHash("sha256").update(`release-gate:${category}`).digest("hex");
 }
 
 function completeCategories(): CategoryEvidence[] {
   return Object.entries(SCORE_WEIGHTS).map(([category, earned]) => ({
     category: category as keyof typeof SCORE_WEIGHTS,
     earned,
-    evidence: [{ path: `evidence/${evidenceSlug(category)}.json`, sha256: HASH }],
+    evidence: [{ path: `evidence/${evidenceSlug(category)}.json`, sha256: evidenceHash(category) }],
     mandatoryTestsExecuted: true,
   }));
 }
@@ -75,7 +78,10 @@ test("rejects evidence path reuse across categories", () => {
   const input = passingInput();
   input.categories[1] = {
     ...input.categories[1],
-    evidence: [{ path: input.categories[0].evidence[0].path, sha256: HASH }],
+    evidence: [{
+      path: input.categories[0].evidence[0].path,
+      sha256: input.categories[0].evidence[0].sha256,
+    }],
   };
   const result = evaluateReleaseGate(input);
   assert.equal(result.passed, false);
@@ -87,7 +93,7 @@ test("rejects unsafe evidence paths", () => {
   const input = passingInput();
   input.categories[0] = {
     ...input.categories[0],
-    evidence: [{ path: "../evidence.json", sha256: HASH }],
+    evidence: [{ path: "../evidence.json", sha256: evidenceHash("unsafe") }],
   };
   const result = evaluateReleaseGate(input);
   assert.equal(result.passed, false);

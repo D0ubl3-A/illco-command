@@ -50,3 +50,27 @@ test("requires complete sequence metadata and controlled duplicate exceptions", 
   assert.match(result.failures.join("\n"), /sequence metadata/);
   assert.match(result.failures.join("\n"), /exception ID/);
 });
+
+test("returns controlled failures for missing persisted manifest arrays", () => {
+  for (const field of ["tags", "packageIds", "evidencePaths"] as const) {
+    const value = manifest() as SpriteManifest & Record<string, unknown>;
+    delete value[field];
+    resign(value as SpriteManifest);
+    const result = validateManifest(value as SpriteManifest);
+    assert.equal(result.passed, false);
+    assert.match(result.failures.join("\n"), /missing|malformed|invalid/i);
+  }
+});
+
+test("rejects malformed array values without throwing", () => {
+  const value = manifest() as SpriteManifest & Record<string, unknown>;
+  value.tags = ["fighter", ""];
+  value.packageIds = ["package-1", "package-1"];
+  value.evidencePaths = ["../escape.json"];
+  resign(value as SpriteManifest);
+  const result = validateManifest(value as SpriteManifest);
+  assert.equal(result.passed, false);
+  assert.match(result.failures.join("\n"), /tags/);
+  assert.match(result.failures.join("\n"), /package IDs/);
+  assert.match(result.failures.join("\n"), /evidence paths/);
+});

@@ -124,6 +124,15 @@ test("rejects contradictory premultiplication declarations", () => {
   assert.match(issues.map((issue) => issue.message).join("\n"), /premultiplied flag disagree/i);
 });
 
+test("rejects non-positive, non-finite, and reversed FX scale ranges", () => {
+  for (const scaleRange of [[0, 1], [2, 1], [0.5, Number.POSITIVE_INFINITY]] as Array<[number, number]>) {
+    const value = fxBible();
+    value.scaleRange = scaleRange;
+    const issues = validateFxBible(value);
+    assert.equal(issues.some((issue) => issue.controlId === "FX-BIBLE-SCALE"), true);
+  }
+});
+
 test("accepts a valid punch phase sequence", () => {
   assert.deepEqual(validateActionGrammar(grammar), []);
   assert.deepEqual(validatePhaseSequence(grammar, ["anticipation", "extension", "contact", "recovery"]), []);

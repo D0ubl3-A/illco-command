@@ -75,6 +75,15 @@ test("blocks protected-character composite similarity", () => {
   assert.match(result.failures.join("\n"), /protected-character similarity threshold exceeded/);
 });
 
+test("isolates invalid metrics without producing NaN risk", () => {
+  const input = validInput();
+  input.signals[0] = { ...input.signals[0], likeness: Number.NaN };
+  const result = reviewOriginality(input);
+  assert.equal(result.passed, false);
+  assert.match(result.failures.join("\n"), /invalid similarity score/);
+  assert.equal(Number.isFinite(result.highestRisk), true);
+});
+
 test("requires human evidence when review is mandatory", () => {
   const input = validInput();
   delete input.humanReview;

@@ -35,10 +35,15 @@ export function validateSequence(record: SequenceRecord): SequenceResult {
   if (!Number.isFinite(record.frameRate) || record.frameRate <= 0 || record.frameRate > 240) failures.push("invalid frameRate");
   if (record.frames.length === 0) failures.push("sequence requires frames");
   const indexes = record.frames.map((frame) => frame.index);
+  const assetIds = new Set<string>();
   if (new Set(indexes).size !== indexes.length) failures.push("duplicate frame indexes");
   const sorted = [...indexes].sort((a, b) => a - b);
   sorted.forEach((value, index) => { if (value !== index) failures.push(`missing frame index ${index}`); });
   for (const frame of record.frames) {
+    const assetId = typeof frame.assetId === "string" ? frame.assetId.trim() : "";
+    if (!assetId) failures.push(`missing assetId for frame ${frame.index}`);
+    else if (assetIds.has(assetId)) failures.push(`duplicate frame assetId ${assetId}`);
+    else assetIds.add(assetId);
     if (!Number.isFinite(frame.durationMs) || frame.durationMs <= 0) failures.push(`invalid duration for frame ${frame.index}`);
     if (!frame.phase.trim()) failures.push(`missing phase for frame ${frame.index}`);
     if (!SHA256.test(frame.sha256)) failures.push(`invalid hash for frame ${frame.index}`);

@@ -126,6 +126,10 @@ export function validateFxBible(bible: FxBible): ValidationIssue[] {
   validatePalette(bible.paletteHex, "FX-BIBLE-PALETTE", issues);
   const [minOpacity, maxOpacity] = bible.opacityRange;
   if (minOpacity < 0 || maxOpacity > 1 || minOpacity > maxOpacity) issues.push({ controlId: "FX-BIBLE-OPACITY", message: "opacity range must be ordered within 0..1" });
+  const [minScale, maxScale] = bible.scaleRange;
+  if (!Number.isFinite(minScale) || !Number.isFinite(maxScale) || minScale <= 0 || maxScale <= 0 || minScale > maxScale) {
+    issues.push({ controlId: "FX-BIBLE-SCALE", message: "scale range must contain finite positive values in ascending order" });
+  }
   if (bible.alphaMode === "premultiplied" !== bible.premultiplied) issues.push({ controlId: "FX-BIBLE-PREMULT", message: "alphaMode and premultiplied flag disagree" });
   if (bible.pivot.some((value) => value < 0 || value > 1)) issues.push({ controlId: "FX-BIBLE-PIVOT", message: "pivot coordinates must be normalized" });
   return issues;

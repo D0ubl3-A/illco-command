@@ -41,13 +41,27 @@ test("raises blocker alerts for integrity and score regression", () => {
   const previous = snapshot({ capturedAt: "2026-07-30T14:00:00.000Z", score: 4300, storageBytes: 900_000 });
   const alerts = evaluatePipelineAlerts(snapshot({ archiveHealthy: false, score: 4200 }), previous);
   assert.equal(alerts.some((alert) => alert.code === "ARCHIVE-UNHEALTHY" && alert.blocker), true);
-  assert.equal(alerts.some((alert) => alert.code === "SCORE-REGRESSION" && alert.severity === 10), true);
+  assert.equal(alerts.some((alert) => alert.code === "SCORE-REGRESSION" && alert.severity === 10 && alert.blocker), true);
 });
 
 test("raises duplicate and failure spike blockers", () => {
   const alerts = evaluatePipelineAlerts(snapshot({ successRate: 0.9, failureRate: 0.1, duplicateRate: 0.05 }), null);
-  assert.equal(alerts.some((alert) => alert.code === "FAILURE-SPIKE"), true);
-  assert.equal(alerts.some((alert) => alert.code === "DUPLICATE-SPIKE"), true);
+  assert.equal(alerts.some((alert) => alert.code === "FAILURE-SPIKE" && alert.blocker), true);
+  assert.equal(alerts.some((alert) => alert.code === "DUPLICATE-SPIKE" && alert.blocker), true);
+});
+
+test("raises blockers for visual, sequence, and IP risk spikes", () => {
+  const alerts = evaluatePipelineAlerts(snapshot({
+    chromaFailureRate: 0.03,
+    alphaFailureRate: 0.03,
+    clippingFailureRate: 0.02,
+    ipRiskRate: 0.01,
+    sequenceFailureRate: 0.02,
+  }), null);
+  for (const code of ["CHROMA-FAILURE-SPIKE", "ALPHA-FAILURE-SPIKE", "CLIPPING-FAILURE-SPIKE", "IP-RISK-SPIKE", "SEQUENCE-FAILURE-SPIKE"]) {
+    assert.equal(alerts.some((alert) => alert.code === code && alert.blocker), true, `${code} must block release`);
+  }
+  assert.equal(alerts.find((alert) => alert.code === "IP-RISK-SPIKE")?.severity, 10);
 });
 
 test("treats malformed metrics as state corruption", () => {

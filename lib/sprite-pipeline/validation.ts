@@ -87,7 +87,12 @@ export function validateManifestRecord(
   const failures: ValidationFailure[] = [];
   const fail = (controlId: string, message: string) => failures.push({ controlId, message });
 
-  if (!ASSET_ID.test(record.assetId)) fail("MANIFEST-ID", "assetId must use kind-00000 format");
+  const assetIdMatch = ASSET_ID.exec(record.assetId);
+  if (!assetIdMatch) {
+    fail("MANIFEST-ID", "assetId must use kind-00000 format");
+  } else if (assetIdMatch[1] !== record.kind) {
+    fail("MANIFEST-KIND-ID", `assetId prefix ${assetIdMatch[1]} does not match kind ${record.kind}`);
+  }
   if (!SAFE_FILENAME.test(record.filename)) fail("PATH-FILENAME", "filename must be lowercase, sanitized, and PNG");
   if (extname(record.relativePath).toLowerCase() !== ".png") fail("FILE-EXT", "relativePath must end in .png");
   if (!Number.isInteger(record.width) || record.width < thresholds.minWidth || record.width > thresholds.maxWidth) {
@@ -145,7 +150,7 @@ export function validateManifestRecord(
   const canonicalEvidence = JSON.stringify({
     record,
     thresholds,
-    failures: [...failures].sort((a, b) => a.controlId.localeCompare(b.controlId)),
+    failures: [...failures].sort((a, b) => a.controlId < b.controlId ? -1 : a.controlId > b.controlId ? 1 : 0),
   });
 
   return {

@@ -56,6 +56,27 @@ test("replay returns the existing committed canonical result", () => {
   assert.equal(recovered.fileSha256, "a".repeat(64));
 });
 
+test("replay rejects incomplete committed checkpoints", () => {
+  assert.throws(
+    () => reconcileReplay([{ ...CHECKPOINT, canonicalResultId: null }]),
+    /missing a canonical result ID or file hash/,
+  );
+  assert.throws(
+    () => reconcileReplay([{ ...CHECKPOINT, fileSha256: null }]),
+    /missing a canonical result ID or file hash/,
+  );
+});
+
+test("replay rejects split canonical result and hash records", () => {
+  assert.throws(
+    () => reconcileReplay([
+      { ...CHECKPOINT, canonicalResultId: "result-001", fileSha256: null },
+      { ...CHECKPOINT, canonicalResultId: null, fileSha256: "a".repeat(64) },
+    ]),
+    /missing a canonical result ID or file hash/,
+  );
+});
+
 test("replay rejects multiple canonical results", () => {
   assert.throws(
     () => reconcileReplay([CHECKPOINT, { ...CHECKPOINT, canonicalResultId: "result-002" }]),

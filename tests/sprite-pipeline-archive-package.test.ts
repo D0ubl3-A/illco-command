@@ -1,6 +1,7 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 import {
+  canonicalJson,
   sha256Canonical,
   verifyArchiveManifest,
   verifyEnginePackage,
@@ -41,6 +42,11 @@ function enginePackage(): EnginePackage {
   return { ...base, packageSha256: sha256Canonical(base) };
 }
 
+function resignPackage(value: EnginePackage): void {
+  const { packageSha256: _signature, ...payload } = value;
+  value.packageSha256 = sha256Canonical(payload);
+}
+
 test("accepts a complete immutable archive manifest", () => {
   const result = verifyArchiveManifest(archive());
   assert.equal(result.passed, true, result.failures.join("\n"));
@@ -63,6 +69,11 @@ test("rejects unsafe and non-content-addressed paths", () => {
   assert.match(result.failures.join("\n"), /unsafe archive path/i);
 });
 
+test("uses locale-independent canonical key ordering", () => {
+  assert.equal(canonicalJson({ z: 1, A: 2, a: 3 }), '{"A":2,"a":3,"z":1}');
+  assert.equal(sha256Canonical({ z: 1, A: 2, a: 3 }), sha256Canonical({ a: 3, z: 1, A: 2 }));
+});
+
 test("accepts a complete Unity package", () => {
   const result = verifyEnginePackage(enginePackage());
   assert.equal(result.passed, true, result.failures.join("\n"));
@@ -71,11 +82,31 @@ test("accepts a complete Unity package", () => {
 test("rejects engine packages with missing import metadata", () => {
   const value = enginePackage();
   value.metadata = { pivot: [0.5, 0] };
-  value.packageSha256 = sha256Canonical({ ...value, packageSha256: undefined });
+  resignPackage(value);
   const result = verifyEnginePackage(value);
   assert.equal(result.passed, false);
   assert.match(result.failures.join("\n"), /pixelsPerUnit/);
   assert.match(result.failures.join("\n"), /filterMode/);
+});
+
+test("rejects malformed Unity metadata shapes", () => {
+  const value = enginePackage();
+  value.metadata = { pixelsPerUnit: "banana", pivot: "center", filterMode: "Nearest" };
+  resignPackage(value);
+  const result = verifyEnginePackage(value);
+  assert.equal(result.passed, false);
+  assert.match(result.failures.join("\n"), /pivot metadata/);
+  assert.match(result.failures.join("\n"), /pixelsPerUnit/);
+  assert.match(result.failures.join("\n"), /filterMode/);
+});
+
+test("rejects out-of-range pivot coordinates", () => {
+  const value = enginePackage();
+  value.metadata = { pixelsPerUnit: 100, pivot: [1.5, -0.1], filterMode: "Point" };
+  resignPackage(value);
+  const result = verifyEnginePackage(value);
+  assert.equal(result.passed, false);
+  assert.match(result.failures.join("\n"), /normalized numeric/);
 });
 
 test("detects package tampering after signing", () => {

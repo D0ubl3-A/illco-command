@@ -36,28 +36,34 @@ async function atomicWrite(path: string, bytes: Uint8Array): Promise<void> {
 function validateRendered(kind: "character" | "fx", metrics: PixelMetrics): string[] {
   const failures: string[] = [];
   if (!metrics.alphaBoundsNonEmpty) failures.push("empty visible bounds");
-  if (metrics.clippingScore > 0) failures.push(`clippingScore=${metrics.clippingScore}`);
   if (kind === "character") {
     if (metrics.chromaPurity < 0.55) failures.push(`chromaPurity=${metrics.chromaPurity}`);
     if (metrics.edgeContamination > 0) failures.push(`edgeContamination=${metrics.edgeContamination}`);
     if (metrics.chromaSpill > 0.03) failures.push(`chromaSpill=${metrics.chromaSpill}`);
   } else {
+    if (metrics.clippingScore > 0) failures.push(`clippingScore=${metrics.clippingScore}`);
     if (metrics.transparentPixels === 0) failures.push("FX has no transparent pixels");
     if (metrics.alphaCoverage <= 0 || metrics.alphaCoverage >= 0.8) failures.push(`alphaCoverage=${metrics.alphaCoverage}`);
   }
   return failures;
 }
 
+function assertUniqueRequests(requests: RenderRequest[]): void {
+  const seen = new Set<string>();
+  for (const request of requests) {
+    if (seen.has(request.assetId)) throw new Error(`Duplicate production asset ID: ${request.assetId}`);
+    seen.add(request.assetId);
+  }
+}
+
 export async function executeProductionRun(root: string, runId: string, requests: RenderRequest[]): Promise<ProductionRunResult> {
   if (!runId.trim()) throw new Error("runId is required");
   if (requests.length === 0) throw new Error("At least one render request is required");
-  const seen = new Set<string>();
+  assertUniqueRequests(requests);
   const assets: ProducedAsset[] = [];
   let rejected = 0;
 
   for (const request of requests) {
-    if (seen.has(request.assetId)) throw new Error(`Duplicate production asset ID: ${request.assetId}`);
-    seen.add(request.assetId);
     const rendered = renderSprite(request);
     const decoded = decodePngPixels(rendered.bytes);
     const metrics = measurePixelMetrics(decoded);

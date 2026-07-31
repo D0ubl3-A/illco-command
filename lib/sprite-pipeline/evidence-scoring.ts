@@ -1,17 +1,11 @@
-export const SCORE_WEIGHTS = {
-  architecture: 1200,
-  continuity: 1000,
-  manifest: 1000,
-  renderTruthfulness: 1200,
-  duplication: 1000,
-  characterCoverage: 900,
-  fxCoverage: 900,
-  visualQuality: 1000,
-  operations: 900,
-  commercialReadiness: 900,
-} as const;
+import {
+  SCORE_CATEGORIES,
+  SCORE_WEIGHTS,
+  isScoreCategory,
+  type ScoreCategory,
+} from "./score-weights";
 
-export type ScoreCategory = keyof typeof SCORE_WEIGHTS;
+export { SCORE_WEIGHTS, type ScoreCategory } from "./score-weights";
 
 export type ControlEvidence = {
   controlId: string;
@@ -73,7 +67,7 @@ function releaseFailures(facts: ReleaseFacts): string[] {
 }
 
 export function calculateEvidenceScore(evidence: ControlEvidence[], facts: ReleaseFacts): ScoreResult {
-  const categoryScores = Object.fromEntries(Object.keys(SCORE_WEIGHTS).map((key) => [key, 0])) as Record<ScoreCategory, number>;
+  const categoryScores = Object.fromEntries(SCORE_CATEGORIES.map((key) => [key, 0])) as Record<ScoreCategory, number>;
   const rejectedEvidence: string[] = [];
   const seen = new Set<string>();
   for (const item of evidence) {
@@ -82,6 +76,10 @@ export function calculateEvidenceScore(evidence: ControlEvidence[], facts: Relea
       continue;
     }
     seen.add(item.controlId);
+    if (!isScoreCategory((item as { category?: unknown }).category)) {
+      rejectedEvidence.push(`${item.controlId}: unknown score category`);
+      continue;
+    }
     const valid = item.implemented && item.passed && item.current && item.executable && item.evidencePath.trim() && SHA256.test(item.evidenceSha256) && Number.isInteger(item.points) && item.points >= 0;
     if (!valid) {
       rejectedEvidence.push(`${item.controlId}: evidence is not creditable`);

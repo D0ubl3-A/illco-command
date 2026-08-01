@@ -43,6 +43,16 @@ function fromArchivePath(root: string, path: string): string {
   return absolute;
 }
 
+function persistedPathWithinRoot(root: string, path: string, label: string): string {
+  const normalizedRoot = resolve(root);
+  const normalizedPath = resolve(path);
+  const rel = relative(normalizedRoot, normalizedPath).replaceAll("\\", "/");
+  if (!rel || rel.startsWith("../") || rel.includes("/../")) {
+    throw new Error(`${label} escapes production root: ${path}`);
+  }
+  return normalizedPath;
+}
+
 async function verifiedFile(root: string, path: string, expectedSha256: string, label: string): Promise<ArchiveFile> {
   const info = await stat(path);
   if (!info.isFile() || info.size <= 0) throw new Error(`Missing ${label}: ${path}`);
@@ -133,7 +143,8 @@ export async function verifyPackagedRunOnDisk(root: string, packaged: PackagedRu
 
   let persistedArchive: ArchiveManifest | null = null;
   try {
-    persistedArchive = JSON.parse(await readFile(packaged.archivePath, "utf8")) as ArchiveManifest;
+    const archivePath = persistedPathWithinRoot(root, packaged.archivePath, "archive manifest path");
+    persistedArchive = JSON.parse(await readFile(archivePath, "utf8")) as ArchiveManifest;
     const archiveCheck = verifyArchiveManifest(persistedArchive);
     if (!archiveCheck.passed) failures.push(...archiveCheck.failures.map((failure) => `archive: ${failure}`));
     if (persistedArchive.manifestSha256 !== packaged.archive.manifestSha256) failures.push("archive manifest identity mismatch");
@@ -165,7 +176,8 @@ export async function verifyPackagedRunOnDisk(root: string, packaged: PackagedRu
     }
     seenTargets.add(entry.target);
     try {
-      const persisted = JSON.parse(await readFile(entry.path, "utf8")) as EnginePackage;
+      const packagePath = persistedPathWithinRoot(root, entry.path, `${entry.target} package path`);
+      const persisted = JSON.parse(await readFile(packagePath, "utf8")) as EnginePackage;
       const check = verifyEnginePackage(persisted);
       if (!check.passed) throw new Error(check.failures.join("; "));
       if (persisted.packageSha256 !== entry.manifest.packageSha256) throw new Error("package identity mismatch");

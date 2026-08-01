@@ -50,15 +50,17 @@ async function main(): Promise<void> {
   const startedAt = new Date().toISOString();
   const result = await executeProductionRun(outputRoot, runId, requests);
   const completedAt = new Date().toISOString();
+  const { runId: canonicalRunId, ...runMetrics } = result;
 
   const report = {
     theme: "original-claymation-celebrity-brawl-parody",
+    runId: canonicalRunId,
     startedAt,
     completedAt,
     requested: requests.length,
     characterRequested: requests.filter((request) => request.kind === "character").length,
     fxRequested: requests.filter((request) => request.kind === "fx").length,
-    ...result,
+    ...runMetrics,
     characterValidated: result.assets.filter((asset) => asset.kind === "character").length,
     fxValidated: result.assets.filter((asset) => asset.kind === "fx").length,
     exactAssetIds: result.assets.map((asset) => asset.assetId),

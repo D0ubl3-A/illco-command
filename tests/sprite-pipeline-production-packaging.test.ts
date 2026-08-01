@@ -121,3 +121,28 @@ test("detects package manifest tampering and missing engine targets", async () =
     await rm(root, { recursive: true, force: true });
   }
 });
+
+test("rejects archive and package manifest paths outside the production root", async () => {
+  const root = await mkdtemp(join(tmpdir(), "sprite-package-path-escape-"));
+  const outside = await mkdtemp(join(tmpdir(), "sprite-package-outside-"));
+  try {
+    const produced = await executeProductionRun(root, "package-run-path-escape", requests);
+    const packaged = await packageValidatedRun(root, produced.runId, produced.continuityPointer, produced.assets, "test-code-sha");
+    const archiveEscape = await verifyPackagedRunOnDisk(root, {
+      ...packaged,
+      archivePath: join(outside, "forged-archive.json"),
+    });
+    assert.equal(archiveEscape.passed, false);
+    assert.match(archiveEscape.failures.join("\n"), /archive manifest path escapes production root/i);
+
+    const packageEscape = await verifyPackagedRunOnDisk(root, {
+      ...packaged,
+      packages: packaged.packages.map((entry, index) => index === 0 ? { ...entry, path: join(outside, "forged-package.json") } : entry),
+    });
+    assert.equal(packageEscape.passed, false);
+    assert.match(packageEscape.failures.join("\n"), /unity package path escapes production root/i);
+  } finally {
+    await rm(root, { recursive: true, force: true });
+    await rm(outside, { recursive: true, force: true });
+  }
+});

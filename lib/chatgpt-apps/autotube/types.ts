@@ -8,6 +8,7 @@ export type VideoIntent =
   | "explainer"
   | "brand-film"
   | "social-ad"
+  | "social-proof"
   | "case-study"
   | "proposal"
   | "tutorial"

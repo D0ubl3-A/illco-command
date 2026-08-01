@@ -18,12 +18,29 @@ export type PackagedRun = {
   packages: Array<{ target: EngineTarget; manifest: EnginePackage; path: string }>;
 };
 
+export type PersistedPackageVerification = {
+  passed: boolean;
+  verifiedFiles: number;
+  verifiedPackages: number;
+  failures: string[];
+};
+
 function toArchivePath(root: string, path: string): string {
   const normalizedRoot = resolve(root);
   const normalizedPath = resolve(path);
   const rel = relative(normalizedRoot, normalizedPath).replaceAll("\\", "/");
   if (!rel || rel.startsWith("../") || rel.includes("/../")) throw new Error(`File escapes production root: ${path}`);
   return rel;
+}
+
+function fromArchivePath(root: string, path: string): string {
+  if (!path || path.startsWith("/") || path.includes("\\") || path.split("/").includes("..")) {
+    throw new Error(`Unsafe archive path: ${path}`);
+  }
+  const absolute = resolve(root, path);
+  const rel = relative(resolve(root), absolute).replaceAll("\\", "/");
+  if (!rel || rel.startsWith("../") || rel.includes("/../")) throw new Error(`Archive path escapes production root: ${path}`);
+  return absolute;
 }
 
 async function verifiedFile(root: string, path: string, expectedSha256: string, label: string): Promise<ArchiveFile> {
@@ -107,4 +124,60 @@ export async function packageValidatedRun(
     packages.push({ target, manifest, path });
   }
   return { archive, archivePath, packages };
+}
+
+export async function verifyPackagedRunOnDisk(root: string, packaged: PackagedRun): Promise<PersistedPackageVerification> {
+  const failures: string[] = [];
+  let verifiedFiles = 0;
+  let verifiedPackages = 0;
+
+  let persistedArchive: ArchiveManifest | null = null;
+  try {
+    persistedArchive = JSON.parse(await readFile(packaged.archivePath, "utf8")) as ArchiveManifest;
+    const archiveCheck = verifyArchiveManifest(persistedArchive);
+    if (!archiveCheck.passed) failures.push(...archiveCheck.failures.map((failure) => `archive: ${failure}`));
+    if (persistedArchive.manifestSha256 !== packaged.archive.manifestSha256) failures.push("archive manifest identity mismatch");
+  } catch (error) {
+    failures.push(`archive read failed: ${error instanceof Error ? error.message : String(error)}`);
+  }
+
+  if (persistedArchive) {
+    for (const file of persistedArchive.files) {
+      try {
+        const absolute = fromArchivePath(root, file.path);
+        const info = await stat(absolute);
+        if (!info.isFile() || info.size !== file.bytes) throw new Error(`byte-size mismatch for ${file.path}`);
+        const digest = createHash("sha256").update(await readFile(absolute)).digest("hex");
+        if (digest !== file.sha256) throw new Error(`hash mismatch for ${file.path}`);
+        verifiedFiles++;
+      } catch (error) {
+        failures.push(error instanceof Error ? error.message : String(error));
+      }
+    }
+  }
+
+  const expectedTargets: EngineTarget[] = ["unity", "godot", "unreal", "generic"];
+  const seenTargets = new Set<EngineTarget>();
+  for (const entry of packaged.packages) {
+    if (seenTargets.has(entry.target)) {
+      failures.push(`duplicate engine package target: ${entry.target}`);
+      continue;
+    }
+    seenTargets.add(entry.target);
+    try {
+      const persisted = JSON.parse(await readFile(entry.path, "utf8")) as EnginePackage;
+      const check = verifyEnginePackage(persisted);
+      if (!check.passed) throw new Error(check.failures.join("; "));
+      if (persisted.packageSha256 !== entry.manifest.packageSha256) throw new Error("package identity mismatch");
+      if (persisted.archiveId !== packaged.archive.archiveId) throw new Error("archive linkage mismatch");
+      if (persisted.target !== entry.target) throw new Error("engine target mismatch");
+      if (persisted.files.length !== packaged.archive.files.length) throw new Error("package file-count mismatch");
+      verifiedPackages++;
+    } catch (error) {
+      failures.push(`${entry.target} package verification failed: ${error instanceof Error ? error.message : String(error)}`);
+    }
+  }
+  for (const target of expectedTargets) if (!seenTargets.has(target)) failures.push(`missing engine package target: ${target}`);
+
+  return { passed: failures.length === 0, verifiedFiles, verifiedPackages, failures };
 }

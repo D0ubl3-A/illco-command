@@ -1,4 +1,8 @@
 import {
+  authorizeAutoTubeSession,
+  autoTubeAccessResponse,
+} from "@/lib/autotube/access";
+import {
   AutoTubeServiceError,
   getAutoTubeConfigurationStatus,
   submitAutoTubeRender,
@@ -32,6 +36,7 @@ export async function GET() {
       service: "illco-autotube-production",
       version: "5.0.0",
       configuration,
+      access: "authorized-illco-account",
     },
     {
       status: configuration.configured ? 200 : 503,
@@ -41,12 +46,25 @@ export async function GET() {
 }
 
 export async function POST(request: Request) {
+  const access = await authorizeAutoTubeSession();
+  if (!access.ok) return autoTubeAccessResponse(access);
+
   try {
     const body = await request.json().catch(() => ({}));
     const job = await submitAutoTubeRender(body, requestOrigin(request));
     return Response.json(
-      { ok: true, ...job },
-      { status: 202, headers: { "Cache-Control": "no-store", Location: job.statusUrl } },
+      {
+        ok: true,
+        ...job,
+        account: { email: access.user.email },
+      },
+      {
+        status: 202,
+        headers: {
+          "Cache-Control": "no-store",
+          Location: job.statusUrl,
+        },
+      },
     );
   } catch (error) {
     return errorResponse(error);

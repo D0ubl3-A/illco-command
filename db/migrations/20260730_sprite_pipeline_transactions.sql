@@ -2,11 +2,13 @@ BEGIN;
 
 ALTER TABLE sprite_locks
   ADD COLUMN IF NOT EXISTS recovery_count integer NOT NULL DEFAULT 0,
-  ADD COLUMN IF NOT EXISTS recovered_by_run_id text,
-  ADD COLUMN IF NOT EXISTS recovery_evidence_id bigint;
+  ADD COLUMN IF NOT EXISTS recovered_by_run_id text REFERENCES sprite_runs(id) ON DELETE RESTRICT,
+  ADD COLUMN IF NOT EXISTS recovery_evidence_id bigint REFERENCES sprite_evidence(id) ON DELETE RESTRICT;
 
-CREATE UNIQUE INDEX IF NOT EXISTS idx_sprite_events_transition_once
-  ON sprite_status_events(asset_id, from_state, to_state, run_id, surgeon_id, created_at);
+-- Lookup support only. Exactly-once transition identity is enforced by the
+-- deterministic operation-key table introduced in the replay-token migration.
+CREATE INDEX IF NOT EXISTS idx_sprite_events_transition_lookup
+  ON sprite_status_events(asset_id, run_id, surgeon_id, from_state, to_state);
 
 CREATE OR REPLACE FUNCTION recover_sprite_lock(
   p_lock_key text,
@@ -24,14 +26,28 @@ BEGIN
     RAISE EXCEPTION 'Lock TTL must be positive';
   END IF;
 
+  IF NOT EXISTS (SELECT 1 FROM sprite_runs WHERE id = p_new_owner_run_id) THEN
+    RAISE EXCEPTION 'Recovery owner run % does not exist', p_new_owner_run_id;
+  END IF;
+
+  IF p_evidence_id IS NULL OR NOT EXISTS (SELECT 1 FROM sprite_evidence WHERE id = p_evidence_id) THEN
+    RAISE EXCEPTION 'Valid recovery evidence is required';
+  END IF;
+
   SELECT * INTO current_lock
   FROM sprite_locks
   WHERE lock_key = p_lock_key
   FOR UPDATE;
 
   IF NOT FOUND THEN
-    INSERT INTO sprite_locks(lock_key, owner_run_id, surgeon_id, expires_at)
-    VALUES (p_lock_key, p_new_owner_run_id, p_surgeon_id, now() + p_ttl)
+    INSERT INTO sprite_locks(
+      lock_key, owner_run_id, surgeon_id, expires_at,
+      recovered_by_run_id, recovery_evidence_id
+    )
+    VALUES (
+      p_lock_key, p_new_owner_run_id, p_surgeon_id, now() + p_ttl,
+      p_new_owner_run_id, p_evidence_id
+    )
     RETURNING * INTO current_lock;
     RETURN current_lock;
   END IF;
@@ -57,6 +73,8 @@ BEGIN
 END;
 $$;
 
+-- Legacy transition entrypoint retained only for fail-closed compatibility.
+-- All callers must use transition_sprite_asset_v2 with a canonical operation key.
 CREATE OR REPLACE FUNCTION transition_sprite_asset(
   p_asset_id text,
   p_expected_state text,
@@ -67,42 +85,8 @@ CREATE OR REPLACE FUNCTION transition_sprite_asset(
 ) RETURNS sprite_assets
 LANGUAGE plpgsql
 AS $$
-DECLARE
-  current_asset sprite_assets;
 BEGIN
-  SELECT * INTO current_asset
-  FROM sprite_assets
-  WHERE id = p_asset_id
-  FOR UPDATE;
-
-  IF NOT FOUND THEN
-    RAISE EXCEPTION 'Asset % does not exist', p_asset_id;
-  END IF;
-
-  IF current_asset.owner_surgeon <> p_surgeon_id THEN
-    RAISE EXCEPTION 'Ownership violation for asset %', p_asset_id;
-  END IF;
-
-  IF current_asset.state <> p_expected_state THEN
-    IF current_asset.state = p_next_state THEN
-      RETURN current_asset;
-    END IF;
-    RAISE EXCEPTION 'State conflict for asset %: expected %, actual %', p_asset_id, p_expected_state, current_asset.state;
-  END IF;
-
-  IF p_next_state IN ('rendered_unvalidated','validated','packaged','published') AND p_evidence_id IS NULL THEN
-    RAISE EXCEPTION 'Evidence is required for completion state %', p_next_state;
-  END IF;
-
-  UPDATE sprite_assets
-  SET state = p_next_state, updated_at = now()
-  WHERE id = p_asset_id
-  RETURNING * INTO current_asset;
-
-  INSERT INTO sprite_status_events(asset_id, from_state, to_state, run_id, surgeon_id, evidence_id)
-  VALUES (p_asset_id, p_expected_state, p_next_state, p_run_id, p_surgeon_id, p_evidence_id);
-
-  RETURN current_asset;
+  RAISE EXCEPTION 'transition_sprite_asset is deprecated; use transition_sprite_asset_v2 with a canonical operation key';
 END;
 $$;
 

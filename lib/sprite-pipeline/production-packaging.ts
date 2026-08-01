@@ -184,6 +184,8 @@ export async function verifyPackagedRunOnDisk(root: string, packaged: PackagedRu
       if (persisted.archiveId !== packaged.archive.archiveId) throw new Error("archive linkage mismatch");
       if (persisted.target !== entry.target) throw new Error("engine target mismatch");
       if (persisted.files.length !== packaged.archive.files.length) throw new Error("package file-count mismatch");
+      if (sha256Canonical(persisted.files) !== sha256Canonical(packaged.archive.files)) throw new Error("package file-set mismatch");
+      if (sha256Canonical(persisted.assetIds) !== sha256Canonical(entry.manifest.assetIds)) throw new Error("package asset identity mismatch");
       verifiedPackages++;
     } catch (error) {
       failures.push(`${entry.target} package verification failed: ${error instanceof Error ? error.message : String(error)}`);

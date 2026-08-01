@@ -1,5 +1,6 @@
 import { createHash } from "node:crypto";
-import { mkdir, rename, writeFile } from "node:fs/promises";
+import { constants } from "node:fs";
+import { copyFile, mkdir, readFile, unlink, writeFile } from "node:fs/promises";
 import { dirname, join } from "node:path";
 import { decodePngPixels, measurePixelMetrics, type PixelMetrics } from "./png-pixels";
 import { renderSprite, type RenderRequest } from "./procedural-renderer";
@@ -26,11 +27,37 @@ export type ProductionRunResult = {
   continuityPointer: string;
 };
 
+function equalBytes(left: Uint8Array, right: Uint8Array): boolean {
+  return left.length === right.length && left.every((byte, index) => byte === right[index]);
+}
+
+async function verifyExisting(path: string, bytes: Uint8Array): Promise<boolean> {
+  try {
+    const existing = await readFile(path);
+    if (!equalBytes(existing, bytes)) throw new Error(`Immutable file collision: ${path}`);
+    return true;
+  } catch (error) {
+    if ((error as NodeJS.ErrnoException).code === "ENOENT") return false;
+    throw error;
+  }
+}
+
 async function atomicWrite(path: string, bytes: Uint8Array): Promise<void> {
   await mkdir(dirname(path), { recursive: true });
-  const temp = `${path}.${process.pid}.${Date.now()}.tmp`;
+  if (await verifyExisting(path, bytes)) return;
+
+  const temp = `${path}.${process.pid}.${Date.now()}.${Math.random().toString(16).slice(2)}.tmp`;
   await writeFile(temp, bytes, { flag: "wx" });
-  await rename(temp, path);
+  try {
+    await copyFile(temp, path, constants.COPYFILE_EXCL);
+  } catch (error) {
+    if ((error as NodeJS.ErrnoException).code !== "EEXIST") throw error;
+    await verifyExisting(path, bytes);
+  } finally {
+    await unlink(temp).catch((error: NodeJS.ErrnoException) => {
+      if (error.code !== "ENOENT") throw error;
+    });
+  }
 }
 
 function validateRendered(kind: "character" | "fx", metrics: PixelMetrics): string[] {

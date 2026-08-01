@@ -1,5 +1,6 @@
+import { createHash } from "node:crypto";
 import { mkdir, readFile, stat, writeFile } from "node:fs/promises";
-import { basename, join, relative, resolve } from "node:path";
+import { basename, dirname, join, relative, resolve } from "node:path";
 import {
   sha256Canonical,
   verifyArchiveManifest,
@@ -25,14 +26,24 @@ function toArchivePath(root: string, path: string): string {
   return rel;
 }
 
-async function assetFile(root: string, asset: ProducedAsset): Promise<ArchiveFile> {
+async function verifiedFile(root: string, path: string, expectedSha256: string, label: string): Promise<ArchiveFile> {
+  const info = await stat(path);
+  if (!info.isFile() || info.size <= 0) throw new Error(`Missing ${label}: ${path}`);
+  const bytes = await readFile(path);
+  const digest = createHash("sha256").update(bytes).digest("hex");
+  if (digest !== expectedSha256) throw new Error(`${label} hash mismatch: ${path}`);
+  return { path: toArchivePath(root, path), sha256: digest, bytes: info.size };
+}
+
+async function assetFiles(root: string, asset: ProducedAsset): Promise<ArchiveFile[]> {
   if (asset.state !== "validated") throw new Error(`Cannot package non-validated asset ${asset.assetId}`);
-  const info = await stat(asset.path);
-  if (!info.isFile() || info.size <= 0) throw new Error(`Missing validated asset bytes: ${asset.assetId}`);
-  const bytes = await readFile(asset.path);
-  const digest = (await import("node:crypto")).createHash("sha256").update(bytes).digest("hex");
-  if (digest !== asset.sha256) throw new Error(`Validated asset hash mismatch: ${asset.assetId}`);
-  return { path: toArchivePath(root, asset.path), sha256: digest, bytes: info.size };
+  const image = await verifiedFile(root, asset.path, asset.sha256, `validated asset ${asset.assetId}`);
+  const evidence = await verifiedFile(root, asset.evidencePath, asset.evidenceSha256, `validation evidence ${asset.assetId}`);
+  const parsed = JSON.parse(await readFile(asset.evidencePath, "utf8")) as Record<string, unknown>;
+  if (parsed.assetId !== asset.assetId || parsed.state !== "validated" || parsed.sha256 !== asset.sha256) {
+    throw new Error(`Validation evidence payload mismatch: ${asset.assetId}`);
+  }
+  return [image, evidence];
 }
 
 function metadata(target: EngineTarget): Record<string, unknown> {
@@ -45,7 +56,7 @@ function metadata(target: EngineTarget): Record<string, unknown> {
 }
 
 async function writeNew(path: string, value: unknown): Promise<void> {
-  await mkdir(resolve(path, ".."), { recursive: true });
+  await mkdir(dirname(path), { recursive: true });
   await writeFile(path, JSON.stringify(value, null, 2), { flag: "wx" });
 }
 
@@ -59,7 +70,8 @@ export async function packageValidatedRun(
 ): Promise<PackagedRun> {
   if (assets.length === 0) throw new Error("Cannot package an empty validated run");
   if (new Set(assets.map((asset) => asset.assetId)).size !== assets.length) throw new Error("Duplicate asset IDs in validated run");
-  const files = await Promise.all(assets.map((asset) => assetFile(root, asset)));
+  const files = (await Promise.all(assets.map((asset) => assetFiles(root, asset)))).flat();
+  if (new Set(files.map((file) => file.path)).size !== files.length) throw new Error("Duplicate archive paths in validated run");
   const createdAt = new Date().toISOString();
   const archivePayload = {
     archiveId: `archive-${runId}`,

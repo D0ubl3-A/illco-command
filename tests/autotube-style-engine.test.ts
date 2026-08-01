@@ -129,8 +129,23 @@ test("every AutoTube style has a preset and a complete director bible", () => {
     assert.ok(directive.narrativeArchitecture.length >= 3);
     assert.ok(directive.assetStrategy.length >= 3);
     assert.ok(directive.animationDirection.length >= 3);
-    assert.ok(directive.audioDirection.length >= 3);
     assert.ok(directive.qualityGates.length >= 3);
+
+    if (styleId === "custom") {
+      const customAudioContract = directive.audioDirection.join(" ");
+      assert.ok(directive.audioDirection.length >= 1);
+      assert.match(customAudioContract, /narration/i);
+      assert.match(customAudioContract, /dialogue/i);
+      assert.match(customAudioContract, /music/i);
+      assert.match(customAudioContract, /SFX/i);
+      assert.match(customAudioContract, /ambience/i);
+      assert.match(customAudioContract, /silence/i);
+      assert.match(customAudioContract, /sync/i);
+      assert.match(customAudioContract, /loudness/i);
+      assert.match(customAudioContract, /rights/i);
+    } else {
+      assert.ok(directive.audioDirection.length >= 3);
+    }
   }
 });
 

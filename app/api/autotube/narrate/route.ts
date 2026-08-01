@@ -1,4 +1,8 @@
 import {
+  authorizeAutoTubeSession,
+  autoTubeAccessResponse,
+} from "@/lib/autotube/access";
+import {
   AutoTubeServiceError,
   createNarrationAudio,
   getAutoTubeConfigurationStatus,
@@ -22,12 +26,20 @@ function errorResponse(error: unknown) {
 export async function GET() {
   const status = getAutoTubeConfigurationStatus();
   return Response.json(
-    { ok: status.narration, narration: status.narration, browserFetchRequired: false },
+    {
+      ok: status.narration,
+      narration: status.narration,
+      browserFetchRequired: false,
+      access: "authorized-illco-account",
+    },
     { status: status.narration ? 200 : 503, headers: { "Cache-Control": "no-store" } },
   );
 }
 
 export async function POST(request: Request) {
+  const access = await authorizeAutoTubeSession();
+  if (!access.ok) return autoTubeAccessResponse(access);
+
   try {
     const body = await request.json().catch(() => ({}));
     const narration = await createNarrationAudio(body);
@@ -40,6 +52,7 @@ export async function POST(request: Request) {
         "Content-Disposition": 'inline; filename="autotube-narration.mp3"',
         "Cache-Control": "private, no-store, max-age=0",
         "X-AutoTube-Narration-Source": narration.source,
+        "X-AutoTube-Account": access.user.email,
         "X-Content-Type-Options": "nosniff",
       },
     });

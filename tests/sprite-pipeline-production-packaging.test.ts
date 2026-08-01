@@ -4,7 +4,7 @@ import { tmpdir } from "node:os";
 import { join } from "node:path";
 import test from "node:test";
 import { executeProductionRun } from "../lib/sprite-pipeline/production-run";
-import { packageValidatedRun } from "../lib/sprite-pipeline/production-packaging";
+import { packageValidatedRun, verifyPackagedRunOnDisk } from "../lib/sprite-pipeline/production-packaging";
 import { verifyArchiveManifest, verifyEnginePackage } from "../lib/sprite-pipeline/archive-package";
 
 const requests = [
@@ -47,6 +47,11 @@ test("archives validated bytes and evidence then creates verified engine package
       const persisted = JSON.parse(await readFile(entry.path, "utf8"));
       assert.equal(persisted.packageSha256, entry.manifest.packageSha256);
     }
+    const persistedCheck = await verifyPackagedRunOnDisk(root, packaged);
+    assert.equal(persistedCheck.passed, true);
+    assert.equal(persistedCheck.verifiedFiles, 4);
+    assert.equal(persistedCheck.verifiedPackages, 4);
+    assert.deepEqual(persistedCheck.failures, []);
   } finally {
     await rm(root, { recursive: true, force: true });
   }
@@ -77,6 +82,41 @@ test("refuses archive creation after validation evidence is altered", async () =
       packageValidatedRun(root, produced.runId, produced.continuityPointer, produced.assets, "test-code-sha"),
       /evidence.*hash mismatch/i,
     );
+  } finally {
+    await rm(root, { recursive: true, force: true });
+  }
+});
+
+test("detects post-package asset tampering during persisted verification", async () => {
+  const root = await mkdtemp(join(tmpdir(), "sprite-package-post-tamper-"));
+  try {
+    const produced = await executeProductionRun(root, "package-run-post-tamper", requests);
+    const packaged = await packageValidatedRun(root, produced.runId, produced.continuityPointer, produced.assets, "test-code-sha");
+    await writeFile(produced.assets[0].path, Buffer.from("tampered after packaging"));
+    const check = await verifyPackagedRunOnDisk(root, packaged);
+    assert.equal(check.passed, false);
+    assert.match(check.failures.join("\n"), /byte-size mismatch|hash mismatch/i);
+    assert.equal(check.verifiedPackages, 4);
+  } finally {
+    await rm(root, { recursive: true, force: true });
+  }
+});
+
+test("detects package manifest tampering and missing engine targets", async () => {
+  const root = await mkdtemp(join(tmpdir(), "sprite-package-manifest-tamper-"));
+  try {
+    const produced = await executeProductionRun(root, "package-run-manifest-tamper", requests);
+    const packaged = await packageValidatedRun(root, produced.runId, produced.continuityPointer, produced.assets, "test-code-sha");
+    const unity = packaged.packages.find((entry) => entry.target === "unity");
+    assert.ok(unity);
+    await writeFile(unity.path, JSON.stringify({ ...unity.manifest, archiveId: "wrong-archive" }));
+    const check = await verifyPackagedRunOnDisk(root, {
+      ...packaged,
+      packages: packaged.packages.filter((entry) => entry.target !== "godot"),
+    });
+    assert.equal(check.passed, false);
+    assert.match(check.failures.join("\n"), /unity package verification failed/i);
+    assert.match(check.failures.join("\n"), /missing engine package target: godot/i);
   } finally {
     await rm(root, { recursive: true, force: true });
   }

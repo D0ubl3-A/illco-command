@@ -1,5 +1,5 @@
 import { createHash, randomUUID } from "node:crypto";
-import { link, mkdir, readFile, stat, unlink, writeFile } from "node:fs/promises";
+import { link, mkdir, readFile, readdir, stat, unlink, writeFile } from "node:fs/promises";
 import { basename, dirname, join, relative, resolve } from "node:path";
 import {
   sha256Canonical,
@@ -94,6 +94,19 @@ async function writeNew(path: string, value: unknown): Promise<void> {
   }
 }
 
+async function assertRunPackagingIsNew(root: string, runId: string): Promise<void> {
+  for (const path of [join(root, "archives", runId), join(root, "packages", runId)]) {
+    try {
+      const entries = await readdir(path);
+      if (entries.length > 0) throw new Error(`Immutable packaging output already exists for run ${runId}`);
+    } catch (error) {
+      const code = (error as NodeJS.ErrnoException).code;
+      if (code === "ENOENT") continue;
+      throw error;
+    }
+  }
+}
+
 export async function packageValidatedRun(
   root: string,
   runId: string,
@@ -104,6 +117,7 @@ export async function packageValidatedRun(
 ): Promise<PackagedRun> {
   if (assets.length === 0) throw new Error("Cannot package an empty validated run");
   if (new Set(assets.map((asset) => asset.assetId)).size !== assets.length) throw new Error("Duplicate asset IDs in validated run");
+  await assertRunPackagingIsNew(root, runId);
   const files = (await Promise.all(assets.map((asset) => assetFiles(root, asset)))).flat();
   if (new Set(files.map((file) => file.path)).size !== files.length) throw new Error("Duplicate archive paths in validated run");
   const createdAt = new Date().toISOString();

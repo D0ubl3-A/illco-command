@@ -1,6 +1,7 @@
 import { mkdir, writeFile } from "node:fs/promises";
 import { resolve, join } from "node:path";
 import { executeProductionRun } from "../lib/sprite-pipeline/production-run";
+import { packageValidatedRun } from "../lib/sprite-pipeline/production-packaging";
 import type { RenderRequest } from "../lib/sprite-pipeline/procedural-renderer";
 
 type Options = {
@@ -88,9 +89,16 @@ export async function runSpriteSkill(args: string[]): Promise<Record<string, unk
   if (characterCount !== options.characters || fxCount !== options.fx) {
     throw new Error(`Kind-count mismatch characters=${characterCount}/${options.characters} fx=${fxCount}/${options.fx}`);
   }
+  const packaged = await packageValidatedRun(
+    options.root,
+    options.runId,
+    result.continuityPointer,
+    result.assets,
+    process.env.GITHUB_SHA ?? "local-unversioned",
+  );
   const summary = {
     skill: "sprite-pipeline-to-10k",
-    skillVersion: "1.0.0",
+    skillVersion: "1.1.0",
     runId: result.runId,
     requested: requests.length,
     generated: result.generated,
@@ -99,6 +107,18 @@ export async function runSpriteSkill(args: string[]): Promise<Record<string, unk
     rejected: result.rejected,
     characters: characterCount,
     fx: fxCount,
+    archived: result.assets.length,
+    packaged: result.assets.length,
+    packageTargets: packaged.packages.map((entry) => entry.target),
+    archiveId: packaged.archive.archiveId,
+    archiveManifestSha256: packaged.archive.manifestSha256,
+    archivePath: packaged.archivePath,
+    packages: packaged.packages.map((entry) => ({
+      target: entry.target,
+      packageId: entry.manifest.packageId,
+      packageSha256: entry.manifest.packageSha256,
+      path: entry.path,
+    })),
     continuityPointer: result.continuityPointer,
     assets: result.assets,
     completedAt: new Date().toISOString(),

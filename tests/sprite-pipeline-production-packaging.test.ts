@@ -142,7 +142,10 @@ test("detects same-count engine package file substitution", async () => {
     await writeFile(unity.path, JSON.stringify({ ...payload, packageSha256: sha256Canonical(payload) }));
     const check = await verifyPackagedRunOnDisk(root, packaged);
     assert.equal(check.passed, false);
-    assert.match(check.failures.join("\n"), /package identity mismatch|package file-set mismatch/i);
+    assert.match(
+      check.failures.join("\n"),
+      /package identity mismatch|package file-set mismatch|path is not content-addressed/i,
+    );
   } finally {
     await rm(root, { recursive: true, force: true });
   }

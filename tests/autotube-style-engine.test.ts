@@ -10,7 +10,7 @@ import {
   type AnimationTrack,
   type AutoTubeStyleId,
   type AutoTubeVideoPlan,
-} from "../lib/chatgpt-apps/autotube";
+} from "../lib/chatgpt-apps/autotube/index";
 
 const expectedStyles: AutoTubeStyleId[] = [
   "evidence-business-demo",

@@ -21,6 +21,10 @@ on:
       - "package.json"
       - ".github/workflows/sprite-skill-run.yml"
 
+concurrency:
+  group: sprite-pipeline-skill-${{ github.ref }}
+  cancel-in-progress: false
+
 permissions:
   contents: read
 
@@ -57,13 +61,14 @@ jobs:
             --fx-start 1 > sprite-skill-report.json
           node -e "JSON.parse(require('fs').readFileSync('sprite-skill-report.json', 'utf8')); console.log('skill report JSON parsed')"
 
-      - name: Verify exact production counts
+      - name: Verify exact production counts and uniqueness
         env:
           CHARACTER_COUNT: ${{ github.event.inputs.characters || '24' }}
           FX_COUNT: ${{ github.event.inputs.fx || '24' }}
         run: |
           node - <<'NODE'
           const fs = require('fs');
+          const crypto = require('crypto');
           const report = JSON.parse(fs.readFileSync('sprite-skill-report.json', 'utf8'));
           const expected = Number(process.env.CHARACTER_COUNT) + Number(process.env.FX_COUNT);
           if (report.requested !== expected) throw new Error(`requested ${report.requested} != ${expected}`);
@@ -74,9 +79,23 @@ jobs:
           if (report.characters !== Number(process.env.CHARACTER_COUNT)) throw new Error('character count mismatch');
           if (report.fx !== Number(process.env.FX_COUNT)) throw new Error('FX count mismatch');
           if (!Array.isArray(report.assets) || report.assets.length !== expected) throw new Error('asset list mismatch');
+
+          const unique = (values, label) => {
+            if (new Set(values).size !== values.length) throw new Error(`duplicate ${label}`);
+          };
+          unique(report.assets.map((asset) => asset.assetId), 'asset IDs');
+          unique(report.assets.map((asset) => asset.path), 'content paths');
+          unique(report.assets.map((asset) => asset.evidencePath), 'evidence paths');
+          unique(report.assets.map((asset) => asset.sha256), 'asset SHA-256 hashes');
+          unique(report.assets.map((asset) => asset.evidenceSha256), 'evidence SHA-256 hashes');
+
           for (const asset of report.assets) {
             if (!fs.existsSync(asset.path)) throw new Error(`missing object ${asset.path}`);
             if (!fs.existsSync(asset.evidencePath)) throw new Error(`missing evidence ${asset.evidencePath}`);
+            const objectHash = crypto.createHash('sha256').update(fs.readFileSync(asset.path)).digest('hex');
+            const evidenceHash = crypto.createHash('sha256').update(fs.readFileSync(asset.evidencePath)).digest('hex');
+            if (objectHash !== asset.sha256) throw new Error(`object hash mismatch ${asset.assetId}`);
+            if (evidenceHash !== asset.evidenceSha256) throw new Error(`evidence hash mismatch ${asset.assetId}`);
           }
           if (!report.summaryPath || !fs.existsSync(report.summaryPath)) throw new Error('missing durable summary');
           console.log(JSON.stringify({ passed: true, expected, continuityPointer: report.continuityPointer }, null, 2));

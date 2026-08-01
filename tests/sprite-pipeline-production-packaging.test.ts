@@ -5,7 +5,7 @@ import { join } from "node:path";
 import test from "node:test";
 import { executeProductionRun } from "../lib/sprite-pipeline/production-run";
 import { packageValidatedRun, verifyPackagedRunOnDisk } from "../lib/sprite-pipeline/production-packaging";
-import { verifyArchiveManifest, verifyEnginePackage } from "../lib/sprite-pipeline/archive-package";
+import { sha256Canonical, verifyArchiveManifest, verifyEnginePackage } from "../lib/sprite-pipeline/archive-package";
 
 const requests = [
   {
@@ -117,6 +117,32 @@ test("detects package manifest tampering and missing engine targets", async () =
     assert.equal(check.passed, false);
     assert.match(check.failures.join("\n"), /unity package verification failed/i);
     assert.match(check.failures.join("\n"), /missing engine package target: godot/i);
+  } finally {
+    await rm(root, { recursive: true, force: true });
+  }
+});
+
+test("detects same-count engine package file substitution", async () => {
+  const root = await mkdtemp(join(tmpdir(), "sprite-package-file-substitution-"));
+  try {
+    const produced = await executeProductionRun(root, "package-run-file-substitution", requests);
+    const packaged = await packageValidatedRun(root, produced.runId, produced.continuityPointer, produced.assets, "test-code-sha");
+    const unity = packaged.packages.find((entry) => entry.target === "unity");
+    assert.ok(unity);
+    const substitutedFiles = unity.manifest.files.map((file, index) => index === 0 ? { ...file, path: `objects/ff/${"f".repeat(64)}.png` } : file);
+    const payload = {
+      packageId: unity.manifest.packageId,
+      archiveId: unity.manifest.archiveId,
+      target: unity.manifest.target,
+      createdAt: unity.manifest.createdAt,
+      assetIds: unity.manifest.assetIds,
+      files: substitutedFiles,
+      metadata: unity.manifest.metadata,
+    };
+    await writeFile(unity.path, JSON.stringify({ ...payload, packageSha256: sha256Canonical(payload) }));
+    const check = await verifyPackagedRunOnDisk(root, packaged);
+    assert.equal(check.passed, false);
+    assert.match(check.failures.join("\n"), /package identity mismatch|package file-set mismatch/i);
   } finally {
     await rm(root, { recursive: true, force: true });
   }

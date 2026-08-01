@@ -31,7 +31,9 @@ export async function POST(request: Request) {
   try {
     const body = await request.json().catch(() => ({}));
     const narration = await createNarrationAudio(body);
-    return new Response(narration.bytes, {
+    const audioBody = new Uint8Array(narration.bytes.byteLength);
+    audioBody.set(narration.bytes);
+    return new Response(audioBody.buffer, {
       status: 200,
       headers: {
         "Content-Type": narration.mimeType,

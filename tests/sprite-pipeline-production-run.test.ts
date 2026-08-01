@@ -1,5 +1,5 @@
 import assert from "node:assert/strict";
-import { mkdtemp, readFile, rm, stat } from "node:fs/promises";
+import { mkdtemp, readFile, rm, stat, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import test from "node:test";
@@ -89,6 +89,21 @@ test("rejects duplicate production IDs before writing a false second result", as
       executeProductionRun(root, "run-real-duplicate", [characterRequest, characterRequest]),
       /Duplicate production asset ID/,
     );
+  } finally {
+    await rm(root, { recursive: true, force: true });
+  }
+});
+
+test("never overwrites an immutable content-addressed production object", async () => {
+  const root = await mkdtemp(join(tmpdir(), "sprite-production-collision-"));
+  try {
+    const first = await executeProductionRun(root, "run-real-collision-1", [characterRequest]);
+    await writeFile(first.assets[0].path, Buffer.from("corrupt-existing-object"));
+    await assert.rejects(
+      executeProductionRun(root, "run-real-collision-2", [characterRequest]),
+      /immutable file collision/i,
+    );
+    assert.equal((await readFile(first.assets[0].path, "utf8")), "corrupt-existing-object");
   } finally {
     await rm(root, { recursive: true, force: true });
   }

@@ -1,5 +1,5 @@
-import { createHash } from "node:crypto";
-import { mkdir, readFile, stat, writeFile } from "node:fs/promises";
+import { createHash, randomUUID } from "node:crypto";
+import { link, mkdir, readFile, stat, unlink, writeFile } from "node:fs/promises";
 import { basename, dirname, join, relative, resolve } from "node:path";
 import {
   sha256Canonical,
@@ -84,7 +84,14 @@ function metadata(target: EngineTarget): Record<string, unknown> {
 
 async function writeNew(path: string, value: unknown): Promise<void> {
   await mkdir(dirname(path), { recursive: true });
-  await writeFile(path, JSON.stringify(value, null, 2), { flag: "wx" });
+  const temp = `${path}.${process.pid}.${randomUUID()}.tmp`;
+  const bytes = JSON.stringify(value, null, 2);
+  try {
+    await writeFile(temp, bytes, { flag: "wx" });
+    await link(temp, path);
+  } finally {
+    await unlink(temp).catch(() => undefined);
+  }
 }
 
 export async function packageValidatedRun(

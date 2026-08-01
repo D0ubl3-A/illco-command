@@ -1,8 +1,8 @@
 BEGIN;
 
--- Repair recovery-audit referential integrity without rewriting prior immutable migrations.
--- NOT VALID allows deployment against an existing populated table while still enforcing
--- the constraint for all new writes; the explicit VALIDATE step proves historical rows.
+-- Add recovery-audit referential integrity without rewriting prior immutable migrations.
+-- NOT VALID immediately protects new writes while allowing historical rows to be
+-- checked in a separate no-transaction validation migration.
 DO $$
 BEGIN
   IF NOT EXISTS (
@@ -40,19 +40,5 @@ BEGIN
   END IF;
 END
 $$;
-
-ALTER TABLE sprite_locks
-  VALIDATE CONSTRAINT sprite_locks_recovered_by_run_fk;
-
-ALTER TABLE sprite_locks
-  VALIDATE CONSTRAINT sprite_locks_recovery_evidence_fk;
-
-CREATE INDEX IF NOT EXISTS idx_sprite_locks_recovered_by_run
-  ON sprite_locks(recovered_by_run_id)
-  WHERE recovered_by_run_id IS NOT NULL;
-
-CREATE INDEX IF NOT EXISTS idx_sprite_locks_recovery_evidence
-  ON sprite_locks(recovery_evidence_id)
-  WHERE recovery_evidence_id IS NOT NULL;
 
 COMMIT;

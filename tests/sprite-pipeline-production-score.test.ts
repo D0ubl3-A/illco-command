@@ -51,11 +51,15 @@ test("caps a partial real run and reports concrete missing gates", () => {
   assert.ok(result.blockers.some((entry) => entry.includes("perceptual duplicate")));
 });
 
-test("does not let asset counts exceed their category weights", () => {
-  const result = calculateProductionScore({ ...complete, validatedCharacters: 99_999, validatedFx: 99_999 });
-  assert.equal(result.categories.characterCoverage, 900);
-  assert.equal(result.categories.fxTextureCoverage, 900);
-  assert.equal(result.score, 10_000);
+test("rejects impossible asset overcounts instead of clamping them to full coverage", () => {
+  assert.throws(
+    () => calculateProductionScore({ ...complete, validatedCharacters: 10_001 }),
+    /validatedCharacters cannot exceed the authoritative production target 10000/,
+  );
+  assert.throws(
+    () => calculateProductionScore({ ...complete, validatedFx: 10_001 }),
+    /validatedFx cannot exceed the authoritative production target 10000/,
+  );
 });
 
 test("requires the exact four engine package targets instead of any four labels", () => {

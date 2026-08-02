@@ -1,4 +1,4 @@
-name: Verify and deploy ILLCO Command
+name: Verify ILLCO Command for Sites
 
 on:
   push:
@@ -8,6 +8,12 @@ on:
     branches:
       - main
   workflow_dispatch:
+    inputs:
+      verify_live:
+        description: Verify the published illcoai.tech Site and AutoTube MCP
+        required: false
+        type: boolean
+        default: true
 
 concurrency:
   group: illco-command-${{ github.ref }}
@@ -59,108 +65,77 @@ jobs:
           python services/autotube-renderer/smoke_test.py
 
       - name: Type check
-        id: typecheck
         shell: bash
-        run: |
-          set -o pipefail
-          npx tsc --noEmit --pretty false 2>&1 | tee typecheck.log
-
-      - name: Upload type-check failure log
-        if: failure() && steps.typecheck.outcome == 'failure'
-        uses: actions/upload-artifact@v4
-        with:
-          name: typecheck-failure-log
-          path: typecheck.log
-          retention-days: 7
+        run: npx tsc --noEmit --pretty false
 
       - name: Test
-        id: test
         shell: bash
-        run: |
-          set -o pipefail
-          npm test 2>&1 | tee test.log
+        run: npm test
 
-      - name: Upload test failure log
-        if: failure() && steps.test.outcome == 'failure'
-        uses: actions/upload-artifact@v4
-        with:
-          name: test-failure-log
-          path: test.log
-          retention-days: 7
-
-      - name: Build
-        id: build
+      - name: Build Sites source bundle
         shell: bash
-        run: |
-          set -o pipefail
-          npm run build 2>&1 | tee build.log
+        run: npm run build
 
-      - name: Upload build failure log
-        if: failure() && steps.build.outcome == 'failure'
-        uses: actions/upload-artifact@v4
-        with:
-          name: build-failure-log
-          path: build.log
-          retention-days: 7
-
-  deploy:
-    if: github.event_name != 'pull_request'
+  verify_live_mcp:
+    if: github.event_name == 'workflow_dispatch' && inputs.verify_live
     needs: verify
     runs-on: ubuntu-latest
-    timeout-minutes: 30
-    env:
-      VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
-      VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+    timeout-minutes: 10
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      - name: Use Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: 22
-          cache: npm
-
-      - name: Verify deployment credentials
+      - name: Verify illcoai.tech Site and MCP routes
         shell: bash
-        run: |
-          test -n "${{ secrets.VERCEL_TOKEN }}" || (echo "Missing VERCEL_TOKEN secret" && exit 1)
-          test -n "$VERCEL_ORG_ID" || (echo "Missing VERCEL_ORG_ID secret" && exit 1)
-          test -n "$VERCEL_PROJECT_ID" || (echo "Missing VERCEL_PROJECT_ID secret" && exit 1)
-
-      - name: Install dependencies
-        run: npm ci
-
-      - name: Pull production environment
-        run: npx --yes vercel pull --yes --environment=production --token="${{ secrets.VERCEL_TOKEN }}"
-
-      - name: Build Vercel artifact
-        run: npx --yes vercel build --prod --token="${{ secrets.VERCEL_TOKEN }}"
-
-      - name: Deploy production artifact
-        run: npx --yes vercel deploy --prebuilt --prod --token="${{ secrets.VERCEL_TOKEN }}"
-
-      - name: Verify critical production routes
-        shell: bash
+        env:
+          SITE_URL: https://illcoai.tech
+          MCP_URL: https://illcoai.tech/api/chatgpt/autotube/mcp
+          WIDGET_URL: https://illcoai.tech/api/chatgpt/autotube/widget
         run: |
           set -euo pipefail
-          routes=(
-            "https://illco-command.vercel.app/"
-            "https://illco-command.vercel.app/lead-rescue"
-            "https://illco-command.vercel.app/youtube-rank-revival"
-            "https://illco-command.vercel.app/brain"
-            "https://illco-command.vercel.app/label-command"
-            "https://illco-command.vercel.app/api/label-command/health"
-            "https://illco-command.vercel.app/tools/lyric-video-forge"
-            "https://illco-command.vercel.app/tools/meme-mcp-server"
-            "https://illco-command.vercel.app/api/chatgpt/autotube/mcp"
-            "https://illco-command.vercel.app/api/chatgpt/autotube/widget"
-            "https://illco-command.vercel.app/api/health"
-          )
 
-          for route in "${routes[@]}"; do
-            echo "Checking $route"
-            curl --fail --silent --show-error --location \
-              --retry 8 --retry-delay 5 --retry-all-errors \
-              --max-time 30 "$route" > /dev/null
-          done
+          curl --fail --silent --show-error --location \
+            --retry 8 --retry-delay 5 --retry-all-errors \
+            --max-time 30 "$SITE_URL/" > site.html
+
+          curl --fail --silent --show-error --location \
+            --retry 8 --retry-delay 5 --retry-all-errors \
+            --max-time 30 "$MCP_URL" > mcp-health.json
+
+          curl --fail --silent --show-error --location \
+            --retry 8 --retry-delay 5 --retry-all-errors \
+            --max-time 30 "$WIDGET_URL" > widget.html
+
+          curl --fail --silent --show-error --location \
+            --max-time 30 \
+            --header 'Content-Type: application/json' \
+            --data '{"jsonrpc":"2.0","id":1,"method":"initialize","params":{"protocolVersion":"2025-06-18","capabilities":{},"clientInfo":{"name":"illco-production-verifier","version":"1.0.0"}}}' \
+            "$MCP_URL" > mcp-initialize.json
+
+          curl --fail --silent --show-error --location \
+            --max-time 30 \
+            --header 'Content-Type: application/json' \
+            --data '{"jsonrpc":"2.0","id":2,"method":"tools/list","params":{}}' \
+            "$MCP_URL" > mcp-tools.json
+
+          python - <<'PY'
+          import json
+          from pathlib import Path
+
+          health_payload = json.loads(Path("mcp-health.json").read_text(encoding="utf-8"))
+          health = health_payload.get("health") or {}
+          initialize = json.loads(Path("mcp-initialize.json").read_text(encoding="utf-8"))
+          tools_payload = json.loads(Path("mcp-tools.json").read_text(encoding="utf-8"))
+          tools = (tools_payload.get("result") or {}).get("tools") or []
+          tool_names = {str(tool.get("name")) for tool in tools}
+
+          assert health_payload.get("version") == "5.1.0-autotube4", health_payload
+          assert health_payload.get("mcpUrl") == "https://illcoai.tech/api/chatgpt/autotube/mcp", health_payload
+          assert health_payload.get("widgetUrl") == "https://illcoai.tech/api/chatgpt/autotube/widget", health_payload
+          assert health.get("standardVersion") == "4.0.0", health
+          assert health.get("styleEngineAvailable") is True, health
+          assert health.get("qualityGateAvailable") is True, health
+          assert initialize.get("result"), initialize
+          assert "autotube_health_check" in tool_names, tool_names
+          assert "autotube_render_video" in tool_names, tool_names
+          assert len(Path("site.html").read_bytes()) > 1_000
+          assert len(Path("widget.html").read_bytes()) > 500
+          print("illcoai.tech AutoTube MCP verification passed")
+          PY

@@ -148,34 +148,27 @@ export function calculateProductionScore(input: ProductionScoreInput): Productio
   const packageTargets = targets(input.packageTargets);
   const allTargets = REQUIRED_ENGINE_PACKAGE_TARGETS.every((target) => packageTargets.has(target));
 
-  // Fail closed: categories receive no baseline credit. Every awarded point must
-  // correspond to a positively asserted, executable control or measured coverage.
+  // Fail closed for compound categories. A category receives credit only when
+  // every control represented by that category has current executable evidence.
+  // Partial booleans are blockers, not a basis for arbitrary fractional points.
   const categories: Record<Category, number> = {
     architectureOrchestration:
       input.crashRecoveryPassed && input.transitionCoveragePassed
         ? weights.architectureOrchestration
-        : input.transitionCoveragePassed
-          ? 700
-          : 0,
+        : 0,
     continuityState:
       input.ownershipCoveragePassed && input.crashRecoveryPassed
         ? weights.continuityState
-        : input.ownershipCoveragePassed
-          ? 600
-          : 0,
+        : 0,
     manifestIntegrity:
       input.packageVerificationPassed && input.exactHashesUnique
         ? weights.manifestIntegrity
-        : input.exactHashesUnique
-          ? 650
-          : 0,
+        : 0,
     renderTruthfulness: renderTruth ? weights.renderTruthfulness : 0,
     duplication:
       input.exactHashesUnique && input.perceptualDuplicateScanPassed
         ? weights.duplication
-        : input.exactHashesUnique
-          ? 350
-          : 0,
+        : 0,
     characterCoverage: Math.floor(weights.characterCoverage * characterCoverage),
     fxTextureCoverage: Math.floor(weights.fxTextureCoverage * fxCoverage),
     visualQuality: visualQuality ? weights.visualQuality : 0,
@@ -183,9 +176,7 @@ export function calculateProductionScore(input: ProductionScoreInput): Productio
     commercialEngineReadiness:
       input.packageVerificationPassed && allTargets
         ? weights.commercialEngineReadiness
-        : input.packageVerificationPassed
-          ? 500
-          : 0,
+        : 0,
   };
 
   const blockers: string[] = [];

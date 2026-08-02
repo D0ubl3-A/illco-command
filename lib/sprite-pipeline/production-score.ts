@@ -148,25 +148,27 @@ export function calculateProductionScore(input: ProductionScoreInput): Productio
   const packageTargets = targets(input.packageTargets);
   const allTargets = REQUIRED_ENGINE_PACKAGE_TARGETS.every((target) => packageTargets.has(target));
 
+  // Fail closed: categories receive no baseline credit. Every awarded point must
+  // correspond to a positively asserted, executable control or measured coverage.
   const categories: Record<Category, number> = {
     architectureOrchestration:
       input.crashRecoveryPassed && input.transitionCoveragePassed
         ? weights.architectureOrchestration
         : input.transitionCoveragePassed
           ? 700
-          : 450,
+          : 0,
     continuityState:
       input.ownershipCoveragePassed && input.crashRecoveryPassed
         ? weights.continuityState
         : input.ownershipCoveragePassed
           ? 600
-          : 300,
+          : 0,
     manifestIntegrity:
       input.packageVerificationPassed && input.exactHashesUnique
         ? weights.manifestIntegrity
         : input.exactHashesUnique
           ? 650
-          : 250,
+          : 0,
     renderTruthfulness: renderTruth ? weights.renderTruthfulness : 0,
     duplication:
       input.exactHashesUnique && input.perceptualDuplicateScanPassed
@@ -177,7 +179,7 @@ export function calculateProductionScore(input: ProductionScoreInput): Productio
     characterCoverage: Math.floor(weights.characterCoverage * characterCoverage),
     fxTextureCoverage: Math.floor(weights.fxTextureCoverage * fxCoverage),
     visualQuality: visualQuality ? weights.visualQuality : 0,
-    scalabilityOperations: input.crashRecoveryPassed ? weights.scalabilityOperations : 350,
+    scalabilityOperations: input.crashRecoveryPassed ? weights.scalabilityOperations : 0,
     commercialEngineReadiness:
       input.packageVerificationPassed && allTargets
         ? weights.commercialEngineReadiness

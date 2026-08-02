@@ -31,6 +31,13 @@ function count(value: number, name: string): number {
   if (!Number.isSafeInteger(value) || value < 0) throw new RangeError(`${name} must be a non-negative safe integer`);
   return value;
 }
+function boundedCount(value: number, maximum: number, name: string): number {
+  const normalized = count(value, name);
+  if (normalized > maximum) {
+    throw new RangeError(`${name} cannot exceed the authoritative production target ${maximum}`);
+  }
+  return normalized;
+}
 function rate(value: number, name: string): number {
   if (!Number.isFinite(value) || value < 0 || value > 1) throw new RangeError(`${name} must be between 0 and 1`);
   return value;
@@ -44,7 +51,7 @@ function authoritativeTarget(value: number | undefined, required: number, name: 
   if (value !== required) throw new RangeError(`${name} must equal the authoritative production target ${required}`);
   return value;
 }
-function ratio(value: number, total: number): number { return Math.max(0, Math.min(1, value / total)); }
+function ratio(value: number, total: number): number { return value / total; }
 function targets(values: string[]): Set<string> {
   if (!Array.isArray(values)) throw new TypeError("packageTargets must be an array");
   return new Set(values.map((value) => {
@@ -56,7 +63,8 @@ function targets(values: string[]): Set<string> {
 export function calculateProductionScore(input: ProductionScoreInput): ProductionScoreResult {
   const expectedCharacters = authoritativeTarget(input.expectedCharacters, REQUIRED_CHARACTER_COUNT, "expectedCharacters");
   const expectedFx = authoritativeTarget(input.expectedFx, REQUIRED_FX_COUNT, "expectedFx");
-  count(input.validatedCharacters, "validatedCharacters"); count(input.validatedFx, "validatedFx");
+  const validatedCharacters = boundedCount(input.validatedCharacters, expectedCharacters, "validatedCharacters");
+  const validatedFx = boundedCount(input.validatedFx, expectedFx, "validatedFx");
   count(input.unresolvedSeverityNineOrTen, "unresolvedSeverityNineOrTen"); count(input.blockerTestFailures, "blockerTestFailures");
   rate(input.mandatoryTestPassRate, "mandatoryTestPassRate"); rate(input.publicationFailureRate, "publicationFailureRate");
   for (const key of ["packageVerificationPassed","exactHashesUnique","perceptualDuplicateScanPassed","ownershipCoveragePassed","transitionCoveragePassed","crashRecoveryPassed","sequenceSynchronizationPassed","originalityReviewPassed","publicationGatePassed","mandatoryTestsExecuted"] as const) bool(input[key], key);
@@ -65,8 +73,8 @@ export function calculateProductionScore(input: ProductionScoreInput): Productio
 
   const renderTruth = input.renderTruthfulnessPassed === true;
   const visualQuality = input.visualQualityPassed === true;
-  const characterCoverage = ratio(input.validatedCharacters, expectedCharacters);
-  const fxCoverage = ratio(input.validatedFx, expectedFx);
+  const characterCoverage = ratio(validatedCharacters, expectedCharacters);
+  const fxCoverage = ratio(validatedFx, expectedFx);
   const packageTargets = targets(input.packageTargets);
   const allTargets = REQUIRED_ENGINE_PACKAGE_TARGETS.every((target) => packageTargets.has(target));
   const categories: Record<Category, number> = {

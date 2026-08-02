@@ -129,6 +129,21 @@ test("rejects noncanonical evidence path aliases", () => {
   }
 });
 
+test("rejects case-variant evidence path aliases", () => {
+  const input = passingInput();
+  input.categories[1] = {
+    ...input.categories[1],
+    evidence: [{
+      path: input.categories[0].evidence[0].path.toUpperCase(),
+      sha256: evidenceHash("case-variant-path"),
+    }],
+  };
+  const result = evaluateReleaseGate(input);
+  assert.equal(result.passed, false);
+  assert.match(result.failures.join("\n"), /Unsafe or noncanonical evidence path/);
+  assert.equal(result.score < 10_000, true);
+});
+
 test("fails on a single blocker even with a nominal 10K score", () => {
   const input = passingInput();
   input.falseRenderClaims = 1;

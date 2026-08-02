@@ -1,0 +1,56 @@
+name: Occasions ElevenLabs Narrated Render
+
+on:
+  pull_request:
+    paths:
+      - "autotube/occasions/request.json"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  render:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    env:
+      ELEVENLABS_API_KEY: ${{ secrets.ELEVENLABS_API_KEY }}
+      AUTOTUBE_ELEVENLABS_VOICE_ID: ${{ secrets.AUTOTUBE_ELEVENLABS_VOICE_ID }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install media dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y ffmpeg fonts-dejavu-core fonts-liberation
+          python -m pip install --upgrade pip
+          pip install pillow requests
+
+      - name: Verify ElevenLabs secret is configured
+        shell: bash
+        run: |
+          if [ -z "${ELEVENLABS_API_KEY}" ]; then
+            echo "::error::ELEVENLABS_API_KEY is not configured in repository secrets."
+            exit 1
+          fi
+
+      - name: Render narrated universal MP4
+        run: python tools/render_occasions_elevenlabs.py
+
+      - name: Upload narrated test artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: occasions-elevenlabs-narrated-test
+          path: |
+            dist/occasions/occasions_narrated_all_devices.mp4
+            dist/occasions/elevenlabs_narration.mp3
+            dist/occasions/validation.json
+            dist/occasions/contact_sheet.png
+          if-no-files-found: error
+          retention-days: 7

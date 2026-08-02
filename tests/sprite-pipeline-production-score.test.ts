@@ -62,14 +62,14 @@ test("rejects impossible asset overcounts instead of clamping them to full cover
   );
 });
 
-test("requires the exact four engine package targets instead of any four labels", () => {
-  const result = calculateProductionScore({
-    ...complete,
-    packageTargets: ["ios", "android", "web", "desktop"],
-  });
-  assert.equal(result.gatePassed, false);
-  assert.equal(result.categories.commercialEngineReadiness, 500);
-  assert.ok(result.blockers.includes("engine-package verification is incomplete"));
+test("rejects unsupported engine targets instead of treating malformed package evidence as partial readiness", () => {
+  assert.throws(
+    () => calculateProductionScore({
+      ...complete,
+      packageTargets: ["ios", "android", "web", "desktop"],
+    }),
+    /unsupported targets: ios, android, web, desktop/,
+  );
 });
 
 test("requires all mandatory tests to execute and publication failures to stay at or below two percent", () => {
@@ -85,18 +85,20 @@ test("requires all mandatory tests to execute and publication failures to stay a
   assert.equal(boundary.gatePassed, true);
 });
 
-test("normalizes required package target casing without accepting duplicates as coverage", () => {
+test("normalizes required package target casing and rejects duplicate target evidence", () => {
   const normalized = calculateProductionScore({
     ...complete,
     packageTargets: [" Unity ", "GODOT", "Unreal", "generic"],
   });
   assert.equal(normalized.gatePassed, true);
 
-  const duplicateTargets = calculateProductionScore({
-    ...complete,
-    packageTargets: ["unity", "unity", "godot", "unreal"],
-  });
-  assert.equal(duplicateTargets.gatePassed, false);
+  assert.throws(
+    () => calculateProductionScore({
+      ...complete,
+      packageTargets: ["unity", "unity", "godot", "unreal"],
+    }),
+    /must not contain duplicates/,
+  );
 });
 
 test("fails closed instead of inferring render truth or visual quality from asset counts", () => {

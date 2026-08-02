@@ -90,7 +90,9 @@ function canonicalEvidencePath(value: unknown): string | null {
     return null;
   }
 
-  const canonical = segments.join("/");
+  const canonical = segments.join("/").toLowerCase();
+  // Evidence paths are lowercase-canonical so case aliases cannot make one
+  // physical file appear to be independent evidence on case-insensitive hosts.
   return canonical === value ? canonical : null;
 }
 
@@ -122,8 +124,6 @@ function validateEvidenceReferences(
       failures.push(`Invalid evidence SHA-256 for ${category}: ${String(reference.path)}`);
       valid = false;
     }
-    // SHA-256 hexadecimal is case-insensitive. Canonicalize before uniqueness
-    // checks so the same evidence cannot be reused by changing letter casing.
     const canonicalSha256 = hashIsValid ? reference.sha256.toLowerCase() : "";
     if (canonicalPath && localPaths.has(canonicalPath)) {
       failures.push(`Duplicate evidence path within ${category}: ${canonicalPath}`);

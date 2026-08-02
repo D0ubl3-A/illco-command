@@ -54,10 +54,19 @@ function authoritativeTarget(value: number | undefined, required: number, name: 
 function ratio(value: number, total: number): number { return value / total; }
 function targets(values: string[]): Set<string> {
   if (!Array.isArray(values)) throw new TypeError("packageTargets must be an array");
-  return new Set(values.map((value) => {
+  const normalized = values.map((value) => {
     if (typeof value !== "string" || !value.trim()) throw new TypeError("packageTargets must contain non-empty strings");
     return value.trim().toLowerCase();
-  }));
+  });
+  if (new Set(normalized).size !== normalized.length) {
+    throw new RangeError("packageTargets must not contain duplicates");
+  }
+  const allowed = new Set<string>(REQUIRED_ENGINE_PACKAGE_TARGETS);
+  const unknown = normalized.filter((value) => !allowed.has(value));
+  if (unknown.length > 0) {
+    throw new RangeError(`packageTargets contains unsupported targets: ${unknown.join(", ")}`);
+  }
+  return new Set(normalized);
 }
 
 export function calculateProductionScore(input: ProductionScoreInput): ProductionScoreResult {

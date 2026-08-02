@@ -89,6 +89,21 @@ test("rejects evidence path reuse across categories", () => {
   assert.equal(result.score < 10_000, true);
 });
 
+test("rejects evidence hash reuse across categories regardless of hex casing", () => {
+  const input = passingInput();
+  input.categories[1] = {
+    ...input.categories[1],
+    evidence: [{
+      path: "evidence/distinct-path.json",
+      sha256: input.categories[0].evidence[0].sha256.toUpperCase(),
+    }],
+  };
+  const result = evaluateReleaseGate(input);
+  assert.equal(result.passed, false);
+  assert.match(result.failures.join("\n"), /Evidence content reused across categories/);
+  assert.equal(result.score < 10_000, true);
+});
+
 test("rejects unsafe evidence paths", () => {
   const input = passingInput();
   input.categories[0] = {

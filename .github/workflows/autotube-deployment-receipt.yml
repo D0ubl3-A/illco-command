@@ -1,0 +1,153 @@
+name: Report AutoTube production deployment
+
+on:
+  workflow_run:
+    workflows:
+      - Verify and deploy ILLCO Command
+    types:
+      - completed
+
+permissions:
+  contents: read
+  issues: write
+
+jobs:
+  report:
+    if: >-
+      github.event.workflow_run.event == 'push' &&
+      github.event.workflow_run.head_branch == 'main'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Verify live AutoTube 4 MCP metadata
+        id: live
+        shell: bash
+        env:
+          MCP_URL: https://illco-command.vercel.app/api/chatgpt/autotube/mcp
+          EXPECTED_SHA: ${{ github.event.workflow_run.head_sha }}
+        run: |
+          set +e
+          curl --fail --silent --show-error --location \
+            --retry 8 --retry-delay 5 --retry-all-errors \
+            --max-time 30 "$MCP_URL" --output autotube-mcp.json
+          CURL_STATUS=$?
+
+          python - <<'PY'
+          import json
+          import os
+          from pathlib import Path
+
+          path = Path("autotube-mcp.json")
+          result = {
+              "reachable": False,
+              "version": None,
+              "standardVersion": None,
+              "styleEngineAvailable": False,
+              "qualityGateAvailable": False,
+              "rendererConfigured": False,
+              "narrationConfigured": False,
+              "deliveryConfigured": False,
+              "supportedStyleCount": 0,
+              "error": None,
+          }
+          try:
+              payload = json.loads(path.read_text(encoding="utf-8"))
+              health = payload.get("health") or {}
+              result.update(
+                  reachable=True,
+                  version=payload.get("version"),
+                  standardVersion=health.get("standardVersion"),
+                  styleEngineAvailable=bool(health.get("styleEngineAvailable")),
+                  qualityGateAvailable=bool(health.get("qualityGateAvailable")),
+                  rendererConfigured=bool(health.get("renderServiceConfigured")),
+                  narrationConfigured=bool(health.get("narrationProviderConfigured")),
+                  deliveryConfigured=bool(health.get("signedDeliveryConfigured")),
+                  supportedStyleCount=len(health.get("supportedStyles") or []),
+              )
+              required = {
+                  "version": result["version"] == "5.1.0-autotube4",
+                  "standard": result["standardVersion"] == "4.0.0",
+                  "style_engine": result["styleEngineAvailable"],
+                  "quality_gate": result["qualityGateAvailable"],
+              }
+              if not all(required.values()):
+                  result["error"] = f"Live metadata failed requirements: {required}"
+          except Exception as exc:
+              result["error"] = str(exc)
+
+          Path("autotube-live-result.json").write_text(
+              json.dumps(result, indent=2, sort_keys=True),
+              encoding="utf-8",
+          )
+          with open(os.environ["GITHUB_OUTPUT"], "a", encoding="utf-8") as output:
+              output.write(f"reachable={str(result['reachable']).lower()}\n")
+              output.write(f"version={result['version'] or 'unknown'}\n")
+              output.write(f"standard_version={result['standardVersion'] or 'unknown'}\n")
+              output.write(f"style_engine={str(result['styleEngineAvailable']).lower()}\n")
+              output.write(f"quality_gate={str(result['qualityGateAvailable']).lower()}\n")
+              output.write(f"renderer_configured={str(result['rendererConfigured']).lower()}\n")
+              output.write(f"narration_configured={str(result['narrationConfigured']).lower()}\n")
+              output.write(f"delivery_configured={str(result['deliveryConfigured']).lower()}\n")
+              output.write(f"style_count={result['supportedStyleCount']}\n")
+              output.write(f"verified={str(result['error'] is None).lower()}\n")
+          PY
+          PYTHON_STATUS=$?
+
+          if [ "$CURL_STATUS" -ne 0 ] || [ "$PYTHON_STATUS" -ne 0 ]; then
+            echo "verified=false" >> "$GITHUB_OUTPUT"
+          fi
+          exit 0
+
+      - name: Build deployment receipt
+        if: always()
+        shell: bash
+        env:
+          PARENT_CONCLUSION: ${{ github.event.workflow_run.conclusion }}
+          PARENT_URL: ${{ github.event.workflow_run.html_url }}
+          HEAD_SHA: ${{ github.event.workflow_run.head_sha }}
+          LIVE_REACHABLE: ${{ steps.live.outputs.reachable }}
+          LIVE_VERIFIED: ${{ steps.live.outputs.verified }}
+          LIVE_VERSION: ${{ steps.live.outputs.version }}
+          STANDARD_VERSION: ${{ steps.live.outputs.standard_version }}
+          STYLE_ENGINE: ${{ steps.live.outputs.style_engine }}
+          QUALITY_GATE: ${{ steps.live.outputs.quality_gate }}
+          RENDERER_CONFIGURED: ${{ steps.live.outputs.renderer_configured }}
+          NARRATION_CONFIGURED: ${{ steps.live.outputs.narration_configured }}
+          DELIVERY_CONFIGURED: ${{ steps.live.outputs.delivery_configured }}
+          STYLE_COUNT: ${{ steps.live.outputs.style_count }}
+        run: |
+          cat > deployment-receipt.md <<EOF
+          ## AutoTube production deployment receipt
+
+          - Main workflow conclusion: **${PARENT_CONCLUSION}**
+          - Main workflow: ${PARENT_URL}
+          - Deployed commit candidate: \`${HEAD_SHA}\`
+          - Live MCP reachable: **${LIVE_REACHABLE:-false}**
+          - Exact AutoTube 4 metadata verified: **${LIVE_VERIFIED:-false}**
+          - Live MCP version: \`${LIVE_VERSION:-unknown}\`
+          - Live standard version: \`${STANDARD_VERSION:-unknown}\`
+          - Style engine available: **${STYLE_ENGINE:-false}**
+          - Quality gate available: **${QUALITY_GATE:-false}**
+          - Supported styles reported: **${STYLE_COUNT:-0}**
+          - Renderer configured: **${RENDERER_CONFIGURED:-false}**
+          - Narration configured: **${NARRATION_CONFIGURED:-false}**
+          - Signed delivery configured: **${DELIVERY_CONFIGURED:-false}**
+
+          Production is considered verified only when the main workflow succeeds and the live endpoint reports AutoTube \`5.1.0-autotube4\`, standard \`4.0.0\`, an active style engine, and an active quality gate.
+          EOF
+
+      - name: Post receipt to AutoTube integration issue
+        if: always()
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh issue comment 20 --repo "${{ github.repository }}" --body-file deployment-receipt.md
+
+      - name: Enforce deployment verification
+        if: always()
+        shell: bash
+        env:
+          PARENT_CONCLUSION: ${{ github.event.workflow_run.conclusion }}
+          LIVE_VERIFIED: ${{ steps.live.outputs.verified }}
+        run: |
+          test "$PARENT_CONCLUSION" = "success"
+          test "$LIVE_VERIFIED" = "true"

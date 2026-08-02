@@ -33,6 +33,8 @@ export type ProductionScoreInput = {
   unresolvedSeverityNineOrTen: number;
   mandatoryTestPassRate: number;
   blockerTestFailures: number;
+  renderTruthfulnessPassed?: boolean;
+  visualQualityPassed?: boolean;
 };
 
 export type ProductionScoreResult = {
@@ -85,7 +87,11 @@ export function calculateProductionScore(input: ProductionScoreInput): Productio
     "publicationGatePassed",
     "mandatoryTestsExecuted",
   ] as const) requireBoolean(input[key], key);
+  if (input.renderTruthfulnessPassed !== undefined) requireBoolean(input.renderTruthfulnessPassed, "renderTruthfulnessPassed");
+  if (input.visualQualityPassed !== undefined) requireBoolean(input.visualQualityPassed, "visualQualityPassed");
 
+  const renderTruthfulnessPassed = input.renderTruthfulnessPassed === true;
+  const visualQualityPassed = input.visualQualityPassed === true;
   const characterCoverage = boundedRatio(input.validatedCharacters, expectedCharacters);
   const fxCoverage = boundedRatio(input.validatedFx, expectedFx);
   const packageTargets = normalizedPackageTargets(input.packageTargets);
@@ -95,11 +101,11 @@ export function calculateProductionScore(input: ProductionScoreInput): Productio
     architectureOrchestration: input.crashRecoveryPassed && input.transitionCoveragePassed ? PRODUCTION_SCORE_WEIGHTS.architectureOrchestration : input.transitionCoveragePassed ? 700 : 450,
     continuityState: input.ownershipCoveragePassed && input.crashRecoveryPassed ? PRODUCTION_SCORE_WEIGHTS.continuityState : input.ownershipCoveragePassed ? 600 : 300,
     manifestIntegrity: input.packageVerificationPassed && input.exactHashesUnique ? PRODUCTION_SCORE_WEIGHTS.manifestIntegrity : input.exactHashesUnique ? 650 : 250,
-    renderTruthfulness: input.validatedCharacters > 0 && input.validatedFx > 0 && input.packageVerificationPassed ? PRODUCTION_SCORE_WEIGHTS.renderTruthfulness : input.validatedCharacters + input.validatedFx > 0 ? 700 : 0,
+    renderTruthfulness: renderTruthfulnessPassed ? PRODUCTION_SCORE_WEIGHTS.renderTruthfulness : 0,
     duplication: input.exactHashesUnique && input.perceptualDuplicateScanPassed ? PRODUCTION_SCORE_WEIGHTS.duplication : input.exactHashesUnique ? 350 : 0,
     characterCoverage: Math.floor(PRODUCTION_SCORE_WEIGHTS.characterCoverage * characterCoverage),
     fxTextureCoverage: Math.floor(PRODUCTION_SCORE_WEIGHTS.fxTextureCoverage * fxCoverage),
-    visualQuality: input.validatedCharacters > 0 && input.validatedFx > 0 ? PRODUCTION_SCORE_WEIGHTS.visualQuality : 0,
+    visualQuality: visualQualityPassed ? PRODUCTION_SCORE_WEIGHTS.visualQuality : 0,
     scalabilityOperations: input.crashRecoveryPassed ? PRODUCTION_SCORE_WEIGHTS.scalabilityOperations : 350,
     commercialEngineReadiness: input.packageVerificationPassed && hasAllRequiredPackageTargets ? PRODUCTION_SCORE_WEIGHTS.commercialEngineReadiness : input.packageVerificationPassed ? 500 : 0,
   };
@@ -109,7 +115,10 @@ export function calculateProductionScore(input: ProductionScoreInput): Productio
   if (!input.ownershipCoveragePassed) blockers.push("ownership coverage is incomplete");
   if (!input.transitionCoveragePassed) blockers.push("status-transition coverage is incomplete");
   if (!input.crashRecoveryPassed) blockers.push("crash-recovery gate has not passed");
+  if (!input.exactHashesUnique) blockers.push("exact-hash uniqueness has not passed");
   if (!input.perceptualDuplicateScanPassed) blockers.push("perceptual duplicate stack has not passed");
+  if (!renderTruthfulnessPassed) blockers.push("render-truthfulness evidence has not passed");
+  if (!visualQualityPassed) blockers.push("visual-quality evidence has not passed");
   if (characterCoverage < 1) blockers.push(`character coverage ${(characterCoverage * 100).toFixed(2)}%`);
   if (fxCoverage < 1) blockers.push(`FX/texture coverage ${(fxCoverage * 100).toFixed(2)}%`);
   if (!input.sequenceSynchronizationPassed) blockers.push("sequence synchronization has not passed");

@@ -15,6 +15,8 @@ const complete = {
   sequenceSynchronizationPassed: true,
   originalityReviewPassed: true,
   publicationGatePassed: true,
+  publicationFailureRate: 0,
+  mandatoryTestsExecuted: true,
   unresolvedSeverityNineOrTen: 0,
   mandatoryTestPassRate: 1,
   blockerTestFailures: 0,
@@ -54,8 +56,47 @@ test("does not let asset counts exceed their category weights", () => {
   assert.equal(result.score, 10_000);
 });
 
+test("requires the exact four engine package targets instead of any four labels", () => {
+  const result = calculateProductionScore({
+    ...complete,
+    packageTargets: ["ios", "android", "web", "desktop"],
+  });
+  assert.equal(result.gatePassed, false);
+  assert.equal(result.categories.commercialEngineReadiness, 500);
+  assert.ok(result.blockers.includes("engine-package verification is incomplete"));
+});
+
+test("requires all mandatory tests to execute and publication failures to stay at or below two percent", () => {
+  const notExecuted = calculateProductionScore({ ...complete, mandatoryTestsExecuted: false });
+  assert.equal(notExecuted.gatePassed, false);
+  assert.ok(notExecuted.blockers.includes("mandatory test suite has not been fully executed"));
+
+  const publicationFailure = calculateProductionScore({ ...complete, publicationFailureRate: 0.0201 });
+  assert.equal(publicationFailure.gatePassed, false);
+  assert.ok(publicationFailure.blockers.some((entry) => entry.includes("exceeds 2%")));
+
+  const boundary = calculateProductionScore({ ...complete, publicationFailureRate: 0.02 });
+  assert.equal(boundary.gatePassed, true);
+});
+
+test("normalizes required package target casing without accepting duplicates as coverage", () => {
+  const normalized = calculateProductionScore({
+    ...complete,
+    packageTargets: [" Unity ", "GODOT", "Unreal", "generic"],
+  });
+  assert.equal(normalized.gatePassed, true);
+
+  const duplicateTargets = calculateProductionScore({
+    ...complete,
+    packageTargets: ["unity", "unity", "godot", "unreal"],
+  });
+  assert.equal(duplicateTargets.gatePassed, false);
+});
+
 test("rejects malformed external score inputs", () => {
   assert.throws(() => calculateProductionScore({ ...complete, mandatoryTestPassRate: 1.1 }), /between 0 and 1/);
+  assert.throws(() => calculateProductionScore({ ...complete, publicationFailureRate: -0.01 }), /between 0 and 1/);
   assert.throws(() => calculateProductionScore({ ...complete, validatedCharacters: -1 }), /non-negative/);
   assert.throws(() => calculateProductionScore({ ...complete, blockerTestFailures: 1.5 }), /safe integer/);
+  assert.throws(() => calculateProductionScore({ ...complete, packageTargets: ["unity", ""] }), /non-empty strings/);
 });

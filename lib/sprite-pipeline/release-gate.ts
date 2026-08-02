@@ -59,6 +59,26 @@ export type ReleaseGateResult = {
 
 const SHA256 = /^[a-f0-9]{64}$/i;
 const SAFE_EVIDENCE_PATH = /^[a-z0-9][a-z0-9._/-]*$/i;
+const SCORE_CATEGORIES = new Set<string>(Object.keys(SCORE_WEIGHTS));
+
+function requireBoolean(value: unknown, name: string): boolean {
+  if (typeof value !== "boolean") throw new TypeError(`${name} must be boolean`);
+  return value;
+}
+
+function requireNonNegativeSafeInteger(value: unknown, name: string): number {
+  if (!Number.isSafeInteger(value) || (value as number) < 0) {
+    throw new RangeError(`${name} must be a non-negative safe integer`);
+  }
+  return value as number;
+}
+
+function requireRate(value: unknown, name: string): number {
+  if (typeof value !== "number" || !Number.isFinite(value) || value < 0 || value > 1) {
+    throw new RangeError(`${name} must be a finite number between 0 and 1`);
+  }
+  return value;
+}
 
 function validateEvidenceReferences(
   category: ScoreCategory,
@@ -67,6 +87,7 @@ function validateEvidenceReferences(
   globallySeenHashes: Set<string>,
   failures: string[],
 ): boolean {
+  if (!Array.isArray(references)) throw new TypeError(`Evidence references for ${category} must be an array`);
   if (references.length === 0) {
     failures.push(`Missing executable evidence for ${category}`);
     return false;
@@ -76,12 +97,13 @@ function validateEvidenceReferences(
   const localPaths = new Set<string>();
   const localHashes = new Set<string>();
   for (const reference of references) {
-    if (!reference.path || !SAFE_EVIDENCE_PATH.test(reference.path) || reference.path.startsWith("/") || reference.path.includes("..") || reference.path.includes("\\")) {
-      failures.push(`Unsafe evidence path for ${category}: ${reference.path}`);
+    if (!reference || typeof reference !== "object") throw new TypeError(`Evidence reference for ${category} must be an object`);
+    if (typeof reference.path !== "string" || !reference.path || !SAFE_EVIDENCE_PATH.test(reference.path) || reference.path.startsWith("/") || reference.path.includes("..") || reference.path.includes("\\")) {
+      failures.push(`Unsafe evidence path for ${category}: ${String(reference.path)}`);
       valid = false;
     }
-    if (!SHA256.test(reference.sha256)) {
-      failures.push(`Invalid evidence SHA-256 for ${category}: ${reference.path}`);
+    if (typeof reference.sha256 !== "string" || !SHA256.test(reference.sha256)) {
+      failures.push(`Invalid evidence SHA-256 for ${category}: ${String(reference.path)}`);
       valid = false;
     }
     if (localPaths.has(reference.path)) {
@@ -109,6 +131,39 @@ function validateEvidenceReferences(
 }
 
 export function evaluateReleaseGate(input: ReleaseGateInput): ReleaseGateResult {
+  if (!input || typeof input !== "object") throw new TypeError("release gate input must be an object");
+  if (!Array.isArray(input.categories)) throw new TypeError("categories must be an array");
+
+  const countFields = [
+    "unresolvedSeverityNineOrTen",
+    "blockerFailures",
+    "falseRenderClaims",
+    "duplicateIds",
+    "filenameCollisions",
+    "corruptValidatedFiles",
+    "continuityGaps",
+    "unauthorizedOverwrites",
+  ] as const;
+  for (const field of countFields) requireNonNegativeSafeInteger(input[field], field);
+
+  requireRate(input.overallPassRate, "overallPassRate");
+  requireRate(input.publicationFailureRate, "publicationFailureRate");
+
+  const booleanFields = [
+    "ownershipComplete",
+    "transitionIntegrity",
+    "idempotencyIntegrity",
+    "archiveIntegrity",
+    "packageIntegrity",
+    "crashRecoveryPassed",
+    "realCharacterE2EPassed",
+    "realFxE2EPassed",
+    "sequenceSyncPassed",
+    "engineImportPassed",
+    "originalityReviewPassed",
+  ] as const;
+  for (const field of booleanFields) requireBoolean(input[field], field);
+
   const failures: string[] = [];
   const categoryScores = Object.fromEntries(Object.keys(SCORE_WEIGHTS).map((key) => [key, 0])) as Record<ScoreCategory, number>;
   const seen = new Set<ScoreCategory>();
@@ -116,16 +171,22 @@ export function evaluateReleaseGate(input: ReleaseGateInput): ReleaseGateResult 
   const globallySeenEvidenceHashes = new Set<string>();
 
   for (const evidence of input.categories) {
-    if (seen.has(evidence.category)) failures.push(`Duplicate score category: ${evidence.category}`);
-    seen.add(evidence.category);
-    const max = SCORE_WEIGHTS[evidence.category];
+    if (!evidence || typeof evidence !== "object") throw new TypeError("category evidence must be an object");
+    if (typeof evidence.category !== "string" || !SCORE_CATEGORIES.has(evidence.category)) {
+      throw new RangeError(`Unknown score category: ${String(evidence.category)}`);
+    }
+    const category = evidence.category as ScoreCategory;
+    requireBoolean(evidence.mandatoryTestsExecuted, `mandatoryTestsExecuted.${category}`);
+    if (seen.has(category)) failures.push(`Duplicate score category: ${category}`);
+    seen.add(category);
+    const max = SCORE_WEIGHTS[category];
     if (!Number.isInteger(evidence.earned) || evidence.earned < 0 || evidence.earned > max) {
-      failures.push(`Invalid score for ${evidence.category}`);
+      failures.push(`Invalid score for ${category}`);
       continue;
     }
 
     const referencesValid = validateEvidenceReferences(
-      evidence.category,
+      category,
       evidence.evidence,
       globallySeenEvidencePaths,
       globallySeenEvidenceHashes,
@@ -133,10 +194,10 @@ export function evaluateReleaseGate(input: ReleaseGateInput): ReleaseGateResult 
     );
 
     if (evidence.earned > 0 && (!evidence.mandatoryTestsExecuted || !referencesValid)) {
-      if (!evidence.mandatoryTestsExecuted) failures.push(`Mandatory tests not executed for ${evidence.category}`);
+      if (!evidence.mandatoryTestsExecuted) failures.push(`Mandatory tests not executed for ${category}`);
       continue;
     }
-    categoryScores[evidence.category] = evidence.earned;
+    categoryScores[category] = evidence.earned;
   }
 
   for (const category of Object.keys(SCORE_WEIGHTS) as ScoreCategory[]) {
@@ -170,8 +231,8 @@ export function evaluateReleaseGate(input: ReleaseGateInput): ReleaseGateResult 
   ];
   for (const [passed, label] of requiredFlags) if (!passed) failures.push(label);
 
-  if (!Number.isFinite(input.overallPassRate) || input.overallPassRate < 0.99 || input.overallPassRate > 1) failures.push("Overall pass rate below 99%");
-  if (!Number.isFinite(input.publicationFailureRate) || input.publicationFailureRate < 0 || input.publicationFailureRate > 0.02) failures.push("Publication failure rate above 2%");
+  if (input.overallPassRate < 0.99) failures.push("Overall pass rate below 99%");
+  if (input.publicationFailureRate > 0.02) failures.push("Publication failure rate above 2%");
 
   const score = (Object.keys(categoryScores) as ScoreCategory[]).reduce((sum, key) => sum + categoryScores[key], 0);
   if (score !== 10_000) failures.push(`Evidence-backed score is ${score}, not 10000`);

@@ -17,9 +17,12 @@ import {
   getAutoTubeStyle,
   scoreAutoTubeVideoPlan,
   type AnimationPreset,
+  type AnimationTarget,
+  type AnimationTrack,
   type AutoTubeScene,
   type AutoTubeStyleId,
   type AutoTubeVideoPlan,
+  type EasingPreset,
   type SceneKind,
   type VideoIntent,
   type VisualMode,
@@ -58,7 +61,22 @@ const SUPPORTED_RENDERER_PRESETS = new Set<AnimationPreset>([
   "music-reactive",
 ]);
 
-const SCENE_KINDS = new Set<SceneKind>([
+const VIDEO_INTENTS: VideoIntent[] = [
+  "cold-outreach",
+  "follow-up",
+  "product-demo",
+  "explainer",
+  "brand-film",
+  "social-ad",
+  "case-study",
+  "proposal",
+  "tutorial",
+  "story",
+  "music-visual",
+  "internal-update",
+];
+
+const SCENE_KINDS: SceneKind[] = [
   "hook",
   "current-state",
   "problem",
@@ -82,9 +100,9 @@ const SCENE_KINDS = new Set<SceneKind>([
   "offer",
   "cta",
   "transition",
-]);
+];
 
-const VISUAL_MODES = new Set<VisualMode>([
+const VISUAL_MODES: VisualMode[] = [
   "website-capture",
   "live-ui",
   "workflow-diagram",
@@ -102,22 +120,7 @@ const VISUAL_MODES = new Set<VisualMode>([
   "abstract-motion",
   "music-reactive",
   "brand-transition",
-]);
-
-const VIDEO_INTENTS = new Set<VideoIntent>([
-  "cold-outreach",
-  "follow-up",
-  "product-demo",
-  "explainer",
-  "brand-film",
-  "social-ad",
-  "case-study",
-  "proposal",
-  "tutorial",
-  "story",
-  "music-visual",
-  "internal-update",
-]);
+];
 
 function objectValue(value: unknown): Record<string, unknown> {
   return value && typeof value === "object" && !Array.isArray(value)
@@ -136,34 +139,19 @@ function list(value: unknown, maximum = 40) {
 
 function numberBetween(value: unknown, minimum: number, maximum: number, fallback: number) {
   const parsed = Number(value);
-  if (!Number.isFinite(parsed)) return fallback;
-  return Math.min(maximum, Math.max(minimum, parsed));
+  return Number.isFinite(parsed) ? Math.min(maximum, Math.max(minimum, parsed)) : fallback;
 }
 
-function styleId(value: unknown): AutoTubeStyleId {
+function selectedStyleId(value: unknown): AutoTubeStyleId {
   const candidate = text(value, 80) as AutoTubeStyleId;
   return candidate in AUTOTUBE_STYLES ? candidate : "animated-explainer";
 }
 
-function intent(value: unknown, selectedStyle: AutoTubeStyleId): VideoIntent {
+function selectedIntent(value: unknown, styleId: AutoTubeStyleId): VideoIntent {
   const candidate = text(value, 80) as VideoIntent;
-  if (VIDEO_INTENTS.has(candidate)) return candidate;
-  return getAutoTubeStyle(selectedStyle).bestFor[0] ?? "explainer";
-}
-
-function sceneKind(value: unknown, fallback: SceneKind): SceneKind {
-  const candidate = text(value, 60) as SceneKind;
-  return SCENE_KINDS.has(candidate) ? candidate : fallback;
-}
-
-function visualMode(value: unknown, fallback: VisualMode): VisualMode {
-  const candidate = text(value, 80) as VisualMode;
-  return VISUAL_MODES.has(candidate) ? candidate : fallback;
-}
-
-function animationPreset(value: unknown): AnimationPreset | null {
-  const candidate = text(value, 80) as AnimationPreset;
-  return candidate ? candidate : null;
+  return VIDEO_INTENTS.includes(candidate)
+    ? candidate
+    : getAutoTubeStyle(styleId).bestFor[0] ?? "explainer";
 }
 
 function isAdvancedRequest(input: unknown) {
@@ -172,62 +160,72 @@ function isAdvancedRequest(input: unknown) {
   return list(source.scenes).some((entry) => {
     const scene = objectValue(entry);
     return Boolean(
-      scene.id ||
-        scene.kind ||
-        scene.visual ||
-        scene.animations ||
-        scene.camera ||
-        scene.character_actions ||
-        scene.audio ||
-        scene.claims,
+      scene.id || scene.kind || scene.visual || scene.animations || scene.camera ||
+        scene.character_actions || scene.audio || scene.claims,
     );
   });
 }
 
-function defaultKind(index: number, count: number, styleGrammar: SceneKind[], selectedIntent: VideoIntent) {
-  if (index === 0) return "hook" as SceneKind;
+function defaultKind(
+  index: number,
+  count: number,
+  grammar: SceneKind[],
+  intent: VideoIntent,
+): SceneKind {
+  if (index === 0) return "hook";
   if (index === count - 1) {
-    return ["cold-outreach", "follow-up", "product-demo", "social-ad", "proposal", "case-study"].includes(
-      selectedIntent,
-    )
-      ? ("cta" as SceneKind)
-      : ("outcome" as SceneKind);
+    return ["cold-outreach", "follow-up", "product-demo", "social-ad", "proposal", "case-study"].includes(intent)
+      ? "cta"
+      : "outcome";
   }
-  return styleGrammar[index % Math.max(1, styleGrammar.length)] ?? "workflow";
+  return grammar[index % Math.max(1, grammar.length)] ?? "workflow";
+}
+
+function normalizeKind(value: unknown, fallback: SceneKind): SceneKind {
+  const candidate = text(value, 60) as SceneKind;
+  return SCENE_KINDS.includes(candidate) ? candidate : fallback;
+}
+
+function normalizeVisualMode(value: unknown, fallback: VisualMode): VisualMode {
+  const candidate = text(value, 80) as VisualMode;
+  return VISUAL_MODES.includes(candidate) ? candidate : fallback;
 }
 
 function generatedAnimations(
   sceneId: string,
   durationSeconds: number,
-  selectedStyle: AutoTubeStyleId,
-) {
-  const style = getAutoTubeStyle(selectedStyle);
-  const supported = style.animationLanguage.filter((preset) => SUPPORTED_RENDERER_PRESETS.has(preset));
-  const fallback: AnimationPreset[] = ["fade", "camera-push", "parallax", "reveal"];
-  const vocabulary = supported.length ? supported : fallback;
+  styleId: AutoTubeStyleId,
+): AnimationTrack[] {
+  const style = getAutoTubeStyle(styleId);
+  const available = style.animationLanguage.filter((preset) => SUPPORTED_RENDERER_PRESETS.has(preset));
+  const vocabulary: AnimationPreset[] = available.length
+    ? available
+    : ["fade", "camera-push", "parallax", "reveal"];
   const required = Math.max(1, style.minimumAnimationTracksPerScene);
   const trackDuration = Math.max(0.35, Math.min(1.4, durationSeconds / Math.max(2, required + 1)));
-  return Array.from({ length: required }, (_, index) => {
-    const startSeconds = Math.min(
+  return Array.from({ length: required }, (_, index): AnimationTrack => ({
+    id: `${sceneId}-motion-${index + 1}`,
+    target: index === 0 ? "scene" : index === 1 ? "headline" : "image",
+    preset: vocabulary[index % vocabulary.length],
+    startSeconds: Math.min(
       Math.max(0, durationSeconds - trackDuration),
       Number((index * Math.min(0.7, trackDuration)).toFixed(2)),
-    );
-    return {
-      id: `${sceneId}-motion-${index + 1}`,
-      target: index === 0 ? ("scene" as const) : index === 1 ? ("headline" as const) : ("image" as const),
-      preset: vocabulary[index % vocabulary.length],
-      startSeconds,
-      durationSeconds: trackDuration,
-      easing: index % 2 ? ("ease-in-out" as const) : ("ease-out" as const),
-    };
-  });
+    ),
+    durationSeconds: trackDuration,
+    easing: index % 2 ? "ease-in-out" : "ease-out",
+  }));
 }
 
-function normalizeAnimations(raw: unknown, sceneId: string, durationSeconds: number, selectedStyle: AutoTubeStyleId) {
+function normalizeAnimations(
+  raw: unknown,
+  sceneId: string,
+  durationSeconds: number,
+  styleId: AutoTubeStyleId,
+): AnimationTrack[] {
   const parsed = list(raw, 24)
-    .map((entry, index) => {
+    .map((entry, index): AnimationTrack | null => {
       const item = objectValue(entry);
-      const preset = animationPreset(item.preset);
+      const preset = text(item.preset, 80) as AnimationPreset;
       if (!preset) return null;
       const duration = numberBetween(
         item.durationSeconds ?? item.duration_seconds,
@@ -235,25 +233,29 @@ function normalizeAnimations(raw: unknown, sceneId: string, durationSeconds: num
         durationSeconds,
         Math.min(1, durationSeconds),
       );
-      const start = numberBetween(
-        item.startSeconds ?? item.start_seconds,
-        0,
-        Math.max(0, durationSeconds - duration),
-        0,
-      );
       return {
         id: text(item.id, 120, `${sceneId}-motion-${index + 1}`),
-        target: text(item.target, 60, "scene") as AutoTubeScene["animations"][number]["target"],
+        target: text(item.target, 60, "scene") as AnimationTarget,
         preset,
-        startSeconds: start,
+        startSeconds: numberBetween(
+          item.startSeconds ?? item.start_seconds,
+          0,
+          Math.max(0, durationSeconds - duration),
+          0,
+        ),
         durationSeconds: duration,
-        easing: text(item.easing, 40, "ease-in-out") as AutoTubeScene["animations"][number]["easing"],
-        delaySeconds: numberBetween(item.delaySeconds ?? item.delay_seconds, 0, durationSeconds, 0),
+        easing: text(item.easing, 40, "ease-in-out") as EasingPreset,
+        delaySeconds: numberBetween(
+          item.delaySeconds ?? item.delay_seconds,
+          0,
+          durationSeconds,
+          0,
+        ),
         parameters: objectValue(item.parameters) as Record<string, string | number | boolean>,
       };
     })
-    .filter((entry): entry is NonNullable<typeof entry> => Boolean(entry));
-  return parsed.length ? parsed : generatedAnimations(sceneId, durationSeconds, selectedStyle);
+    .filter((entry): entry is AnimationTrack => Boolean(entry));
+  return parsed.length ? parsed : generatedAnimations(sceneId, durationSeconds, styleId);
 }
 
 function normalizeEvidence(value: unknown) {
@@ -263,14 +265,15 @@ function normalizeEvidence(value: unknown) {
       const sourceUrl = text(item.sourceUrl ?? item.source_url, 2_048);
       const observedFact = text(item.observedFact ?? item.observed_fact, 1_000);
       if (!sourceUrl || !observedFact) return null;
+      const confidenceValue = text(item.confidence, 20, "medium");
       return {
         id: text(item.id, 120, `evidence-${index + 1}`),
         sourceUrl,
         observedFact,
         capturedAt: text(item.capturedAt ?? item.captured_at, 80, new Date().toISOString()),
-        confidence: ["high", "medium", "low"].includes(text(item.confidence, 20))
-          ? (text(item.confidence, 20) as "high" | "medium" | "low")
-          : ("medium" as const),
+        confidence: (["high", "medium", "low"].includes(confidenceValue)
+          ? confidenceValue
+          : "medium") as "high" | "medium" | "low",
       };
     })
     .filter((entry): entry is NonNullable<typeof entry> => Boolean(entry));
@@ -284,20 +287,17 @@ function normalizeBusiness(value: unknown, prospect: string) {
     website: text(source.website, 2_048) || undefined,
     industry: text(source.industry, 160) || undefined,
     businessModel: text(source.businessModel ?? source.business_model, 80) as any,
-    riskProfile: (["standard", "regulated", "sensitive"].includes(risk) ? risk : "standard") as
-      | "standard"
-      | "regulated"
-      | "sensitive",
+    riskProfile: (["standard", "regulated", "sensitive"].includes(risk)
+      ? risk
+      : "standard") as "standard" | "regulated" | "sensitive",
     location: text(source.location, 180) || undefined,
     audience: text(source.audience, 300) || undefined,
     services: list(source.services, 30).map((item) => text(item, 180)).filter(Boolean),
     differentiators: list(source.differentiators, 30).map((item) => text(item, 240)).filter(Boolean),
     approvedTerms: list(source.approvedTerms ?? source.approved_terms, 30)
-      .map((item) => text(item, 120))
-      .filter(Boolean),
+      .map((item) => text(item, 120)).filter(Boolean),
     prohibitedClaims: list(source.prohibitedClaims ?? source.prohibited_claims, 30)
-      .map((item) => text(item, 180))
-      .filter(Boolean),
+      .map((item) => text(item, 180)).filter(Boolean),
   };
 }
 
@@ -307,16 +307,15 @@ function normalizeClaims(value: unknown) {
       const item = objectValue(entry);
       const claimText = text(item.text, 500);
       if (!claimText) return null;
-      const kindCandidate = text(item.kind, 30, "proposed");
-      const kind = ["observed", "proposed", "measured", "creative"].includes(kindCandidate)
-        ? (kindCandidate as "observed" | "proposed" | "measured" | "creative")
-        : ("proposed" as const);
+      const candidate = text(item.kind, 30, "proposed");
+      const kind = (["observed", "proposed", "measured", "creative"].includes(candidate)
+        ? candidate
+        : "proposed") as "observed" | "proposed" | "measured" | "creative";
       return {
         text: claimText,
         kind,
         evidenceIds: list(item.evidenceIds ?? item.evidence_ids, 20)
-          .map((id) => text(id, 120))
-          .filter(Boolean),
+          .map((id) => text(id, 120)).filter(Boolean),
       };
     })
     .filter((entry): entry is NonNullable<typeof entry> => Boolean(entry));
@@ -325,52 +324,61 @@ function normalizeClaims(value: unknown) {
 export function compileAutoTubeV4Request(input: unknown) {
   const source = objectValue(input);
   const legacy = normalizeAutoTubeRequest(input);
-  const selectedStyle = styleId(source.styleId ?? source.style_id);
-  const selectedIntent = intent(source.intent, selectedStyle);
-  const style = getAutoTubeStyle(selectedStyle);
+  const styleId = selectedStyleId(source.styleId ?? source.style_id);
+  const intent = selectedIntent(source.intent, styleId);
+  const style = getAutoTubeStyle(styleId);
   const rawScenes = list(source.scenes, 24);
-  const sceneCount = legacy.scenes.length;
   const requestedDuration = numberBetween(
     source.durationSeconds ?? source.duration_seconds,
     6,
     180,
     legacy.durationSeconds,
   );
-  const durationPerScene = Number(Math.max(1.5, requestedDuration / Math.max(1, sceneCount)).toFixed(2));
+  const sceneDurationDefault = Number(
+    Math.max(1.5, requestedDuration / Math.max(1, legacy.scenes.length)).toFixed(2),
+  );
 
   const scenes: AutoTubeScene[] = legacy.scenes.map((legacyScene, index) => {
     const raw = objectValue(rawScenes[index]);
-    const rawVisual = objectValue(raw.visual);
+    const visual = objectValue(raw.visual);
     const id = text(raw.id, 120, `scene-${index + 1}`);
-    const kind = sceneKind(raw.kind, defaultKind(index, sceneCount, style.sceneGrammar, selectedIntent));
-    const mode = visualMode(rawVisual.mode, style.visualModes[index % style.visualModes.length]);
-    const sceneDuration = numberBetween(
+    const durationSeconds = numberBetween(
       raw.durationSeconds ?? raw.duration_seconds,
       1.5,
       30,
-      durationPerScene,
+      sceneDurationDefault,
+    );
+    const mode = normalizeVisualMode(
+      visual.mode,
+      style.visualModes[index % style.visualModes.length],
     );
     return {
       id,
-      kind,
+      kind: normalizeKind(
+        raw.kind,
+        defaultKind(index, legacy.scenes.length, style.sceneGrammar, intent),
+      ),
       title: legacyScene.title,
       onScreenText: legacyScene.onScreenText,
       narration: legacyScene.narration,
-      durationSeconds: sceneDuration,
+      durationSeconds,
       visual: {
         mode,
-        uniqueKey: text(rawVisual.uniqueKey ?? rawVisual.unique_key, 160, `${selectedStyle}-${id}-${mode}`),
-        assetUrl: text(rawVisual.assetUrl ?? rawVisual.asset_url, 2_048, legacyScene.imageUrl) || undefined,
-        videoUrl: text(rawVisual.videoUrl ?? rawVisual.video_url, 2_048) || undefined,
-        prompt: text(rawVisual.prompt, 2_000) || undefined,
-        interactionSteps: list(rawVisual.interactionSteps ?? rawVisual.interaction_steps, 20)
-          .map((step) => text(step, 240))
-          .filter(Boolean),
-        layout: text(rawVisual.layout, 160) || undefined,
+        uniqueKey: text(
+          visual.uniqueKey ?? visual.unique_key,
+          160,
+          `${styleId}-${id}-${mode}`,
+        ),
+        assetUrl: text(visual.assetUrl ?? visual.asset_url, 2_048, legacyScene.imageUrl) || undefined,
+        videoUrl: text(visual.videoUrl ?? visual.video_url, 2_048) || undefined,
+        prompt: text(visual.prompt, 2_000) || undefined,
+        interactionSteps: list(visual.interactionSteps ?? visual.interaction_steps, 20)
+          .map((step) => text(step, 240)).filter(Boolean),
+        layout: text(visual.layout, 160) || undefined,
       },
-      animations: normalizeAnimations(raw.animations, id, sceneDuration, selectedStyle),
+      animations: normalizeAnimations(raw.animations, id, durationSeconds, styleId),
       transitionOut: (text(raw.transitionOut ?? raw.transition_out, 60) ||
-        style.transitionLanguage[index % style.transitionLanguage.length]) as AutoTubeScene["transitionOut"],
+        style.transitionLanguage[index % style.transitionLanguage.length]) as any,
       claims: normalizeClaims(raw.claims),
     };
   });
@@ -379,8 +387,8 @@ export function compileAutoTubeV4Request(input: unknown) {
   const plan: AutoTubeVideoPlan = {
     standardVersion: AUTOTUBE_STANDARD_VERSION,
     title: legacy.videoTitle,
-    intent: selectedIntent,
-    styleId: selectedStyle,
+    intent,
+    styleId,
     business: normalizeBusiness(source.business, legacy.prospect),
     offer: legacy.offer,
     painPoint: legacy.painPoint,
@@ -392,16 +400,14 @@ export function compileAutoTubeV4Request(input: unknown) {
     evidence: normalizeEvidence(source.evidence),
     scenes,
     globalAudio: legacy.narrationScript
-      ? [
-          {
-            id: "master-narration",
-            type: "narration",
-            startSeconds: 0,
-            durationSeconds: totalDuration,
-            text: legacy.narrationScript,
-            volume: 1,
-          },
-        ]
+      ? [{
+          id: "master-narration",
+          type: "narration",
+          startSeconds: 0,
+          durationSeconds: totalDuration,
+          text: legacy.narrationScript,
+          volume: 1,
+        }]
       : [],
   };
 
@@ -415,19 +421,16 @@ export function compileAutoTubeV4Request(input: unknown) {
     outputMode: "render-ready",
   });
   const qualityReport = scoreAutoTubeVideoPlan(plan);
-  const unsupported = Array.from(
-    new Set(
-      scenes
-        .flatMap((scene) => scene.animations ?? [])
-        .map((track) => track.preset)
-        .filter((preset) => !SUPPORTED_RENDERER_PRESETS.has(preset)),
-    ),
-  );
+  const unsupported = Array.from(new Set(
+    scenes.flatMap((scene) => scene.animations ?? [])
+      .map((track) => track.preset)
+      .filter((preset) => !SUPPORTED_RENDERER_PRESETS.has(preset)),
+  ));
 
   const production: AutoTubeV4ProductionPackage = {
     standardVersion: AUTOTUBE_STANDARD_VERSION,
-    styleId: selectedStyle,
-    intent: selectedIntent,
+    styleId,
+    intent,
     plan,
     pipeline,
     masterPrompt,
@@ -454,16 +457,12 @@ function extendToolDefinition(result: any) {
   if (!tool?.inputSchema?.properties) return result;
   tool.title = "Render AutoTube 4 video";
   tool.description =
-    "Create a style-directed, quality-gated AutoTube video. Legacy prospect payloads remain supported. Supplying style_id, intent, or advanced scene fields activates AutoTube 4 planning, animation, and publication gates.";
+    "Create a style-directed, quality-gated AutoTube video. Legacy prospect payloads remain supported. Supplying style_id, intent, or advanced scene fields activates AutoTube 4.";
   tool.inputSchema.properties.style_id = {
     type: "string",
     enum: Object.keys(AUTOTUBE_STYLES),
-    description: "AutoTube 4 production style. Activates the style engine and quality gate.",
   };
-  tool.inputSchema.properties.intent = {
-    type: "string",
-    enum: Array.from(VIDEO_INTENTS),
-  };
+  tool.inputSchema.properties.intent = { type: "string", enum: VIDEO_INTENTS };
   tool.inputSchema.properties.captions = { type: "boolean", default: true };
   tool.inputSchema.properties.business = { type: "object", additionalProperties: true };
   tool.inputSchema.properties.evidence = {
@@ -473,41 +472,43 @@ function extendToolDefinition(result: any) {
   };
   const scene = tool.inputSchema.properties.scenes?.items;
   if (scene?.properties) {
-    scene.properties.id = { type: "string", maxLength: 120 };
-    scene.properties.kind = { type: "string", enum: Array.from(SCENE_KINDS) };
-    scene.properties.duration_seconds = { type: "number", minimum: 1.5, maximum: 30 };
-    scene.properties.visual = { type: "object", additionalProperties: true };
-    scene.properties.animations = {
-      type: "array",
-      maxItems: 24,
-      items: { type: "object", additionalProperties: true },
-    };
-    scene.properties.camera = {
-      type: "array",
-      maxItems: 12,
-      items: { type: "object", additionalProperties: true },
-    };
-    scene.properties.character_actions = {
-      type: "array",
-      maxItems: 12,
-      items: { type: "object", additionalProperties: true },
-    };
-    scene.properties.audio = {
-      type: "array",
-      maxItems: 12,
-      items: { type: "object", additionalProperties: true },
-    };
-    scene.properties.transition_out = { type: "string" };
-    scene.properties.claims = {
-      type: "array",
-      maxItems: 20,
-      items: { type: "object", additionalProperties: true },
-    };
+    Object.assign(scene.properties, {
+      id: { type: "string", maxLength: 120 },
+      kind: { type: "string", enum: SCENE_KINDS },
+      duration_seconds: { type: "number", minimum: 1.5, maximum: 30 },
+      visual: { type: "object", additionalProperties: true },
+      animations: {
+        type: "array",
+        maxItems: 24,
+        items: { type: "object", additionalProperties: true },
+      },
+      camera: {
+        type: "array",
+        maxItems: 12,
+        items: { type: "object", additionalProperties: true },
+      },
+      character_actions: {
+        type: "array",
+        maxItems: 12,
+        items: { type: "object", additionalProperties: true },
+      },
+      audio: {
+        type: "array",
+        maxItems: 12,
+        items: { type: "object", additionalProperties: true },
+      },
+      transition_out: { type: "string" },
+      claims: {
+        type: "array",
+        maxItems: 20,
+        items: { type: "object", additionalProperties: true },
+      },
+    });
   }
   return result;
 }
 
-function v4SuccessOutput(
+function successOutput(
   request: AutoTubeRenderRequest,
   compiled: ReturnType<typeof compileAutoTubeV4Request>,
   job: Awaited<ReturnType<typeof submitAutoTubeRenderV4>>,
@@ -534,12 +535,10 @@ function v4SuccessOutput(
   };
   return {
     structuredContent,
-    content: [
-      {
-        type: "text",
-        text: `AutoTube 4 approved ${request.videoTitle} at ${compiled.qualityReport.score}/${compiled.qualityReport.threshold} and submitted render job ${job.jobId}. Completion is not verified until status is ready and the MP4 is playable.`,
-      },
-    ],
+    content: [{
+      type: "text",
+      text: `AutoTube 4 approved ${request.videoTitle} at ${compiled.qualityReport.score}/${compiled.qualityReport.threshold} and submitted render job ${job.jobId}. Completion is not verified until status is ready and the MP4 is playable.`,
+    }],
     _meta: {
       ui: { resourceUri: AUTOTUBE_WIDGET_URI },
       autotube: structuredContent,
@@ -550,15 +549,14 @@ function v4SuccessOutput(
   };
 }
 
-function v4FailureOutput(error: unknown) {
-  const serviceError =
-    error instanceof AutoTubeServiceError
-      ? error
-      : new AutoTubeServiceError(
-          error instanceof Error ? error.message : "AutoTube 4 could not submit the render.",
-          400,
-          "autotube_v4_failed",
-        );
+function failureOutput(error: unknown) {
+  const serviceError = error instanceof AutoTubeServiceError
+    ? error
+    : new AutoTubeServiceError(
+        error instanceof Error ? error.message : "AutoTube 4 could not submit the render.",
+        400,
+        "autotube_v4_failed",
+      );
   return {
     isError: true,
     content: [{ type: "text", text: `AutoTube 4 did not start: ${serviceError.message}` }],
@@ -594,7 +592,7 @@ export async function handleAutoTubeRpcV4(body: any, origin: string) {
     if (result?.result?.serverInfo) result.result.serverInfo.version = "5.1.0-autotube4";
     if (result?.result) {
       result.result.instructions =
-        "Use autotube_render_video. Legacy requests remain compatible. Supply style_id or advanced scene fields for AutoTube 4 style planning, animation manifests, an 85-point publication threshold, and structured blockers. Never claim completion before the status is ready and the MP4 is playable.";
+        "Use autotube_render_video. Legacy requests remain compatible. Supply style_id or advanced scene fields for AutoTube 4 style planning, animation manifests, the 85-point publication threshold, and structured blockers. Never claim completion before status is ready and the MP4 is playable.";
     }
     return result;
   }
@@ -604,9 +602,10 @@ export async function handleAutoTubeRpcV4(body: any, origin: string) {
   }
 
   if (method !== "tools/call") return handleLegacyAutoTubeRpc(body, origin);
+  if (String(body?.params?.name || "") !== AUTOTUBE_TOOL_NAME) {
+    return handleLegacyAutoTubeRpc(body, origin);
+  }
 
-  const name = String(body?.params?.name || "");
-  if (name !== AUTOTUBE_TOOL_NAME) return handleLegacyAutoTubeRpc(body, origin);
   const args = body?.params?.arguments || {};
   if (!isAdvancedRequest(args)) return handleLegacyAutoTubeRpc(body, origin);
 
@@ -632,8 +631,8 @@ export async function handleAutoTubeRpcV4(body: any, origin: string) {
       );
     }
     const job = await submitAutoTubeRenderV4(compiled.legacy, compiled.production, origin);
-    return { jsonrpc: "2.0", id, result: v4SuccessOutput(compiled.legacy, compiled, job) };
+    return { jsonrpc: "2.0", id, result: successOutput(compiled.legacy, compiled, job) };
   } catch (error) {
-    return { jsonrpc: "2.0", id, result: v4FailureOutput(error) };
+    return { jsonrpc: "2.0", id, result: failureOutput(error) };
   }
 }

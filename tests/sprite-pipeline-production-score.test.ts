@@ -51,6 +51,36 @@ test("caps a partial real run and reports concrete missing gates", () => {
   assert.ok(result.blockers.some((entry) => entry.includes("perceptual duplicate")));
 });
 
+test("awards zero baseline points when executable controls are absent", () => {
+  const result = calculateProductionScore({
+    ...complete,
+    validatedCharacters: 0,
+    validatedFx: 0,
+    packageTargets: [],
+    packageVerificationPassed: false,
+    exactHashesUnique: false,
+    perceptualDuplicateScanPassed: false,
+    ownershipCoveragePassed: false,
+    transitionCoveragePassed: false,
+    crashRecoveryPassed: false,
+    sequenceSynchronizationPassed: false,
+    originalityReviewPassed: false,
+    publicationGatePassed: false,
+    mandatoryTestsExecuted: false,
+    mandatoryTestPassRate: 0,
+    renderTruthfulnessPassed: false,
+    visualQualityPassed: false,
+  });
+  assert.equal(result.categories.architectureOrchestration, 0);
+  assert.equal(result.categories.continuityState, 0);
+  assert.equal(result.categories.manifestIntegrity, 0);
+  assert.equal(result.categories.scalabilityOperations, 0);
+  assert.equal(result.categories.commercialEngineReadiness, 0);
+  assert.equal(result.rawScore, 0);
+  assert.equal(result.score, 0);
+  assert.equal(result.gatePassed, false);
+});
+
 test("rejects impossible asset overcounts instead of clamping them to full coverage", () => {
   assert.throws(
     () => calculateProductionScore({ ...complete, validatedCharacters: 10_001 }),

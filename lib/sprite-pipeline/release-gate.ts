@@ -102,30 +102,34 @@ function validateEvidenceReferences(
       failures.push(`Unsafe evidence path for ${category}: ${String(reference.path)}`);
       valid = false;
     }
-    if (typeof reference.sha256 !== "string" || !SHA256.test(reference.sha256)) {
+    const hashIsValid = typeof reference.sha256 === "string" && SHA256.test(reference.sha256);
+    if (!hashIsValid) {
       failures.push(`Invalid evidence SHA-256 for ${category}: ${String(reference.path)}`);
       valid = false;
     }
+    // SHA-256 hexadecimal is case-insensitive. Canonicalize before uniqueness
+    // checks so the same evidence cannot be reused by changing letter casing.
+    const canonicalSha256 = hashIsValid ? reference.sha256.toLowerCase() : "";
     if (localPaths.has(reference.path)) {
       failures.push(`Duplicate evidence path within ${category}: ${reference.path}`);
       valid = false;
     }
-    if (localHashes.has(reference.sha256)) {
-      failures.push(`Duplicate evidence content within ${category}: ${reference.sha256}`);
+    if (hashIsValid && localHashes.has(canonicalSha256)) {
+      failures.push(`Duplicate evidence content within ${category}: ${canonicalSha256}`);
       valid = false;
     }
     localPaths.add(reference.path);
-    localHashes.add(reference.sha256);
+    if (hashIsValid) localHashes.add(canonicalSha256);
     if (globallySeenPaths.has(reference.path)) {
       failures.push(`Evidence path reused across categories: ${reference.path}`);
       valid = false;
     }
-    if (globallySeenHashes.has(reference.sha256)) {
-      failures.push(`Evidence content reused across categories: ${reference.sha256}`);
+    if (hashIsValid && globallySeenHashes.has(canonicalSha256)) {
+      failures.push(`Evidence content reused across categories: ${canonicalSha256}`);
       valid = false;
     }
     globallySeenPaths.add(reference.path);
-    globallySeenHashes.add(reference.sha256);
+    if (hashIsValid) globallySeenHashes.add(canonicalSha256);
   }
   return valid;
 }

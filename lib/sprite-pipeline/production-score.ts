@@ -76,16 +76,16 @@ export function calculateProductionScore(input: ProductionScoreInput): Productio
   const hasAllFourPackageTargets = new Set(input.packageTargets).size >= 4;
 
   const categories: ProductionScoreResult["categories"] = {
-    architectureOrchestration: input.crashRecoveryPassed && input.transitionCoveragePassed ? 1200 : input.transitionCoveragePassed ? 700 : 450,
-    continuityState: input.ownershipCoveragePassed && input.crashRecoveryPassed ? 1000 : input.ownershipCoveragePassed ? 600 : 300,
-    manifestIntegrity: input.packageVerificationPassed && input.exactHashesUnique ? 1000 : input.exactHashesUnique ? 650 : 250,
-    renderTruthfulness: input.validatedCharacters > 0 && input.validatedFx > 0 && input.packageVerificationPassed ? 1050 : input.validatedCharacters + input.validatedFx > 0 ? 700 : 0,
-    duplication: input.exactHashesUnique && input.perceptualDuplicateScanPassed ? 1000 : input.exactHashesUnique ? 350 : 0,
+    architectureOrchestration: input.crashRecoveryPassed && input.transitionCoveragePassed ? PRODUCTION_SCORE_WEIGHTS.architectureOrchestration : input.transitionCoveragePassed ? 700 : 450,
+    continuityState: input.ownershipCoveragePassed && input.crashRecoveryPassed ? PRODUCTION_SCORE_WEIGHTS.continuityState : input.ownershipCoveragePassed ? 600 : 300,
+    manifestIntegrity: input.packageVerificationPassed && input.exactHashesUnique ? PRODUCTION_SCORE_WEIGHTS.manifestIntegrity : input.exactHashesUnique ? 650 : 250,
+    renderTruthfulness: input.validatedCharacters > 0 && input.validatedFx > 0 && input.packageVerificationPassed ? PRODUCTION_SCORE_WEIGHTS.renderTruthfulness : input.validatedCharacters + input.validatedFx > 0 ? 700 : 0,
+    duplication: input.exactHashesUnique && input.perceptualDuplicateScanPassed ? PRODUCTION_SCORE_WEIGHTS.duplication : input.exactHashesUnique ? 350 : 0,
     characterCoverage: Math.floor(PRODUCTION_SCORE_WEIGHTS.characterCoverage * characterCoverage),
     fxTextureCoverage: Math.floor(PRODUCTION_SCORE_WEIGHTS.fxTextureCoverage * fxCoverage),
-    visualQuality: input.validatedCharacters > 0 && input.validatedFx > 0 ? 500 : 0,
-    scalabilityOperations: input.crashRecoveryPassed ? 800 : 350,
-    commercialEngineReadiness: input.packageVerificationPassed && hasAllFourPackageTargets ? 800 : input.packageVerificationPassed ? 500 : 0,
+    visualQuality: input.validatedCharacters > 0 && input.validatedFx > 0 ? PRODUCTION_SCORE_WEIGHTS.visualQuality : 0,
+    scalabilityOperations: input.crashRecoveryPassed ? PRODUCTION_SCORE_WEIGHTS.scalabilityOperations : 350,
+    commercialEngineReadiness: input.packageVerificationPassed && hasAllFourPackageTargets ? PRODUCTION_SCORE_WEIGHTS.commercialEngineReadiness : input.packageVerificationPassed ? 500 : 0,
   };
 
   const blockers: string[] = [];

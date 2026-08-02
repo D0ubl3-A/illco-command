@@ -112,7 +112,21 @@ test("rejects unsafe evidence paths", () => {
   };
   const result = evaluateReleaseGate(input);
   assert.equal(result.passed, false);
-  assert.match(result.failures.join("\n"), /Unsafe evidence path/);
+  assert.match(result.failures.join("\n"), /Unsafe or noncanonical evidence path/);
+});
+
+test("rejects noncanonical evidence path aliases", () => {
+  for (const path of ["evidence//proof.json", "evidence/./proof.json", "evidence/trailing/"]) {
+    const input = passingInput();
+    input.categories[0] = {
+      ...input.categories[0],
+      evidence: [{ path, sha256: evidenceHash(`alias:${path}`) }],
+    };
+    const result = evaluateReleaseGate(input);
+    assert.equal(result.passed, false, path);
+    assert.match(result.failures.join("\n"), /Unsafe or noncanonical evidence path/, path);
+    assert.equal(result.score < 10_000, true, path);
+  }
 });
 
 test("fails on a single blocker even with a nominal 10K score", () => {

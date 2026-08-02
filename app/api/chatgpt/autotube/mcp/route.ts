@@ -5,7 +5,10 @@ import {
   authorizeAutoTubeOAuth,
   autoTubeMcpAccessResult,
 } from "@/lib/autotube/access";
-import { autoTubeHealth, handleAutoTubeRpc } from "@/lib/chatgpt-apps/autotube";
+import {
+  autoTubeHealthV4,
+  handleAutoTubeRpcV4,
+} from "@/lib/chatgpt-apps/autotube-runtime-v4";
 
 export const dynamic = "force-dynamic";
 export const runtime = "nodejs";
@@ -22,8 +25,8 @@ export async function GET(request: Request) {
     {
       name: "illco-autotube-production",
       description:
-        "ChatGPT Apps SDK MCP endpoint for authenticated server-side AutoTube narration, rendering, status, preview, and MP4 delivery.",
-      version: "5.0.1",
+        "ChatGPT Apps SDK MCP endpoint for authenticated AutoTube 4 style planning, quality-gated rendering, status, preview, and MP4 delivery.",
+      version: "5.1.0-autotube4",
       mcpUrl: `${origin}/api/chatgpt/autotube/mcp`,
       widgetUrl: `${origin}/api/chatgpt/autotube/widget`,
       renderUrl: `${origin}/api/autotube/render`,
@@ -32,7 +35,7 @@ export async function GET(request: Request) {
         resourceMetadata: AUTOTUBE_OAUTH_METADATA,
         requiredScope: AUTOTUBE_REQUIRED_SCOPE,
       },
-      health: autoTubeHealth(),
+      health: autoTubeHealthV4(),
     },
     { headers: { "Cache-Control": "no-store" } },
   );
@@ -49,7 +52,7 @@ export async function POST(request: Request) {
     }
   }
 
-  const result = await handleAutoTubeRpc(body, originFrom(request));
+  const result = await handleAutoTubeRpcV4(body, originFrom(request));
   if (result === null) return new Response(null, { status: 202 });
   return Response.json(result, { headers: { "Cache-Control": "no-store" } });
 }

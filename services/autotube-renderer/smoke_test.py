@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import base64
+import json
 import subprocess
 import tempfile
 import time
@@ -109,7 +110,7 @@ def main() -> None:
         )
         created = create_render_job(payload, "github-actions-autotube-smoke-v4")
         job_id = created["jobId"]
-        deadline = time.time() + 180
+        deadline = time.time() + 240
         while time.time() < deadline:
             row = job_row(job_id)
             if row["status"] == "ready":
@@ -117,14 +118,39 @@ def main() -> None:
                 artifact = Path(row["artifact_path"])
                 assert artifact.is_file()
                 assert artifact.stat().st_size > 100_000
-                assert row["output_json"] and "camera-push" in row["output_json"]
-                assert "animated-explainer" in row["output_json"]
-                print(f"AutoTube 4 smoke render passed: {artifact} ({artifact.stat().st_size} bytes)")
+
+                output = json.loads(row["output_json"] or "{}")
+                assert "camera-push" in output.get("executedAnimationPresets", [])
+                assert output.get("styleId") == "animated-explainer"
+
+                playability = output.get("playability") or {}
+                assert playability.get("validated") is True
+                assert playability.get("completeDecode") is True
+                assert playability.get("progressiveDownload") is True
+                assert playability.get("videoCodec") == "h264"
+                assert "Baseline" in str(playability.get("videoProfile"))
+                assert playability.get("pixelFormat") == "yuv420p"
+                assert playability.get("hasBFrames") == 0
+                assert playability.get("audioCodec") == "aac"
+                assert str(playability.get("audioProfile")).upper() == "LC"
+                assert playability.get("width") == 360
+                assert playability.get("height") == 360
+                assert abs(float(playability.get("fps") or 0) - 30.0) < 0.01
+
+                delivery = output.get("deliveryEncoding") or {}
+                assert delivery.get("constantFrameRate") is True
+                assert delivery.get("fastStart") is True
+                assert delivery.get("completeDecodeRequired") is True
+
+                print(
+                    "AutoTube 4 smoke render and playability gate passed: "
+                    f"{artifact} ({artifact.stat().st_size} bytes)"
+                )
                 return
             if row["status"] == "failed":
                 raise RuntimeError(row["error"] or "AutoTube 4 smoke render failed")
             time.sleep(1)
-        raise TimeoutError("AutoTube 4 smoke render did not finish within 180 seconds")
+        raise TimeoutError("AutoTube 4 smoke render did not finish within 240 seconds")
 
 
 if __name__ == "__main__":

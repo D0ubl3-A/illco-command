@@ -113,6 +113,7 @@ test("rejects unsafe evidence paths", () => {
   const result = evaluateReleaseGate(input);
   assert.equal(result.passed, false);
   assert.match(result.failures.join("\n"), /Unsafe or noncanonical evidence path/);
+  assert.equal(result.score < 10_000, true);
 });
 
 test("rejects noncanonical evidence path aliases", () => {
@@ -144,11 +145,11 @@ test("rejects case-variant evidence path aliases", () => {
   assert.equal(result.score < 10_000, true);
 });
 
-test("fails on a single blocker even with a nominal 10K score", () => {
+test("caps a failed gate below 10K even when category evidence totals 10K", () => {
   const input = passingInput();
   input.falseRenderClaims = 1;
   const result = evaluateReleaseGate(input);
-  assert.equal(result.score, 10_000);
+  assert.equal(result.score, 9_999);
   assert.equal(result.passed, false);
   assert.match(result.failures.join("\n"), /False render claims: 1/);
 });

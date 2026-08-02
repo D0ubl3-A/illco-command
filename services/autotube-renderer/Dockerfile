@@ -18,6 +18,8 @@ WORKDIR /app
 COPY requirements.txt ./requirements.txt
 RUN pip install --requirement requirements.txt
 COPY app.py ./app.py
+COPY app_v4.py ./app_v4.py
+COPY app_v4_runtime.py ./app_v4_runtime.py
 
 USER autotube
 VOLUME ["/data"]
@@ -26,4 +28,4 @@ EXPOSE 8080
 HEALTHCHECK --interval=30s --timeout=5s --start-period=10s --retries=3 \
   CMD python -c "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8080/health', timeout=3).read()"
 
-CMD ["sh", "-c", "uvicorn app:app --host 0.0.0.0 --port ${PORT:-8080} --workers 1 --proxy-headers"]
+CMD ["sh", "-c", "uvicorn app_v4_runtime:app --host 0.0.0.0 --port ${PORT:-8080} --workers 1 --proxy-headers"]

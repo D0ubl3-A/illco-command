@@ -60,6 +60,12 @@ export type ReleaseGateResult = {
 const SHA256 = /^[a-f0-9]{64}$/i;
 const SAFE_EVIDENCE_PATH = /^[a-z0-9][a-z0-9._/-]*$/i;
 const SCORE_CATEGORIES = new Set<string>(Object.keys(SCORE_WEIGHTS));
+const MAX_RELEASE_SCORE = Object.values(SCORE_WEIGHTS).reduce((sum, weight) => sum + weight, 0);
+const FAILED_GATE_SCORE_CAP = MAX_RELEASE_SCORE - 1;
+
+if (MAX_RELEASE_SCORE !== 10_000) {
+  throw new Error(`Release score weights must total 10000, received ${MAX_RELEASE_SCORE}`);
+}
 
 function requireBoolean(value: unknown, name: string): boolean {
   if (typeof value !== "boolean") throw new TypeError(`${name} must be boolean`);
@@ -91,8 +97,6 @@ function canonicalEvidencePath(value: unknown): string | null {
   }
 
   const canonical = segments.join("/").toLowerCase();
-  // Evidence paths are lowercase-canonical so case aliases cannot make one
-  // physical file appear to be independent evidence on case-insensitive hosts.
   return canonical === value ? canonical : null;
 }
 
@@ -253,7 +257,10 @@ export function evaluateReleaseGate(input: ReleaseGateInput): ReleaseGateResult 
   if (input.overallPassRate < 0.99) failures.push("Overall pass rate below 99%");
   if (input.publicationFailureRate > 0.02) failures.push("Publication failure rate above 2%");
 
-  const score = (Object.keys(categoryScores) as ScoreCategory[]).reduce((sum, key) => sum + categoryScores[key], 0);
-  if (score !== 10_000) failures.push(`Evidence-backed score is ${score}, not 10000`);
-  return { score, passed: failures.length === 0, failures, categoryScores };
+  const rawScore = (Object.keys(categoryScores) as ScoreCategory[]).reduce((sum, key) => sum + categoryScores[key], 0);
+  if (rawScore !== MAX_RELEASE_SCORE) failures.push(`Evidence-backed score is ${rawScore}, not ${MAX_RELEASE_SCORE}`);
+
+  const passed = failures.length === 0;
+  const score = passed ? rawScore : Math.min(rawScore, FAILED_GATE_SCORE_CAP);
+  return { score, passed, failures, categoryScores };
 }

@@ -80,6 +80,20 @@ function requireRate(value: unknown, name: string): number {
   return value;
 }
 
+function canonicalEvidencePath(value: unknown): string | null {
+  if (typeof value !== "string" || !value || !SAFE_EVIDENCE_PATH.test(value) || value.startsWith("/") || value.includes("\\")) {
+    return null;
+  }
+
+  const segments = value.split("/");
+  if (segments.some((segment) => segment.length === 0 || segment === "." || segment === "..")) {
+    return null;
+  }
+
+  const canonical = segments.join("/");
+  return canonical === value ? canonical : null;
+}
+
 function validateEvidenceReferences(
   category: ScoreCategory,
   references: EvidenceReference[],
@@ -98,8 +112,9 @@ function validateEvidenceReferences(
   const localHashes = new Set<string>();
   for (const reference of references) {
     if (!reference || typeof reference !== "object") throw new TypeError(`Evidence reference for ${category} must be an object`);
-    if (typeof reference.path !== "string" || !reference.path || !SAFE_EVIDENCE_PATH.test(reference.path) || reference.path.startsWith("/") || reference.path.includes("..") || reference.path.includes("\\")) {
-      failures.push(`Unsafe evidence path for ${category}: ${String(reference.path)}`);
+    const canonicalPath = canonicalEvidencePath(reference.path);
+    if (!canonicalPath) {
+      failures.push(`Unsafe or noncanonical evidence path for ${category}: ${String(reference.path)}`);
       valid = false;
     }
     const hashIsValid = typeof reference.sha256 === "string" && SHA256.test(reference.sha256);
@@ -110,25 +125,25 @@ function validateEvidenceReferences(
     // SHA-256 hexadecimal is case-insensitive. Canonicalize before uniqueness
     // checks so the same evidence cannot be reused by changing letter casing.
     const canonicalSha256 = hashIsValid ? reference.sha256.toLowerCase() : "";
-    if (localPaths.has(reference.path)) {
-      failures.push(`Duplicate evidence path within ${category}: ${reference.path}`);
+    if (canonicalPath && localPaths.has(canonicalPath)) {
+      failures.push(`Duplicate evidence path within ${category}: ${canonicalPath}`);
       valid = false;
     }
     if (hashIsValid && localHashes.has(canonicalSha256)) {
       failures.push(`Duplicate evidence content within ${category}: ${canonicalSha256}`);
       valid = false;
     }
-    localPaths.add(reference.path);
+    if (canonicalPath) localPaths.add(canonicalPath);
     if (hashIsValid) localHashes.add(canonicalSha256);
-    if (globallySeenPaths.has(reference.path)) {
-      failures.push(`Evidence path reused across categories: ${reference.path}`);
+    if (canonicalPath && globallySeenPaths.has(canonicalPath)) {
+      failures.push(`Evidence path reused across categories: ${canonicalPath}`);
       valid = false;
     }
     if (hashIsValid && globallySeenHashes.has(canonicalSha256)) {
       failures.push(`Evidence content reused across categories: ${canonicalSha256}`);
       valid = false;
     }
-    globallySeenPaths.add(reference.path);
+    if (canonicalPath) globallySeenPaths.add(canonicalPath);
     if (hashIsValid) globallySeenHashes.add(canonicalSha256);
   }
   return valid;

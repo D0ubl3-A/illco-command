@@ -11,6 +11,8 @@ export const PRODUCTION_SCORE_WEIGHTS = {
   commercialEngineReadiness: 900,
 } as const;
 
+export const REQUIRED_ENGINE_PACKAGE_TARGETS = ["unity", "godot", "unreal", "generic"] as const;
+
 export type ProductionScoreInput = {
   validatedCharacters: number;
   validatedFx: number;
@@ -26,6 +28,8 @@ export type ProductionScoreInput = {
   sequenceSynchronizationPassed: boolean;
   originalityReviewPassed: boolean;
   publicationGatePassed: boolean;
+  publicationFailureRate: number;
+  mandatoryTestsExecuted: boolean;
   unresolvedSeverityNineOrTen: number;
   mandatoryTestPassRate: number;
   blockerTestFailures: number;
@@ -49,6 +53,15 @@ function requireBoolean(value: unknown, name: string): asserts value is boolean 
   if (typeof value !== "boolean") throw new TypeError(`${name} must be boolean`);
 }
 
+function normalizedPackageTargets(targets: string[]): Set<string> {
+  if (!Array.isArray(targets)) throw new TypeError("packageTargets must be an array");
+  const normalized = targets.map((target) => {
+    if (typeof target !== "string" || !target.trim()) throw new TypeError("packageTargets must contain non-empty strings");
+    return target.trim().toLowerCase();
+  });
+  return new Set(normalized);
+}
+
 export function calculateProductionScore(input: ProductionScoreInput): ProductionScoreResult {
   const expectedCharacters = input.expectedCharacters ?? 10_000;
   const expectedFx = input.expectedFx ?? 10_000;
@@ -59,6 +72,7 @@ export function calculateProductionScore(input: ProductionScoreInput): Productio
   if (!Number.isSafeInteger(input.unresolvedSeverityNineOrTen) || input.unresolvedSeverityNineOrTen < 0) throw new RangeError("unresolvedSeverityNineOrTen must be a non-negative safe integer");
   if (!Number.isSafeInteger(input.blockerTestFailures) || input.blockerTestFailures < 0) throw new RangeError("blockerTestFailures must be a non-negative safe integer");
   if (!Number.isFinite(input.mandatoryTestPassRate) || input.mandatoryTestPassRate < 0 || input.mandatoryTestPassRate > 1) throw new RangeError("mandatoryTestPassRate must be between 0 and 1");
+  if (!Number.isFinite(input.publicationFailureRate) || input.publicationFailureRate < 0 || input.publicationFailureRate > 1) throw new RangeError("publicationFailureRate must be between 0 and 1");
   for (const key of [
     "packageVerificationPassed",
     "exactHashesUnique",
@@ -69,11 +83,13 @@ export function calculateProductionScore(input: ProductionScoreInput): Productio
     "sequenceSynchronizationPassed",
     "originalityReviewPassed",
     "publicationGatePassed",
+    "mandatoryTestsExecuted",
   ] as const) requireBoolean(input[key], key);
 
   const characterCoverage = boundedRatio(input.validatedCharacters, expectedCharacters);
   const fxCoverage = boundedRatio(input.validatedFx, expectedFx);
-  const hasAllFourPackageTargets = new Set(input.packageTargets).size >= 4;
+  const packageTargets = normalizedPackageTargets(input.packageTargets);
+  const hasAllRequiredPackageTargets = REQUIRED_ENGINE_PACKAGE_TARGETS.every((target) => packageTargets.has(target));
 
   const categories: ProductionScoreResult["categories"] = {
     architectureOrchestration: input.crashRecoveryPassed && input.transitionCoveragePassed ? PRODUCTION_SCORE_WEIGHTS.architectureOrchestration : input.transitionCoveragePassed ? 700 : 450,
@@ -85,7 +101,7 @@ export function calculateProductionScore(input: ProductionScoreInput): Productio
     fxTextureCoverage: Math.floor(PRODUCTION_SCORE_WEIGHTS.fxTextureCoverage * fxCoverage),
     visualQuality: input.validatedCharacters > 0 && input.validatedFx > 0 ? PRODUCTION_SCORE_WEIGHTS.visualQuality : 0,
     scalabilityOperations: input.crashRecoveryPassed ? PRODUCTION_SCORE_WEIGHTS.scalabilityOperations : 350,
-    commercialEngineReadiness: input.packageVerificationPassed && hasAllFourPackageTargets ? PRODUCTION_SCORE_WEIGHTS.commercialEngineReadiness : input.packageVerificationPassed ? 500 : 0,
+    commercialEngineReadiness: input.packageVerificationPassed && hasAllRequiredPackageTargets ? PRODUCTION_SCORE_WEIGHTS.commercialEngineReadiness : input.packageVerificationPassed ? 500 : 0,
   };
 
   const blockers: string[] = [];
@@ -99,7 +115,9 @@ export function calculateProductionScore(input: ProductionScoreInput): Productio
   if (!input.sequenceSynchronizationPassed) blockers.push("sequence synchronization has not passed");
   if (!input.originalityReviewPassed) blockers.push("originality/IP review has not passed");
   if (!input.publicationGatePassed) blockers.push("publication gate has not passed");
-  if (!input.packageVerificationPassed || !hasAllFourPackageTargets) blockers.push("engine-package verification is incomplete");
+  if (input.publicationFailureRate > 0.02) blockers.push(`publication failure rate ${(input.publicationFailureRate * 100).toFixed(2)}% exceeds 2%`);
+  if (!input.packageVerificationPassed || !hasAllRequiredPackageTargets) blockers.push("engine-package verification is incomplete");
+  if (!input.mandatoryTestsExecuted) blockers.push("mandatory test suite has not been fully executed");
   if (input.mandatoryTestPassRate < 0.99) blockers.push(`mandatory test pass rate ${(input.mandatoryTestPassRate * 100).toFixed(2)}% is below 99%`);
   if (input.blockerTestFailures > 0) blockers.push(`${input.blockerTestFailures} blocker-test failures`);
 

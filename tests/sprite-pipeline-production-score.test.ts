@@ -20,6 +20,8 @@ const complete = {
   unresolvedSeverityNineOrTen: 0,
   mandatoryTestPassRate: 1,
   blockerTestFailures: 0,
+  renderTruthfulnessPassed: true,
+  visualQualityPassed: true,
 };
 
 test("awards 10000 only when every production release gate passes", () => {
@@ -93,10 +95,30 @@ test("normalizes required package target casing without accepting duplicates as 
   assert.equal(duplicateTargets.gatePassed, false);
 });
 
+test("fails closed instead of inferring render truth or visual quality from asset counts", () => {
+  const result = calculateProductionScore({
+    ...complete,
+    renderTruthfulnessPassed: undefined,
+    visualQualityPassed: undefined,
+  });
+  assert.equal(result.gatePassed, false);
+  assert.equal(result.categories.renderTruthfulness, 0);
+  assert.equal(result.categories.visualQuality, 0);
+  assert.ok(result.blockers.includes("render-truthfulness evidence has not passed"));
+  assert.ok(result.blockers.includes("visual-quality evidence has not passed"));
+});
+
+test("reports exact-hash uniqueness as an explicit blocker", () => {
+  const result = calculateProductionScore({ ...complete, exactHashesUnique: false });
+  assert.equal(result.gatePassed, false);
+  assert.ok(result.blockers.includes("exact-hash uniqueness has not passed"));
+});
+
 test("rejects malformed external score inputs", () => {
   assert.throws(() => calculateProductionScore({ ...complete, mandatoryTestPassRate: 1.1 }), /between 0 and 1/);
   assert.throws(() => calculateProductionScore({ ...complete, publicationFailureRate: -0.01 }), /between 0 and 1/);
   assert.throws(() => calculateProductionScore({ ...complete, validatedCharacters: -1 }), /non-negative/);
   assert.throws(() => calculateProductionScore({ ...complete, blockerTestFailures: 1.5 }), /safe integer/);
   assert.throws(() => calculateProductionScore({ ...complete, packageTargets: ["unity", ""] }), /non-empty strings/);
+  assert.throws(() => calculateProductionScore({ ...complete, visualQualityPassed: "yes" as never }), /must be boolean/);
 });

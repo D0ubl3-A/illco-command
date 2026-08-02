@@ -1,7 +1,7 @@
 import { mkdir, writeFile } from "node:fs/promises";
 import { resolve, join } from "node:path";
 import { executeProductionRun } from "../lib/sprite-pipeline/production-run";
-import { packageValidatedRun } from "../lib/sprite-pipeline/production-packaging";
+import { packageValidatedRun, verifyPackagedRunOnDisk } from "../lib/sprite-pipeline/production-packaging";
 import type { RenderRequest } from "../lib/sprite-pipeline/procedural-renderer";
 
 type Options = {
@@ -96,9 +96,19 @@ export async function runSpriteSkill(args: string[]): Promise<Record<string, unk
     result.assets,
     process.env.GITHUB_SHA ?? "local-unversioned",
   );
+  const packageVerification = await verifyPackagedRunOnDisk(options.root, packaged);
+  const expectedVerifiedFiles = result.assets.length * 2;
+  if (!packageVerification.passed) {
+    throw new Error(`Persisted package verification failed: ${packageVerification.failures.join("; ")}`);
+  }
+  if (packageVerification.verifiedFiles !== expectedVerifiedFiles || packageVerification.verifiedPackages !== 4) {
+    throw new Error(
+      `Persisted package count mismatch files=${packageVerification.verifiedFiles}/${expectedVerifiedFiles} packages=${packageVerification.verifiedPackages}/4`,
+    );
+  }
   const summary = {
     skill: "sprite-pipeline-to-10k",
-    skillVersion: "1.1.0",
+    skillVersion: "1.2.0",
     runId: result.runId,
     requested: requests.length,
     generated: result.generated,
@@ -107,8 +117,9 @@ export async function runSpriteSkill(args: string[]): Promise<Record<string, unk
     rejected: result.rejected,
     characters: characterCount,
     fx: fxCount,
-    archived: result.assets.length,
+    archived: packageVerification.verifiedFiles,
     packaged: result.assets.length,
+    packageVerification,
     packageTargets: packaged.packages.map((entry) => entry.target),
     archiveId: packaged.archive.archiveId,
     archiveManifestSha256: packaged.archive.manifestSha256,

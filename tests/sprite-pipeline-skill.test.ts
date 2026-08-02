@@ -26,7 +26,7 @@ test("parses bounded skill ranges and builds unique character and FX requests", 
   assert.equal(new Set(requests.map((request) => request.assetId)).size, 5);
 });
 
-test("runs the sprite pipeline as a real skill and writes validated output", async () => {
+test("runs the sprite pipeline as a real skill and verifies persisted packages", async () => {
   const root = await mkdtemp(join(tmpdir(), "sprite-skill-test-"));
   try {
     const summary = await runSpriteSkill([
@@ -38,6 +38,7 @@ test("runs the sprite pipeline as a real skill and writes validated output", asy
       "--fx-start", "1",
     ]);
     assert.equal(summary.skill, "sprite-pipeline-to-10k");
+    assert.equal(summary.skillVersion, "1.2.0");
     assert.equal(summary.requested, 4);
     assert.equal(summary.generated, 4);
     assert.equal(summary.validated, 4);
@@ -45,11 +46,29 @@ test("runs the sprite pipeline as a real skill and writes validated output", asy
     assert.equal(summary.rejected, 0);
     assert.equal(summary.characters, 2);
     assert.equal(summary.fx, 2);
+    assert.equal(summary.packaged, 4);
+    assert.equal(summary.archived, 8);
     assert.equal(summary.continuityPointer, "character-00003");
+    const verification = summary.packageVerification as {
+      passed: boolean;
+      verifiedFiles: number;
+      verifiedPackages: number;
+      failures: string[];
+    };
+    assert.equal(verification.passed, true);
+    assert.equal(verification.verifiedFiles, 8);
+    assert.equal(verification.verifiedPackages, 4);
+    assert.deepEqual(verification.failures, []);
     const summaryPath = String(summary.summaryPath);
     assert.equal((await stat(summaryPath)).isFile(), true);
-    const persisted = JSON.parse(await readFile(summaryPath, "utf8")) as { assets: Array<{ path: string; evidencePath: string }> };
+    const persisted = JSON.parse(await readFile(summaryPath, "utf8")) as {
+      assets: Array<{ path: string; evidencePath: string }>;
+      packageVerification: { passed: boolean; verifiedFiles: number; verifiedPackages: number };
+    };
     assert.equal(persisted.assets.length, 4);
+    assert.equal(persisted.packageVerification.passed, true);
+    assert.equal(persisted.packageVerification.verifiedFiles, 8);
+    assert.equal(persisted.packageVerification.verifiedPackages, 4);
     for (const asset of persisted.assets) {
       assert.equal((await stat(asset.path)).isFile(), true);
       assert.equal((await stat(asset.evidencePath)).isFile(), true);

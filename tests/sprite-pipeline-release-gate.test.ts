@@ -108,3 +108,39 @@ test("fails on a single blocker even with a nominal 10K score", () => {
   assert.equal(result.passed, false);
   assert.match(result.failures.join("\n"), /False render claims: 1/);
 });
+
+test("rejects truthy non-boolean gate flags at runtime", () => {
+  const input = passingInput() as unknown as Record<string, unknown>;
+  input.ownershipComplete = "false";
+  assert.throws(
+    () => evaluateReleaseGate(input as unknown as ReleaseGateInput),
+    /ownershipComplete must be boolean/,
+  );
+});
+
+test("rejects malformed non-integer blocker counts", () => {
+  const input = passingInput() as unknown as Record<string, unknown>;
+  input.falseRenderClaims = Number.NaN;
+  assert.throws(
+    () => evaluateReleaseGate(input as unknown as ReleaseGateInput),
+    /falseRenderClaims must be a non-negative safe integer/,
+  );
+});
+
+test("rejects unknown score categories before they can affect accounting", () => {
+  const input = passingInput() as unknown as { categories: Array<Record<string, unknown>> };
+  input.categories[0] = { ...input.categories[0], category: "inventedCredit" };
+  assert.throws(
+    () => evaluateReleaseGate(input as unknown as ReleaseGateInput),
+    /Unknown score category: inventedCredit/,
+  );
+});
+
+test("rejects truthy non-boolean mandatory-test evidence", () => {
+  const input = passingInput() as unknown as { categories: Array<Record<string, unknown>> };
+  input.categories[0] = { ...input.categories[0], mandatoryTestsExecuted: "yes" };
+  assert.throws(
+    () => evaluateReleaseGate(input as unknown as ReleaseGateInput),
+    /mandatoryTestsExecuted\.architecture must be boolean/,
+  );
+});

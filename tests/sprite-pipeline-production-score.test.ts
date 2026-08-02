@@ -81,6 +81,20 @@ test("awards zero baseline points when executable controls are absent", () => {
   assert.equal(result.gatePassed, false);
 });
 
+test("awards zero to incomplete compound categories instead of arbitrary partial credit", () => {
+  const noRecovery = calculateProductionScore({ ...complete, crashRecoveryPassed: false });
+  assert.equal(noRecovery.categories.architectureOrchestration, 0);
+  assert.equal(noRecovery.categories.continuityState, 0);
+  assert.equal(noRecovery.categories.scalabilityOperations, 0);
+
+  const noPackageVerification = calculateProductionScore({ ...complete, packageVerificationPassed: false });
+  assert.equal(noPackageVerification.categories.manifestIntegrity, 0);
+  assert.equal(noPackageVerification.categories.commercialEngineReadiness, 0);
+
+  const noPerceptualEvidence = calculateProductionScore({ ...complete, perceptualDuplicateScanPassed: false });
+  assert.equal(noPerceptualEvidence.categories.duplication, 0);
+});
+
 test("rejects impossible asset overcounts instead of clamping them to full coverage", () => {
   assert.throws(
     () => calculateProductionScore({ ...complete, validatedCharacters: 10_001 }),

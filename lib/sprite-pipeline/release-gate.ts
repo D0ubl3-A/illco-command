@@ -1,3 +1,7 @@
+import { createHash } from "node:crypto";
+import { readFileSync, realpathSync, statSync } from "node:fs";
+import { isAbsolute, relative, resolve, sep } from "node:path";
+
 export const SCORE_WEIGHTS = {
   architecture: 1200,
   continuity: 1000,
@@ -26,6 +30,7 @@ export type CategoryEvidence = {
 };
 
 export type ReleaseGateInput = {
+  evidenceRoot: string;
   categories: CategoryEvidence[];
   unresolvedSeverityNineOrTen: number;
   blockerFailures: number;
@@ -100,7 +105,81 @@ function canonicalEvidencePath(value: unknown): string | null {
   return canonical === value ? canonical : null;
 }
 
+function canonicalEvidenceRoot(value: unknown): string {
+  if (typeof value !== "string" || value.length === 0 || !isAbsolute(value)) {
+    throw new TypeError("evidenceRoot must be a non-empty absolute path");
+  }
+  const resolved = resolve(value);
+  let real: string;
+  try {
+    real = realpathSync(resolved);
+  } catch {
+    throw new Error(`Evidence root does not exist: ${resolved}`);
+  }
+  if (!statSync(real).isDirectory()) throw new Error(`Evidence root is not a directory: ${real}`);
+  return real;
+}
+
+function verifyEvidenceFile(
+  evidenceRoot: string,
+  category: ScoreCategory,
+  canonicalPath: string,
+  expectedSha256: string,
+  failures: string[],
+): boolean {
+  const candidate = resolve(evidenceRoot, canonicalPath);
+  const rel = relative(evidenceRoot, candidate);
+  if (rel === "" || rel === ".." || rel.startsWith(`..${sep}`) || isAbsolute(rel)) {
+    failures.push(`Evidence path escapes root for ${category}: ${canonicalPath}`);
+    return false;
+  }
+
+  let realCandidate: string;
+  try {
+    realCandidate = realpathSync(candidate);
+  } catch {
+    failures.push(`Evidence file missing for ${category}: ${canonicalPath}`);
+    return false;
+  }
+
+  const realRel = relative(evidenceRoot, realCandidate);
+  if (realRel === "" || realRel === ".." || realRel.startsWith(`..${sep}`) || isAbsolute(realRel)) {
+    failures.push(`Evidence symlink escapes root for ${category}: ${canonicalPath}`);
+    return false;
+  }
+
+  let stats;
+  try {
+    stats = statSync(realCandidate);
+  } catch {
+    failures.push(`Evidence file unreadable for ${category}: ${canonicalPath}`);
+    return false;
+  }
+  if (!stats.isFile()) {
+    failures.push(`Evidence path is not a regular file for ${category}: ${canonicalPath}`);
+    return false;
+  }
+  if (stats.size <= 0) {
+    failures.push(`Evidence file is empty for ${category}: ${canonicalPath}`);
+    return false;
+  }
+
+  let actualSha256: string;
+  try {
+    actualSha256 = createHash("sha256").update(readFileSync(realCandidate)).digest("hex");
+  } catch {
+    failures.push(`Evidence file unreadable for ${category}: ${canonicalPath}`);
+    return false;
+  }
+  if (actualSha256 !== expectedSha256) {
+    failures.push(`Evidence hash mismatch for ${category}: ${canonicalPath}`);
+    return false;
+  }
+  return true;
+}
+
 function validateEvidenceReferences(
+  evidenceRoot: string,
   category: ScoreCategory,
   references: EvidenceReference[],
   globallySeenPaths: Set<string>,
@@ -149,6 +228,9 @@ function validateEvidenceReferences(
     }
     if (canonicalPath) globallySeenPaths.add(canonicalPath);
     if (hashIsValid) globallySeenHashes.add(canonicalSha256);
+    if (canonicalPath && hashIsValid && !verifyEvidenceFile(evidenceRoot, category, canonicalPath, canonicalSha256, failures)) {
+      valid = false;
+    }
   }
   return valid;
 }
@@ -156,6 +238,7 @@ function validateEvidenceReferences(
 export function evaluateReleaseGate(input: ReleaseGateInput): ReleaseGateResult {
   if (!input || typeof input !== "object") throw new TypeError("release gate input must be an object");
   if (!Array.isArray(input.categories)) throw new TypeError("categories must be an array");
+  const evidenceRoot = canonicalEvidenceRoot(input.evidenceRoot);
 
   const countFields = [
     "unresolvedSeverityNineOrTen",
@@ -209,6 +292,7 @@ export function evaluateReleaseGate(input: ReleaseGateInput): ReleaseGateResult 
     }
 
     const referencesValid = validateEvidenceReferences(
+      evidenceRoot,
       category,
       evidence.evidence,
       globallySeenEvidencePaths,

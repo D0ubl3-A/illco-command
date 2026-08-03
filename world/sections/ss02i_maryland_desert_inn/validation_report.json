@@ -1,0 +1,10 @@
+{
+  "section_id":"SS-02I-MARYLAND-PARKWAY-DESERT-INN",
+  "run_at":"2026-08-03T21:00:00Z",
+  "result":"PARTIAL_PASS",
+  "tests":{"passed":10,"total":10,"results":[
+    {"name":"source_refs_resolve","passed":true},{"name":"no_coordinate_fabrication","passed":true},{"name":"no_parcel_fabrication","passed":true},{"name":"no_terrain_fabrication","passed":true},{"name":"building_identity_source_backed","passed":true},{"name":"architecture_scope_not_whole_tower","passed":true},{"name":"temporary_context_not_promoted","passed":true},{"name":"inventory_grid_math","passed":true},{"name":"inventory_boundary_blocked","passed":true},{"name":"final_assets_blocked","passed":true}]},
+  "errors":[],
+  "warnings":["RTC stop-closure records are temporary operational context and are not permanent geometry.","The 1,225-slot denominator is nominal until the authoritative 35 km project boundary is committed."],
+  "next_section":"SS-02J-MARYLAND-PARKWAY-SAHARA-AVENUE"
+}

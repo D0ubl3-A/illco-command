@@ -1,0 +1,26 @@
+{
+  "section_id": "SS-02J-MARYLAND-PARKWAY-SAHARA-AVENUE",
+  "branch": "map/ss02j-maryland-sahara-20260803-1503",
+  "base_ref": "main",
+  "artifact_commits": {
+    "section_dossier.json": "0da4c8625a04eb2e52907e39900c29abc849d951",
+    "semantic_graph.json": "0b0310236ae580269f91d214240bc8086c851c5b",
+    "validation_report.json": "7e44c5191ae54b257712e4e234b37092bf07772f",
+    "resolution_queue.json": "69ddaf6a694c5b1bfa4665fb04560a33b10ac895",
+    "README.md": "81b5b29689982581e9081f5295742560e341e86f"
+  },
+  "validation_contract": {
+    "pipeline_result": "PARTIAL_PASS",
+    "tests_passed": 12,
+    "tests_total": 12,
+    "errors": 0,
+    "warnings": 2,
+    "fail_closed": true
+  },
+  "promotion_restrictions": [
+    "Do not create intersection coordinates from addresses, planning maps or consumer geocoders.",
+    "Do not assign one APN to the intersection corridor.",
+    "Do not treat active BRT construction information as permanent as-built geometry.",
+    "Do not generate terrain, buildings or architecture until their dedicated evidence gates pass."
+  ]
+}

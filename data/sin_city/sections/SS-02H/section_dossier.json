@@ -1,0 +1,104 @@
+{
+  "schema": "sin-city-section-dossier-v1",
+  "section_id": "SS-02H-MARYLAND-ROCHELLE-CORRIDOR",
+  "name": "Maryland Parkway / Rochelle Avenue corridor",
+  "status": "PARTIAL_PASS",
+  "identity": {
+    "state": "SOURCE_CONFIRMED",
+    "roads": ["South Maryland Parkway", "East Rochelle Avenue"],
+    "note": "This is a corridor section spanning multiple properties and rights-of-way, not one parcel."
+  },
+  "coordinates": {
+    "section_polygon": null,
+    "road_centerlines": null,
+    "model_origin": null,
+    "crs": null,
+    "state": "BLOCKED",
+    "reason": "No authoritative coordinate feature response with CRS metadata was captured in this cycle."
+  },
+  "parcels": {
+    "apns": [],
+    "polygons": [],
+    "state": "BLOCKED",
+    "reason": "No complete Clark County parcel/right-of-way intersection response was captured."
+  },
+  "terrain": {
+    "samples": [],
+    "vertical_datum": null,
+    "state": "BLOCKED",
+    "reason": "USGS 3DEP sampling requires an approved section polygon or model origins."
+  },
+  "roads": {
+    "context_state": "SOURCE_CONFIRMED",
+    "geometry_state": "BLOCKED",
+    "confirmed_relationships": [
+      "Maryland Administrative Building 1 is at the corner of South Maryland Parkway and East Rochelle Avenue.",
+      "Maryland Administrative Building 2 is on South Maryland Parkway near East Rochelle Avenue."
+    ],
+    "unresolved": ["centerlines", "lanes", "medians", "curbs", "sidewalks", "turn pockets", "right-of-way boundaries"]
+  },
+  "buildings": [
+    {
+      "id": "unlv_mab1",
+      "name": "Maryland Administrative Building 1",
+      "address": "4292 S. Maryland Pkwy., Las Vegas, NV 89119",
+      "identity_state": "SOURCE_CONFIRMED",
+      "architecture": {
+        "floors": 1,
+        "gross_square_feet": 9879,
+        "use": "UNLV Online Education offices",
+        "state": "PARTIAL_PASS"
+      },
+      "footprint": null,
+      "source_ref": "unlv_mab1"
+    },
+    {
+      "id": "unlv_mab2",
+      "name": "Maryland Administrative Building 2",
+      "address": "4350 S. Maryland Pkwy., Las Vegas, NV 89119",
+      "identity_state": "SOURCE_CONFIRMED",
+      "architecture": {
+        "floors": 1,
+        "gross_square_feet": 37755,
+        "use": "UNLV Lifelong Learning and Osher Lifelong Learning Institute",
+        "state": "PARTIAL_PASS"
+      },
+      "footprint": null,
+      "source_ref": "unlv_mab2"
+    }
+  ],
+  "semantic_edges": [
+    {"subject":"building:unlv_mab1","predicate":"addressed_on","object":"road:south_maryland_parkway","source_ref":"unlv_mab1"},
+    {"subject":"building:unlv_mab1","predicate":"located_at_corner_of","object":"road:east_rochelle_avenue","source_ref":"unlv_mab1"},
+    {"subject":"building:unlv_mab1","predicate":"houses","object":"organization:unlv_online_education","source_ref":"unlv_mab1"},
+    {"subject":"parking:mab1","predicate":"serves","object":"building:unlv_mab1","source_ref":"unlv_mab1_parking"},
+    {"subject":"parking:mab1","predicate":"located_east_and_west_of","object":"building:unlv_mab1","source_ref":"unlv_mab1_parking"},
+    {"subject":"building:unlv_mab2","predicate":"addressed_on","object":"road:south_maryland_parkway","source_ref":"unlv_mab2"},
+    {"subject":"building:unlv_mab2","predicate":"located_near","object":"road:east_rochelle_avenue","source_ref":"unlv_mab2"},
+    {"subject":"building:unlv_mab2","predicate":"houses","object":"organization:unlv_lifelong_learning","source_ref":"unlv_mab2"},
+    {"subject":"building:unlv_mab2","predicate":"houses","object":"organization:olli_at_unlv","source_ref":"unlv_mab2"},
+    {"subject":"parking:mab2","predicate":"surrounds","object":"building:unlv_mab2","source_ref":"unlv_mab2_parking"}
+  ],
+  "sources": [
+    {"id":"unlv_mab1","authority":"University of Nevada, Las Vegas","url":"https://www.unlv.edu/maps/mab1"},
+    {"id":"unlv_mab2","authority":"University of Nevada, Las Vegas","url":"https://www.unlv.edu/maps/mab2"},
+    {"id":"unlv_mab1_parking","authority":"University of Nevada, Las Vegas","url":"https://www.unlv.edu/maps/parking/lots/mab-1"},
+    {"id":"unlv_mab2_parking","authority":"University of Nevada, Las Vegas","url":"https://www.unlv.edu/maps/parking/lots/mab-2"},
+    {"id":"clark_county_gis","authority":"Clark County, Nevada","url":"https://www.clarkcountynv.gov/government/departments/geographic_info_systems/"},
+    {"id":"usgs_3dep","authority":"U.S. Geological Survey","url":"https://www.usgs.gov/3d-elevation-program"}
+  ],
+  "release": {
+    "identity_records": true,
+    "semantic_graph": true,
+    "partial_architecture_records": true,
+    "coordinates": false,
+    "parcel_geometry": false,
+    "road_geometry": false,
+    "terrain": false,
+    "building_footprints": false,
+    "sprites": false,
+    "models": false,
+    "parcel_aligned_placement": false
+  },
+  "next_section": "SS-02I-MARYLAND-PARKWAY-DESERT-INN-INTERSECTION"
+}

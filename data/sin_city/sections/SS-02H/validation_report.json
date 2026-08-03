@@ -1,0 +1,57 @@
+{
+  "section_id": "SS-02H-MARYLAND-ROCHELLE-CORRIDOR",
+  "pipeline_result": "PARTIAL_PASS",
+  "checks": {
+    "passed": 12,
+    "total": 12,
+    "results": [
+      {"name":"source_ids_are_unique","passed":true},
+      {"name":"all_semantic_edges_have_source_refs","passed":true},
+      {"name":"all_semantic_source_refs_resolve","passed":true},
+      {"name":"two_building_identities_are_source_confirmed","passed":true},
+      {"name":"addresses_are_not_used_as_surveyed_origins","passed":true},
+      {"name":"coordinates_are_null_when_unresolved","passed":true},
+      {"name":"parcel_ids_and_polygons_are_empty_when_unresolved","passed":true},
+      {"name":"terrain_samples_are_empty_without_approved_geometry","passed":true},
+      {"name":"building_footprints_are_null","passed":true},
+      {"name":"architecture_is_partial_not_final","passed":true},
+      {"name":"final_visual_assets_are_blocked","passed":true},
+      {"name":"next_section_is_registered","passed":true}
+    ]
+  },
+  "errors": [],
+  "warnings": [],
+  "gates": {
+    "IDENTITY_GATE": "PASS",
+    "SOURCE_GATE": "PASS",
+    "SEMANTIC_EDGE_GATE": "PASS",
+    "ROAD_CONTEXT_GATE": "PASS",
+    "BUILDING_IDENTITY_GATE": "PASS",
+    "ARCHITECTURE_GATE": "PARTIAL_PASS",
+    "COORDINATE_GATE": "BLOCKED",
+    "PARCEL_GATE": "BLOCKED",
+    "ROAD_GEOMETRY_GATE": "BLOCKED",
+    "TERRAIN_GATE": "BLOCKED",
+    "BUILDING_FOOTPRINT_GATE": "BLOCKED",
+    "FINAL_ASSET_GATE": "BLOCKED"
+  },
+  "released": [
+    "section identity",
+    "two building identity records",
+    "ten explicit source-backed semantic edges",
+    "partial floor, area and use records",
+    "parking-context relationships"
+  ],
+  "blocked": [
+    "authoritative section polygon",
+    "surveyed coordinate origin and CRS transform",
+    "Clark County parcel/right-of-way intersections",
+    "road centerlines and lane geometry",
+    "USGS 3DEP terrain samples",
+    "authoritative building footprints",
+    "roof and facade geometry",
+    "materials and PBR textures",
+    "final sprites and 3D models",
+    "parcel-aligned placement"
+  ]
+}

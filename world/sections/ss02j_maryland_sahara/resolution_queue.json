@@ -1,0 +1,11 @@
+{
+  "section_id": "SS-02J-MARYLAND-PARKWAY-SAHARA-AVENUE",
+  "tasks": [
+    {"priority":1,"gate":"COORDINATE_GATE","task":"Query and preserve intersecting Maryland Parkway and Sahara Avenue centerline features from Clark County GIS in EPSG:3421, including feature IDs and response timestamp."},
+    {"priority":2,"gate":"PARCEL_GATE","task":"Create an approved section polygon, then intersect it against Clark County parcel, lot-line, easement and public-right-of-way sources."},
+    {"priority":3,"gate":"ROAD_GEOMETRY_GATE","task":"Resolve centerlines into verified carriageways, medians, turn pockets, signals, curb ramps and sidewalks; distinguish planned BRT work from as-built conditions."},
+    {"priority":4,"gate":"TERRAIN_GATE","task":"Capture USGS 3DEP elevation samples with dataset date, horizontal CRS and vertical datum."},
+    {"priority":5,"gate":"BUILDING_GATE","task":"Join authoritative footprints to verified property identities for all four intersection quadrants."},
+    {"priority":6,"gate":"ARCHITECTURE_GATE","task":"Acquire source-backed floor counts, heights, roof forms, facade dimensions and materials per verified building."}
+  ]
+}

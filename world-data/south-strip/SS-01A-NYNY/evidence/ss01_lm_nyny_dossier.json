@@ -1,0 +1,39 @@
+{
+  "schema_version": "1.0.0",
+  "location_id": "ss01_lm_nyny",
+  "section_id": "SS-01A-NYNY",
+  "captured_at": "2026-08-02T21:00:06-07:00",
+  "facts": [
+    {
+      "fact": "Official address is 3790 S Las Vegas Blvd, Las Vegas, NV 89109.",
+      "state": "SOURCE-CONFIRMED",
+      "source": "MGM official contact page"
+    },
+    {
+      "fact": "Official property map identifies the main/casino floor, parking garage, pool, main entrance, valet/rideshare, meeting-space access, and pedestrian connections.",
+      "state": "SOURCE-CONFIRMED",
+      "source": "MGM official property map"
+    },
+    {
+      "fact": "Official map labels walkways/connections to MGM Grand, Excalibur, The Park and T-Mobile Arena.",
+      "state": "SOURCE-CONFIRMED",
+      "source": "MGM official property map"
+    },
+    {
+      "fact": "Clark County Parcels layer is polygon geometry with APN and supports GeoJSON queries.",
+      "state": "SOURCE-CONFIRMED",
+      "source": "Clark County GISMO layer metadata"
+    },
+    {
+      "fact": "Exact parcel polygon and APN for the resort.",
+      "state": "UNKNOWN",
+      "reason": "feature query response was not captured"
+    },
+    {
+      "fact": "Exact exterior building footprint polygons and tower-by-tower story counts.",
+      "state": "UNKNOWN",
+      "reason": "not established by the official property map"
+    }
+  ],
+  "decision": "Do not generate final exterior assets. Permit semantic campus decomposition, road/pedestrian relationship graph updates, and source-backed planning only."
+}

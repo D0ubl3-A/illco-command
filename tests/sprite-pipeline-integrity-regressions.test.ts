@@ -40,7 +40,7 @@ function categories(): CategoryEvidence[] {
       earned,
       mandatoryTestsExecuted: true,
       evidence: [{
-        path: `evidence/${category}/control-${index}.json`,
+        path: `evidence/${category.toLowerCase()}/control-${index}.json`,
         sha256: (index + 1).toString(16).padStart(64, "0"),
       }],
     }),

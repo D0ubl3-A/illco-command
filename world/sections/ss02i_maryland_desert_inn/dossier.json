@@ -1,0 +1,31 @@
+{
+  "schema": "sin-city-section-dossier-v2",
+  "section_id": "SS-02I-MARYLAND-PARKWAY-DESERT-INN",
+  "identity": {"name":"Maryland Parkway / Desert Inn Road intersection","state":"SOURCE_CONFIRMED"},
+  "coordinates": {"intersection":null,"section_polygon":null,"utm_geometry":null,"state":"BLOCKED","reason":"No authoritative road-centerline feature geometry was captured."},
+  "parcels": {"apns":[],"polygons":[],"state":"BLOCKED","reason":"No Clark County parcel feature response was captured."},
+  "roads": {"names":["South Maryland Parkway","East Desert Inn Road"],"context_state":"PASS","geometry_state":"BLOCKED"},
+  "terrain": {"samples":[],"state":"BLOCKED","required_source":"USGS 3DEP after approved section vertices exist"},
+  "buildings": [{"id":"sunrise_medical_tower_4","name":"Sunrise Medical Tower 4","address":"3196 S. Maryland Pkwy., Las Vegas, NV 89109","identity_state":"PASS","footprint":null,"source_ref":"unlv_som09"}],
+  "architecture": [{"asset_id":"unlv_som09_suite_303","gross_square_feet":6704,"scope":"UNLV occupied clinic space, not whole tower","state":"PARTIAL_PASS","source_ref":"unlv_som09"}],
+  "context": {"transit":"PASS","medical":"PASS","temporary_traffic":"RECORDED_NOT_PROMOTED"},
+  "semantic_edges": [
+    {"subject":"section:ss02i","predicate":"contains_intersection_context","object":"intersection:maryland_parkway_desert_inn","source_ref":"rtc_maryland_project"},
+    {"subject":"road:maryland_parkway","predicate":"crosses","object":"road:desert_inn_road","source_ref":"rtc_maryland_project"},
+    {"subject":"transit:route_109","predicate":"serves_corridor","object":"road:maryland_parkway","source_ref":"rtc_bus_stop_closures"},
+    {"subject":"transit:stop_1766","predicate":"located_before","object":"road:desert_inn_road","source_ref":"rtc_bus_stop_closures"},
+    {"subject":"transit:stop_1772","predicate":"located_before","object":"road:desert_inn_road","source_ref":"rtc_bus_stop_closures"},
+    {"subject":"transit:stop_1732","predicate":"located_after","object":"road:desert_inn_road","source_ref":"rtc_bus_stop_closures"},
+    {"subject":"property:sunrise_medical_tower_4","predicate":"addressed_on","object":"road:maryland_parkway","source_ref":"unlv_som09"},
+    {"subject":"property:sunrise_medical_tower_4","predicate":"contains","object":"unit:unlv_som09_suite_303","source_ref":"unlv_som09"},
+    {"subject":"unit:unlv_som09_suite_303","predicate":"occupied_by","object":"clinic:unlv_health_gynecology_obstetrics","source_ref":"unlv_som09"}
+  ],
+  "sources": [
+    {"id":"unlv_som09","authority":"University of Nevada, Las Vegas","url":"https://www.unlv.edu/maps/som-09","retrieved":"2026-08-03"},
+    {"id":"rtc_maryland_project","authority":"Regional Transportation Commission of Southern Nevada","url":"https://www.rtcsnv.com/maryland-parkway/","retrieved":"2026-08-03"},
+    {"id":"rtc_bus_stop_closures","authority":"Regional Transportation Commission of Southern Nevada","url":"https://www.rtcsnv.com/ways-to-travel/schedules-maps/bus-stop-closures/","retrieved":"2026-08-03"},
+    {"id":"clark_gis","authority":"Clark County GIS","url":"https://maps.clarkcountynv.gov/","retrieved":"2026-08-03","note":"registered only; no feature response captured"}
+  ],
+  "gates": {"IDENTITY":"PASS","SOURCE":"PASS","SEMANTIC":"PASS","ROAD_CONTEXT":"PASS","BUILDING_IDENTITY":"PASS","ARCHITECTURE":"PARTIAL_PASS","COORDINATE":"BLOCKED","PARCEL":"BLOCKED","ROAD_GEOMETRY":"BLOCKED","TERRAIN":"BLOCKED","BUILDING_FOOTPRINT":"BLOCKED","FINAL_ASSET":"BLOCKED"},
+  "release": {"dossier":true,"semantic_graph":true,"building_identity":true,"partial_architecture":true,"road_geometry":false,"terrain":false,"building_model":false,"final_visual":false}
+}

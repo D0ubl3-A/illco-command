@@ -10,6 +10,7 @@ Production-indexed sprite package for the Goldstrike Canyon / Gold Strike Hot Sp
 - SHA-256: `2ea4e18b36a96710a385e12d01261a1dfcfb3f71d2ea45d02dc2f022227796a3`
 - Git blob SHA-1: `93fa6f13c12c7ed3d9d0590ce8f3ffc422820c2c`
 - Linked anchors: `GS-A010`, `GS-A020`, `GS-A030`, `GS-A040`, `GS-A050`
+- Regression coverage: frame bounds, UVs, pivots, category counts, anchor references and scale validation
 
 The repository image is deliberately a tiny far-distance LOD for rapid world streaming. Eight full-resolution 1536 × 1024 transparent source sheets are preserved in the separate production asset pack for close rendering, recutting, texture baking and future 3D conversion.
 

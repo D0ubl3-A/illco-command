@@ -1,0 +1,37 @@
+name: AI Project Kickoff Builder
+
+on:
+  pull_request:
+    paths:
+      - "apps/ai-project-kickoff-builder/**"
+      - ".github/workflows/ai-project-kickoff-builder.yml"
+  push:
+    branches: [main]
+    paths:
+      - "apps/ai-project-kickoff-builder/**"
+      - ".github/workflows/ai-project-kickoff-builder.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: apps/ai-project-kickoff-builder
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: apps/ai-project-kickoff-builder/package.json
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+      - run: npm install
+      - run: npm run check
+      - run: python -m py_compile skill/scripts/project_g.py
+      - run: python skill/scripts/project_g.py --state /tmp/project-g-state.json init
+      - run: python skill/scripts/project_g.py --state /tmp/project-g-state.json validate --project all

@@ -1,0 +1,4 @@
+interface:
+  display_name: "AI Project Kickoff Builder"
+  short_description: "Run Project G kickoffs and command center"
+  default_prompt: "Use $ai-project-kickoff-builder to open Project G and perform the highest-priority verified work now."

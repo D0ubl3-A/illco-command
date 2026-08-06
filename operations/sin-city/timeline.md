@@ -1,19 +1,28 @@
 # Timeline
 
-## Phase 1 — Control geometry
-Register deterministic 1 km sections in southwest row-major order. Current: 40/1,225.
+**Updated:** 2026-08-06 09:01 America/Los_Angeles
 
-## Phase 2 — Authoritative evidence intake
-Attach source registry, coordinate and gate contracts, production terrain manifest/tiles, parcels/right-of-way, roads, buildings, identities, architecture, context, and binary assets.
+## Phase 1 — Control geometry registration
 
-## Phase 3 — Evidence-backed joins
-Join only records with original provenance; preserve navigation centerlines separately from visible pavement.
+- Batch 001: `SC_00_00`–`SC_00_19` — complete
+- Batch 002: `SC_00_20`–`SC_01_04` — complete
+- Batch 003: `SC_01_05`–`SC_01_24` — complete
+- Next: `SC_01_25`–`SC_02_09`
 
-## Phase 4 — Repair and QA
-Apply the established 50-issue policy, seam checks, placement checks, checksums, and regression tests.
+Progress: **60/1,225 (4.90%)**
+
+## Phase 2 — Evidence attachment
+
+Blocked pending authoritative source registry, terrain manifest, parcels/right-of-way, road transform, building registry, and binary sprites.
+
+## Phase 3 — Production joins
+
+Not authorized.
+
+## Phase 4 — 50-issue QA
+
+No section eligible.
 
 ## Phase 5 — Production authorization
-Authorize a section only when every required gate is PASS. Current authorization: BLOCKED.
 
-## Next batch
-`SC_01_05` through `SC_01_24`.
+Blocked until every gate passes with direct evidence.

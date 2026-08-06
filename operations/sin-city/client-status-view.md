@@ -1,24 +1,28 @@
-# Client Status View
+# Sin City Client Status View
 
-## Progress
-- Latest batch: **20/20 (100%)**
-- Cumulative registered: **40/1,225 (3.27%)**
-- Production-ready: **0/1,225 (0.00%)**
-- Remaining: **1,185**
+**Updated:** 2026-08-06 09:01 America/Los_Angeles
+
+- Batch 003: **100%** — 20/20 sections
+- Cumulative processed: **60/1,225 (4.90%)**
+- Production ready: **0/1,225 (0.00%)**
+- Remaining: **1,165**
 - Readiness: **20/100**
-- Authorization: **BLOCKED — control geometry only**
+- Production authorization: **BLOCKED**
+- Current milestone: 60 permanent control-geometry registrations
+- Next milestone: `SC_01_25` through `SC_02_09`
 
-## Current milestone
-Forty unique one-kilometer sections have durable IDs and deterministic bounds.
+## Verified this run
 
-## Next milestone
-Register `SC_01_05` through `SC_01_24` without duplicating prior sections.
+Twenty new nonduplicated one-kilometer sections (`SC_01_05`–`SC_01_24`) received permanent bounds, neighbors, explicit evidence arrays, and production-gate state.
 
-## Top blockers
-`building_registry.*`, `terrain_manifest.json`, authoritative parcels/right-of-way, production terrain, canonical road transform, and original binary sprites.
+## Blockers
 
-## Approval needed
-Keep production placement and SinCityNGen recording prohibited until all source-dependent gates pass.
+`building_registry.*`, `terrain_manifest.json`, authoritative parcel/right-of-way, production DEM/terrain tiles, canonical road transform, and original binary sprite PNGs.
 
-## Evidence gap
-No registered section has original source evidence attached; no section is production-ready.
+## Required approval
+
+None can be requested yet. Original evidence must be supplied and validated before production placement or SinCityNGen recording.
+
+## Continuity
+
+Resume at `SC_01_25`.

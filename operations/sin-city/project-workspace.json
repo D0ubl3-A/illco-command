@@ -1,0 +1,75 @@
+{
+  "schema_version": "1.0",
+  "run_id": "2026-08-05T22:00:13-07:00",
+  "project": "Sin City / JC the Holy OG Authoritative Map Production",
+  "grid": {
+    "crs": "EPSG:32611",
+    "min_easting": 648949.782,
+    "max_easting": 683949.782,
+    "min_northing": 3983561.814,
+    "max_northing": 4018561.814,
+    "tile_size_m": 1000,
+    "rows": 35,
+    "columns": 35,
+    "total_sections": 1225
+  },
+  "ledger": {
+    "ordering": "row-major from southwest",
+    "registered_sections": [
+      "SC_00_00","SC_00_01","SC_00_02","SC_00_03","SC_00_04",
+      "SC_00_05","SC_00_06","SC_00_07","SC_00_08","SC_00_09",
+      "SC_00_10","SC_00_11","SC_00_12","SC_00_13","SC_00_14",
+      "SC_00_15","SC_00_16","SC_00_17","SC_00_18","SC_00_19"
+    ],
+    "bounds_rule": {
+      "section_id": "SC_{row:02d}_{column:02d}",
+      "min_easting": "648949.782 + column * 1000",
+      "max_easting": "min_easting + 1000",
+      "min_northing": "3983561.814 + row * 1000",
+      "max_northing": "min_northing + 1000"
+    },
+    "neighbor_rule": "west/east decrement or increment column; south/north decrement or increment row; null at grid edge",
+    "registration_status": "REGISTERED_CONTROL_GEOMETRY_ONLY"
+  },
+  "batch": {
+    "sections_processed_this_run": 20,
+    "batch_completion_percentage": 100.0,
+    "cumulative_unique_sections": 20,
+    "cumulative_processing_percentage": 1.63,
+    "production_ready_sections": 0,
+    "production_ready_percentage": 0.0,
+    "remaining_sections": 1205
+  },
+  "production_gates": {
+    "terrain": "BLOCKED",
+    "parcels": "BLOCKED",
+    "buildings": "BLOCKED",
+    "roads": "BLOCKED",
+    "identities": "BLOCKED",
+    "architecture": "BLOCKED",
+    "binary_assets": "BLOCKED",
+    "qa_50_issue_policy": "BLOCKED"
+  },
+  "readiness_score": 18,
+  "production_authorization": "BLOCKED",
+  "current_milestone": "Permanent control-geometry registration",
+  "next_milestone": "Attach authoritative source registry and production terrain evidence",
+  "top_blockers": [
+    "building_registry.*",
+    "terrain_manifest.json",
+    "authoritative parcel/right-of-way layers",
+    "production DEM and terrain tiles",
+    "canonical source-local road transform",
+    "binary sprite PNGs"
+  ],
+  "verified_changes": [
+    "Created the first accessible authoritative section ledger in the repository",
+    "Registered exactly 20 unique one-kilometer sections without production claims",
+    "Recorded deterministic permanent bounds and neighbor rules"
+  ],
+  "unresolved_evidence_gaps": [
+    "No source evidence is attached to these 20 sections",
+    "No section has passed every production gate",
+    "SinCityNGen recording and world placement remain prohibited"
+  ]
+}

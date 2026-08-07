@@ -1,6 +1,6 @@
 {
   "schema_version": "1.2",
-  "run_id": "2026-08-06T09:01:49-07:00",
+  "run_id": "2026-08-06T17:06:02-07:00",
   "project": "Sin City / JC the Holy OG Authoritative Map Production",
   "grid": {
     "crs": "EPSG:32611",
@@ -15,64 +15,32 @@
   },
   "ledger": {
     "ordering": "row-major from southwest",
-    "registered_sections": [
-      "SC_00_00","SC_00_01","SC_00_02","SC_00_03","SC_00_04","SC_00_05","SC_00_06","SC_00_07","SC_00_08","SC_00_09",
-      "SC_00_10","SC_00_11","SC_00_12","SC_00_13","SC_00_14","SC_00_15","SC_00_16","SC_00_17","SC_00_18","SC_00_19",
-      "SC_00_20","SC_00_21","SC_00_22","SC_00_23","SC_00_24","SC_00_25","SC_00_26","SC_00_27","SC_00_28","SC_00_29",
-      "SC_00_30","SC_00_31","SC_00_32","SC_00_33","SC_00_34","SC_01_00","SC_01_01","SC_01_02","SC_01_03","SC_01_04",
-      "SC_01_05","SC_01_06","SC_01_07","SC_01_08","SC_01_09","SC_01_10","SC_01_11","SC_01_12","SC_01_13","SC_01_14",
-      "SC_01_15","SC_01_16","SC_01_17","SC_01_18","SC_01_19","SC_01_20","SC_01_21","SC_01_22","SC_01_23","SC_01_24"
-    ],
-    "bounds_rule": {
-      "section_id": "SC_{row:02d}_{column:02d}",
-      "min_easting": "648949.782 + column * 1000",
-      "max_easting": "min_easting + 1000",
-      "min_northing": "3983561.814 + row * 1000",
-      "max_northing": "min_northing + 1000"
-    },
-    "neighbor_rule": "west/east decrement or increment column; south/north decrement or increment row; null at grid edge",
-    "registration_status": "REGISTERED_CONTROL_GEOMETRY_ONLY",
-    "latest_batch_manifest": "section-batch-003.json"
+    "registered_range": "SC_00_00 through SC_02_09",
+    "registered_count": 80,
+    "latest_batch_manifest": "section-batch-004.json",
+    "registration_status": "REGISTERED_CONTROL_GEOMETRY_ONLY"
   },
   "batch": {
     "sections_processed_this_run": 20,
-    "section_ids": ["SC_01_05","SC_01_06","SC_01_07","SC_01_08","SC_01_09","SC_01_10","SC_01_11","SC_01_12","SC_01_13","SC_01_14","SC_01_15","SC_01_16","SC_01_17","SC_01_18","SC_01_19","SC_01_20","SC_01_21","SC_01_22","SC_01_23","SC_01_24"],
+    "section_ids": ["SC_01_25","SC_01_26","SC_01_27","SC_01_28","SC_01_29","SC_01_30","SC_01_31","SC_01_32","SC_01_33","SC_01_34","SC_02_00","SC_02_01","SC_02_02","SC_02_03","SC_02_04","SC_02_05","SC_02_06","SC_02_07","SC_02_08","SC_02_09"],
     "batch_completion_percentage": 100.0,
-    "cumulative_unique_sections": 60,
-    "cumulative_processing_percentage": 4.9,
+    "cumulative_unique_sections": 80,
+    "cumulative_processing_percentage": 6.53,
     "production_ready_sections": 0,
     "production_ready_percentage": 0.0,
-    "remaining_sections": 1165
+    "remaining_sections": 1145
   },
-  "objectives": ["Register exactly the next 20 unique one-kilometer sections","Preserve evidence-gated production authorization","Maintain durable nonduplicated continuity"],
-  "scope": ["Control-geometry registration","Permanent bounds and neighbors","Evidence and gate state","50-issue QA gate tracking"],
-  "exclusions": ["Unsupported terrain/building/parcel/road joins","World placement without original evidence","SinCityNGen recording without production authorization"],
-  "success_criteria": ["20 new unique IDs","All bounds exactly 1000 m and within grid","No duplicate ledger IDs","All unsupported production actions blocked"],
-  "phases": ["Control geometry registration","Evidence attachment","Production joins","50-issue QA","Production authorization"],
-  "milestones": {
-    "current": "Permanent control-geometry registration: 60 unique sections",
-    "next": "Register SC_01_25 through SC_02_09 while preserving evidence blocks"
-  },
-  "tasks": ["Register batch 003","Validate IDs, bounds, neighbors, and continuity","Update status and validation artifacts"],
+  "current_milestone": "Permanent control-geometry registration: 80 unique sections",
+  "next_milestone": "Register SC_02_10 through SC_02_29 while preserving evidence blocks",
   "dependencies": ["building_registry.*","terrain_manifest.json","authoritative parcel/right-of-way layers","production DEM and terrain tiles","canonical source-local road transform","binary sprite PNGs"],
-  "acceptance_criteria": ["Exactly 20 sections in batch","Batch disjoint from prior ledger","Navigation centerlines remain separate from visible pavement","Every production gate remains evidence-based"],
-  "approval_gates": {"production_placement":"BLOCKED","sincityngen_recording":"BLOCKED","production_ready":"BLOCKED"},
-  "deliverables": ["section-batch-003.json","project-workspace.json","validation-report.md","client-status-view.md","project command documents"],
-  "roles": {"Aaron":"Provide or approve authoritative source inputs","AI Project Kickoff Builder":"Register, validate, document, and block unsupported claims"},
-  "communications": {"timezone":"America/Los_Angeles","notify_only":["verified milestone","critical blocker requiring Aaron","material regression"]},
-  "risks": ["Control geometry may be mistaken for production completion","Missing source contracts prevent authoritative joins"],
-  "blockers": ["building_registry.*","terrain_manifest.json","authoritative parcel/right-of-way layers","production DEM and terrain tiles","canonical source-local road transform","binary sprite PNGs"],
-  "assumptions": ["Grid and ordering contract remain unchanged","No newly supplied source evidence was available in this run"],
-  "questions": ["Which authoritative source package should be attached first?"],
-  "decisions": ["Batch 003 remains control geometry only","No unsupported world placement or recording"],
   "production_gates": {"terrain":"BLOCKED","parcels":"BLOCKED","buildings":"BLOCKED","roads":"BLOCKED","identities":"BLOCKED","architecture":"BLOCKED","binary_assets":"BLOCKED","qa_50_issue_policy":"BLOCKED"},
   "readiness_score": 20,
   "readiness_deductions": ["-20 no authoritative source registry attached","-15 no production terrain manifest or tiles","-15 no authoritative parcels or right-of-way","-15 no building registry or binary sprites","-10 no canonical source-local road transform","-5 no section has passed 50-issue QA"],
   "production_authorization": "BLOCKED",
   "approvals_needed": ["No production placement approval until original evidence contracts are present"],
-  "verified_changes": ["Registered exactly 20 additional unique one-kilometer sections","Added batch 003 manifest with permanent bounds, neighbors, evidence arrays, and gate state","Improved skill validation by embedding per-section production gate checks and explicit false-completion blocks"],
+  "verified_changes": ["Registered exactly 20 additional unique one-kilometer sections","Created batch 004 with permanent bounds, neighbors, evidence arrays, and fail-closed gate state","Preserved navigation-centerline separation from visible pavement","Blocked unsupported world placement and SinCityNGen recording"],
   "unresolved_evidence_gaps": ["No source evidence is attached to registered sections","No section has passed every production gate","SinCityNGen recording and world placement remain prohibited"],
-  "continuity_pointer": {"next_unregistered":"SC_01_25","next_batch_end":"SC_02_09"},
+  "continuity_pointer": {"next_unregistered":"SC_02_10","next_batch_end":"SC_02_29"},
   "validation": {
     "unique_registered_ids": true,
     "latest_batch_disjoint_from_prior_ledger": true,
@@ -81,6 +49,6 @@
     "navigation_centerlines_separate_from_visible_pavement": true,
     "unsupported_world_placement_blocked": true,
     "unsupported_sincityngen_recording_blocked": true,
-    "manifest_sha256": "04446efda777e34214627aaa37372ff6646377d586816caf5d8d3af57e0458ca"
+    "manifest_sha256": "af81a651d557fd4158d49f80816331603526301a9354305f346bbd96318c0234"
   }
 }

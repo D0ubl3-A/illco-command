@@ -1,28 +1,28 @@
 # Sin City Authoritative Map Validation Report
 
-**Run:** 2026-08-07 08:02:03 America/Los_Angeles  
-**Batch:** 007  
+**Run:** 2026-08-07 10:02:41 America/Los_Angeles  
+**Batch:** 008  
 **Authorization:** BLOCKED — CONTROL GEOMETRY ONLY
 
 ## Status
 
 - Batch completion: **20/20 — 100%**
-- Cumulative unique sections: **140/1,225 — 11.43%**
+- Cumulative unique sections: **160/1,225 — 13.06%**
 - Production-ready sections: **0/1,225 — 0.00%**
-- Remaining sections: **1,085**
+- Remaining sections: **1,065**
 - Readiness score: **20/100**
-- Current milestone: permanent control-geometry registration of 140 unique sections
-- Next milestone: register `SC_04_00` through `SC_04_19`
+- Current milestone: permanent control-geometry registration of 160 unique sections
+- Next milestone: register `SC_04_20` through `SC_05_04`
 
 ## Sections processed this run
 
-`SC_03_15` through `SC_03_34`
+`SC_04_00` through `SC_04_19`
 
 ## Validation results
 
 PASS:
 - Exactly 20 new row-major section IDs were registered.
-- The batch is disjoint from the prior 120-section ledger.
+- The batch is disjoint from the prior 140-section ledger.
 - Every section is within the 35 × 35 EPSG:32611 grid.
 - Every bound is exactly 1,000 m × 1,000 m.
 - Permanent west/east/south/north neighbors were recorded, with nulls only at grid edges.
@@ -30,7 +30,7 @@ PASS:
 - Empty anchors/source-evidence arrays were preserved rather than fabricated.
 - Unsupported world placement is blocked.
 - Unsupported SinCityNGen recording is blocked.
-- Batch manifest SHA-256: `e42529b7164ddde106c60c3c93b3540b42131ce78cf0455c526ae35475ba2a68`
+- Batch manifest SHA-256: `5388724302ba9f0c38b896f0c56e74d856afbba8e0aaf7a55ca4a7e7bda852f4`
 
 BLOCKED:
 - Terrain
@@ -77,5 +77,5 @@ No original source evidence or anchors were available for this batch. No product
 
 ## Continuity pointer
 
-Next unregistered section: `SC_04_00`  
-Next batch end: `SC_04_19`
+Next unregistered section: `SC_04_20`  
+Next batch end: `SC_05_04`

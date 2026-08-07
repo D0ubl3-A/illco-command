@@ -1,35 +1,36 @@
 # Sin City Authoritative Map Validation Report
 
-**Run:** 2026-08-06 09:01:49 America/Los_Angeles  
-**Batch:** 003  
+**Run:** 2026-08-06 18:04:09 America/Los_Angeles  
+**Batch:** 005  
 **Authorization:** BLOCKED — CONTROL GEOMETRY ONLY
 
 ## Status
 
 - Batch completion: **20/20 — 100%**
-- Cumulative unique sections: **60/1,225 — 4.90%**
+- Cumulative unique sections: **100/1,225 — 8.16%**
 - Production-ready sections: **0/1,225 — 0.00%**
-- Remaining sections: **1,165**
+- Remaining sections: **1,125**
 - Readiness score: **20/100**
-- Current milestone: permanent control-geometry registration of 60 unique sections
-- Next milestone: register `SC_01_25` through `SC_02_09`
+- Current milestone: permanent control-geometry registration of 100 unique sections
+- Next milestone: register `SC_02_30` through `SC_03_14`
 
 ## Sections processed this run
 
-`SC_01_05` through `SC_01_24`
+`SC_02_10` through `SC_02_29`
 
 ## Validation results
 
 PASS:
 - Exactly 20 new row-major section IDs were registered.
-- The batch is disjoint from the prior 40-section ledger.
+- The batch is disjoint from the prior 80-section ledger.
 - Every section is within the 35 × 35 EPSG:32611 grid.
 - Every bound is exactly 1,000 m × 1,000 m.
 - Permanent west/east/south/north neighbors were recorded.
 - Navigation centerlines and visible pavement remain separate requirements.
+- Empty anchors/source-evidence arrays were preserved rather than fabricated.
 - Unsupported world placement is blocked.
 - Unsupported SinCityNGen recording is blocked.
-- Batch manifest SHA-256: `04446efda777e34214627aaa37372ff6646377d586816caf5d8d3af57e0458ca`
+- Batch manifest SHA-256: `3c2995c78727ed15046686e8bd729532df9854bb09dc0d170a82b8b846caa16a`
 
 BLOCKED:
 - Terrain
@@ -66,14 +67,15 @@ No production placement or recording approval is supportable until original evid
 ## Verified changes
 
 - Registered exactly 20 additional unique one-kilometer sections.
-- Added permanent bounds, neighbors, empty evidence arrays, and explicit gate state per section.
-- Added per-section production-gate validation and false-completion blocking as the hourly skill-audit improvement.
+- Preserved permanent bounds, neighbors, fail-closed evidence defaults, and per-section production-gate state.
+- Preserved navigation-centerline separation from visible pavement.
+- Kept world placement and SinCityNGen recording blocked.
 
 ## Unresolved evidence gaps
 
-No source evidence or anchors were available for this batch. No production join was performed or claimed.
+No original source evidence or anchors were available for this batch. No production terrain, parcel, building, road, identity, architecture, or binary-asset join was performed or claimed.
 
 ## Continuity pointer
 
-Next unregistered section: `SC_01_25`  
-Next batch end: `SC_02_09`
+Next unregistered section: `SC_02_30`  
+Next batch end: `SC_03_14`

@@ -1,0 +1,82 @@
+{
+  "schema_version": "1.0",
+  "project": "Sin City / JC the Holy OG Authoritative Map Production",
+  "target_crs": "EPSG:32611",
+  "policy": "Register only authoritative or primary-source geospatial endpoints. Registration does not imply section-level ingestion, QA PASS, or production authorization.",
+  "sources": [
+    {
+      "source_id": "clark_county_parcels",
+      "authority": "Clark County Assessor's Office / Clark County GISMO / City of Las Vegas",
+      "dataset": "CC_PARCELS_SHP",
+      "type": "parcel_polygons",
+      "service_url": "https://services1.arcgis.com/F1v0ufATbBQScMtY/ArcGIS/rest/services/CC_PARCELS_SHP/FeatureServer/1",
+      "service_root": "https://services1.arcgis.com/F1v0ufATbBQScMtY/ArcGIS/rest/services/CC_PARCELS_SHP/FeatureServer",
+      "source_crs": "EPSG:3421",
+      "update_note": "Service metadata states parcel data are derived from AOCCROLL and updated weekly.",
+      "evidence_status": "SOURCE_CONFIRMED",
+      "ingestion_status": "NOT_INGESTED"
+    },
+    {
+      "source_id": "clark_county_right_of_way",
+      "authority": "Clark County",
+      "dataset": "TransformClarkCounty Right of Ways",
+      "type": "right_of_way_centerlines",
+      "service_url": "https://gisgate.co.clark.nv.us/arcgis/rest/services/CompPlanning/TransformClarkCounty/FeatureServer/0",
+      "source_crs": "EPSG:3421",
+      "evidence_status": "SOURCE_CONFIRMED",
+      "ingestion_status": "NOT_INGESTED"
+    },
+    {
+      "source_id": "city_las_vegas_right_of_way",
+      "authority": "City of Las Vegas / OGIS / Clark County",
+      "dataset": "Transportation/RightofWay",
+      "type": "right_of_way",
+      "service_url": "https://mapdata.lasvegasnevada.gov/clvgis/rest/services/Transportation/RightofWay/MapServer",
+      "source_crs": "EPSG:3421",
+      "evidence_status": "SOURCE_CONFIRMED",
+      "ingestion_status": "NOT_INGESTED"
+    },
+    {
+      "source_id": "city_las_vegas_building_footprints",
+      "authority": "City of Las Vegas Planning and Development Department",
+      "dataset": "DevelopmentServices/BuildingFootprints",
+      "type": "building_footprints",
+      "service_url": "https://mapdata.lasvegasnevada.gov/clvgis/rest/services/DevelopmentServices/BuildingFootprints/MapServer",
+      "source_crs": "EPSG:3421",
+      "evidence_status": "SOURCE_CONFIRMED",
+      "coverage_note": "City service coverage is not assumed to cover the full 35x35 km project extent; coverage must be checked section-by-section.",
+      "ingestion_status": "NOT_INGESTED"
+    },
+    {
+      "source_id": "usgs_3dep_dem",
+      "authority": "U.S. Geological Survey",
+      "dataset": "3D Elevation Program (3DEP)",
+      "type": "bare_earth_dem",
+      "catalog_url": "https://data.usgs.gov/datacatalog/data/USGS%3A3a81321b-c153-416f-98b7-cc8e5f0e17c3",
+      "download_portal": "https://apps.nationalmap.gov/downloader/",
+      "horizontal_datum": "NAD83",
+      "vertical_datum": "typically NAVD88 in CONUS; verify product metadata per tile",
+      "preferred_resolution": "highest available verified product, with 1/3 arc-second (~10 m) as nationwide fallback",
+      "evidence_status": "SOURCE_CONFIRMED",
+      "ingestion_status": "NOT_INGESTED"
+    }
+  ],
+  "crs_authorities": [
+    {
+      "crs": "EPSG:3421",
+      "name": "NAD83 / Nevada East (ftUS)",
+      "units": "US survey foot",
+      "area": "Nevada east zone including Clark County"
+    },
+    {
+      "crs": "EPSG:32611",
+      "name": "WGS 84 / UTM zone 11N",
+      "units": "metre"
+    }
+  ],
+  "production_effect": {
+    "authoritative_source_registry": "PASS",
+    "section_source_evidence": "BLOCKED_PENDING_INGESTION",
+    "production_authorization": "BLOCKED"
+  }
+}

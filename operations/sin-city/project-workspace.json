@@ -1,20 +1,20 @@
 {
   "schema_version":"1.2",
-  "run_id":"2026-08-07T11:58:23-07:00",
+  "run_id":"2026-08-07T17:54:11-07:00",
   "project":"Sin City / JC the Holy OG Authoritative Map Production",
   "grid":{"crs":"EPSG:32611","min_easting":648949.782,"max_easting":683949.782,"min_northing":3983561.814,"max_northing":4018561.814,"tile_size_m":1000,"rows":35,"columns":35,"total_sections":1225},
-  "ledger":{"ordering":"row-major from southwest","registered_range":"SC_00_00 through SC_05_24","registered_count":200,"latest_batch_manifest":"section-batch-010.json","registration_status":"REGISTERED_CONTROL_GEOMETRY_ONLY"},
-  "batch":{"sections_processed_this_run":20,"section_ids":["SC_05_05","SC_05_06","SC_05_07","SC_05_08","SC_05_09","SC_05_10","SC_05_11","SC_05_12","SC_05_13","SC_05_14","SC_05_15","SC_05_16","SC_05_17","SC_05_18","SC_05_19","SC_05_20","SC_05_21","SC_05_22","SC_05_23","SC_05_24"],"batch_completion_percentage":100.0,"cumulative_unique_sections":200,"cumulative_processing_percentage":16.33,"production_ready_sections":0,"production_ready_percentage":0.0,"remaining_sections":1025},
-  "current_milestone":"Permanent control-geometry registration: 200 unique sections",
-  "next_milestone":"Register SC_05_25 through SC_06_09 while preserving evidence blocks",
+  "ledger":{"ordering":"row-major from southwest","registered_range":"SC_00_00 through SC_06_09","registered_count":220,"latest_batch_manifest":"section-batch-011.json","registration_status":"REGISTERED_CONTROL_GEOMETRY_ONLY"},
+  "batch":{"sections_processed_this_run":20,"section_ids":["SC_05_25","SC_05_26","SC_05_27","SC_05_28","SC_05_29","SC_05_30","SC_05_31","SC_05_32","SC_05_33","SC_05_34","SC_06_00","SC_06_01","SC_06_02","SC_06_03","SC_06_04","SC_06_05","SC_06_06","SC_06_07","SC_06_08","SC_06_09"],"batch_completion_percentage":100.0,"cumulative_unique_sections":220,"cumulative_processing_percentage":17.96,"production_ready_sections":0,"production_ready_percentage":0.0,"remaining_sections":1005},
+  "current_milestone":"Permanent control-geometry registration: 220 unique sections",
+  "next_milestone":"Register SC_06_10 through SC_06_29 while preserving evidence blocks",
   "dependencies":["building_registry.*","terrain_manifest.json","authoritative parcel/right-of-way layers","production DEM and terrain tiles","canonical source-local road transform","binary sprite PNGs"],
   "production_gates":{"terrain":"BLOCKED","parcels":"BLOCKED","buildings":"BLOCKED","roads":"BLOCKED","identities":"BLOCKED","architecture":"BLOCKED","binary_assets":"BLOCKED","qa_50_issue_policy":"BLOCKED"},
   "readiness_score":20,
   "readiness_deductions":["-20 no authoritative source registry attached","-15 no production terrain manifest or tiles","-15 no authoritative parcels or right-of-way","-15 no building registry or binary sprites","-10 no canonical source-local road transform","-5 no section has passed 50-issue QA"],
   "production_authorization":"BLOCKED",
   "approvals_needed":["No production placement approval until original evidence contracts are present"],
-  "verified_changes":["Registered exactly 20 additional unique one-kilometer sections","Created batch 010 with permanent bounds, neighbors, evidence defaults, and fail-closed gate state","Preserved navigation-centerline separation from visible pavement","Blocked unsupported world placement and SinCityNGen recording"],
+  "verified_changes":["Registered exactly 20 additional unique one-kilometer sections","Created batch 011 with permanent bounds, neighbors, evidence defaults, and fail-closed gate state","Preserved navigation-centerline separation from visible pavement","Blocked unsupported world placement and SinCityNGen recording"],
   "unresolved_evidence_gaps":["No source evidence is attached to registered sections","No section has passed every production gate","SinCityNGen recording and world placement remain prohibited"],
-  "continuity_pointer":{"next_unregistered":"SC_05_25","next_batch_end":"SC_06_09"},
-  "validation":{"unique_registered_ids":true,"latest_batch_disjoint_from_prior_ledger":true,"all_latest_batch_bounds_are_one_kilometer":true,"all_latest_batch_sections_within_grid":true,"navigation_centerlines_separate_from_visible_pavement":true,"unsupported_world_placement_blocked":true,"unsupported_sincityngen_recording_blocked":true}
+  "continuity_pointer":{"next_unregistered":"SC_06_10","next_batch_end":"SC_06_29"},
+  "validation":{"unique_registered_ids":true,"latest_batch_disjoint_from_prior_ledger":true,"all_latest_batch_bounds_are_one_kilometer":true,"all_latest_batch_sections_within_grid":true,"navigation_centerlines_separate_from_visible_pavement":true,"unsupported_world_placement_blocked":true,"unsupported_sincityngen_recording_blocked":true,"manifest_sha256":"0ad66f50dcecc74b8e675685ad1602abd2cf39a898c89a6b53179e3bdb3b5ed3"}
 }

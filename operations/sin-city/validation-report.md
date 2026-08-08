@@ -1,37 +1,37 @@
 # Sin City Authoritative Map Validation Report
 
-**Run:** 2026-08-07 18:16:28 America/Los_Angeles  
-**Batch:** 013  
+**Run:** 2026-08-07 22:02:40 America/Los_Angeles  
+**Batch:** 018  
 **Authorization:** BLOCKED — CONTROL GEOMETRY ONLY
 
 ## Status
 
 - Batch completion: **20/20 — 100%**
-- Cumulative unique sections: **260/1,225 — 21.22%**
+- Cumulative unique sections: **360/1,225 — 29.39%**
 - Production-ready sections: **0/1,225 — 0.00%**
-- Remaining sections: **965**
+- Remaining sections: **865**
 - Readiness score: **20/100**
-- Current milestone: permanent control-geometry registration of 260 unique sections
-- Next milestone: register `SC_07_15` through `SC_07_34`
+- Current milestone: permanent control-geometry registration of 360 unique sections
+- Next milestone: register `SC_10_10` through `SC_10_29`
 
 ## Sections processed this run
 
-`SC_06_30` through `SC_06_34`, then `SC_07_00` through `SC_07_14`.
+`SC_09_25` through `SC_09_34`, then `SC_10_00` through `SC_10_09`.
 
 ## Validation results
 
 PASS:
 - Exactly 20 new row-major section IDs were registered.
-- Batch 013 begins immediately after the prior verified continuity pointer `SC_06_30` and is disjoint from the 240-section ledger.
+- Batch 018 begins immediately after the prior verified continuity pointer `SC_09_25` and is disjoint from the 340-section ledger.
 - Every section is within the 35 × 35 EPSG:32611 grid.
 - Every bound is exactly 1,000 m × 1,000 m.
 - Permanent west/east/south/north neighbors were recorded, with nulls only at grid edges.
 - Navigation centerlines and visible pavement remain separate requirements.
 - Empty anchors/source-evidence arrays were preserved rather than fabricated.
-- Explicit evidence state is `NO_ORIGINAL_EVIDENCE_ATTACHED`.
 - Unsupported world placement is blocked.
 - Unsupported SinCityNGen recording is blocked.
-- Batch manifest SHA-256: `6374054f9524d9d7cfc0e5ae187e0e5f6fc06df74d4311d190c8a6491c67f363`
+- Prior workspace blob SHA preserved: `28f7f5c6e86249a1933b0c7853a08215a632c19b`.
+- Batch manifest SHA-256: `d37c3986bd68f022ad855df494e79674669441323cee7db411c7a1e56b476232`.
 
 BLOCKED:
 - Terrain
@@ -71,8 +71,8 @@ No production placement or recording approval is supportable until original evid
 - Preserved permanent bounds, neighbors, fail-closed evidence defaults, and per-section production-gate state.
 - Preserved navigation-centerline separation from visible pavement.
 - Kept world placement and SinCityNGen recording blocked.
-- Advanced the durable workspace ledger to 260 unique sections.
-- Upgraded workspace validation controls to explicitly track scope, acceptance criteria, risks, decisions, and evidence state.
+- Advanced the durable workspace ledger to 360 unique sections.
+- Added immutable prior-ledger and batch-manifest evidence receipts to the workspace schema.
 
 ## Unresolved evidence gaps
 
@@ -80,5 +80,5 @@ No original source evidence or anchors were available for this batch. No product
 
 ## Continuity pointer
 
-Next unregistered section: `SC_07_15`  
-Next batch end: `SC_07_34`
+Next unregistered section: `SC_10_10`  
+Next batch end: `SC_10_29`

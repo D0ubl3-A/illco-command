@@ -1,28 +1,28 @@
 # Sin City Authoritative Map Validation Report
 
-**Run:** 2026-08-07 10:02:41 America/Los_Angeles  
-**Batch:** 008  
+**Run:** 2026-08-07 17:54:11 America/Los_Angeles  
+**Batch:** 011  
 **Authorization:** BLOCKED — CONTROL GEOMETRY ONLY
 
 ## Status
 
 - Batch completion: **20/20 — 100%**
-- Cumulative unique sections: **160/1,225 — 13.06%**
+- Cumulative unique sections: **220/1,225 — 17.96%**
 - Production-ready sections: **0/1,225 — 0.00%**
-- Remaining sections: **1,065**
+- Remaining sections: **1,005**
 - Readiness score: **20/100**
-- Current milestone: permanent control-geometry registration of 160 unique sections
-- Next milestone: register `SC_04_20` through `SC_05_04`
+- Current milestone: permanent control-geometry registration of 220 unique sections
+- Next milestone: register `SC_06_10` through `SC_06_29`
 
 ## Sections processed this run
 
-`SC_04_00` through `SC_04_19`
+`SC_05_25` through `SC_05_34`, then `SC_06_00` through `SC_06_09`.
 
 ## Validation results
 
 PASS:
 - Exactly 20 new row-major section IDs were registered.
-- The batch is disjoint from the prior 140-section ledger.
+- Batch 011 begins immediately after the prior verified continuity pointer `SC_05_25` and is disjoint from the 200-section ledger.
 - Every section is within the 35 × 35 EPSG:32611 grid.
 - Every bound is exactly 1,000 m × 1,000 m.
 - Permanent west/east/south/north neighbors were recorded, with nulls only at grid edges.
@@ -30,7 +30,7 @@ PASS:
 - Empty anchors/source-evidence arrays were preserved rather than fabricated.
 - Unsupported world placement is blocked.
 - Unsupported SinCityNGen recording is blocked.
-- Batch manifest SHA-256: `5388724302ba9f0c38b896f0c56e74d856afbba8e0aaf7a55ca4a7e7bda852f4`
+- Batch manifest SHA-256: `0ad66f50dcecc74b8e675685ad1602abd2cf39a898c89a6b53179e3bdb3b5ed3`
 
 BLOCKED:
 - Terrain
@@ -70,6 +70,7 @@ No production placement or recording approval is supportable until original evid
 - Preserved permanent bounds, neighbors, fail-closed evidence defaults, and per-section production-gate state.
 - Preserved navigation-centerline separation from visible pavement.
 - Kept world placement and SinCityNGen recording blocked.
+- Advanced the durable workspace ledger to 220 unique sections.
 
 ## Unresolved evidence gaps
 
@@ -77,5 +78,5 @@ No original source evidence or anchors were available for this batch. No product
 
 ## Continuity pointer
 
-Next unregistered section: `SC_04_20`  
-Next batch end: `SC_05_04`
+Next unregistered section: `SC_06_10`  
+Next batch end: `SC_06_29`

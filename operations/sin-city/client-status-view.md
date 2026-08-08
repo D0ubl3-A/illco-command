@@ -1,24 +1,25 @@
 # Sin City Client Status View
 
-**Updated:** 2026-08-08 05:58 America/Los_Angeles
+**Updated:** 2026-08-08 13:58 America/Los_Angeles
 
-- Batch 034: **100%** — 20/20 sections
-- Cumulative processed: **680/1,225 (55.51%)**
+- Batch 036: **100%** — 20/20 sections
+- Cumulative processed: **720/1,225 (58.78%)**
 - Production ready: **0/1,225 (0.00%)**
-- Remaining: **545**
+- Remaining: **505**
 - Readiness: **50/100**
 - Production authorization: **BLOCKED — CONTROL GEOMETRY ONLY**
-- Current milestone: 680 permanent control-geometry registrations
-- Next milestone: `SC_19_15` through `SC_19_34`
+- Current milestone: 720 permanent control-geometry registrations
+- Next milestone: `SC_20_20` through `SC_21_04`
 
 ## Verified this run
 
-Exactly 20 new nonduplicated one-kilometer sections (`SC_18_30`–`SC_18_34`, `SC_19_00`–`SC_19_14`) received permanent EPSG:32611 bounds and grid neighbors. Available anchors and source evidence remain empty; navigation centerlines remain distinct from visible pavement; unsupported world placement and SinCityNGen recording remain blocked.
+Exactly 20 new nonduplicated one-kilometer sections (`SC_20_00`–`SC_20_19`) received permanent EPSG:32611 bounds and grid neighbors after direct verification of the 700-section durable ledger. Available anchors and source evidence remain empty; navigation centerlines remain distinct from visible pavement; unsupported world placement and SinCityNGen recording remain blocked.
 
 ## Evidence receipts
 
-Prior workspace blob: `97e232cad712b0855e5ec8f2d5883e9f48b700ad`  
-Batch 034 commit: `cbe60e5c33b4c7bf90661777bc1a0df36c465fe0`
+Prior workspace blob: `b5b83838be93be5431ade36009cc5f9aa9c287f4`  
+Batch 036 commit: `532dc4fad25b6329bedcbc3ed175a78702d9036f`  
+Ledger commit: `83156bf08ef3f3bfb86344742f7da1dac46389ec`
 
 ## Blockers
 
@@ -30,4 +31,4 @@ No production placement approval can be requested until original evidence is ing
 
 ## Continuity
 
-Resume at `SC_19_15`; next 20-section batch ends at `SC_19_34`.
+Resume at `SC_20_20`; next 20-section batch ends at `SC_21_04`.

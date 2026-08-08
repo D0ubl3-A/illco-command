@@ -1,0 +1,88 @@
+name: Package Sin City Workspace
+
+on:
+  push:
+    paths:
+      - '.github/workflows/sin-city-package.yml'
+      - 'operations/sin-city/**'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  package:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout exact repository state
+        uses: actions/checkout@v4
+
+      - name: Build auditable package manifest
+        shell: python
+        run: |
+          import hashlib
+          import json
+          from datetime import datetime, timezone
+          from pathlib import Path
+
+          root = Path('operations/sin-city')
+          files = sorted(p for p in root.rglob('*') if p.is_file())
+          workspace = json.loads((root / 'project-workspace.json').read_text(encoding='utf-8'))
+
+          inventory = []
+          for path in files:
+              data = path.read_bytes()
+              inventory.append({
+                  'path': path.as_posix(),
+                  'bytes': len(data),
+                  'sha256': hashlib.sha256(data).hexdigest(),
+              })
+
+          manifest = {
+              'schema_version': '1.0',
+              'package': 'Sin City / JC the Holy OG current workspace',
+              'source_repository': '${{ github.repository }}',
+              'source_commit': '${{ github.sha }}',
+              'branch': '${{ github.ref_name }}',
+              'generated_at_utc': datetime.now(timezone.utc).isoformat(),
+              'included_root': 'operations/sin-city',
+              'file_count': len(files),
+              'ledger_snapshot': {
+                  'registered_count': workspace.get('ledger', {}).get('registered_count'),
+                  'total_sections': workspace.get('grid', {}).get('total_sections'),
+                  'registered_range': workspace.get('ledger', {}).get('registered_range'),
+                  'latest_batch_manifest': workspace.get('ledger', {}).get('latest_batch_manifest'),
+                  'production_ready_sections': workspace.get('batch', {}).get('production_ready_sections'),
+                  'production_ready_percentage': workspace.get('batch', {}).get('production_ready_percentage'),
+                  'readiness_score': workspace.get('readiness_score'),
+                  'production_authorization': workspace.get('production_authorization'),
+                  'continuity_pointer': workspace.get('continuity_pointer'),
+              },
+              'truth_notice': 'This archive is an exact workspace snapshot. Registration/control geometry is not production completion. Production readiness is only what project-workspace.json directly verifies.',
+              'files': inventory,
+          }
+          Path('PACKAGE-MANIFEST.json').write_text(json.dumps(manifest, indent=2) + '\n', encoding='utf-8')
+
+          with Path('SHA256SUMS.txt').open('w', encoding='utf-8') as out:
+              for item in inventory:
+                  out.write(f"{item['sha256']}  {item['path']}\n")
+              for extra in ('PACKAGE-MANIFEST.json',):
+                  data = Path(extra).read_bytes()
+                  out.write(f"{hashlib.sha256(data).hexdigest()}  {extra}\n")
+
+      - name: Create ZIP
+        run: zip -9 -r Sin-City-Workspace-CURRENT.zip operations/sin-city PACKAGE-MANIFEST.json SHA256SUMS.txt
+
+      - name: Verify ZIP
+        run: |
+          unzip -t Sin-City-Workspace-CURRENT.zip
+          test -s Sin-City-Workspace-CURRENT.zip
+
+      - name: Upload package
+        uses: actions/upload-artifact@v4
+        with:
+          name: Sin-City-Workspace-CURRENT
+          path: Sin-City-Workspace-CURRENT.zip
+          if-no-files-found: error
+          retention-days: 30

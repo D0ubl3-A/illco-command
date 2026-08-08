@@ -1,0 +1,45 @@
+{
+  "schema_version": "1.0",
+  "project": "Sin City / JC the Holy OG Authoritative Map Production",
+  "purpose": "Canonical reprojection contract for authoritative Clark County / City of Las Vegas road, parcel, right-of-way, and building layers before section joins.",
+  "source_crs": {
+    "epsg": 3421,
+    "name": "NAD83 / Nevada East (ftUS)",
+    "axis_order": ["easting", "northing"],
+    "unit": "US survey foot"
+  },
+  "target_crs": {
+    "epsg": 32611,
+    "name": "WGS 84 / UTM zone 11N",
+    "axis_order": ["easting", "northing"],
+    "unit": "metre"
+  },
+  "required_engine": "PROJ/GDAL or equivalent standards-compliant EPSG transformation engine",
+  "operation_policy": {
+    "always_xy": true,
+    "preserve_source_geometry": true,
+    "no_manual_scale_only_conversion": true,
+    "no_affine_guessing": true,
+    "record_transform_metadata_per_ingested_dataset": true,
+    "verify_transformed_extent_intersects_project_grid": true,
+    "reject_unknown_crs": true
+  },
+  "project_grid": {
+    "crs": "EPSG:32611",
+    "min_easting": 648949.782,
+    "max_easting": 683949.782,
+    "min_northing": 3983561.814,
+    "max_northing": 4018561.814
+  },
+  "acceptance_checks": [
+    "input CRS explicitly identified as EPSG:3421 or separately verified before transform",
+    "transform performed by an EPSG-aware engine",
+    "output coordinates expressed in metres in EPSG:32611",
+    "output bounds intersect expected Las Vegas project grid when dataset coverage should intersect",
+    "geometry validity checked after reprojection",
+    "source feature identifiers preserved",
+    "source URL and retrieval timestamp retained in provenance"
+  ],
+  "status": "PASS_CONTRACT_DEFINED_NOT_YET_APPLIED_TO_SECTION_DATA",
+  "production_authorization": "BLOCKED_PENDING_SOURCE_INGESTION_AND_QA"
+}

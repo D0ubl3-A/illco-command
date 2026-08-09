@@ -1,16 +1,13 @@
-# First-Week Plan
+# First-Week / Current Execution Plan
 
-## Priority 1 — Durable control ledger
-Continue exact non-overlapping 20-section batches with deterministic bounds, neighbors, validation, and continuity pointers.
+**Updated:** 2026-08-09 11:19 America/Los_Angeles
 
-## Priority 2 — Evidence intake contract
-Locate and validate `building_registry.*`, `terrain_manifest.json`, coordinate/gate/section/source contracts, authoritative parcels/right-of-way, production terrain, canonical road transform, and original binary sprites.
+Current execution order:
+1. Continue nonduplicative 20-section registration from the durable pointer.
+2. In parallel, prioritize ingestion of original production DEM/terrain evidence.
+3. Join authoritative parcel/right-of-way, building, and road evidence by bounded section.
+4. Add identities/architecture only where evidence supports them.
+5. Generate binary assets only from verified evidence.
+6. Run the full 50-issue QA and promote sections only when every gate passes.
 
-## Priority 3 — Gate automation
-Add schema checks for unique IDs, in-grid 1 km bounds, required evidence references, centerline/pavement separation, QA receipts, and explicit production authorization.
-
-## Stop conditions
-Stop joins or placement when provenance is absent, coordinates conflict, a checksum changes unexpectedly, a duplicate section appears, or any production gate is not PASS.
-
-## Next execution
-Register `SC_01_05` through `SC_01_24`; do not process a second duplicate batch.
+After Batch 048: **960 registered, 265 remaining, 0 production-ready**. Next batch: `SC_27_15–SC_27_34`.

@@ -1,18 +1,20 @@
-# Risks, Assumptions, and Decisions
+# Risks, Assumptions, Decisions
+
+**Updated:** 2026-08-09 11:19 America/Los_Angeles
 
 ## Risks
-- Missing source contracts can cause false placement or unverifiable reconstruction.
-- Navigation centerlines may be mistaken for visible pavement.
-- Recreated or preview assets may be mislabeled as original binary assets.
-- Duplicate batches can corrupt cumulative progress.
-- A registration percentage may be mistaken for production readiness.
+- Control-geometry progress can be mistaken for production completion.
+- Source data may exist in registry but remain un-ingested at section level.
+- Partial writes can desynchronize batch manifests and the ledger.
+- Unsupported assets or placement can create false realism claims.
 
 ## Assumptions
-- Grid origin, bounds, CRS, dimensions, and row-major order remain authoritative until contradicted by original evidence.
-- Unknown source-dependent fields remain blocked rather than estimated.
+- The fixed grid and row-major ordering remain authoritative unless explicitly migrated with evidence.
+- Missing evidence is treated as unknown, not inferred.
 
 ## Decisions
-- Exactly one 20-section batch per hourly map lane.
-- Existing validated ledger entries are immutable unless a regression is evidenced.
-- Production-ready percentage uses only sections with every required gate PASS.
-- World placement and SinCityNGen recording remain blocked for control-only sections.
+- Ledger is read before every mutation.
+- Production authorization remains fail-closed.
+- Empty anchors/evidence arrays are preserved rather than fabricated.
+- Navigation centerlines remain distinct from visible pavement.
+- Batch 048 advances registration to **960/1,225** only.

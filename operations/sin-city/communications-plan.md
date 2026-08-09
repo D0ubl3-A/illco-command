@@ -1,13 +1,9 @@
 # Communications Plan
 
-## Hourly status
-Report only verified batch changes, percentages, gate status, regressions, blockers requiring Aaron, approvals, and the next continuity pointer.
+**Updated:** 2026-08-09 11:19 America/Los_Angeles
 
-## Evidence language
-Use `REGISTERED_CONTROL_GEOMETRY_ONLY`, `BLOCKED`, `UNKNOWN`, or `PASS` exactly as supported. Never use complete, production-ready, rendered, placed, or validated for evidence that does not prove those states.
+Each batch report must state: batch %, cumulative unique-section %, production-ready %, sections processed, cumulative processed, remaining, readiness /100 with deductions, current/next milestone, blockers, approvals, production authorization, verified changes, evidence gaps, and continuity pointer.
 
-## Escalation
-Escalate only when a required original input is available for approval, a validated section regresses, a release gate changes materially, or Aaron must take a specific action.
+Batch 048 status: **20/20**, **960/1,225 (78.37%)**, production-ready **0%**, next `SC_27_15–SC_27_34`.
 
-## Records
-GitHub repository files are the durable operational record. Preserve prior validated entries and append or replace only with evidence-backed updates.
+Do not report registration, plans, manifests, previews, or unverified assets as production completion.

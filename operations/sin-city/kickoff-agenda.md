@@ -1,11 +1,13 @@
-# Kickoff Agenda
+# Kickoff / Continuation Agenda
 
-1. Confirm authoritative grid, CRS, bounds, and row-major ordering.
-2. Confirm control geometry is not production completion.
-3. Review original source contracts and licensing.
-4. Resolve terrain, parcel/right-of-way, road-transform, building-registry, identity, architecture, context, and binary-asset dependencies.
-5. Confirm separation of navigation centerlines and visible pavement.
-6. Review 50-issue repair policy and acceptance gates.
-7. Approve evidence retention, checksum, and regression procedures.
-8. Confirm prohibition on unsupported world placement and SinCityNGen recording.
-9. Approve next exact section batch and continuity pointer.
+**Updated:** 2026-08-09 11:19 America/Los_Angeles
+
+1. Verify authoritative ledger and continuity pointer.
+2. Confirm next 20 row-major sections are disjoint and within grid.
+3. Register bounds and neighbors without fabricating anchors/evidence.
+4. Preserve source registry, CRS transform, pavement/navigation separation, and fail-closed gates.
+5. Ingest bounded original evidence only when available.
+6. Run 50-issue QA before any production-ready claim.
+7. Re-read durable state after commit.
+
+Current continuation pointer after Batch 048: `SC_27_15–SC_27_34`.

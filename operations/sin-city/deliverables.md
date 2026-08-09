@@ -1,23 +1,16 @@
-# Deliverables
+# Sin City Deliverables
 
-## Required workspace artifacts
-- `project-workspace.json`
-- `project-charter.md`
-- `timeline.md`
-- `deliverables.md`
-- `roles-and-responsibilities.md`
-- `communications-plan.md`
-- `kickoff-agenda.md`
-- `risks-assumptions-decisions.md`
-- `first-week-plan.md`
-- `client-status-view.md`
-- `validation-report.md`
+**Updated:** 2026-08-09 11:19 America/Los_Angeles
 
-## Per-batch artifacts
-- exact 20-section manifest
-- queue/continuity pointer
-- validation report
-- checksum receipt when package creation is supported
+## Current durable deliverables
+- Authoritative ledger: `project-workspace.json`
+- Batch 048 manifest: `section-batch-048.json`
+- Charter, timeline, roles, communications, kickoff agenda, risks/assumptions/decisions, first-week plan, client status, validation report
+- Source registry and canonical CRS-transform contract
 
-## Production package requirements
-Original evidence references, joined geometry/assets, section acceptance records, seam and 50-issue QA results, checksums, and explicit production authorization. No control-only artifact may be labeled production-ready.
+## Acceptance status
+Control-geometry registration: **960/1,225**.  
+Production-ready: **0/1,225**.  
+Production authorization: **BLOCKED**.
+
+No terrain, parcel, building, road, identity, architecture, binary asset, or recording deliverable is accepted without original evidence and passing QA.

@@ -1,39 +1,40 @@
 # Sin City Authoritative Map Validation Report
 
-**Run:** 2026-08-08 17:02 America/Los_Angeles  
-**Batch:** 043  
+**Run:** 2026-08-09 11:10 America/Los_Angeles  
+**Batch:** 047  
 **Authorization:** BLOCKED — CONTROL GEOMETRY ONLY
 
 ## Status
 
 - Batch completion: **20/20 — 100%**
-- Cumulative unique sections: **860/1,225 — 70.20%**
+- Cumulative unique sections: **940/1,225 — 76.73%**
 - Production-ready sections: **0/1,225 — 0.00%**
-- Remaining sections: **365**
+- Remaining sections: **285**
 - Readiness score: **50/100**
-- Current milestone: permanent control-geometry registration of 860 unique sections
-- Next milestone: register `SC_24_20` through `SC_25_04`
+- Current milestone: permanent control-geometry registration of 940 unique sections
+- Next milestone: register `SC_26_30` through `SC_27_14`
 
-## Sections processed this run
+## Sections reconciled this run
 
-`SC_24_00` through `SC_24_19`.
+`SC_26_10` through `SC_26_29`.
 
 ## Validation results
 
 PASS:
-- Exactly 20 new row-major section IDs were registered after direct ledger verification at 840 sections.
-- Batch 043 begins immediately after verified continuity pointer `SC_24_00` and is disjoint from the prior ledger.
-- Every section is within the 35 × 35 EPSG:32611 grid.
-- Every bound is exactly 1,000 m × 1,000 m.
-- West/east/south/north grid neighbors were recorded, with nulls only at grid edges.
+- Authoritative ledger path recovered as `operations/sin-city/project-workspace.json` in `D0ubl3-A/illco-command`.
+- Prior durable ledger directly verified at 920 sections before reconciliation.
+- Existing Batch 047 manifest directly verified; no duplicate batch manifest was created.
+- Batch 047 contains exactly 20 next row-major section IDs and is disjoint from the prior registered range ending at `SC_26_09`.
+- Every Batch 047 section is within the 35 × 35 EPSG:32611 grid.
+- Every Batch 047 bound is exactly 1,000 m × 1,000 m.
 - Navigation centerlines and visible pavement remain separate requirements.
-- Empty anchors/source-evidence state was preserved rather than fabricated.
-- Authoritative source registry remains attached.
-- Canonical source-to-project CRS transform contract remains defined but unapplied to section evidence.
+- No original section evidence, terrain, parcel, building, road, identity, architecture, or binary-asset join was fabricated.
 - Unsupported world placement and SinCityNGen recording remain blocked.
-- Prior workspace blob SHA preserved: `a0b79699593c9488729c7ebcc6371cf8456ea89e`.
-- Batch 043 commit: `0c361825f6d79bcf6328e8f08cab216c5e8eff85`.
-- Ledger commit: `4b02973d0baf5605687d9445869784baac12ce05`.
+- Root-level `SIN_CITY_LEDGER.md` now identifies the authoritative ledger and enforces read-before-write/fail-closed continuity.
+- Prior workspace blob SHA preserved: `1dbdbcb87b0cfd16432ac78b9cde7732a7ff31be`.
+- Batch 047 commit: `d854e1c64d54c1de2bd38e7ac1bf9e21c4469035`.
+- Ledger reconciliation commit: `8223ad752124d36cfef4f12db42acce8385e1119`.
+- Ledger pointer commit: `cc8ab0352f3037fe96914525b80bd70056d2b58b`.
 
 BLOCKED:
 - Production terrain
@@ -58,17 +59,18 @@ No production placement or recording approval is supportable until original evid
 
 ## Verified changes
 
-- Registered exactly 20 additional unique one-kilometer sections.
-- Advanced durable control-geometry coverage from 840 to 860 sections.
-- Preserved authoritative-source and CRS contracts.
+- Recovered durable ledger discoverability.
+- Reconciled an existing partial Batch 047 write without duplicating section registration.
+- Advanced the authoritative ledger from 920 to 940 unique registered sections based on the already-committed Batch 047 manifest.
+- Added a durable root-level pointer so future runs can locate the ledger directly.
+- Refreshed client status and validation surfaces to Batch 047.
 - Preserved fail-closed production authorization.
-- Refreshed client status and validation surfaces to Batch 043.
 
 ## Unresolved evidence gaps
 
-No original section-level source evidence or anchors were available for Batch 043. No production terrain, parcel, building, road, identity, architecture, or binary-asset join was performed or claimed.
+No original section-level source evidence is currently joined for Batch 047. No production terrain, parcel, building, road, identity, architecture, or binary-asset production gate is green, and no section has passed the complete 50-issue QA policy.
 
 ## Continuity pointer
 
-Next unregistered section: `SC_24_20`  
-Next batch end: `SC_25_04`
+Next unregistered section: `SC_26_30`  
+Next batch end: `SC_27_14`

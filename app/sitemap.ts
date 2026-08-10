@@ -14,6 +14,11 @@ export default function sitemap(): MetadataRoute.Sitemap {
   const staticRoutes: MetadataRoute.Sitemap = [
     { url: siteUrl, lastModified, changeFrequency: "daily", priority: 1 },
     { url: `${siteUrl}/audit-proof`, lastModified, changeFrequency: "weekly", priority: 0.99 },
+    { url: `${siteUrl}/las-vegas/ai-agency`, lastModified, changeFrequency: "weekly", priority: 0.96 },
+    { url: `${siteUrl}/las-vegas/ai-automation`, lastModified, changeFrequency: "weekly", priority: 0.96 },
+    { url: `${siteUrl}/las-vegas/ai-receptionist`, lastModified, changeFrequency: "weekly", priority: 0.96 },
+    { url: `${siteUrl}/henderson/ai-consulting`, lastModified, changeFrequency: "weekly", priority: 0.96 },
+    { url: `${siteUrl}/henderson/ai-automation`, lastModified, changeFrequency: "weekly", priority: 0.96 },
     { url: `${siteUrl}/lead-rescue`, lastModified, changeFrequency: "weekly", priority: 0.99 },
     { url: `${siteUrl}/youtube-rank-revival`, lastModified, changeFrequency: "weekly", priority: 0.98 },
     { url: `${siteUrl}/dispensary-menu-ai`, lastModified, changeFrequency: "weekly", priority: 0.97 },

@@ -12,72 +12,18 @@ const allBlogPosts = [...viralBlogPosts, ...newsBlogPosts, ...blogPosts];
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const staticRoutes: MetadataRoute.Sitemap = [
-    {
-      url: siteUrl,
-      lastModified,
-      changeFrequency: "daily",
-      priority: 1,
-    },
-    {
-      url: `${siteUrl}/lead-rescue`,
-      lastModified,
-      changeFrequency: "weekly",
-      priority: 0.99,
-    },
-    {
-      url: `${siteUrl}/youtube-rank-revival`,
-      lastModified,
-      changeFrequency: "weekly",
-      priority: 0.98,
-    },
-    {
-      url: `${siteUrl}/dispensary-menu-ai`,
-      lastModified,
-      changeFrequency: "weekly",
-      priority: 0.97,
-    },
-    {
-      url: `${siteUrl}/tools`,
-      lastModified,
-      changeFrequency: "weekly",
-      priority: 0.8,
-    },
-    {
-      url: `${siteUrl}/tools/lyric-video-forge`,
-      lastModified,
-      changeFrequency: "weekly",
-      priority: 0.84,
-    },
-    {
-      url: `${siteUrl}/products`,
-      lastModified,
-      changeFrequency: "daily",
-      priority: 0.96,
-    },
-    {
-      url: `${siteUrl}/tools/think-for-me-mode`,
-      lastModified,
-      changeFrequency: "weekly",
-      priority: 0.72,
-    },
-    {
-      url: `${siteUrl}/commander`,
-      lastModified,
-      changeFrequency: "weekly",
-      priority: 0.6,
-    },
-    {
-      url: `${siteUrl}/master-agent`,
-      lastModified,
-      changeFrequency: "weekly",
-      priority: 0.76,
-    },
-    {
-      url: `${siteUrl}/blog`,
-      lastModified,
-      changeFrequency: "daily",
-      priority: 0.9,
-    },
+    { url: siteUrl, lastModified, changeFrequency: "daily", priority: 1 },
+    { url: `${siteUrl}/audit-proof`, lastModified, changeFrequency: "weekly", priority: 0.99 },
+    { url: `${siteUrl}/lead-rescue`, lastModified, changeFrequency: "weekly", priority: 0.99 },
+    { url: `${siteUrl}/youtube-rank-revival`, lastModified, changeFrequency: "weekly", priority: 0.98 },
+    { url: `${siteUrl}/dispensary-menu-ai`, lastModified, changeFrequency: "weekly", priority: 0.97 },
+    { url: `${siteUrl}/tools`, lastModified, changeFrequency: "weekly", priority: 0.8 },
+    { url: `${siteUrl}/tools/lyric-video-forge`, lastModified, changeFrequency: "weekly", priority: 0.84 },
+    { url: `${siteUrl}/products`, lastModified, changeFrequency: "daily", priority: 0.96 },
+    { url: `${siteUrl}/tools/think-for-me-mode`, lastModified, changeFrequency: "weekly", priority: 0.72 },
+    { url: `${siteUrl}/commander`, lastModified, changeFrequency: "weekly", priority: 0.6 },
+    { url: `${siteUrl}/master-agent`, lastModified, changeFrequency: "weekly", priority: 0.76 },
+    { url: `${siteUrl}/blog`, lastModified, changeFrequency: "daily", priority: 0.9 },
   ];
 
   const appRoutes = products.map((product) => ({

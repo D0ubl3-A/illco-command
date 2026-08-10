@@ -1,11 +1,12 @@
 import Link from "next/link";
-import { Bot, BrainCircuit, LogIn, ShieldCheck, Sparkles } from "lucide-react";
+import { Bot, BrainCircuit, LogIn, MapPin, ShieldCheck, Sparkles } from "lucide-react";
 
 const googleOAuthHref = "/api/account/google/start?returnTo=/account" as const;
 
 const footerLinks = [
   { href: googleOAuthHref, label: "Login" },
   { href: "/products", label: "Apps" },
+  { href: "/audit-proof", label: "Proof Center" },
   { href: "/brain", label: "Brain OS" },
   { href: "/commander", label: "Commander" },
   { href: "/tools/lyric-video-forge", label: "ChatGPT" },
@@ -27,18 +28,22 @@ export function StoreFooter() {
               <Bot className="h-5 w-5" />
             </span>
             <div>
-              <div className="text-sm font-semibold tracking-[0.06em] text-white uppercase">ILLCO AI App Store</div>
+              <div className="text-sm font-semibold tracking-[0.06em] text-white uppercase">iLLCo AI</div>
               <div className="text-sm text-slate-400">Working AI apps, automation systems, creative engines, and custom builds.</div>
             </div>
           </div>
           <div className="flex flex-wrap gap-2">
-            <span className="inline-flex items-center gap-2 rounded-[999px] border border-cyan-400/30 bg-cyan-400/10 px-3 py-1.5 text-xs font-semibold text-cyan-100">
+            <Link href="/audit-proof" className="inline-flex items-center gap-2 rounded-[999px] border border-cyan-400/30 bg-cyan-400/10 px-3 py-1.5 text-xs font-semibold text-cyan-100 transition hover:bg-cyan-400/15">
               <ShieldCheck className="h-3.5 w-3.5" />
-              Search Console verified
+              Public Proof Center
+            </Link>
+            <span className="inline-flex items-center gap-2 rounded-[999px] border border-white/10 bg-white/[0.04] px-3 py-1.5 text-xs font-semibold text-slate-200">
+              <MapPin className="h-3.5 w-3.5 text-cyan-300" />
+              HQ: Henderson, NV · Regional: Portland, OR
             </span>
             <span className="inline-flex items-center gap-2 rounded-[999px] border border-white/10 bg-white/[0.04] px-3 py-1.5 text-xs font-semibold text-slate-200">
               <LogIn className="h-3.5 w-3.5 text-cyan-300" />
-              Login ready
+              Account access
             </span>
             <span className="inline-flex items-center gap-2 rounded-[999px] border border-white/10 bg-white/[0.04] px-3 py-1.5 text-xs font-semibold text-slate-200">
               <Sparkles className="h-3.5 w-3.5 text-amber-300" />
@@ -49,15 +54,14 @@ export function StoreFooter() {
               Private Brain OS
             </Link>
           </div>
+          <p className="max-w-2xl text-xs leading-5 text-slate-500">
+            Primary command center: illcoai.tech · Owned business property: illcoai.com. Product status and verification claims are governed by the public Proof Center.
+          </p>
         </div>
 
         <nav className="grid grid-cols-2 gap-2 text-sm text-slate-300 sm:grid-cols-3" aria-label="Footer links">
           {footerLinks.map((link) => (
-            <Link
-              key={link.href}
-              href={link.href}
-              className="rounded-lg px-3 py-2 transition hover:bg-white/[0.05] hover:text-white"
-            >
+            <Link key={link.href} href={link.href} className="rounded-lg px-3 py-2 transition hover:bg-white/[0.05] hover:text-white">
               {link.label}
             </Link>
           ))}

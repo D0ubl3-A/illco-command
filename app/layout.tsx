@@ -8,11 +8,11 @@ import "./globals.css";
 export const metadata: Metadata = {
   metadataBase: new URL("https://illcoai.tech"),
   title: {
-    default: "ILLCO AI App Store",
-    template: "%s | ILLCO AI",
+    default: "iLLCo AI App Store",
+    template: "%s | iLLCo AI",
   },
-  description: "Browse working AI apps, sign in with Google, and open ChatGPT-backed tools from the same storefront.",
-  applicationName: "ILLCO AI App Store",
+  description: "iLLCo AI builds working AI apps, business automation systems, creator tools, lead workflows, and managed custom builds from its public command center.",
+  applicationName: "iLLCo AI App Store",
   alternates: {
     canonical: "/",
   },
@@ -21,24 +21,24 @@ export const metadata: Metadata = {
     shortcut: "/favicon.svg",
   },
   openGraph: {
-    title: "ILLCO AI App Store",
-    description: "Browse working AI apps, sign in with Google, and open ChatGPT-backed tools from the same storefront.",
+    title: "iLLCo AI App Store",
+    description: "Working AI apps, business automation systems, creator tools, lead workflows, and managed custom builds.",
     url: "https://illcoai.tech",
-    siteName: "ILLCO AI App Store",
+    siteName: "iLLCo AI",
     images: [
       {
         url: "/media/illco-command-header-loop-poster.jpg",
         width: 1200,
         height: 630,
-        alt: "ILLCO AI app store preview",
+        alt: "iLLCo AI app store preview",
       },
     ],
     type: "website",
   },
   twitter: {
     card: "summary_large_image",
-    title: "ILLCO AI App Store",
-    description: "Browse working AI apps, sign in with Google, and open ChatGPT-backed tools from the same storefront.",
+    title: "iLLCo AI App Store",
+    description: "Working AI apps, automation systems, creator tools, lead workflows, and managed builds.",
     images: ["/media/illco-command-header-loop-poster.jpg"],
   },
   other: {

@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 
 import { hasDatabase } from "@/lib/db";
+import { requireLabelCommandAccess } from "@/lib/label-command-access";
 import { getLabelOperationsSnapshot } from "@/lib/label-command-operations-store";
 import { getLabelWorkspaceSnapshot } from "@/lib/label-command-store";
 import { getCurrentUser } from "@/lib/user-accounts";
@@ -8,7 +9,10 @@ import { getCurrentUser } from "@/lib/user-accounts";
 export const dynamic = "force-dynamic";
 export const runtime = "nodejs";
 
-export async function GET() {
+export async function GET(request: Request) {
+  const access = requireLabelCommandAccess(request);
+  if (!access.ok) return access.response;
+
   if (!hasDatabase()) {
     return NextResponse.json({
       ok: true,
@@ -37,6 +41,11 @@ export async function GET() {
         ok: true,
         authenticated: true,
         databaseReady: true,
+        access: {
+          active: true,
+          source: access.result.source,
+          expiresAt: access.result.expiresAt || null,
+        },
         syncedAt: new Date().toISOString(),
         user: {
           id: user.id,

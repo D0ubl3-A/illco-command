@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { z } from "zod";
 
 import { hasDatabase } from "@/lib/db";
+import { requireLabelCommandAccess } from "@/lib/label-command-access";
 import {
   createLabelDistributor,
   createLabelRoyalty,
@@ -60,6 +61,8 @@ function databaseUnavailable() {
 }
 
 export async function GET(request: Request) {
+  const access = requireLabelCommandAccess(request);
+  if (!access.ok) return access.response;
   if (!hasDatabase()) return databaseUnavailable();
 
   try {
@@ -90,6 +93,8 @@ export async function POST(request: Request) {
   if (!isSameOriginRequest(request)) {
     return NextResponse.json({ ok: false, error: "Cross-origin write rejected." }, { status: 403 });
   }
+  const access = requireLabelCommandAccess(request);
+  if (!access.ok) return access.response;
   if (!hasDatabase()) return databaseUnavailable();
 
   try {

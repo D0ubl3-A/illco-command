@@ -13,6 +13,7 @@ export const metadata: Metadata = {
   },
   description: "iLLCo AI builds working AI apps, business automation systems, creator tools, lead workflows, and managed custom builds from its public command center.",
   applicationName: "iLLCo AI App Store",
+  manifest: "/manifest.webmanifest",
   alternates: {
     canonical: "/",
   },
@@ -50,6 +51,7 @@ export const metadata: Metadata = {
 export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
+  themeColor: "#050a12",
 };
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {

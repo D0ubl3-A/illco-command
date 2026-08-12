@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 
 import { getProductById } from "@/lib/deployments";
+import { LABEL_COMMAND_PRODUCT_ID } from "@/lib/label-command-access";
 import { assertAdminRequest, issueSignedLicense } from "@/lib/license";
 
 export async function POST(request: Request) {
@@ -18,7 +19,7 @@ export async function POST(request: Request) {
     if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
       return NextResponse.json({ detail: "A valid email is required." }, { status: 400 });
     }
-    if (!getProductById(productId)) {
+    if (productId !== LABEL_COMMAND_PRODUCT_ID && !getProductById(productId)) {
       return NextResponse.json({ detail: "A known productId is required." }, { status: 400 });
     }
 
@@ -35,6 +36,7 @@ export async function POST(request: Request) {
         productId,
         email,
         seats: Math.max(1, Math.floor(body.seats || 1)),
+        expiresAt: body.expiresAt || null,
       },
       { status: 201 },
     );

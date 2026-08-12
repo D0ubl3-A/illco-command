@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="illco_background">#050A12</color>
+    <color name="illco_cyan">#44EAFF</color>
+    <color name="illco_green">#9CFF13</color>
+    <color name="illco_red">#FF2B25</color>
+</resources>

@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 
 import { hasDatabase } from "@/lib/db";
+import { getLabelOperationsSnapshot } from "@/lib/label-command-operations-store";
 import { getLabelWorkspaceSnapshot } from "@/lib/label-command-store";
 import { getCurrentUser } from "@/lib/user-accounts";
 
@@ -29,17 +30,21 @@ export async function GET() {
     }
 
     const snapshot = await getLabelWorkspaceSnapshot(user);
+    const operations = await getLabelOperationsSnapshot(user.id, snapshot.workspace.id);
+
     return NextResponse.json(
       {
         ok: true,
         authenticated: true,
         databaseReady: true,
+        syncedAt: new Date().toISOString(),
         user: {
           id: user.id,
           name: user.name,
           email: user.email,
         },
         ...snapshot,
+        operations,
       },
       { headers: { "Cache-Control": "no-store, max-age=0" } },
     );

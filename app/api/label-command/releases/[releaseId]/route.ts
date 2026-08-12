@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { z } from "zod";
 
 import { hasDatabase } from "@/lib/db";
+import { requireLabelCommandAccess } from "@/lib/label-command-access";
 import { labelReleaseStages } from "@/lib/label-command-domain";
 import { updateLabelReleaseStage } from "@/lib/label-command-release-stage";
 import { archiveLabelRelease } from "@/lib/label-command-store";
@@ -24,6 +25,9 @@ export async function PATCH(request: Request, context: RouteContext) {
   if (!isSameOriginRequest(request)) {
     return NextResponse.json({ ok: false, error: "Cross-origin write rejected." }, { status: 403 });
   }
+  const access = requireLabelCommandAccess(request);
+  if (!access.ok) return access.response;
+
   if (!hasDatabase()) {
     return NextResponse.json({ ok: false, error: "Database setup is required." }, { status: 503 });
   }
@@ -54,6 +58,9 @@ export async function DELETE(request: Request, context: RouteContext) {
   if (!isSameOriginRequest(request)) {
     return NextResponse.json({ ok: false, error: "Cross-origin write rejected." }, { status: 403 });
   }
+  const access = requireLabelCommandAccess(request);
+  if (!access.ok) return access.response;
+
   if (!hasDatabase()) {
     return NextResponse.json({ ok: false, error: "Database setup is required." }, { status: 503 });
   }

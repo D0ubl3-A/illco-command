@@ -53,6 +53,7 @@ async function persistCheckoutEvent(eventId: string, session: Stripe.Checkout.Se
   } catch (error) {
     await markStripeNotificationFailed(outboxId, error);
     console.error("Service-order notification queued for retry", error);
+    throw error;
   }
 }
 

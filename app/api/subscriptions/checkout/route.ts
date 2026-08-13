@@ -16,14 +16,13 @@ function safeReturnTo(value: string) {
   if (!raw) return "";
 
   try {
-    if (raw.startsWith("/")) return raw;
+    if (raw.startsWith("/") && !raw.startsWith("//")) return raw;
     const url = new URL(raw);
     const hostname = url.hostname.toLowerCase();
     const allowed =
       hostname === "localhost" ||
       hostname === "127.0.0.1" ||
       hostname === "illcoai.tech" ||
-      hostname.endsWith(".illcoai.tech") ||
       hostname.endsWith(".illcoai.tech");
 
     return allowed && (url.protocol === "https:" || url.protocol === "http:") ? url.toString() : "";
@@ -97,6 +96,7 @@ export async function POST(request: Request) {
       productId,
       planId,
       returnPath: buildCheckoutReturnPath(returnTo, productId),
+      cancelPath: productId === "illco-command" ? "/products?checkout=cancelled" : `/apps/${encodeURIComponent(productId)}?checkout=cancelled`,
     });
     if (!session.url) {
       return NextResponse.json({ detail: "Stripe did not return a checkout URL." }, { status: 502 });

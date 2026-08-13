@@ -47,3 +47,73 @@ test("checkout access grants round-trip and bind to a session", async () => {
   assert.equal(payload.planId, "studio");
   assert.equal(payload.email, "creator@example.com");
 });
+
+test("checkout access grants reject tampering", async () => {
+  const { createCheckoutAccessGrant, verifyCheckoutAccessGrant } = await import("../lib/checkout-success");
+
+  const grant = createCheckoutAccessGrant({
+    sessionId: "cs_test_tamper",
+    customerId: "cus_test_tamper",
+    productId: "youtube-ops-vercel",
+    planId: "studio",
+    email: "creator@example.com",
+  });
+  const [prefix, payload, signature] = grant.split(".");
+  const decoded = JSON.parse(Buffer.from(payload, "base64url").toString("utf8"));
+  decoded.productId = "illco-command";
+  const tampered = `${prefix}.${Buffer.from(JSON.stringify(decoded)).toString("base64url")}.${signature}`;
+
+  assert.throws(() => verifyCheckoutAccessGrant(tampered, "cs_test_tamper"), /signature is invalid/);
+});
+
+test("completed one-time checkouts do not unlock before payment succeeds", async () => {
+  const { summarizeCheckoutSession } = await import("../lib/checkout-success");
+
+  const summary = summarizeCheckoutSession({
+    id: "cs_test_unpaid",
+    mode: "payment",
+    customer: "cus_test_unpaid",
+    client_reference_id: "youtube-ops-vercel",
+    metadata: { productId: "youtube-ops-vercel", planId: "studio" },
+    status: "complete",
+    payment_status: "unpaid",
+  } as never);
+
+  assert.equal(summary.checkoutComplete, false);
+});
+
+test("subscription trials can unlock only after Checkout completes", async () => {
+  const { summarizeCheckoutSession } = await import("../lib/checkout-success");
+
+  const completeTrial = summarizeCheckoutSession({
+    id: "cs_test_trial",
+    mode: "subscription",
+    customer: "cus_test_trial",
+    client_reference_id: "youtube-ops-vercel",
+    metadata: { productId: "youtube-ops-vercel", planId: "studio" },
+    status: "complete",
+    payment_status: "no_payment_required",
+  } as never);
+  const openTrial = summarizeCheckoutSession({
+    id: "cs_test_open_trial",
+    mode: "subscription",
+    customer: "cus_test_open_trial",
+    client_reference_id: "youtube-ops-vercel",
+    metadata: { productId: "youtube-ops-vercel", planId: "studio" },
+    status: "open",
+    payment_status: "no_payment_required",
+  } as never);
+
+  assert.equal(completeTrial.checkoutComplete, true);
+  assert.equal(openTrial.checkoutComplete, false);
+});
+
+test("missing purchase persistence fails the webhook so Stripe can retry", async () => {
+  const { requirePurchasePersistence } = await import("../lib/stripe-webhook");
+
+  assert.throws(
+    () => requirePurchasePersistence(false),
+    /Purchase persistence is temporarily unavailable; retry this webhook/,
+  );
+  assert.doesNotThrow(() => requirePurchasePersistence(true));
+});

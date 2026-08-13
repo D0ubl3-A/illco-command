@@ -66,6 +66,7 @@ export async function createCheckoutSession(input: {
   planId: FunnelPlanId;
   productId?: string | null;
   returnPath?: string | null;
+  cancelPath?: string | null;
 }) {
   const stripePriceId = requireEnv(getStripePriceIdForPlan(input.planId), `STRIPE_PRICE_${input.planId.toUpperCase()}_ID`);
   const stripe = getStripeClient();
@@ -79,7 +80,7 @@ export async function createCheckoutSession(input: {
     customer_email: input.email || undefined,
     client_reference_id: input.productId || "illco-command",
     success_url: buildSuccessUrl(input),
-    cancel_url: absoluteUrl(env.stripeCancelPath),
+    cancel_url: absoluteUrl(input.cancelPath || env.stripeCancelPath),
     line_items: [
       {
         price: stripePriceId,

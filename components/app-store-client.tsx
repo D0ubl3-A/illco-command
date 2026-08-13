@@ -21,6 +21,9 @@ export type AppStoreProduct = {
   image: string;
   appHref: string;
   skipHref: string;
+  purchaseMode: "direct-buy" | "book-service" | "quote-only";
+  checkoutProductId?: string;
+  checkoutPlanId?: string;
 };
 
 export type HelloskipBlogPost = {
@@ -443,7 +446,7 @@ export function AppStoreClient({
           <div className="appStoreCatalogToolbar">
             <div>
               <p className="appStoreEyebrow">Featured catalog</p>
-              <h2>Packaged products, clean filter paths, and a direct quote lane.</h2>
+              <h2>Buy ready products, book managed services, or request a custom quote.</h2>
               <p aria-live="polite">
                 Showing {filteredProducts.length} of {products.length} products{category === allCategory ? "" : ` in ${category}`}{query.trim() ? ` for "${query.trim()}"` : ""}.
               </p>
@@ -539,12 +542,25 @@ export function AppStoreClient({
                           </div>
 
                           <div className="appStoreCardActions">
-                            <button className={inCart ? "isActive" : ""} type="button" onClick={() => toggleCart(product.id)}>
-                              {inCart ? "Added" : "Add to cart"}
-                            </button>
+                            {product.purchaseMode === "direct-buy" && product.checkoutProductId && product.checkoutPlanId ? (
+                              <form action="/api/subscriptions/checkout" method="post" className="inlineCheckoutForm">
+                                <input type="hidden" name="planId" value={product.checkoutPlanId} />
+                                <input type="hidden" name="productId" value={product.checkoutProductId} />
+                                <input type="hidden" name="returnTo" value={product.appHref} />
+                                <button type="submit">Buy now — {product.priceLabel}</button>
+                              </form>
+                            ) : product.purchaseMode === "book-service" ? (
+                              <a className="appStorePurchaseLink" href={product.appHref}>Book service — {product.priceLabel}</a>
+                            ) : (
+                              <button className={inCart ? "isActive" : ""} type="button" onClick={() => toggleCart(product.id)}>
+                                {inCart ? "Added to quote" : "Add to quote"}
+                              </button>
+                            )}
                             <a href={product.appHref}>Details</a>
                             <a href={product.skipHref} target="_blank" rel="noreferrer">Skip listing</a>
-                            <button type="button" onClick={() => requestQuote([product.id])}>Request quote</button>
+                            {product.purchaseMode === "quote-only" ? (
+                              <button type="button" onClick={() => requestQuote([product.id])}>Request quote</button>
+                            ) : null}
                           </div>
                         </div>
                       </div>
@@ -561,9 +577,9 @@ export function AppStoreClient({
 
             <aside className="appStoreCartPanel" id="build">
               <div className="appStoreCartHead">
-                <p className="appStoreEyebrow">Cart preview</p>
-                <h3>Your build stack</h3>
-                <p>Add a few items to compare the stack, estimate the order total, and send a clean quote request to the ILLCO team.</p>
+                <p className="appStoreEyebrow">Quote builder</p>
+                <h3>Your custom quote shortlist</h3>
+                <p>Add quote-only items to compare the stack, estimate a starting total, and send a clean scope request to the ILLCO team.</p>
               </div>
 
               <div className="appStoreBuildShare" aria-label="Share this custom build desk">
@@ -581,7 +597,7 @@ export function AppStoreClient({
                 {shareStatus ? <p role="status">{shareStatus}</p> : null}
               </div>
 
-              {!selectedProducts.length ? <div className="appStoreCartEmpty">Add a few apps to compare the stack and estimate the order total.</div> : null}
+              {!selectedProducts.length ? <div className="appStoreCartEmpty">Add quote-only items to compare the stack and estimate a starting total.</div> : null}
 
               <div className="appStoreCartItems" aria-live="polite">
                 {selectedProducts.map((product) => (
@@ -597,15 +613,15 @@ export function AppStoreClient({
               </div>
 
               <div className="appStoreCartSummary">
-                <div><span>Items selected</span><strong>{selectedProducts.length}</strong></div>
-                <div><span>Estimated total</span><strong>{money(cartTotal)}</strong></div>
+                <div><span>Quote items selected</span><strong>{selectedProducts.length}</strong></div>
+                <div><span>Estimated starting total</span><strong>{money(cartTotal)}</strong></div>
               </div>
 
               <button className="appStoreBtn appStoreBtnPrimary" type="button" onClick={() => selectedProducts.length ? requestQuote([...cart]) : document.getElementById("catalog")?.scrollIntoView({ behavior: "smooth" })}>
                 Request quote
               </button>
               <button className="appStoreBtn appStoreBtnSecondary" type="button" onClick={() => setCart(new Set())}>
-                Clear cart
+                Clear quote
               </button>
 
               <p className="appStoreCartNote">
@@ -633,7 +649,7 @@ export function AppStoreClient({
               <div className="appStoreSteps">
                 {[
                   ["1", "Choose the right lane", "Packaged app, automation bundle, support plan, or scoped custom build."],
-                  ["2", "Review the stack", "Compare the products, see the price mix, and narrow the cart before checkout."],
+                  ["2", "Review the stack", "Compare direct-buy products, managed services, and quote-only work before choosing the right next step."],
                   ["3", "Send the brief", "Use the quote request button or email admin@illcoai.tech for next steps."],
                 ].map(([number, title, copy]) => (
                   <article className="appStoreStep" key={number}>

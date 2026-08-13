@@ -9,6 +9,9 @@ import {
 } from "@/lib/checkout-products";
 import { getCheckoutProductImagePath } from "@/lib/checkout-product-images";
 import { getProductById } from "@/lib/deployments";
+import { getConfigurationStatus } from "@/lib/env";
+import { getMonetizationPlan } from "@/lib/monetization";
+import { canDirectCheckoutPublicProduct } from "@/lib/public-checkout";
 import { getPublicProductPriceLabel } from "@/lib/pricing";
 import { storefrontProductImage } from "@/lib/storefront";
 
@@ -43,7 +46,7 @@ const dedicatedSalesPages: Record<string, string> = {
 };
 
 const priorityOfferPrices: Record<string, string> = {
-  "instant-lead-rescue-text-back-ai": "$750 setup",
+  "instant-lead-rescue-text-back-ai": "$750 setup + $199/mo",
   "youtube-rank-revival-ai-pro": "$50",
 };
 
@@ -213,6 +216,8 @@ function bestFor(category: CheckoutProductCategory) {
 }
 
 function toStoreProducts() {
+  const config = getConfigurationStatus();
+
   return checkoutProducts.map((checkoutProduct, index): AppStoreProduct => {
     const offerProduct = getProductById(checkoutProduct.id);
     const appProduct = getProductById(checkoutProduct.appProductId) || offerProduct;
@@ -221,6 +226,14 @@ function toStoreProducts() {
     const priceLabel = priorityOfferPrices[checkoutProduct.id] || defaultPriceLabel;
     const theme = categoryTheme[checkoutProduct.category];
     const featured = featuredCheckoutIds.has(checkoutProduct.id) || index < 4;
+    const plan = appProduct ? getMonetizationPlan(appProduct.id) : null;
+    const paymentConfigured = Boolean(plan && config.subscriptionsReady && config.planPrices[plan.funnelPlanId]);
+    const directCheckoutReady = Boolean(appProduct && plan && paymentConfigured && canDirectCheckoutPublicProduct(appProduct.id));
+    const purchaseMode = dedicatedSalesPages[checkoutProduct.id]
+      ? "book-service"
+      : directCheckoutReady
+        ? "direct-buy"
+        : "quote-only";
 
     return {
       id: checkoutProduct.id,
@@ -245,6 +258,9 @@ function toStoreProducts() {
       image: displayProduct ? storefrontProductImage(displayProduct) : getCheckoutProductImagePath(checkoutProduct),
       appHref: dedicatedSalesPages[checkoutProduct.id] || `/apps/${encodeURIComponent(displayProduct?.id || checkoutProduct.id)}`,
       skipHref: skipProductHref(checkoutProduct.name),
+      purchaseMode,
+      checkoutProductId: appProduct?.id,
+      checkoutPlanId: plan?.funnelPlanId,
     };
   });
 }

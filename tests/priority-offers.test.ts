@@ -24,8 +24,24 @@ test("priority offers use one canonical name, scope, and sales route", () => {
 
   assert.match(storefront, /"instant-lead-rescue-text-back-ai": "\/lead-rescue"/);
   assert.match(storefront, /"youtube-rank-revival-ai-pro": "\/youtube-rank-revival"/);
-  assert.match(storefront, /"instant-lead-rescue-text-back-ai": "\$750 setup"/);
+  assert.match(storefront, /"instant-lead-rescue-text-back-ai": "\$750 setup \+ \$199\/mo"/);
   assert.match(storefront, /"youtube-rank-revival-ai-pro": "\$50"/);
+});
+
+
+test("homepage routes buyers through honest purchase modes", () => {
+  const storefront = read("app/page.tsx");
+  const client = read("components/app-store-client.tsx");
+
+  assert.match(storefront, /purchaseMode = dedicatedSalesPages\[checkoutProduct\.id\]/);
+  assert.match(storefront, /canDirectCheckoutPublicProduct\(appProduct\.id\)/);
+  assert.match(client, /action="\/api\/subscriptions\/checkout"/);
+  assert.match(client, /Buy now — \{product\.priceLabel\}/);
+  assert.match(client, /Book service — \{product\.priceLabel\}/);
+  assert.match(client, /Add to quote/);
+  assert.doesNotMatch(client, /Add to cart/);
+  assert.match(client, /Quote builder/);
+  assert.match(client, /Estimated starting total/);
 });
 
 test("Lead Recovery has linked setup-plus-subscription checkout and verified confirmation", () => {

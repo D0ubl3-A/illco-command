@@ -1,0 +1,47 @@
+name: Checkout release gate
+
+on:
+  pull_request:
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: checkout-release-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  release-gate:
+    name: Typecheck, test, and build
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    steps:
+      - name: Check out source
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+
+      - name: Install locked dependencies
+        run: npm ci
+
+      - name: Validate public checkout catalog
+        run: npx tsx --test tests/public-checkout.test.ts tests/priority-offers.test.ts tests/checkout-success.test.ts
+
+      - name: Typecheck
+        run: npx tsc --noEmit
+
+      - name: Run complete test suite
+        run: npm test
+
+      - name: Build production application
+        run: npm run build

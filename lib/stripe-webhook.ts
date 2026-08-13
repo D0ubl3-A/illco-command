@@ -7,10 +7,15 @@ import { hasDatabase } from "@/lib/db";
 import { notifyServiceOrderCreated, upsertServiceOrderFromCheckout } from "@/lib/service-orders";
 import { constructStripeWebhookEvent } from "@/lib/stripe";
 
-async function persistCheckoutEvent(session: Stripe.Checkout.Session) {
-  if (!hasDatabase()) {
+export function requirePurchasePersistence(available = hasDatabase()) {
+  if (!available) {
     throw new Error("Purchase persistence is temporarily unavailable; retry this webhook.");
   }
+}
+
+async function persistCheckoutEvent(session: Stripe.Checkout.Session) {
+  requirePurchasePersistence();
+
   const summary = summarizeCheckoutSession(session);
   await completeCheckoutSession({
     stripeSessionId: summary.sessionId,

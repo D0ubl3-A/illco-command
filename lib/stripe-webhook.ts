@@ -8,7 +8,9 @@ import { notifyServiceOrderCreated, upsertServiceOrderFromCheckout } from "@/lib
 import { constructStripeWebhookEvent } from "@/lib/stripe";
 
 async function persistCheckoutEvent(session: Stripe.Checkout.Session) {
-  if (!hasDatabase()) return;
+  if (!hasDatabase()) {
+    throw new Error("Purchase persistence is temporarily unavailable; retry this webhook.");
+  }
   const summary = summarizeCheckoutSession(session);
   await completeCheckoutSession({
     stripeSessionId: summary.sessionId,

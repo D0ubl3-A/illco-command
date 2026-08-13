@@ -13,7 +13,7 @@ const planIds = new Set<FunnelPlanId>(["core", "studio", "suite", "agency", "ent
 
 function safeReturnTo(value: string) {
   const raw = value.trim();
-  if (!raw) return "";
+  if (!raw || raw.includes("\\")) return "";
 
   try {
     if (raw.startsWith("/") && !raw.startsWith("//")) return raw;

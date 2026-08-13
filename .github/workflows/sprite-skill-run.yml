@@ -1,0 +1,112 @@
+name: Run Sprite Pipeline Skill
+
+on:
+  workflow_dispatch:
+    inputs:
+      characters:
+        description: Number of character sprites
+        required: false
+        default: "24"
+      fx:
+        description: Number of FX sprites
+        required: false
+        default: "24"
+  push:
+    branches:
+      - repair/sprite-pipeline-10k-core
+    paths:
+      - "skills/sprite-pipeline-to-10k/**"
+      - "scripts/run-sprite-skill.ts"
+      - "lib/sprite-pipeline/**"
+      - "package.json"
+      - ".github/workflows/sprite-skill-run.yml"
+
+concurrency:
+  group: sprite-pipeline-skill-${{ github.ref }}
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+jobs:
+  run-skill:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Use Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run Sprite Pipeline to 10K skill
+        env:
+          CHARACTER_COUNT: ${{ github.event.inputs.characters || '24' }}
+          FX_COUNT: ${{ github.event.inputs.fx || '24' }}
+          RUN_ID: skill-${{ github.run_id }}-${{ github.run_attempt }}
+        run: |
+          set -euo pipefail
+          npm run --silent sprite:skill -- \
+            --root .sprite-skill-output \
+            --run-id "$RUN_ID" \
+            --characters "$CHARACTER_COUNT" \
+            --fx "$FX_COUNT" \
+            --character-start 1 \
+            --fx-start 1 > sprite-skill-report.json
+          node -e "JSON.parse(require('fs').readFileSync('sprite-skill-report.json', 'utf8')); console.log('skill report JSON parsed')"
+
+      - name: Verify exact production counts and uniqueness
+        env:
+          CHARACTER_COUNT: ${{ github.event.inputs.characters || '24' }}
+          FX_COUNT: ${{ github.event.inputs.fx || '24' }}
+        run: |
+          node - <<'NODE'
+          const fs = require('fs');
+          const crypto = require('crypto');
+          const report = JSON.parse(fs.readFileSync('sprite-skill-report.json', 'utf8'));
+          const expected = Number(process.env.CHARACTER_COUNT) + Number(process.env.FX_COUNT);
+          if (report.requested !== expected) throw new Error(`requested ${report.requested} != ${expected}`);
+          if (report.generated !== expected) throw new Error(`generated ${report.generated} != ${expected}`);
+          if (report.validated !== expected) throw new Error(`validated ${report.validated} != ${expected}`);
+          if (report.rejected !== 0) throw new Error(`rejected must be 0, got ${report.rejected}`);
+          if (report.renderedUnvalidated !== 0) throw new Error(`renderedUnvalidated must be 0, got ${report.renderedUnvalidated}`);
+          if (report.characters !== Number(process.env.CHARACTER_COUNT)) throw new Error('character count mismatch');
+          if (report.fx !== Number(process.env.FX_COUNT)) throw new Error('FX count mismatch');
+          if (!Array.isArray(report.assets) || report.assets.length !== expected) throw new Error('asset list mismatch');
+
+          const unique = (values, label) => {
+            if (new Set(values).size !== values.length) throw new Error(`duplicate ${label}`);
+          };
+          unique(report.assets.map((asset) => asset.assetId), 'asset IDs');
+          unique(report.assets.map((asset) => asset.path), 'content paths');
+          unique(report.assets.map((asset) => asset.evidencePath), 'evidence paths');
+          unique(report.assets.map((asset) => asset.sha256), 'asset SHA-256 hashes');
+          unique(report.assets.map((asset) => asset.evidenceSha256), 'evidence SHA-256 hashes');
+
+          for (const asset of report.assets) {
+            if (!fs.existsSync(asset.path)) throw new Error(`missing object ${asset.path}`);
+            if (!fs.existsSync(asset.evidencePath)) throw new Error(`missing evidence ${asset.evidencePath}`);
+            const objectHash = crypto.createHash('sha256').update(fs.readFileSync(asset.path)).digest('hex');
+            const evidenceHash = crypto.createHash('sha256').update(fs.readFileSync(asset.evidencePath)).digest('hex');
+            if (objectHash !== asset.sha256) throw new Error(`object hash mismatch ${asset.assetId}`);
+            if (evidenceHash !== asset.evidenceSha256) throw new Error(`evidence hash mismatch ${asset.assetId}`);
+          }
+          if (!report.summaryPath || !fs.existsSync(report.summaryPath)) throw new Error('missing durable summary');
+          console.log(JSON.stringify({ passed: true, expected, continuityPointer: report.continuityPointer }, null, 2));
+          NODE
+
+      - name: Upload validated skill output
+        uses: actions/upload-artifact@v4
+        with:
+          name: sprite-pipeline-skill-${{ github.run_id }}-${{ github.run_attempt }}
+          path: |
+            .sprite-skill-output/**
+            sprite-skill-report.json
+          if-no-files-found: error
+          retention-days: 30

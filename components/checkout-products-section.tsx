@@ -191,7 +191,7 @@ export function CheckoutProductsSection({
                             <input type="hidden" name="productId" value={appProduct.id} />
                             <input type="hidden" name="returnTo" value={checkoutReturnTo} />
                             <button className="button primary" type="submit">
-                              Unlock
+                              Buy now — {priceLabel}
                             </button>
                           </form>
                         ) : (

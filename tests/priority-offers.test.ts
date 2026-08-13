@@ -24,7 +24,7 @@ test("priority offers use one canonical name, scope, and sales route", () => {
 
   assert.match(storefront, /"instant-lead-rescue-text-back-ai": "\/lead-rescue"/);
   assert.match(storefront, /"youtube-rank-revival-ai-pro": "\/youtube-rank-revival"/);
-  assert.match(storefront, /"instant-lead-rescue-text-back-ai": "\$750 setup"/);
+  assert.match(storefront, /"instant-lead-rescue-text-back-ai": "\\$750 setup \\+ \\$199\\/mo"/);
   assert.match(storefront, /"youtube-rank-revival-ai-pro": "\$50"/);
 });
 

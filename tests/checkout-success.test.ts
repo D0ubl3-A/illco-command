@@ -47,3 +47,36 @@ test("checkout access grants round-trip and bind to a session", async () => {
   assert.equal(payload.planId, "studio");
   assert.equal(payload.email, "creator@example.com");
 });
+
+
+test("completed one-time checkouts do not unlock before payment succeeds", async () => {
+  const { summarizeCheckoutSession } = await import("../lib/checkout-success");
+
+  const summary = summarizeCheckoutSession({
+    id: "cs_test_unpaid",
+    mode: "payment",
+    customer: "cus_test_unpaid",
+    client_reference_id: "youtube-ops-vercel",
+    metadata: { productId: "youtube-ops-vercel", planId: "studio" },
+    status: "complete",
+    payment_status: "unpaid",
+  } as never);
+
+  assert.equal(summary.checkoutComplete, false);
+});
+
+test("subscription trials can unlock only after Checkout completes", async () => {
+  const { summarizeCheckoutSession } = await import("../lib/checkout-success");
+
+  const summary = summarizeCheckoutSession({
+    id: "cs_test_trial",
+    mode: "subscription",
+    customer: "cus_test_trial",
+    client_reference_id: "youtube-ops-vercel",
+    metadata: { productId: "youtube-ops-vercel", planId: "studio" },
+    status: "complete",
+    payment_status: "no_payment_required",
+  } as never);
+
+  assert.equal(summary.checkoutComplete, true);
+});

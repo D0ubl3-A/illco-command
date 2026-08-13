@@ -17,6 +17,10 @@ async function persistCheckoutEvent(session: Stripe.Checkout.Session) {
   requirePurchasePersistence();
 
   const summary = summarizeCheckoutSession(session);
+  if (!summary.checkoutComplete) {
+    return;
+  }
+
   await completeCheckoutSession({
     stripeSessionId: summary.sessionId,
     stripeCustomerId: summary.customerId,

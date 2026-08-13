@@ -65,6 +65,11 @@ export function summarizeCheckoutSession(session: StripeCheckoutSession, fallbac
   const customerId = getCustomerId(session);
   const email = getCustomerEmail(session);
   const checkoutStatus = session.status || "open";
+  const paymentStatus = session.payment_status || "unpaid";
+  const checkoutComplete =
+    session.mode === "subscription"
+      ? checkoutStatus === "complete" && (paymentStatus === "paid" || paymentStatus === "no_payment_required")
+      : paymentStatus === "paid";
   const launchHref = product ? getProductModuleHref(product.id) : "/";
 
   return {
@@ -77,8 +82,8 @@ export function summarizeCheckoutSession(session: StripeCheckoutSession, fallbac
     monetization,
     productName: product?.displayName || "ILLCO Command",
     checkoutStatus,
-    paymentStatus: session.payment_status || "unpaid",
-    checkoutComplete: checkoutStatus === "complete" || session.payment_status === "paid",
+    paymentStatus,
+    checkoutComplete,
     launchHref,
     createdAtIso: toIsoFromUnix(session.created),
   };

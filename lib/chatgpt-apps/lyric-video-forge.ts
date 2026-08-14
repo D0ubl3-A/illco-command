@@ -1,4 +1,5 @@
 import { env } from "@/lib/env";
+import { alignTranscriptToWordTimestamps } from "@/lib/lyric-timing";
 import {
   CHATGPT_OAUTH_CLIENT_ID,
   CHATGPT_OAUTH_RESOURCE,
@@ -27,7 +28,7 @@ export const LYRIC_VIDEO_FORGE_APP = {
   },
   widgetUri: "ui://illco/lyric-video-forge/v2.html",
   serverName: "illco-lyric-video-forge",
-  serverVersion: "1.2.0",
+  serverVersion: "1.3.0",
 };
 
 type ChatGptFileReference = {
@@ -116,6 +117,9 @@ const TOOL_OUTPUT_SCHEMA = {
     segmentCount: { type: "integer", minimum: 0 },
     transcriptionStatus: { type: "string" },
     transcriptionError: { type: "string" },
+    transcriptSource: { type: "string" },
+    timingSource: { type: "string" },
+    alignmentCoverage: { type: "number", minimum: 0, maximum: 1 },
   },
   required: [
     "app",
@@ -495,9 +499,21 @@ async function buildTranscribeAudioOutput(args: any) {
     const payload = model.startsWith("groq-")
       ? await callGroqTranscription({ audioBlob, fileName, model, timestamps, knownLyrics: args?.knownLyrics })
       : await callOpenAiTranscription({ audioBlob, fileName, model, timestamps, knownLyrics: args?.knownLyrics });
-    const words = normalizeTimedWords(payload);
+    let timingPayload = payload;
+    let rawTimingWords = normalizeTimedWords(timingPayload);
+    let timingSource = model;
+    if (timestamps === "word" && !rawTimingWords.length) {
+      const fallbackModel = env.groqApiKey ? "groq-whisper-large-v3" : "openai-whisper-1";
+      timingPayload = fallbackModel.startsWith("groq-")
+        ? await callGroqTranscription({ audioBlob, fileName, model: fallbackModel, timestamps: "word", knownLyrics: args?.knownLyrics })
+        : await callOpenAiTranscription({ audioBlob, fileName, model: fallbackModel, timestamps: "word", knownLyrics: args?.knownLyrics });
+      rawTimingWords = normalizeTimedWords(timingPayload);
+      timingSource = fallbackModel;
+    }
     const segments = normalizeTimedSegments(payload);
     const transcriptText = String(payload?.text || segments.map((segment: { text: string }) => segment.text).join(" ")).replace(/\s+/g, " ").trim();
+    const aligned = alignTranscriptToWordTimestamps(transcriptText, rawTimingWords);
+    const words = aligned.words.length ? aligned.words : rawTimingWords;
     const timedLyrics = {
       sourceFile: fileName,
       model,
@@ -505,6 +521,9 @@ async function buildTranscribeAudioOutput(args: any) {
       text: transcriptText,
       words,
       segments,
+      transcriptSource: model,
+      timingSource,
+      alignmentCoverage: aligned.coverage,
       status: words.length ? "word-timestamps-ready" : segments.length ? "segment-timestamps-ready" : "text-only",
     };
 
@@ -518,6 +537,9 @@ async function buildTranscribeAudioOutput(args: any) {
         timedLyricsJson: JSON.stringify(timedLyrics),
         wordCount: words.length,
         segmentCount: segments.length,
+        transcriptSource: model,
+        timingSource,
+        alignmentCoverage: aligned.coverage,
         nextStep: "Review and approve the timed transcript, then export ASS/SRT captions before rendering.",
       },
       content: [

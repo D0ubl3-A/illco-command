@@ -1,0 +1,32 @@
+{
+  "theme": "original-claymation-celebrity-brawl-parody",
+  "themeVersion": 1,
+  "repository": "D0ubl3-A/illco-command",
+  "branch": "sprite-pipeline-to-10k",
+  "database": {
+    "engine": "sqlite",
+    "schema": "sprite-pipeline/state/schema.sql",
+    "runtimePath": "sprite-pipeline/state/pipeline.sqlite3"
+  },
+  "roots": {
+    "evidence": "sprite-pipeline/evidence",
+    "archives": "sprite-pipeline/evidence/archives",
+    "characters": "sprite-pipeline/assets/characters",
+    "fx": "sprite-pipeline/assets/fx",
+    "packages": "sprite-pipeline/packages"
+  },
+  "ownership": {
+    "characterSurgeons": [1, 500],
+    "fxSurgeons": [501, 1000],
+    "assetsPerSurgeon": 20,
+    "requiredCharacters": 10000,
+    "requiredFx": 10000
+  },
+  "truthRules": {
+    "renderedRequiresFileEvidence": true,
+    "validatedRequiresMandatoryTests": true,
+    "packagedRequiresPackageEvidence": true,
+    "publishedRequiresPublicationEvidence": true,
+    "perfectScoreRequiresAllGates": true
+  }
+}

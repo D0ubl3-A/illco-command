@@ -19,10 +19,14 @@ def asset_id(kind: str, ordinal: int) -> str:
 def bootstrap() -> None:
     DB.parent.mkdir(parents=True, exist_ok=True)
     schema = SCHEMA.read_text(encoding="utf-8")
+    migrations = sorted((ROOT / "state").glob("[0-9][0-9][0-9]_*.sql"))
     now = datetime.now(timezone.utc).isoformat()
 
     with sqlite3.connect(DB) as con:
         con.executescript(schema)
+        for migration in migrations:
+            con.executescript(migration.read_text(encoding="utf-8"))
+
         con.execute(
             "INSERT OR IGNORE INTO themes(id, version, name, status, created_at) VALUES(?,?,?,?,?)",
             (THEME_ID, 1, "Original Claymation Celebrity-Brawl Parody", "active", now),
@@ -56,10 +60,13 @@ def bootstrap() -> None:
             "SELECT COUNT(*) FROM (SELECT asset_id, COUNT(*) c FROM ownership GROUP BY asset_id HAVING c <> 1)"
         ).fetchone()[0]
         assert duplicates == 0, duplicates
+        rules = con.execute("SELECT COUNT(*) FROM transition_rules").fetchone()[0]
+        assert rules > 0, rules
         con.commit()
 
     print(f"initialized {DB}")
     print("ownership: 10,000 characters + 10,000 FX, exactly 20 per surgeon")
+    print(f"transition rules loaded: {rules}")
 
 
 if __name__ == "__main__":

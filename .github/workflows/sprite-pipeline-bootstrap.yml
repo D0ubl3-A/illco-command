@@ -7,6 +7,12 @@ on:
     paths:
       - 'sprite-pipeline/**'
       - '.github/workflows/sprite-pipeline-bootstrap.yml'
+  pull_request:
+    branches:
+      - main
+    paths:
+      - 'sprite-pipeline/**'
+      - '.github/workflows/sprite-pipeline-bootstrap.yml'
   workflow_dispatch:
 
 permissions:

@@ -36,8 +36,11 @@ jobs:
               assert con.execute("select count(*) from assets where status='planned'").fetchone()[0] == 20000
               assert con.execute("select count(*) from (select asset_id,count(*) c from ownership group by asset_id having c != 1)").fetchone()[0] == 0
               assert con.execute("select count(*) from (select surgeon_id,count(*) c from ownership group by surgeon_id having c != 20)").fetchone()[0] == 0
+              assert con.execute("select count(*) from transition_rules").fetchone()[0] >= 20
           print('bootstrap invariants passed')
           PY
+      - name: Verify fail-closed state machine
+        run: python sprite-pipeline/scripts/test_state_machine.py
       - name: Hash bootstrap database
         run: sha256sum sprite-pipeline/state/pipeline.sqlite3 | tee sprite-pipeline/state/pipeline.sqlite3.sha256
       - name: Upload bootstrap evidence

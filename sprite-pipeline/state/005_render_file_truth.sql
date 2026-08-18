@@ -64,14 +64,3 @@ BEGIN
     ) THEN RAISE(ABORT, 'rendered_unvalidated requires registered real file evidence')
   END;
 END;
-
-CREATE TRIGGER IF NOT EXISTS trg_rendered_asset_metadata_sync
-AFTER INSERT ON file_registrations
-BEGIN
-  UPDATE assets
-  SET filename = substr(NEW.relative_path, length(NEW.relative_path) - instr(reverse(NEW.relative_path), '/') + 2),
-      content_path = NEW.relative_path,
-      sha256 = NEW.sha256,
-      updated_at = NEW.created_at
-  WHERE asset_id = NEW.asset_id;
-END;

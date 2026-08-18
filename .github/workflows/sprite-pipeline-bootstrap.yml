@@ -1,0 +1,50 @@
+name: Sprite Pipeline Bootstrap
+
+on:
+  push:
+    branches:
+      - sprite-pipeline-to-10k
+    paths:
+      - 'sprite-pipeline/**'
+      - '.github/workflows/sprite-pipeline-bootstrap.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  verify-bootstrap:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Bootstrap transactional state
+        run: python sprite-pipeline/scripts/bootstrap_state.py
+      - name: Verify database invariants
+        run: |
+          python - <<'PY'
+          import sqlite3
+          from pathlib import Path
+          db = Path('sprite-pipeline/state/pipeline.sqlite3')
+          assert db.exists() and db.stat().st_size > 0
+          with sqlite3.connect(db) as con:
+              assert con.execute("select count(*) from ownership where asset_type='character'").fetchone()[0] == 10000
+              assert con.execute("select count(*) from ownership where asset_type='fx'").fetchone()[0] == 10000
+              assert con.execute("select count(*) from surgeon_lanes").fetchone()[0] == 1000
+              assert con.execute("select count(*) from assets where status='planned'").fetchone()[0] == 20000
+              assert con.execute("select count(*) from (select asset_id,count(*) c from ownership group by asset_id having c != 1)").fetchone()[0] == 0
+              assert con.execute("select count(*) from (select surgeon_id,count(*) c from ownership group by surgeon_id having c != 20)").fetchone()[0] == 0
+          print('bootstrap invariants passed')
+          PY
+      - name: Hash bootstrap database
+        run: sha256sum sprite-pipeline/state/pipeline.sqlite3 | tee sprite-pipeline/state/pipeline.sqlite3.sha256
+      - name: Upload bootstrap evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: sprite-pipeline-bootstrap-evidence
+          path: |
+            sprite-pipeline/state/pipeline.sqlite3
+            sprite-pipeline/state/pipeline.sqlite3.sha256
+          retention-days: 30

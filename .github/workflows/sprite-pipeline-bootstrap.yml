@@ -45,6 +45,8 @@ jobs:
               assert con.execute("select count(*) from transition_rules").fetchone()[0] >= 20
           print('bootstrap invariants passed')
           PY
+      - name: Verify immutable ownership and cross-range guards
+        run: python sprite-pipeline/scripts/test_ownership_integrity.py
       - name: Verify fail-closed state machine
         run: python sprite-pipeline/scripts/test_state_machine.py
       - name: Hash bootstrap database

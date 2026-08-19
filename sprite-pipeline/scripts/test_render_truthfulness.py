@@ -8,6 +8,8 @@ import struct
 from datetime import datetime, timezone
 from pathlib import Path
 
+from manifest_test_fixture import add_queue_manifest
+
 ROOT = Path(__file__).resolve().parents[1]
 DB = ROOT / "state" / "pipeline.sqlite3"
 THEME_ID = "original-claymation-celebrity-brawl-parody-v1"
@@ -71,9 +73,10 @@ def main() -> None:
         run_id = "ci-render-truth-run"
         con.execute(
             "INSERT OR IGNORE INTO runs(id,theme_id,started_at,code_version,schema_version,continuity_pointer,score) VALUES(?,?,?,?,?,?,?)",
-            (run_id, THEME_ID, now, "ci", 5, aid, 0),
+            (run_id, THEME_ID, now, "ci", 14, aid, 0),
         )
         generic_evidence = add_evidence(con, run_id, aid, "transition-test", generic_file)
+        add_queue_manifest(con, aid, run_id, "ci-render:manifest:CHR-00002:v1")
         transition(con, aid, "planned", "queued", generic_evidence, "1")
         transition(con, aid, "queued", "rendering", generic_evidence, "2")
 
@@ -107,7 +110,7 @@ def main() -> None:
         expect_blocked(con, "DELETE FROM file_registrations WHERE id=?", (reg_id,), "file registrations are append-only")
         con.rollback()
 
-    print("render truthfulness gate passed")
+    print("manifest-gated render truthfulness gate passed")
 
 
 if __name__ == "__main__":

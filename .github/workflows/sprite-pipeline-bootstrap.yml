@@ -45,7 +45,7 @@ jobs:
               assert con.execute("select count(*) from transition_rules").fetchone()[0] >= 20
               assert con.execute("select count(*) from validation_requirements where asset_type='character' and mandatory=1").fetchone()[0] >= 15
               assert con.execute("select count(*) from validation_requirements where asset_type='fx' and mandatory=1").fetchone()[0] >= 15
-              for table in ('publications','package_assets','operation_results','lock_intents','lock_events','migration_history','defect_votes','scoring_categories'):
+              for table in ('publications','package_assets','operation_results','lock_intents','lock_events','migration_history','defect_votes','scoring_categories','asset_manifest_versions'):
                   assert con.execute("select count(*) from sqlite_master where type='table' and name=?", (table,)).fetchone()[0] == 1
               assert con.execute("select count(*) from scoring_categories").fetchone()[0] == 10
               assert con.execute("select sum(max_points) from scoring_categories").fetchone()[0] == 10000
@@ -57,6 +57,8 @@ jobs:
         run: python sprite-pipeline/scripts/test_migration_integrity.py
       - name: Verify immutable ownership and cross-range guards
         run: python sprite-pipeline/scripts/test_ownership_integrity.py
+      - name: Verify append-only manifests and queue admission
+        run: python sprite-pipeline/scripts/test_manifest_integrity.py
       - name: Verify fail-closed state machine
         run: python sprite-pipeline/scripts/test_state_machine.py
       - name: Verify rendered state requires real file evidence

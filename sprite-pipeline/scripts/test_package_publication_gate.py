@@ -29,6 +29,14 @@ def evidence(con: sqlite3.Connection, kind: str, path: str, digest: str) -> int:
     return int(cur.lastrowid)
 
 
+def package_evidence(con: sqlite3.Connection, kind: str, path: str, digest: str) -> int:
+    cur = con.execute(
+        "INSERT INTO evidence(run_id,asset_id,kind,relative_path,sha256,created_at) VALUES(?,?,?,?,?,?)",
+        (RUN, None, kind, path, digest, NOW),
+    )
+    return int(cur.lastrowid)
+
+
 def main() -> None:
     con = sqlite3.connect(":memory:")
     try:
@@ -80,6 +88,37 @@ def main() -> None:
             "INSERT INTO package_assets(package_id,asset_id,evidence_id,created_at) VALUES(?,?,?,?)",
             ("pkg-1", ASSET, pkg_evidence, NOW),
         )
+
+        # The package/publication fixture must satisfy the newer engine-package gate.
+        # This is package-level evidence (asset_id NULL), as required by 018_engine_package_integrity.sql.
+        engine_evidence_id = package_evidence(
+            con,
+            "engine-package-validation",
+            "packages/pkg-1.engine-validation.json",
+            "6" * 64,
+        )
+        con.execute(
+            """
+            INSERT INTO engine_package_validations(
+                package_id,evidence_id,metadata_path,metadata_sha256,
+                import_manifest_path,import_manifest_sha256,parser_version,
+                parsed_ok,pngs_ok,sequences_ok,pivots_ok,collisions_ok,
+                naming_ok,license_ok,changelog_ok,created_at
+            ) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)
+            """,
+            (
+                "pkg-1",
+                engine_evidence_id,
+                "packages/pkg-1.metadata.json",
+                "7" * 64,
+                "packages/pkg-1.import-manifest.json",
+                "8" * 64,
+                "test-parser-v1",
+                1, 1, 1, 1, 1, 1, 1, 1,
+                NOW,
+            ),
+        )
+
         con.execute(
             "INSERT INTO transition_intents(operation_key,asset_id,from_status,to_status,evidence_id,created_at) VALUES(?,?,?,?,?,?)",
             ("pkg-good", ASSET, "validated", "packaged", pkg_evidence, NOW),

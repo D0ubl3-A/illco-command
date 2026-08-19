@@ -41,7 +41,7 @@ def main() -> None:
 
         pkg_evidence = con.execute(
             "INSERT INTO evidence(run_id,asset_id,kind,relative_path,sha256,created_at) VALUES(?,?,?,?,?,?)",
-            (RUN,ASSET,"package-integrity","packages/pkg-1.sha256","1"*64,NOW),
+            (RUN,ASSET,"package-integrity","evidence/packages/pkg-1.sha256","1"*64,NOW),
         ).lastrowid
         con.execute("INSERT INTO packages(id,run_id,engine,relative_path,sha256,created_at) VALUES(?,?,?,?,?,?)", ("pkg-1",RUN,"unity","packages/pkg-1.zip","2"*64,NOW))
         con.execute("INSERT INTO package_assets(package_id,asset_id,evidence_id,created_at) VALUES(?,?,?,?)", ("pkg-1",ASSET,pkg_evidence,NOW))
@@ -55,7 +55,7 @@ def main() -> None:
 
         engine_evidence = con.execute(
             "INSERT INTO evidence(run_id,asset_id,kind,relative_path,sha256,created_at) VALUES(?,?,?,?,?,?)",
-            (RUN,None,"engine-package-validation","packages/pkg-1.engine-validation.json","3"*64,NOW),
+            (RUN,None,"engine-package-validation","evidence/packages/pkg-1.engine-validation.json","3"*64,NOW),
         ).lastrowid
 
         invalid = (

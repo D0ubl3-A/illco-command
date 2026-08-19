@@ -6,6 +6,8 @@ import sqlite3
 from datetime import datetime, timezone
 from pathlib import Path
 
+from manifest_test_fixture import add_queue_manifest
+
 ROOT = Path(__file__).resolve().parents[1]
 DB = ROOT / "state" / "pipeline.sqlite3"
 THEME_ID = "original-claymation-celebrity-brawl-parody-v1"
@@ -26,7 +28,7 @@ def prepare_evidence(con: sqlite3.Connection, aid: str) -> int:
     run_id = "ci-state-machine-run"
     con.execute(
         "INSERT OR IGNORE INTO runs(id,theme_id,started_at,code_version,schema_version,continuity_pointer,score) VALUES(?,?,?,?,?,?,?)",
-        (run_id, THEME_ID, now, "ci", 4, aid, 0),
+        (run_id, THEME_ID, now, "ci", 14, aid, 0),
     )
     evidence_dir = ROOT / "evidence" / "test-runtime"
     evidence_dir.mkdir(parents=True, exist_ok=True)
@@ -70,8 +72,10 @@ def main() -> None:
             con,
             "UPDATE assets SET status='queued' WHERE asset_id=?",
             (aid,),
-            "status transition requires unconsumed evidence-backed intent",
         )
+
+        # Queue admission also requires an immutable versioned manifest bound to the correct owner.
+        add_queue_manifest(con, aid, "ci-state-machine-run", "ci:manifest:CHR-00001:v1")
 
         # Evidence-backed legal transition must atomically update state, append an event, and consume the intent.
         transition(con, aid, "planned", "queued", evidence_id, "1")
@@ -95,7 +99,7 @@ def main() -> None:
         transition(con, aid, "blocked", "queued", evidence_id, "3")
         con.rollback()
 
-    print("atomic evidence-backed state-machine guard passed")
+    print("atomic evidence-backed state-machine and manifest queue guard passed")
 
 
 if __name__ == "__main__":

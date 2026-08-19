@@ -58,7 +58,7 @@ def main() -> None:
                 lambda: con.execute("UPDATE assets SET status='queued',updated_at=? WHERE asset_id='CHR-00001'", (ts,)),
                 'queued requires latest queued manifest',
             )
-            con.execute("DELETE FROM transition_intents WHERE operation_key='manifest:no-row'")
+            assert con.execute("SELECT consumed FROM transition_intents WHERE operation_key='manifest:no-row'").fetchone()[0] == 0
 
             manifest_id = add_queue_manifest(con, 'CHR-00001', 'run-manifest-1', 'manifest:v1')
             assert manifest_id > 0
@@ -81,13 +81,9 @@ def main() -> None:
                 'manifest version must append exactly once',
             )
 
-            con.execute(
-                "INSERT INTO transition_intents(operation_key,asset_id,from_status,to_status,evidence_id,created_at) VALUES(?,?,?,?,?,?)",
-                ('manifest:queue','CHR-00001','planned','queued',evidence_id,ts),
-            )
             con.execute("UPDATE assets SET status='queued',updated_at=? WHERE asset_id='CHR-00001'", (ts,))
             assert con.execute("SELECT status FROM assets WHERE asset_id='CHR-00001'").fetchone()[0] == 'queued'
-            assert con.execute("SELECT consumed FROM transition_intents WHERE operation_key='manifest:queue'").fetchone()[0] == 1
+            assert con.execute("SELECT consumed FROM transition_intents WHERE operation_key='manifest:no-row'").fetchone()[0] == 1
 
     print('append-only manifest versions and queue admission gate passed')
 

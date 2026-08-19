@@ -18,12 +18,18 @@ def now() -> str:
 
 
 def expect_abort(con: sqlite3.Connection, sql: str, params: tuple) -> None:
+    """Probe a failing statement without rolling back unrelated fixture state."""
+    con.execute("SAVEPOINT expect_abort")
     try:
         con.execute(sql, params)
     except sqlite3.IntegrityError:
-        con.rollback()
+        con.execute("ROLLBACK TO expect_abort")
+        con.execute("RELEASE expect_abort")
         return
-    raise AssertionError("expected SQLite integrity failure")
+    else:
+        con.execute("ROLLBACK TO expect_abort")
+        con.execute("RELEASE expect_abort")
+        raise AssertionError("expected SQLite integrity failure")
 
 
 def main() -> None:
@@ -85,12 +91,13 @@ def main() -> None:
                 ("SEQ-BAD",4,1,0.0,bad_evidence,"sequence-test/1",t),
             )
 
-            try:
-                con.execute("UPDATE sequence_validations SET timing_error_seconds=0.1 WHERE sequence_id='SEQ-GOOD'")
-            except sqlite3.IntegrityError:
-                con.rollback()
-            else:
-                raise AssertionError("sequence validation update unexpectedly succeeded")
+            assert con.execute("SELECT COUNT(*) FROM sequence_validations WHERE sequence_id='SEQ-GOOD'").fetchone()[0] == 1
+            expect_abort(
+                con,
+                "UPDATE sequence_validations SET timing_error_seconds=0.1 WHERE sequence_id='SEQ-GOOD'",
+                (),
+            )
+            assert con.execute("SELECT timing_error_seconds FROM sequence_validations WHERE sequence_id='SEQ-GOOD'").fetchone()[0] == 0.0
 
         print("sequence integrity passed: contiguous frames, phase order, timing, evidence and immutability enforced")
 

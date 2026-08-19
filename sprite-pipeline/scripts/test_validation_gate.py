@@ -39,9 +39,11 @@ def main() -> None:
         add_queue_manifest(con, ASSET, RUN, 'validation-gate-queued-manifest')
 
         # Drive the asset to rendered_unvalidated using real registered PNG evidence.
+        # Render-file evidence is the immutable asset path, so it must remain inside
+        # the configured character root rather than the generic evidence root.
         png = b'\x89PNG\r\n\x1a\nvalidation-gate-fixture'
         sha = hashlib.sha256(png).hexdigest()
-        rel = 'sprite-pipeline/evidence/tests/CHR-00001.png'
+        rel = 'assets/characters/CHR-00001.png'
         con.execute(
             'INSERT OR IGNORE INTO evidence(run_id,asset_id,kind,relative_path,sha256,created_at) VALUES(?,?,?,?,?,?)',
             (RUN, ASSET, 'render-file', rel, sha, now),
@@ -54,7 +56,7 @@ def main() -> None:
 
         for idx, (frm, to) in enumerate((('planned','queued'),('queued','rendering'))):
             ev_sha = hashlib.sha256(f'{ASSET}:{frm}:{to}'.encode()).hexdigest()
-            ev_rel = f'sprite-pipeline/evidence/tests/{ASSET}-{to}.txt'
+            ev_rel = f'evidence/tests/{ASSET}-{to}.txt'
             con.execute(
                 'INSERT OR IGNORE INTO evidence(run_id,asset_id,kind,relative_path,sha256,created_at) VALUES(?,?,?,?,?,?)',
                 (RUN, ASSET, 'transition', ev_rel, ev_sha, now),
@@ -74,7 +76,7 @@ def main() -> None:
         con.execute('UPDATE assets SET status=?, updated_at=? WHERE asset_id=?', ('rendered_unvalidated', now, ASSET))
 
         suite_sha = hashlib.sha256(b'validation-suite').hexdigest()
-        suite_rel = 'sprite-pipeline/evidence/tests/CHR-00001-validation-suite.json'
+        suite_rel = 'evidence/tests/CHR-00001-validation-suite.json'
         con.execute(
             'INSERT OR IGNORE INTO evidence(run_id,asset_id,kind,relative_path,sha256,created_at) VALUES(?,?,?,?,?,?)',
             (RUN, ASSET, 'validation-suite', suite_rel, suite_sha, now),

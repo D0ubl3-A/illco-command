@@ -64,6 +64,8 @@ jobs:
         run: python sprite-pipeline/scripts/test_state_machine.py
       - name: Verify rendered state requires real file evidence
         run: python sprite-pipeline/scripts/test_render_truthfulness.py
+      - name: Verify image render provider contract and fail-closed credentials
+        run: python sprite-pipeline/scripts/test_render_provider.py
       - name: Verify validated state requires mandatory suite
         run: python sprite-pipeline/scripts/test_validation_gate.py
       - name: Verify packaged and published states require real evidence

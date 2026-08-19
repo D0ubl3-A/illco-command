@@ -45,10 +45,14 @@ jobs:
               assert con.execute("select count(*) from transition_rules").fetchone()[0] >= 20
               assert con.execute("select count(*) from validation_requirements where asset_type='character' and mandatory=1").fetchone()[0] >= 15
               assert con.execute("select count(*) from validation_requirements where asset_type='fx' and mandatory=1").fetchone()[0] >= 15
-              for table in ('publications','package_assets','operation_results','lock_intents','lock_events'):
+              for table in ('publications','package_assets','operation_results','lock_intents','lock_events','migration_history'):
                   assert con.execute("select count(*) from sqlite_master where type='table' and name=?", (table,)).fetchone()[0] == 1
+              migration_files = list(Path('sprite-pipeline/state').glob('[0-9][0-9][0-9]_*.sql'))
+              assert con.execute("select count(*) from migration_history").fetchone()[0] == len(migration_files)
           print('bootstrap invariants passed')
           PY
+      - name: Verify immutable migration history and replay
+        run: python sprite-pipeline/scripts/test_migration_integrity.py
       - name: Verify immutable ownership and cross-range guards
         run: python sprite-pipeline/scripts/test_ownership_integrity.py
       - name: Verify fail-closed state machine

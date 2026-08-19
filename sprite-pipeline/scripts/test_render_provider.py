@@ -1,11 +1,18 @@
 #!/usr/bin/env python3
 import base64
-import io
 import json
 import tempfile
 from pathlib import Path
 
-from render_provider import MODEL, atomic_write_png, build_payload, png_dimensions, render_bytes
+from render_provider import (
+    CHARACTER_CHROMA_CONTRACT,
+    FX_ALPHA_CONTRACT,
+    MODEL,
+    atomic_write_png,
+    build_payload,
+    png_dimensions,
+    render_bytes,
+)
 
 PNG_1X1 = (
     b"\x89PNG\r\n\x1a\n"
@@ -54,6 +61,13 @@ def main():
     assert fx["background"] == "transparent"
     assert character["output_format"] == fx["output_format"] == "png"
     assert character["model"] == fx["model"] == MODEL
+    assert character["prompt"].startswith("original clay fighter")
+    assert "#00FF00" in character["prompt"]
+    assert "No gradient" in character["prompt"]
+    assert CHARACTER_CHROMA_CONTRACT.strip() in character["prompt"]
+    assert fx["prompt"].startswith("impact burst")
+    assert "fully transparent background" in fx["prompt"]
+    assert FX_ALPHA_CONTRACT.strip() in fx["prompt"]
 
     must_fail(lambda: render_bytes("x", "character", "", opener=opener_ok), "OPENAI_API_KEY")
     must_fail(lambda: render_bytes("x", "character", "test", opener=opener_bad), "b64_json")

@@ -66,14 +66,14 @@ def main() -> None:
             (ASSET, THEME, "character", ASSET, "validated", NOW),
         )
 
-        generic_id = evidence(con, "generic", "tests/generic.txt", "1" * 64)
+        generic_id = evidence(con, "generic", "evidence/tests/generic.txt", "1" * 64)
         expect_blocked(
             con,
             "INSERT INTO transition_intents(operation_key,asset_id,from_status,to_status,evidence_id,created_at) VALUES(?,?,?,?,?,?)",
             ("pkg-generic", ASSET, "validated", "packaged", generic_id, NOW),
         )
 
-        pkg_evidence = evidence(con, "package-integrity", "packages/pkg-1.sha256", "2" * 64)
+        pkg_evidence = evidence(con, "package-integrity", "evidence/packages/pkg-1.sha256", "2" * 64)
         expect_blocked(
             con,
             "INSERT INTO transition_intents(operation_key,asset_id,from_status,to_status,evidence_id,created_at) VALUES(?,?,?,?,?,?)",
@@ -94,7 +94,7 @@ def main() -> None:
         engine_evidence_id = package_evidence(
             con,
             "engine-package-validation",
-            "packages/pkg-1.engine-validation.json",
+            "evidence/packages/pkg-1.engine-validation.json",
             "6" * 64,
         )
         con.execute(
@@ -126,14 +126,14 @@ def main() -> None:
         con.execute("UPDATE assets SET status='packaged', updated_at=? WHERE asset_id=?", (NOW, ASSET))
         assert con.execute("SELECT status FROM assets WHERE asset_id=?", (ASSET,)).fetchone()[0] == "packaged"
 
-        pub_generic = evidence(con, "generic-publication", "publication/generic.txt", "4" * 64)
+        pub_generic = evidence(con, "generic-publication", "evidence/publication/generic.txt", "4" * 64)
         expect_blocked(
             con,
             "INSERT INTO transition_intents(operation_key,asset_id,from_status,to_status,evidence_id,created_at) VALUES(?,?,?,?,?,?)",
             ("pub-generic", ASSET, "packaged", "published", pub_generic, NOW),
         )
 
-        pub_evidence = evidence(con, "publication", "publication/pub-1.json", "5" * 64)
+        pub_evidence = evidence(con, "publication", "evidence/publication/pub-1.json", "5" * 64)
         expect_blocked(
             con,
             "INSERT INTO transition_intents(operation_key,asset_id,from_status,to_status,evidence_id,created_at) VALUES(?,?,?,?,?,?)",

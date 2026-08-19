@@ -20,6 +20,16 @@ from pathlib import Path
 
 API_URL = "https://api.openai.com/v1/images/generations"
 MODEL = "gpt-image-2-2026-04-21"
+CHARACTER_CHROMA_CONTRACT = (
+    " Render the complete full-body subject against a perfectly uniform pure #00FF00 "
+    "chroma-green background only. No gradient, vignette, floor, horizon, cast shadow, "
+    "reflected green lighting, text, logo, watermark, or show branding. Keep all wardrobe "
+    "and props free of green that could conflict with keying."
+)
+FX_ALPHA_CONTRACT = (
+    " Render only the effect on a fully transparent background with clean alpha edges; "
+    "no opaque box, backdrop, floor, text, logo, watermark, or show branding."
+)
 
 
 def png_dimensions(data: bytes) -> tuple[int, int]:
@@ -36,11 +46,15 @@ def build_payload(prompt: str, asset_type: str) -> dict:
         raise ValueError("asset_type must be character or fx")
     if not prompt.strip():
         raise ValueError("prompt must be nonempty")
-    # Characters must be generated on chroma green; FX default to transparent.
-    background = "opaque" if asset_type == "character" else "transparent"
+    if asset_type == "character":
+        background = "opaque"
+        contracted_prompt = prompt.strip() + CHARACTER_CHROMA_CONTRACT
+    else:
+        background = "transparent"
+        contracted_prompt = prompt.strip() + FX_ALPHA_CONTRACT
     return {
         "model": MODEL,
-        "prompt": prompt,
+        "prompt": contracted_prompt,
         "size": "1024x1536" if asset_type == "character" else "1024x1024",
         "quality": "high",
         "background": background,

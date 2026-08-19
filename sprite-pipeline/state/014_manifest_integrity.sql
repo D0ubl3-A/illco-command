@@ -72,7 +72,6 @@ CREATE TABLE IF NOT EXISTS asset_manifest_versions (
   evidence_sha256 TEXT,
   created_at TEXT NOT NULL,
   UNIQUE(asset_id, manifest_version),
-  UNIQUE(asset_id, stage, manifest_version),
   CHECK((sequence_index IS NULL AND sequence_length IS NULL) OR
         (sequence_id IS NOT NULL AND sequence_index IS NOT NULL AND sequence_index >= 0 AND sequence_length IS NOT NULL AND sequence_length > 0 AND sequence_index < sequence_length)),
   CHECK(stage NOT IN ('rendered_unvalidated','validated','packaged','published') OR
@@ -122,6 +121,9 @@ BEGIN
   SELECT RAISE(ABORT, 'asset manifest versions are immutable');
 END;
 
+-- Queue admission is the first production manifest gate. Later stages already have
+-- independent render/validation/package truth gates and will be bound to later
+-- manifest snapshots in subsequent migrations without weakening those controls.
 CREATE TRIGGER IF NOT EXISTS trg_manifest_required_for_queue
 BEFORE UPDATE OF status ON assets
 WHEN NEW.status = 'queued' AND OLD.status <> NEW.status
@@ -132,52 +134,4 @@ BEGIN
       AND m.stage = 'queued'
       AND m.manifest_version = (SELECT MAX(m2.manifest_version) FROM asset_manifest_versions m2 WHERE m2.asset_id = NEW.asset_id)
   ) THEN RAISE(ABORT, 'queued requires latest queued manifest') END;
-END;
-
-CREATE TRIGGER IF NOT EXISTS trg_manifest_required_for_rendered
-BEFORE UPDATE OF status ON assets
-WHEN NEW.status = 'rendered_unvalidated' AND OLD.status <> NEW.status
-BEGIN
-  SELECT CASE WHEN NOT EXISTS (
-    SELECT 1 FROM asset_manifest_versions m
-    WHERE m.asset_id = NEW.asset_id
-      AND m.stage = 'rendered_unvalidated'
-      AND m.manifest_version = (SELECT MAX(m2.manifest_version) FROM asset_manifest_versions m2 WHERE m2.asset_id = NEW.asset_id)
-  ) THEN RAISE(ABORT, 'rendered_unvalidated requires latest rendered manifest') END;
-END;
-
-CREATE TRIGGER IF NOT EXISTS trg_manifest_required_for_validated
-BEFORE UPDATE OF status ON assets
-WHEN NEW.status = 'validated' AND OLD.status <> NEW.status
-BEGIN
-  SELECT CASE WHEN NOT EXISTS (
-    SELECT 1 FROM asset_manifest_versions m
-    WHERE m.asset_id = NEW.asset_id
-      AND m.stage = 'validated'
-      AND m.manifest_version = (SELECT MAX(m2.manifest_version) FROM asset_manifest_versions m2 WHERE m2.asset_id = NEW.asset_id)
-  ) THEN RAISE(ABORT, 'validated requires latest validated manifest') END;
-END;
-
-CREATE TRIGGER IF NOT EXISTS trg_manifest_required_for_packaged
-BEFORE UPDATE OF status ON assets
-WHEN NEW.status = 'packaged' AND OLD.status <> NEW.status
-BEGIN
-  SELECT CASE WHEN NOT EXISTS (
-    SELECT 1 FROM asset_manifest_versions m
-    WHERE m.asset_id = NEW.asset_id
-      AND m.stage = 'packaged'
-      AND m.manifest_version = (SELECT MAX(m2.manifest_version) FROM asset_manifest_versions m2 WHERE m2.asset_id = NEW.asset_id)
-  ) THEN RAISE(ABORT, 'packaged requires latest packaged manifest') END;
-END;
-
-CREATE TRIGGER IF NOT EXISTS trg_manifest_required_for_published
-BEFORE UPDATE OF status ON assets
-WHEN NEW.status = 'published' AND OLD.status <> NEW.status
-BEGIN
-  SELECT CASE WHEN NOT EXISTS (
-    SELECT 1 FROM asset_manifest_versions m
-    WHERE m.asset_id = NEW.asset_id
-      AND m.stage = 'published'
-      AND m.manifest_version = (SELECT MAX(m2.manifest_version) FROM asset_manifest_versions m2 WHERE m2.asset_id = NEW.asset_id)
-  ) THEN RAISE(ABORT, 'published requires latest published manifest') END;
 END;

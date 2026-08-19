@@ -1,12 +1,25 @@
 PRAGMA foreign_keys = ON;
 
 -- Fail closed when a relative path is syntactically safe but points outside the
--- production roots declared in config/production.json.
+-- production roots declared in config/production.json. Render-file evidence is
+-- intentionally the immutable asset path itself, so it is restricted to the
+-- matching character/FX root rather than the evidence directory.
 CREATE TRIGGER IF NOT EXISTS trg_evidence_write_root
 BEFORE INSERT ON evidence
 BEGIN
-  SELECT CASE WHEN NEW.relative_path NOT LIKE 'evidence/%'
-    THEN RAISE(ABORT, 'evidence path outside configured root') END;
+  SELECT CASE
+    WHEN NEW.kind = 'render-file'
+         AND NEW.asset_id LIKE 'CHR-%'
+         AND NEW.relative_path NOT LIKE 'assets/characters/%'
+      THEN RAISE(ABORT, 'character render evidence outside configured root')
+    WHEN NEW.kind = 'render-file'
+         AND NEW.asset_id LIKE 'FX-%'
+         AND NEW.relative_path NOT LIKE 'assets/fx/%'
+      THEN RAISE(ABORT, 'fx render evidence outside configured root')
+    WHEN NEW.kind <> 'render-file'
+         AND NEW.relative_path NOT LIKE 'evidence/%'
+      THEN RAISE(ABORT, 'evidence path outside configured root')
+  END;
 END;
 
 CREATE TRIGGER IF NOT EXISTS trg_packages_write_root

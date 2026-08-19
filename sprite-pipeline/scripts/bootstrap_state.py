@@ -5,6 +5,8 @@ import sqlite3
 from datetime import datetime, timezone
 from pathlib import Path
 
+from migration_integrity import apply_migrations
+
 ROOT = Path(__file__).resolve().parents[1]
 DB = ROOT / "state" / "pipeline.sqlite3"
 SCHEMA = ROOT / "state" / "schema.sql"
@@ -19,13 +21,11 @@ def asset_id(kind: str, ordinal: int) -> str:
 def bootstrap() -> None:
     DB.parent.mkdir(parents=True, exist_ok=True)
     schema = SCHEMA.read_text(encoding="utf-8")
-    migrations = sorted((ROOT / "state").glob("[0-9][0-9][0-9]_*.sql"))
     now = datetime.now(timezone.utc).isoformat()
 
     with sqlite3.connect(DB) as con:
         con.executescript(schema)
-        for migration in migrations:
-            con.executescript(migration.read_text(encoding="utf-8"))
+        migration_count = apply_migrations(con, ROOT / "state")
 
         con.execute(
             "INSERT OR IGNORE INTO themes(id, version, name, status, created_at) VALUES(?,?,?,?,?)",
@@ -62,11 +62,14 @@ def bootstrap() -> None:
         assert duplicates == 0, duplicates
         rules = con.execute("SELECT COUNT(*) FROM transition_rules").fetchone()[0]
         assert rules > 0, rules
+        applied = con.execute("SELECT COUNT(*) FROM migration_history").fetchone()[0]
+        assert applied == migration_count, (applied, migration_count)
         con.commit()
 
     print(f"initialized {DB}")
     print("ownership: 10,000 characters + 10,000 FX, exactly 20 per surgeon")
     print(f"transition rules loaded: {rules}")
+    print(f"immutable migrations verified: {migration_count}")
 
 
 if __name__ == "__main__":

@@ -5,6 +5,8 @@ import hashlib
 import sqlite3
 from pathlib import Path
 
+from manifest_test_fixture import add_queue_manifest
+
 ROOT = Path(__file__).resolve().parents[1]
 DB = ROOT / 'state' / 'pipeline.sqlite3'
 ASSET = 'CHR-00001'
@@ -30,6 +32,11 @@ def main() -> None:
             'INSERT OR IGNORE INTO runs(id,theme_id,started_at,code_version,schema_version,score) VALUES(?,?,?,?,?,0)',
             (RUN, theme, now, 'validation-gate-test', 6),
         )
+
+        # Queue admission is fail-closed: create the immutable queued manifest
+        # before attempting planned -> queued. This keeps the validation test
+        # compatible with the manifest integrity gate instead of bypassing it.
+        add_queue_manifest(con, ASSET, RUN, 'validation-gate-queued-manifest')
 
         # Drive the asset to rendered_unvalidated using real registered PNG evidence.
         png = b'\x89PNG\r\n\x1a\nvalidation-gate-fixture'

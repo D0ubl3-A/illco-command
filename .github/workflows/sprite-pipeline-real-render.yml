@@ -1,0 +1,50 @@
+name: Sprite Pipeline First Real Render
+
+on:
+  push:
+    branches:
+      - sprite-pipeline-to-10k
+    paths:
+      - 'sprite-pipeline/render-queue/first-real-render.json'
+      - '.github/workflows/sprite-pipeline-real-render.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  first-real-render:
+    runs-on: ubuntu-latest
+    env:
+      OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Require mounted OpenAI credential
+        shell: bash
+        run: |
+          if [ -z "${OPENAI_API_KEY:-}" ]; then
+            echo 'OPENAI_API_KEY repository secret is not mounted; refusing to fabricate render evidence.' >&2
+            exit 42
+          fi
+      - name: Bootstrap transactional state
+        run: python sprite-pipeline/scripts/bootstrap_state.py
+      - name: Render first real character and FX assets
+        run: python sprite-pipeline/scripts/render_first_real_assets.py
+      - name: Verify real render evidence
+        run: python sprite-pipeline/scripts/test_first_real_assets.py
+      - name: Hash first-real-render evidence
+        run: |
+          find sprite-pipeline/assets/characters sprite-pipeline/assets/fx sprite-pipeline/evidence/first-real-render -type f -print0 | sort -z | xargs -0 sha256sum > sprite-pipeline/evidence/first-real-render/SHA256SUMS
+      - name: Upload first-real-render evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: sprite-pipeline-first-real-render
+          path: |
+            sprite-pipeline/assets/characters/
+            sprite-pipeline/assets/fx/
+            sprite-pipeline/evidence/first-real-render/
+            sprite-pipeline/state/pipeline.sqlite3
+          retention-days: 30

@@ -2,5 +2,6 @@
   "request": "first-real-render",
   "assets": ["CHR-00001", "FX-00001"],
   "truth_rule": "rendered_unvalidated until file gates pass",
-  "requested_at": "2026-08-20T00:00:00Z"
+  "requested_at": "2026-08-20T00:00:00Z",
+  "trigger_attempt": 2
 }

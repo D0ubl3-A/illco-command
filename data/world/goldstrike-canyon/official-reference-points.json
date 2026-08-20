@@ -1,0 +1,43 @@
+{
+  "schema_version": "1.0.0",
+  "region_id": "goldstrike_canyon_hot_springs",
+  "generated_at": "2026-08-19T22:58:00-07:00",
+  "horizontal_input_crs": "EPSG:4326",
+  "production_crs": "EPSG:32611",
+  "origin_anchor_id": "GS-A000",
+  "references": [
+    {
+      "id": "GS-R001",
+      "name": "nps_goldstrike_canyon_2026_event_location",
+      "label": "NPS Goldstrike Canyon trail event / meeting location",
+      "latitude": 36.010244,
+      "longitude": -114.77348,
+      "utm_zone": 11,
+      "hemisphere": "N",
+      "utm_easting_m": 700660.724527,
+      "utm_northing_m": 3987377.585176,
+      "local_east_m": 100.208402,
+      "local_north_m": 34.92369,
+      "horizontal_accuracy_m": null,
+      "evidence_status": "SOURCE_CONFIRMED_OFFICIAL",
+      "source": {
+        "authority": "U.S. National Park Service",
+        "url": "https://www.nps.gov/planyourvisit/event-details.htm?id=3AA4EA42-B2B9-7038-02A5F1B7DD70405B",
+        "source_checked_at": "2026-08-19T22:58:00-07:00",
+        "notes": "NPS explicitly publishes latitude 36.010244 and longitude -114.773480 for a 2026 Goldstrike Canyon trail event. This is preserved as an official reference point and is not silently substituted for the existing OSM trailhead anchor."
+      },
+      "placement_policy": "REFERENCE_ONLY_UNTIL_FEATURE_IDENTITY_IS_CONFIRMED"
+    }
+  ],
+  "geometry_sources": [
+    {
+      "id": "NPS_PUBLIC_TRAILS_GEOGRAPHIC",
+      "authority": "U.S. National Park Service",
+      "url": "https://mapservices.nps.gov/arcgis/rest/services/NationalDatasets/NPS_Public_Trails/FeatureServer/0",
+      "geometry_type": "polyline",
+      "spatial_reference": "NAD83 / service output configurable",
+      "status": "AUTHORITATIVE_SOURCE_IDENTIFIED_QUERY_PENDING",
+      "notes": "Use the actual Goldstrike feature geometry from this public NPS trail service before assigning exact coordinates to trail-surface and traversal sprite instances."
+    }
+  ]
+}

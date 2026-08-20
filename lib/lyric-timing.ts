@@ -45,7 +45,13 @@ export function alignTranscriptToWordTimestamps(transcriptText: string, timingWo
       output.push({ word: transcriptWords[index], start: anchored.start, end: anchored.end });
       continue;
     }
-    const previousIndex = anchorIndexes.findLast((value) => value < index);
+    let previousIndex: number | undefined;
+    for (let position = anchorIndexes.length - 1; position >= 0; position -= 1) {
+      if (anchorIndexes[position] < index) {
+        previousIndex = anchorIndexes[position];
+        break;
+      }
+    }
     const nextIndex = anchorIndexes.find((value) => value > index);
     const rangeStart = previousIndex === undefined ? songStart : anchors.get(previousIndex)!.end;
     const rangeEnd = nextIndex === undefined ? songEnd : anchors.get(nextIndex)!.start;

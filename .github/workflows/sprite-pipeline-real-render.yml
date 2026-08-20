@@ -7,6 +7,15 @@ on:
     paths:
       - 'sprite-pipeline/render-queue/first-real-render.json'
       - '.github/workflows/sprite-pipeline-real-render.yml'
+  pull_request:
+    branches:
+      - main
+    paths:
+      - 'sprite-pipeline/render-queue/first-real-render.json'
+      - '.github/workflows/sprite-pipeline-real-render.yml'
+      - 'sprite-pipeline/scripts/render_first_real_assets.py'
+      - 'sprite-pipeline/scripts/render_provider.py'
+      - 'sprite-pipeline/scripts/test_first_real_assets.py'
   workflow_dispatch:
 
 permissions:

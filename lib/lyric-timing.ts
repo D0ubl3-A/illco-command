@@ -46,10 +46,9 @@ export function alignTranscriptToWordTimestamps(transcriptText: string, timingWo
       continue;
     }
     let previousIndex: number | undefined;
-    for (let anchorPosition = anchorIndexes.length - 1; anchorPosition >= 0; anchorPosition -= 1) {
-      const candidate = anchorIndexes[anchorPosition];
-      if (candidate < index) {
-        previousIndex = candidate;
+    for (let position = anchorIndexes.length - 1; position >= 0; position -= 1) {
+      if (anchorIndexes[position] < index) {
+        previousIndex = anchorIndexes[position];
         break;
       }
     }

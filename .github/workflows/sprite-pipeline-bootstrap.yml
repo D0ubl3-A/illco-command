@@ -1,0 +1,104 @@
+name: Sprite Pipeline Bootstrap
+
+on:
+  push:
+    branches:
+      - sprite-pipeline-to-10k
+    paths:
+      - 'sprite-pipeline/**'
+      - '.github/workflows/sprite-pipeline-bootstrap.yml'
+  pull_request:
+    branches:
+      - main
+    paths:
+      - 'sprite-pipeline/**'
+      - '.github/workflows/sprite-pipeline-bootstrap.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  verify-bootstrap:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Bootstrap transactional state
+        run: python sprite-pipeline/scripts/bootstrap_state.py
+      - name: Verify database invariants
+        run: |
+          python - <<'PY'
+          import sqlite3
+          from pathlib import Path
+          db = Path('sprite-pipeline/state/pipeline.sqlite3')
+          assert db.exists() and db.stat().st_size > 0
+          with sqlite3.connect(db) as con:
+              assert con.execute("select count(*) from ownership where asset_type='character'").fetchone()[0] == 10000
+              assert con.execute("select count(*) from ownership where asset_type='fx'").fetchone()[0] == 10000
+              assert con.execute("select count(*) from surgeon_lanes").fetchone()[0] == 1000
+              assert con.execute("select count(*) from assets where status='planned'").fetchone()[0] == 20000
+              assert con.execute("select count(*) from (select asset_id,count(*) c from ownership group by asset_id having c != 1)").fetchone()[0] == 0
+              assert con.execute("select count(*) from (select surgeon_id,count(*) c from ownership group by surgeon_id having c != 20)").fetchone()[0] == 0
+              assert con.execute("select count(*) from transition_rules").fetchone()[0] >= 20
+              assert con.execute("select count(*) from validation_requirements where asset_type='character' and mandatory=1").fetchone()[0] >= 15
+              assert con.execute("select count(*) from validation_requirements where asset_type='fx' and mandatory=1").fetchone()[0] >= 15
+              for table in ('publications','package_assets','engine_package_validations','operation_results','lock_intents','lock_events','migration_history','defect_votes','scoring_categories','asset_manifest_versions','run_steps','asset_versions','prompts','character_bibles','fx_bibles','sequence_bundles','frames','sequence_validations','replacements','metrics','alerts','coverage_dimensions','coverage_targets','asset_coverage','coverage_results'):
+                  assert con.execute("select count(*) from sqlite_master where type='table' and name=?", (table,)).fetchone()[0] == 1
+              assert con.execute("select count(*) from coverage_dimensions where required=1").fetchone()[0] >= 20
+              assert con.execute("select count(*) from scoring_categories").fetchone()[0] == 10
+              assert con.execute("select sum(max_points) from scoring_categories").fetchone()[0] == 10000
+              migration_files = list(Path('sprite-pipeline/state').glob('[0-9][0-9][0-9]_*.sql'))
+              assert con.execute("select count(*) from migration_history").fetchone()[0] == len(migration_files)
+          print('bootstrap invariants passed')
+          PY
+      - name: Verify immutable migration history and replay
+        run: python sprite-pipeline/scripts/test_migration_integrity.py
+      - name: Verify immutable ownership and cross-range guards
+        run: python sprite-pipeline/scripts/test_ownership_integrity.py
+      - name: Verify append-only manifests and queue admission
+        run: python sprite-pipeline/scripts/test_manifest_integrity.py
+      - name: Verify fail-closed state machine
+        run: python sprite-pipeline/scripts/test_state_machine.py
+      - name: Verify rendered state requires real file evidence
+        run: python sprite-pipeline/scripts/test_render_truthfulness.py
+      - name: Verify image render provider contract and fail-closed credentials
+        run: python sprite-pipeline/scripts/test_render_provider.py
+      - name: Verify validated state requires mandatory suite
+        run: python sprite-pipeline/scripts/test_validation_gate.py
+      - name: Verify packaged and published states require real evidence
+        run: python sprite-pipeline/scripts/test_package_publication_gate.py
+      - name: Verify engine package metadata parses and mandatory import gates pass
+        run: python sprite-pipeline/scripts/test_engine_package_integrity.py
+      - name: Verify canonical deterministic replay idempotency
+        run: python sprite-pipeline/scripts/test_idempotency.py
+      - name: Verify lock ownership, contention, heartbeat and stale recovery
+        run: python sprite-pipeline/scripts/test_lock_integrity.py
+      - name: Verify storage paths, immutable evidence and archives
+        run: python sprite-pipeline/scripts/test_storage_integrity.py
+      - name: Verify configured write roots are fail-closed
+        run: python sprite-pipeline/scripts/test_write_root_integrity.py
+      - name: Verify crash-boundary rollback and deterministic recovery
+        run: python sprite-pipeline/scripts/test_crash_recovery.py
+      - name: Verify defect ledger completeness, votes, dissent and ranking
+        run: python sprite-pipeline/scripts/test_defect_ledger_integrity.py
+      - name: Verify evidence-backed scoring caps and derived totals
+        run: python sprite-pipeline/scripts/test_scoring_integrity.py
+      - name: Verify authoritative state domains and immutable bibles
+        run: python sprite-pipeline/scripts/test_authoritative_state_coverage.py
+      - name: Verify measurable coverage matrices and type integrity
+        run: python sprite-pipeline/scripts/test_coverage_integrity.py
+      - name: Verify sequence timing, synchronization and immutable validation
+        run: python sprite-pipeline/scripts/test_sequence_integrity.py
+      - name: Hash bootstrap database
+        run: sha256sum sprite-pipeline/state/pipeline.sqlite3 | tee sprite-pipeline/state/pipeline.sqlite3.sha256
+      - name: Upload bootstrap evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: sprite-pipeline-bootstrap-evidence
+          path: |
+            sprite-pipeline/state/pipeline.sqlite3
+            sprite-pipeline/state/pipeline.sqlite3.sha256
+          retention-days: 30

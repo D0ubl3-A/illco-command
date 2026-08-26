@@ -240,6 +240,46 @@ async function main() {
     $$;
   `;
 
+  await sql\`
+    CREATE TABLE IF NOT EXISTS illco_command_stripe_events (
+      event_id TEXT PRIMARY KEY,
+      event_type TEXT NOT NULL,
+      object_id TEXT,
+      api_version TEXT,
+      livemode BOOLEAN NOT NULL DEFAULT FALSE,
+      status TEXT NOT NULL DEFAULT 'processing',
+      attempt_count INTEGER NOT NULL DEFAULT 1,
+      payload JSONB NOT NULL DEFAULT '{}'::jsonb,
+      last_error TEXT,
+      received_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+      processing_started_at TIMESTAMPTZ,
+      processed_at TIMESTAMPTZ,
+      next_attempt_at TIMESTAMPTZ,
+      created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+      updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+    )
+  \`;
+  await sql\`
+    CREATE TABLE IF NOT EXISTS illco_command_notification_outbox (
+      id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+      stripe_event_id TEXT REFERENCES illco_command_stripe_events(event_id) ON DELETE SET NULL,
+      topic TEXT NOT NULL,
+      dedupe_key TEXT NOT NULL UNIQUE,
+      payload JSONB NOT NULL DEFAULT '{}'::jsonb,
+      status TEXT NOT NULL DEFAULT 'pending',
+      attempt_count INTEGER NOT NULL DEFAULT 0,
+      available_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+      delivered_at TIMESTAMPTZ,
+      last_error TEXT,
+      created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+      updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+    )
+  \`;
+  await sql\`CREATE INDEX IF NOT EXISTS idx_illco_command_stripe_events_status_retry ON illco_command_stripe_events (status, next_attempt_at)\`;
+  await sql\`CREATE INDEX IF NOT EXISTS idx_illco_command_stripe_events_object ON illco_command_stripe_events (object_id)\`;
+  await sql\`CREATE INDEX IF NOT EXISTS idx_illco_command_notification_outbox_pending ON illco_command_notification_outbox (status, available_at)\`;
+  await sql\`CREATE INDEX IF NOT EXISTS idx_illco_command_notification_outbox_event ON illco_command_notification_outbox (stripe_event_id)\`;
+
   await sql`CREATE INDEX IF NOT EXISTS idx_illco_command_leads_email ON illco_command_leads (email)`;
   await sql`CREATE INDEX IF NOT EXISTS idx_illco_command_leads_email_lower ON illco_command_leads (LOWER(email))`;
   await sql`CREATE INDEX IF NOT EXISTS idx_illco_command_leads_created_at ON illco_command_leads (created_at DESC)`;

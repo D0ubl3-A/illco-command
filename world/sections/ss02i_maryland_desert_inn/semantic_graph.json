@@ -1,0 +1,14 @@
+{
+  "section_id": "SS-02I-MARYLAND-PARKWAY-DESERT-INN",
+  "edges": [
+    {"subject":"section:ss02i","predicate":"contains_intersection_context","object":"intersection:maryland_parkway_desert_inn","source_ref":"rtc_maryland_project"},
+    {"subject":"road:maryland_parkway","predicate":"crosses","object":"road:desert_inn_road","source_ref":"rtc_maryland_project"},
+    {"subject":"transit:route_109","predicate":"serves_corridor","object":"road:maryland_parkway","source_ref":"rtc_bus_stop_closures"},
+    {"subject":"transit:stop_1766","predicate":"located_before","object":"road:desert_inn_road","source_ref":"rtc_bus_stop_closures"},
+    {"subject":"transit:stop_1772","predicate":"located_before","object":"road:desert_inn_road","source_ref":"rtc_bus_stop_closures"},
+    {"subject":"transit:stop_1732","predicate":"located_after","object":"road:desert_inn_road","source_ref":"rtc_bus_stop_closures"},
+    {"subject":"property:sunrise_medical_tower_4","predicate":"addressed_on","object":"road:maryland_parkway","source_ref":"unlv_som09"},
+    {"subject":"property:sunrise_medical_tower_4","predicate":"contains","object":"unit:unlv_som09_suite_303","source_ref":"unlv_som09"},
+    {"subject":"unit:unlv_som09_suite_303","predicate":"occupied_by","object":"clinic:unlv_health_gynecology_obstetrics","source_ref":"unlv_som09"}
+  ]
+}

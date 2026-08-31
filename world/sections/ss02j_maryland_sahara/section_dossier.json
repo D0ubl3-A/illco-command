@@ -1,0 +1,115 @@
+{
+  "schema": "sin-city-section-dossier-v1",
+  "section_id": "SS-02J-MARYLAND-PARKWAY-SAHARA-AVENUE",
+  "name": "Maryland Parkway / Sahara Avenue intersection",
+  "status": "PARTIAL_PASS",
+  "identity": {
+    "roads": ["South Maryland Parkway", "East Sahara Avenue"],
+    "jurisdiction_context": ["Clark County", "City of Las Vegas boundary context"],
+    "evidence_state": "SOURCE_CONFIRMED"
+  },
+  "coordinates": {
+    "intersection_wgs84": null,
+    "intersection_stateplane": null,
+    "section_polygon": null,
+    "state": "BLOCKED",
+    "reason": "No authoritative GIS feature-query response containing the intersection geometry was captured and committed."
+  },
+  "parcels": {
+    "apns": [],
+    "polygons": [],
+    "state": "BLOCKED",
+    "reason": "The intersection spans rights-of-way and multiple parcels; no complete authoritative intersection result was captured."
+  },
+  "roads": {
+    "named_context": ["South Maryland Parkway", "East Sahara Avenue"],
+    "authoritative_services": [
+      "Clark County GISMO Transportation street-centerline service",
+      "Clark County GISMO Major Streets layer"
+    ],
+    "geometry": null,
+    "lanes": null,
+    "curbs": null,
+    "sidewalks": null,
+    "signals": null,
+    "state": "CONTEXT_PASS_GEOMETRY_BLOCKED"
+  },
+  "terrain": {
+    "samples": [],
+    "state": "BLOCKED",
+    "reason": "No USGS 3DEP sample set or approved vertical datum record was captured."
+  },
+  "buildings": {
+    "identities": [],
+    "footprints": [],
+    "state": "BLOCKED",
+    "reason": "No authoritative quadrant-wide building identity and footprint join was captured."
+  },
+  "architecture": {
+    "records": [],
+    "state": "BLOCKED",
+    "reason": "Architecture cannot pass before building identities and footprints are verified."
+  },
+  "context": {
+    "tod_priority_focus_area": true,
+    "brt_corridor": true,
+    "brt_project_completion_target": "Fall 2026",
+    "temporary_construction_context": true,
+    "notes": [
+      "Clark County identifies Sahara Avenue as one of four priority Maryland Parkway TOD focus areas.",
+      "The City of Las Vegas reports the Maryland Parkway BRT project as active and describes wider sidewalks, improved crossings, lighting, shade, shared bus-bike lanes and electric buses as planned outcomes.",
+      "Construction information is operational context and is not permanent as-built geometry."
+    ]
+  },
+  "sources": [
+    {
+      "id": "clark_tod_plan",
+      "authority": "Clark County Comprehensive Planning",
+      "url": "https://www.clarkcountynv.gov/government/departments/comprehensive_planning_department/maryland-parkway-corridor-transit-oriented-development-plan",
+      "supports": ["Sahara Avenue priority focus area", "TOD plan accepted August 2021"]
+    },
+    {
+      "id": "city_brt_project",
+      "authority": "City of Las Vegas Public Works",
+      "url": "https://www.lasvegasnevada.gov/Government/Departments/Public-Works/Ongoing-Projects",
+      "supports": ["Maryland Parkway BRT active project", "Fall 2026 completion target", "planned corridor improvements"]
+    },
+    {
+      "id": "clark_transportation_service",
+      "authority": "Clark County GIS",
+      "url": "https://maps.clarkcountynv.gov/arcgis/rest/services/GISMO/Transportation/MapServer",
+      "supports": ["official street-centerline service", "EPSG:3421 service CRS"]
+    },
+    {
+      "id": "clark_major_streets",
+      "authority": "Clark County GIS",
+      "url": "https://maps.clarkcountynv.gov/arcgis/rest/services/GISMO/scl/MapServer/0",
+      "supports": ["major-street feature layer", "polyline geometry availability"]
+    },
+    {
+      "id": "clark_assessor_map",
+      "authority": "Clark County GIS",
+      "url": "https://maps.clarkcountynv.gov/arcgis/rest/services/GISMO/AssessorMap/FeatureServer",
+      "supports": ["parcel, lot-line and easement feature-layer availability", "EPSG:3421 service CRS"]
+    },
+    {
+      "id": "clark_design_overlay",
+      "authority": "Clark County GIS",
+      "url": "https://maps.clarkcountynv.gov/arcgis/rest/services/GISMO/DesignView2024/MapServer",
+      "supports": ["Maryland Parkway Overlay layer availability"]
+    }
+  ],
+  "gates": {
+    "IDENTITY_GATE": "PASS",
+    "SOURCE_GATE": "PASS",
+    "CONTEXT_GATE": "PASS",
+    "ROAD_CONTEXT_GATE": "PASS",
+    "COORDINATE_GATE": "BLOCKED",
+    "PARCEL_GATE": "BLOCKED",
+    "ROAD_GEOMETRY_GATE": "BLOCKED",
+    "TERRAIN_GATE": "BLOCKED",
+    "BUILDING_GATE": "BLOCKED",
+    "ARCHITECTURE_GATE": "BLOCKED",
+    "FINAL_ASSET_GATE": "BLOCKED"
+  }
+}

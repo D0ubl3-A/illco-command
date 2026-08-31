@@ -1,0 +1,59 @@
+{
+  "executed_at": "2026-08-02T21:00:06-07:00",
+  "section_id": "SS-01A-NYNY",
+  "pipeline_result": "PARTIAL_PASS",
+  "changed": [
+    "Official address and identity locked from MGM source.",
+    "Official property-map components added to the location graph dossier.",
+    "Road, valet/rideshare, parking-garage, pool and pedestrian-connection relationships recorded.",
+    "Architecture confidence advanced from unresolved to partial evidence-backed dossier.",
+    "Runner hard-coded timestamp replaced with runtime Pacific timestamp."
+  ],
+  "released_outputs": [
+    "semantic campus decomposition",
+    "relationship graph planning",
+    "source-backed road/pedestrian connection planning"
+  ],
+  "blocked_outputs": [
+    "final exterior sprite",
+    "final photoreal 3D model",
+    "parcel-aligned building placement"
+  ],
+  "blocking_gates": [
+    "PARCEL_GATE",
+    "BUILDING_GATE",
+    "ARCHITECTURE_GATE"
+  ],
+  "next_actions": [
+    "Capture Clark County parcel feature polygon and APN",
+    "Capture authoritative or mapped exterior building footprints",
+    "Resolve tower-segment stories/materials/roof geometry"
+  ],
+  "progress": {
+    "anchors_total": 9,
+    "control_anchors_complete": 3,
+    "landmark_sites_total": 6,
+    "landmark_sites_final_complete": 0,
+    "landmark_sites_evidence_advanced": 1,
+    "south_strip_anchor_gate_completion_percent": 38.89,
+    "whole_map_completion_percent": null,
+    "whole_map_progress_note": "Cannot calculate a defensible whole-map percentage until the complete map section inventory and acceptance criteria are registered."
+  },
+  "validation_summary": {
+    "anchors_total": 9,
+    "control_geometry_ready": 3,
+    "final_visual_assets_ready": 0,
+    "anchors_still_blocked": 6,
+    "coordinate_records_valid": 9,
+    "errors": 0,
+    "warnings": 0,
+    "world_graph_nodes": 76,
+    "world_graph_edges": 79,
+    "resolution_tasks": 6
+  },
+  "reproducibility": {
+    "checked_at": "2026-08-02T21:00:06-07:00",
+    "all_identical": true,
+    "deterministic_files_checked": 5
+  }
+}

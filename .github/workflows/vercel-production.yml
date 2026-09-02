@@ -78,7 +78,7 @@ jobs:
         run: npm run build
 
   verify_live_mcp:
-    if: github.event_name == 'workflow_dispatch' && inputs.verify_live
+    if: github.event_name == 'push' || (github.event_name == 'workflow_dispatch' && inputs.verify_live)
     needs: verify
     runs-on: ubuntu-latest
     timeout-minutes: 10

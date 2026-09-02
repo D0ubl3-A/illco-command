@@ -10,7 +10,7 @@ on:
   workflow_dispatch:
     inputs:
       verify_live:
-        description: Verify the published illcoai.tech Site and AutoTube MCP
+        description: Verify the published illcoai.tech Site and MCP routes
         required: false
         type: boolean
         default: true
@@ -59,6 +59,7 @@ jobs:
         shell: bash
         env:
           AUTOTUBE_DATA_DIR: ${{ runner.temp }}/autotube-data
+          OPENMONTAGE_DATA_DIR: ${{ runner.temp }}/openmontage-data
           AUTOTUBE_RENDER_SERVICE_TOKEN: github-actions-test-token
         run: |
           python -m py_compile services/autotube-renderer/app.py services/autotube-renderer/smoke_test.py
@@ -86,8 +87,10 @@ jobs:
         shell: bash
         env:
           SITE_URL: https://illcoai.tech
-          MCP_URL: https://illcoai.tech/api/chatgpt/autotube/mcp
-          WIDGET_URL: https://illcoai.tech/api/chatgpt/autotube/widget
+          AUTOTUBE_MCP_URL: https://illcoai.tech/api/chatgpt/autotube/mcp
+          AUTOTUBE_WIDGET_URL: https://illcoai.tech/api/chatgpt/autotube/widget
+          DI2_MCP_URL: https://illcoai.tech/api/chatgpt/debate-intelligence/mcp
+          DI2_WIDGET_URL: https://illcoai.tech/api/chatgpt/debate-intelligence/widget
         run: |
           set -euo pipefail
 
@@ -97,45 +100,99 @@ jobs:
 
           curl --fail --silent --show-error --location \
             --retry 8 --retry-delay 5 --retry-all-errors \
-            --max-time 30 "$MCP_URL" > mcp-health.json
+            --max-time 30 "$AUTOTUBE_MCP_URL" > autotube-health.json
 
           curl --fail --silent --show-error --location \
             --retry 8 --retry-delay 5 --retry-all-errors \
-            --max-time 30 "$WIDGET_URL" > widget.html
+            --max-time 30 "$AUTOTUBE_WIDGET_URL" > autotube-widget.html
 
           curl --fail --silent --show-error --location \
             --max-time 30 \
             --header 'Content-Type: application/json' \
             --data '{"jsonrpc":"2.0","id":1,"method":"initialize","params":{"protocolVersion":"2025-06-18","capabilities":{},"clientInfo":{"name":"illco-production-verifier","version":"1.0.0"}}}' \
-            "$MCP_URL" > mcp-initialize.json
+            "$AUTOTUBE_MCP_URL" > autotube-initialize.json
 
           curl --fail --silent --show-error --location \
             --max-time 30 \
             --header 'Content-Type: application/json' \
             --data '{"jsonrpc":"2.0","id":2,"method":"tools/list","params":{}}' \
-            "$MCP_URL" > mcp-tools.json
+            "$AUTOTUBE_MCP_URL" > autotube-tools.json
+
+          curl --fail --silent --show-error --location \
+            --retry 8 --retry-delay 5 --retry-all-errors \
+            --max-time 30 "$DI2_MCP_URL" > di2-health.json
+
+          curl --fail --silent --show-error --location \
+            --retry 8 --retry-delay 5 --retry-all-errors \
+            --max-time 30 "$DI2_WIDGET_URL" > di2-widget.html
+
+          curl --fail --silent --show-error --location \
+            --max-time 30 \
+            --header 'Content-Type: application/json' \
+            --data '{"jsonrpc":"2.0","id":11,"method":"initialize","params":{"protocolVersion":"2025-06-18","capabilities":{},"clientInfo":{"name":"illco-production-verifier","version":"1.0.0"}}}' \
+            "$DI2_MCP_URL" > di2-initialize.json
+
+          curl --fail --silent --show-error --location \
+            --max-time 30 \
+            --header 'Content-Type: application/json' \
+            --data '{"jsonrpc":"2.0","id":12,"method":"tools/list","params":{}}' \
+            "$DI2_MCP_URL" > di2-tools.json
+
+          curl --fail --silent --show-error --location \
+            --max-time 30 \
+            --header 'Content-Type: application/json' \
+            --data '{"jsonrpc":"2.0","id":13,"method":"tools/call","params":{"name":"render_debate_studio","arguments":{"title":"Production verifier","topic":"Debate Intelligence MCP"}}}' \
+            "$DI2_MCP_URL" > di2-render-call.json
+
+          curl --fail --silent --show-error --location \
+            --max-time 30 \
+            --header 'Content-Type: application/json' \
+            --data '{"jsonrpc":"2.0","id":14,"method":"resources/read","params":{"uri":"ui://illco/debate-intelligence/studio-v1.html"}}' \
+            "$DI2_MCP_URL" > di2-resource.json
 
           python - <<'PY'
           import json
           from pathlib import Path
 
-          health_payload = json.loads(Path("mcp-health.json").read_text(encoding="utf-8"))
-          health = health_payload.get("health") or {}
-          initialize = json.loads(Path("mcp-initialize.json").read_text(encoding="utf-8"))
-          tools_payload = json.loads(Path("mcp-tools.json").read_text(encoding="utf-8"))
-          tools = (tools_payload.get("result") or {}).get("tools") or []
-          tool_names = {str(tool.get("name")) for tool in tools}
+          autotube_health_payload = json.loads(Path("autotube-health.json").read_text(encoding="utf-8"))
+          autotube_health = autotube_health_payload.get("health") or {}
+          autotube_initialize = json.loads(Path("autotube-initialize.json").read_text(encoding="utf-8"))
+          autotube_tools_payload = json.loads(Path("autotube-tools.json").read_text(encoding="utf-8"))
+          autotube_tools = (autotube_tools_payload.get("result") or {}).get("tools") or []
+          autotube_tool_names = {str(tool.get("name")) for tool in autotube_tools}
 
-          assert health_payload.get("version") == "5.1.0-autotube4", health_payload
-          assert health_payload.get("mcpUrl") == "https://illcoai.tech/api/chatgpt/autotube/mcp", health_payload
-          assert health_payload.get("widgetUrl") == "https://illcoai.tech/api/chatgpt/autotube/widget", health_payload
-          assert health.get("standardVersion") == "4.0.0", health
-          assert health.get("styleEngineAvailable") is True, health
-          assert health.get("qualityGateAvailable") is True, health
-          assert initialize.get("result"), initialize
-          assert "autotube_health_check" in tool_names, tool_names
-          assert "autotube_render_video" in tool_names, tool_names
+          assert autotube_health_payload.get("version") == "5.1.0-autotube4", autotube_health_payload
+          assert autotube_health_payload.get("mcpUrl") == "https://illcoai.tech/api/chatgpt/autotube/mcp", autotube_health_payload
+          assert autotube_health_payload.get("widgetUrl") == "https://illcoai.tech/api/chatgpt/autotube/widget", autotube_health_payload
+          assert autotube_health.get("standardVersion") == "4.0.0", autotube_health
+          assert autotube_health.get("styleEngineAvailable") is True, autotube_health
+          assert autotube_health.get("qualityGateAvailable") is True, autotube_health
+          assert autotube_initialize.get("result"), autotube_initialize
+          assert "autotube_health_check" in autotube_tool_names, autotube_tool_names
+          assert "autotube_render_video" in autotube_tool_names, autotube_tool_names
+
+          di2_health = json.loads(Path("di2-health.json").read_text(encoding="utf-8"))
+          di2_initialize = json.loads(Path("di2-initialize.json").read_text(encoding="utf-8"))
+          di2_tools_payload = json.loads(Path("di2-tools.json").read_text(encoding="utf-8"))
+          di2_tools = (di2_tools_payload.get("result") or {}).get("tools") or []
+          di2_tool_names = {str(tool.get("name")) for tool in di2_tools}
+          di2_render = json.loads(Path("di2-render-call.json").read_text(encoding="utf-8"))
+          di2_resource = json.loads(Path("di2-resource.json").read_text(encoding="utf-8"))
+
+          assert di2_health.get("status") == "ready", di2_health
+          assert di2_health.get("endpoint") == "/api/chatgpt/debate-intelligence/mcp", di2_health
+          assert di2_initialize.get("result"), di2_initialize
+          assert "render_debate_studio" in di2_tool_names, di2_tool_names
+          assert "run_debate_youtube_pipeline" in di2_tool_names, di2_tool_names
+          assert not di2_render.get("error"), di2_render
+          structured = (di2_render.get("result") or {}).get("structuredContent") or {}
+          assert structured.get("studioStatus") == "ready", di2_render
+          assert ((di2_render.get("result") or {}).get("_meta") or {}).get("ui", {}).get("resourceUri") == "ui://illco/debate-intelligence/studio-v1.html", di2_render
+          contents = (di2_resource.get("result") or {}).get("contents") or []
+          assert contents and contents[0].get("mimeType") == "text/html;profile=mcp-app", di2_resource
+
           assert len(Path("site.html").read_bytes()) > 1_000
-          assert len(Path("widget.html").read_bytes()) > 500
-          print("illcoai.tech AutoTube MCP verification passed")
+          assert len(Path("autotube-widget.html").read_bytes()) > 500
+          assert len(Path("di2-widget.html").read_bytes()) > 500
+          print("illcoai.tech AutoTube + Debate Intelligence MCP verification passed")
           PY

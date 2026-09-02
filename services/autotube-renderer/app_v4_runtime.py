@@ -7,6 +7,7 @@ from pathlib import Path
 from typing import Any
 
 import app_v4 as v4
+from openmontage_routes import attach_openmontage_routes
 from playability import validate_playable_mp4
 
 ADDITIONAL_PRESETS = {
@@ -49,11 +50,6 @@ def _extended_motion_filter(
 
 v4._motion_filter = _extended_motion_filter
 
-# app_v4 currently marks a job ready after codec and resolution checks. This
-# wrapper holds that final state, creates a deliberately conservative delivery
-# encode, fully decodes it, validates MP4 atom order, and only then publishes
-# the ready state. The lock prevents concurrent jobs from replacing the shared
-# update_job hook at the same time.
 _RENDER_PLAYABILITY_LOCK = threading.RLock()
 _original_render_job = v4.render_job_v4
 _original_update_job = v4.legacy.update_job
@@ -177,7 +173,6 @@ def _playability_gated_render_job(job_id: str) -> None:
             v4.legacy.update_job = _original_update_job
 
         if not captured_ready:
-            # The original renderer already persisted a failed state.
             return
 
         try:
@@ -242,6 +237,8 @@ def _playability_gated_render_job(job_id: str) -> None:
 v4.legacy.render_job = _playability_gated_render_job
 
 app = v4.app
+attach_openmontage_routes(app)
+
 RenderRequest = v4.RenderRequest
 create_render_job = v4.create_render_job
 job_row = v4.job_row

@@ -9,6 +9,7 @@ import {
   AUTOTUBE_OPENMONTAGE_TOOL_NAME,
   openMontageToolDefinition,
   openMontageToolOutput,
+  openMontageWorkerHealth,
 } from "@/lib/chatgpt-apps/autotube-openmontage";
 import {
   autoTubeHealthV4,
@@ -40,8 +41,8 @@ export async function GET(request: Request) {
     {
       name: "illco-autotube-production",
       description:
-        "ChatGPT Apps SDK MCP endpoint for authenticated AutoTube 4 style planning, quality-gated rendering, OpenMontage-compatible reference-video preproduction, status, preview, and MP4 delivery.",
-      version: "5.2.0-autotube4-openmontage",
+        "ChatGPT Apps SDK MCP endpoint for AutoTube 4 rendering plus real OpenMontage reference-video ingest.",
+      version: "5.3.0-autotube4-openmontage-worker",
       mcpUrl: `${origin}/api/chatgpt/autotube/mcp`,
       widgetUrl: `${origin}/api/chatgpt/autotube/widget`,
       renderUrl: `${origin}/api/autotube/render`,
@@ -51,17 +52,11 @@ export async function GET(request: Request) {
         requiredScope: AUTOTUBE_REQUIRED_SCOPE,
       },
       integrations: {
-        openMontage: {
-          mode: "reference-video-adapter",
-          tool: AUTOTUBE_OPENMONTAGE_TOOL_NAME,
-          repository: "https://github.com/calesthio/OpenMontage",
-          note:
-            "The MCP process builds an OpenMontage-compatible reference brief; the full local OpenMontage agent runtime is not falsely represented as running inside this serverless route.",
-        },
+        openMontage: openMontageWorkerHealth(),
       },
       health: {
         ...autoTubeHealthV4(),
-        openMontageReferenceAdapterAvailable: true,
+        openMontage: openMontageWorkerHealth(),
       },
     },
     { headers: { "Cache-Control": "no-store" } },
@@ -87,7 +82,10 @@ export async function POST(request: Request) {
       {
         jsonrpc: "2.0",
         id: body?.id ?? null,
-        result: openMontageToolOutput(body?.params?.arguments || {}),
+        result: await openMontageToolOutput(
+          body?.params?.arguments || {},
+          originFrom(request),
+        ),
       },
       { headers: { "Cache-Control": "no-store" } },
     );
@@ -98,9 +96,9 @@ export async function POST(request: Request) {
 
   if (method === "tools/list") withOpenMontageTool(result);
   if (method === "initialize" && result?.result) {
-    result.result.instructions = `${String(result.result.instructions || "")} Use ${AUTOTUBE_OPENMONTAGE_TOOL_NAME} when a user supplies a reference video and wants its pacing, hook, scene rhythm, motion language, or editing logic analyzed before creating an original AutoTube video.`.trim();
+    result.result.instructions = `${String(result.result.instructions || "")} Use ${AUTOTUBE_OPENMONTAGE_TOOL_NAME} when a user supplies a permitted reference video that should be downloaded and analyzed before clipping or rendering.`.trim();
     if (result.result.serverInfo) {
-      result.result.serverInfo.version = "5.2.0-autotube4-openmontage";
+      result.result.serverInfo.version = "5.3.0-autotube4-openmontage-worker";
     }
   }
 

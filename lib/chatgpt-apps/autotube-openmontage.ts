@@ -1,82 +1,58 @@
 export const AUTOTUBE_OPENMONTAGE_TOOL_NAME = "autotube_openmontage_reference";
-
 const OPENMONTAGE_REPOSITORY = "https://github.com/calesthio/OpenMontage";
 
-function cleanText(value: unknown, max: number, fallback = "") {
+function text(value: unknown, max: number, fallback = "") {
   const normalized = String(value ?? "").replace(/\s+/g, " ").trim();
   return (normalized || fallback).slice(0, max);
 }
 
-function safeHttpUrl(value: unknown) {
-  const candidate = cleanText(value, 2048);
-  if (!candidate) return "";
+function safeUrl(value: unknown) {
+  const candidate = text(value, 2048);
   try {
     const parsed = new URL(candidate);
-    if (parsed.protocol !== "https:" && parsed.protocol !== "http:") return "";
-    return parsed.toString();
+    return ["http:", "https:"].includes(parsed.protocol) ? parsed.toString() : "";
   } catch {
     return "";
   }
 }
 
-function safeDate(value: unknown) {
-  const candidate = cleanText(value, 32);
-  if (!candidate) return "";
-  const parsed = new Date(candidate);
-  return Number.isNaN(parsed.getTime()) ? candidate : parsed.toISOString().slice(0, 10);
+function workerConfig() {
+  const base = String(process.env.OPENMONTAGE_WORKER_URL || "").trim();
+  const token = String(process.env.OPENMONTAGE_WORKER_TOKEN || "").trim();
+  return { base: base ? (base.endsWith("/") ? base : base + "/") : "", token };
 }
 
 export function openMontageToolDefinition() {
   return {
     name: AUTOTUBE_OPENMONTAGE_TOOL_NAME,
-    title: "Build OpenMontage reference-video brief",
+    title: "Ingest reference video with OpenMontage",
     description:
-      "Create an OpenMontage-compatible reference-video production brief for AutoTube. It extracts the creative decisions AutoTube should preserve from a reference video—hook style, pacing, scene rhythm, visual grammar, transitions, audio behavior, and edit density—while requiring an original topic, script, footage plan, and visual treatment. This is a safe handoff/adapter layer; it does not pretend the local OpenMontage agent runtime is executing inside the serverless MCP process.",
+      "Use the real OpenMontage worker to download a permitted reference video for analysis, extract audio and subtitles, and prepare it for complete-argument segmentation, source-backed fact checking, visual evidence sprites, and AutoTube clip rendering.",
     inputSchema: {
       type: "object",
       additionalProperties: false,
       properties: {
-        reference_video_url: {
+        reference_video_url: { type: "string", format: "uri" },
+        reference_video_date: { type: "string", maxLength: 32 },
+        target_topic: { type: "string", maxLength: 500 },
+        creative_goal: { type: "string", maxLength: 700 },
+        max_resolution: {
           type: "string",
-          format: "uri",
-          description: "YouTube, Short, Reel, TikTok, or other reference-video URL.",
+          enum: ["360p", "480p", "720p", "1080p"],
+          default: "720p",
         },
-        reference_video_date: {
-          type: "string",
-          maxLength: 32,
-          description: "Known publication date for the reference, when supplied by the user.",
+        max_duration_seconds: {
+          type: "integer",
+          minimum: 30,
+          maximum: 21600,
+          default: 7200,
         },
-        target_topic: {
-          type: "string",
-          maxLength: 500,
-          description: "The new, original topic or story AutoTube should create.",
-        },
-        target_duration_seconds: {
-          type: "number",
-          minimum: 6,
-          maximum: 600,
-          default: 60,
-        },
-        target_aspect_ratio: {
-          type: "string",
-          enum: ["landscape", "vertical", "square"],
-          default: "landscape",
-        },
-        creative_goal: {
-          type: "string",
-          maxLength: 700,
-          description: "Desired audience effect, tone, or production goal.",
-        },
-        footage_strategy: {
-          type: "string",
-          enum: ["auto", "real-footage", "generated-motion", "mixed-media", "motion-graphics"],
-          default: "auto",
-        },
+        download_subtitles: { type: "boolean", default: true },
       },
       required: ["reference_video_url"],
     },
     annotations: {
-      readOnlyHint: true,
+      readOnlyHint: false,
       destructiveHint: false,
       idempotentHint: true,
       openWorldHint: true,
@@ -86,123 +62,120 @@ export function openMontageToolDefinition() {
 
 export function buildOpenMontageReferenceBrief(input: unknown) {
   const source = input && typeof input === "object" && !Array.isArray(input)
-    ? (input as Record<string, unknown>)
+    ? input as Record<string, unknown>
     : {};
-  const referenceVideoUrl = safeHttpUrl(source.reference_video_url);
-  if (!referenceVideoUrl) {
-    throw new Error("A valid HTTP(S) reference_video_url is required.");
-  }
-  const referenceVideoDate = safeDate(source.reference_video_date);
-  const targetTopic = cleanText(source.target_topic, 500, "Create an original video using the reference only for creative structure and pacing.");
-  const targetDurationSeconds = Math.min(600, Math.max(6, Number(source.target_duration_seconds) || 60));
-  const targetAspectRatio = ["landscape", "vertical", "square"].includes(String(source.target_aspect_ratio))
-    ? String(source.target_aspect_ratio)
-    : "landscape";
-  const creativeGoal = cleanText(
-    source.creative_goal,
-    700,
-    "Maximize retention and clarity while preserving a distinct, original identity.",
-  );
-  const footageStrategy = ["auto", "real-footage", "generated-motion", "mixed-media", "motion-graphics"].includes(String(source.footage_strategy))
-    ? String(source.footage_strategy)
-    : "auto";
-
-  const analysisChecklist = [
-    "Download or otherwise lawfully access the reference before visual analysis; do not infer unseen frames.",
-    "Analyze transcript and hook construction.",
-    "Measure pacing, average shot length, scene rhythm, escalation, and CTA timing.",
-    "Sample keyframes to identify composition, typography, motion language, color behavior, and transition grammar.",
-    "Separate reusable abstract traits from protected expression: keep pacing/structure/tone, not copied wording, shots, characters, graphics, or music.",
-    "Produce 2–3 differentiated concepts before choosing a production path.",
-    "Choose the cheapest tool path that can genuinely reproduce the target motion quality; do not fake motion with still-image slideshows when the reference depends on real movement.",
-    "Create an original scene plan, script, asset list, narration direction, and audio plan.",
-    "Run a short sample or proof scene before committing to a full expensive render.",
-    "Verify final duration, audio, captions, frame sampling, and playable delivery before claiming completion.",
-  ];
-
-  const brief = {
-    integration: "OpenMontage-compatible reference workflow",
-    integrationKind: "reference-video-handoff",
-    openMontageRepository: OPENMONTAGE_REPOSITORY,
+  const url = safeUrl(source.reference_video_url);
+  if (!url) throw new Error("A valid HTTP(S) reference_video_url is required.");
+  return {
+    integration: "OpenMontage real-worker reference ingest",
+    repository: OPENMONTAGE_REPOSITORY,
     reference: {
-      url: referenceVideoUrl,
-      suppliedDate: referenceVideoDate || null,
+      url,
+      suppliedDate: text(source.reference_video_date, 32) || null,
     },
     target: {
-      topic: targetTopic,
-      durationSeconds: targetDurationSeconds,
-      aspectRatio: targetAspectRatio,
-      creativeGoal,
-      footageStrategy,
+      topic: text(source.target_topic, 500) || null,
+      creativeGoal: text(
+        source.creative_goal,
+        700,
+        "Capture complete arguments, preserve rebuttals, fact-check claims, and add evidence-driven visual sprites.",
+      ),
     },
-    preserveFromReference: [
-      "hook mechanics",
-      "pacing envelope",
-      "scene-length distribution",
-      "information density",
-      "transition energy",
-      "camera/motion intensity",
-      "audio-to-cut relationship",
-      "CTA placement",
+    downstreamPlan: [
+      "download reference video",
+      "extract analysis audio and subtitles",
+      "diarize or identify speakers",
+      "detect complete argument boundaries including rebuttals",
+      "extract checkable claims",
+      "verify claims against current authoritative sources",
+      "build evidence cards and visual sprites",
+      "cut platform-native clips without truncating the argument",
+      "render captions, labels, citations, and fact-check overlays",
+      "validate final playable media",
     ],
-    mustRemainOriginal: [
-      "script wording",
-      "story claims and examples",
-      "shot selection",
-      "graphics and illustrations",
-      "characters and logos",
-      "music and sound recording",
-      "thumbnail artwork",
-      "final scene order when copying would make the new work substantially similar",
-    ],
-    analysisChecklist,
-    acceptanceCriteria: {
-      referenceActuallyAnalyzed: true,
-      conceptsBeforeFullProduction: 2,
-      originalScriptRequired: true,
-      originalVisualPlanRequired: true,
-      proofSceneBeforeExpensiveRender: true,
-      finalMediaValidationRequired: true,
-    },
   };
-
-  const prompt = [
-    "Use the OpenMontage reference-video workflow as a production-analysis layer for AutoTube.",
-    `Reference: ${referenceVideoUrl}`,
-    referenceVideoDate ? `Reference date supplied by user: ${referenceVideoDate}` : "Reference date: not supplied.",
-    `New target topic: ${targetTopic}`,
-    `Target duration: ${targetDurationSeconds}s; aspect ratio: ${targetAspectRatio}; footage strategy: ${footageStrategy}.`,
-    `Creative goal: ${creativeGoal}`,
-    "Analyze transcript, pacing, scenes, keyframes, transitions, motion, edit density, and audio behavior before planning the new piece.",
-    "Keep abstract production traits only. Do not copy the reference's wording, protected imagery, characters, music, graphics, or distinctive sequence of expression.",
-    "Return 2–3 differentiated concepts, tool-path and cost assumptions, then a render-ready original scene plan. Test one short sample before a costly full render.",
-  ].join("\n");
-
-  return { brief, prompt };
 }
 
-export function openMontageToolOutput(input: unknown) {
+export async function openMontageToolOutput(input: unknown, origin: string) {
   try {
-    const result = buildOpenMontageReferenceBrief(input);
+    const brief = buildOpenMontageReferenceBrief(input);
+    const source = input as Record<string, unknown>;
+    const config = workerConfig();
+    if (!config.base || !config.token) {
+      return {
+        isError: true,
+        content: [{
+          type: "text",
+          text: "The real OpenMontage worker is integrated in code but OPENMONTAGE_WORKER_URL / OPENMONTAGE_WORKER_TOKEN are not configured in production.",
+        }],
+        _meta: { autotubeOpenMontage: brief, executionMode: "real-worker-unconfigured" },
+      };
+    }
+
+    const response = await fetch(new URL("v1/reference-jobs", config.base), {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${config.token}`,
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        url: brief.reference.url,
+        reference_video_date: brief.reference.suppliedDate,
+        target_topic: brief.target.topic,
+        creative_goal: brief.target.creativeGoal,
+        max_resolution: text(source.max_resolution, 16, "720p"),
+        max_duration_seconds: Math.min(21600, Math.max(30, Number(source.max_duration_seconds) || 7200)),
+        download_subtitles: source.download_subtitles !== false,
+      }),
+      signal: AbortSignal.timeout(120000),
+      cache: "no-store",
+    });
+
+    if (!response.ok) {
+      const detail = (await response.text().catch(() => "")).slice(0, 1200);
+      throw new Error(`OpenMontage worker rejected the job: ${detail || response.status}`);
+    }
+    const result = await response.json() as Record<string, unknown>;
+    const jobId = text(result.job_id ?? result.jobId, 180);
+    if (!jobId) throw new Error("OpenMontage worker returned no job id.");
+
+    const baseOrigin = origin.replace(/\/$/, "");
+    const structuredContent = {
+      app: "autotube",
+      integration: "openmontage",
+      executionMode: "real-worker",
+      jobId,
+      status: text(result.status, 40, "queued"),
+      progress: Number(result.progress || 0),
+      referenceVideoUrl: brief.reference.url,
+      statusUrl: `${baseOrigin}/api/autotube/openmontage/status/${encodeURIComponent(jobId)}`,
+      videoUrl: `${baseOrigin}/api/autotube/openmontage/artifact/${encodeURIComponent(jobId)}/video`,
+      audioUrl: `${baseOrigin}/api/autotube/openmontage/artifact/${encodeURIComponent(jobId)}/audio`,
+      subtitlesUrl: `${baseOrigin}/api/autotube/openmontage/artifact/${encodeURIComponent(jobId)}/subtitles`,
+      manifestUrl: `${baseOrigin}/api/autotube/openmontage/artifact/${encodeURIComponent(jobId)}/manifest`,
+      nextStage: "argument-segmentation-and-fact-check",
+    };
+
     return {
-      structuredContent: result.brief,
+      structuredContent,
       content: [{
         type: "text",
-        text: `OpenMontage reference brief prepared for ${result.brief.reference.url}. Use the returned prompt as the preproduction layer before AutoTube rendering.`,
+        text: `OpenMontage accepted the reference video. Job ${jobId} is ${structuredContent.status}. After ingest is ready, use the media for complete-argument clipping, fact checking, and visual evidence sprites.`,
       }],
-      _meta: {
-        autotubeOpenMontage: result.brief,
-        openMontagePrompt: result.prompt,
-        sourceProject: OPENMONTAGE_REPOSITORY,
-        executionMode: "adapter-handoff",
-      },
+      _meta: { autotubeOpenMontage: { ...brief, ...structuredContent } },
     };
   } catch (error) {
-    const message = error instanceof Error ? error.message : "OpenMontage reference brief could not be created.";
-    return {
-      isError: true,
-      content: [{ type: "text", text: message }],
-      _meta: { executionMode: "adapter-handoff" },
-    };
+    const message = error instanceof Error ? error.message : "OpenMontage reference ingest failed.";
+    return { isError: true, content: [{ type: "text", text: message }] };
   }
+}
+
+export function openMontageWorkerHealth() {
+  const config = workerConfig();
+  return {
+    available: Boolean(config.base && config.token),
+    mode: config.base && config.token ? "real-worker" : "real-worker-unconfigured",
+    repository: OPENMONTAGE_REPOSITORY,
+  };
 }

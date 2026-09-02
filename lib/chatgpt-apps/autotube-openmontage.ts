@@ -17,9 +17,24 @@ function safeUrl(value: unknown) {
 }
 
 function workerConfig() {
-  const base = String(process.env.OPENMONTAGE_WORKER_URL || "").trim();
-  const token = String(process.env.OPENMONTAGE_WORKER_TOKEN || "").trim();
-  return { base: base ? (base.endsWith("/") ? base : base + "/") : "", token };
+  const base = String(
+    process.env.OPENMONTAGE_WORKER_URL ||
+    process.env.AUTOTUBE_RENDER_SERVICE_URL ||
+    "",
+  ).trim();
+  const token = String(
+    process.env.OPENMONTAGE_WORKER_TOKEN ||
+    process.env.AUTOTUBE_RENDER_SERVICE_TOKEN ||
+    "",
+  ).trim();
+  return {
+    base: base ? (base.endsWith("/") ? base : base + "/") : "",
+    token,
+    source:
+      process.env.OPENMONTAGE_WORKER_URL || process.env.OPENMONTAGE_WORKER_TOKEN
+        ? "openmontage-env"
+        : "autotube-renderer-fallback",
+  };
 }
 
 export function openMontageToolDefinition() {
@@ -69,6 +84,7 @@ export function buildOpenMontageReferenceBrief(input: unknown) {
   return {
     integration: "OpenMontage real-worker reference ingest",
     repository: OPENMONTAGE_REPOSITORY,
+    configurationSource: config.source,
     reference: {
       url,
       suppliedDate: text(source.reference_video_date, 32) || null,
@@ -106,7 +122,7 @@ export async function openMontageToolOutput(input: unknown, origin: string) {
         isError: true,
         content: [{
           type: "text",
-          text: "The real OpenMontage worker is integrated in code but OPENMONTAGE_WORKER_URL / OPENMONTAGE_WORKER_TOKEN are not configured in production.",
+          text: "The OpenMontage worker is integrated, but neither the OpenMontage-specific variables nor the existing AutoTube render-service URL/token are configured.",
         }],
         _meta: { autotubeOpenMontage: brief, executionMode: "real-worker-unconfigured" },
       };

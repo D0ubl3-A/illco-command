@@ -84,7 +84,6 @@ export function buildOpenMontageReferenceBrief(input: unknown) {
   return {
     integration: "OpenMontage real-worker reference ingest",
     repository: OPENMONTAGE_REPOSITORY,
-    configurationSource: config.source,
     reference: {
       url,
       suppliedDate: text(source.reference_video_date, 32) || null,
@@ -193,5 +192,6 @@ export function openMontageWorkerHealth() {
     available: Boolean(config.base && config.token),
     mode: config.base && config.token ? "real-worker" : "real-worker-unconfigured",
     repository: OPENMONTAGE_REPOSITORY,
+    configurationSource: config.source,
   };
 }

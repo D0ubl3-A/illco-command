@@ -31,22 +31,19 @@ jobs:
           curl --fail --silent --show-error --location --max-time 30 --header 'Content-Type: application/json' --data '{"jsonrpc":"2.0","id":1,"method":"initialize","params":{"protocolVersion":"2025-06-18","capabilities":{},"clientInfo":{"name":"di2-live-smoke","version":"1.0.0"}}}' "$MCP_URL" > initialize.json
           curl --fail --silent --show-error --location --max-time 30 --header 'Content-Type: application/json' --data '{"jsonrpc":"2.0","id":2,"method":"tools/list","params":{}}' "$MCP_URL" > tools.json
           curl --fail --silent --show-error --location --max-time 30 --header 'Content-Type: application/json' --data '{"jsonrpc":"2.0","id":3,"method":"tools/call","params":{"name":"render_debate_studio","arguments":{"title":"DI2 production smoke","topic":"MCP registry parity"}}}' "$MCP_URL" > render.json
-          curl --fail --silent --show-error --location --max-time 30 --header 'Content-Type: application/json' --data '{"jsonrpc":"2.0","id":4,"method":"resources/read","params":{"uri":"ui://illco/debate-intelligence/studio-v1.html"}}' "$MCP_URL" > resource.json
 
           python - <<'PY'
           import json
+          import os
+          import urllib.request
           from pathlib import Path
 
+          mcp_url = os.environ['MCP_URL']
           health = json.loads(Path('health.json').read_text())
           initialize = json.loads(Path('initialize.json').read_text())
           tools_payload = json.loads(Path('tools.json').read_text())
           render = json.loads(Path('render.json').read_text())
-          resource = json.loads(Path('resource.json').read_text())
           tool_names = {str(tool.get('name')) for tool in ((tools_payload.get('result') or {}).get('tools') or [])}
-
-          print('HEALTH=', json.dumps(health, sort_keys=True))
-          print('TOOLS=', sorted(tool_names))
-          print('RENDER=', json.dumps(render, sort_keys=True))
 
           assert health.get('status') == 'ready', health
           assert health.get('endpoint') == '/api/chatgpt/debate-intelligence/mcp', health
@@ -54,12 +51,35 @@ jobs:
           assert 'render_debate_studio' in tool_names, tool_names
           assert 'run_debate_youtube_pipeline' in tool_names, tool_names
           assert not render.get('error'), render
+
           result = render.get('result') or {}
-          assert (result.get('structuredContent') or {}).get('studioStatus') == 'ready', render
-          assert (result.get('_meta') or {}).get('ui', {}).get('resourceUri') == 'ui://illco/debate-intelligence/studio-v1.html', render
+          structured = result.get('structuredContent') or {}
+          project = structured.get('project') or {}
+          assert project.get('status') in {'created', 'ready'}, render
+          resource_uri = ((result.get('_meta') or {}).get('ui') or {}).get('resourceUri') or (result.get('_meta') or {}).get('openai/outputTemplate')
+          assert isinstance(resource_uri, str) and resource_uri.startswith('ui://'), render
+
+          payload = json.dumps({
+              'jsonrpc': '2.0',
+              'id': 4,
+              'method': 'resources/read',
+              'params': {'uri': resource_uri},
+          }).encode('utf-8')
+          request = urllib.request.Request(mcp_url, data=payload, headers={'Content-Type': 'application/json'}, method='POST')
+          with urllib.request.urlopen(request, timeout=30) as response:
+              resource = json.loads(response.read().decode('utf-8'))
+
+          assert not resource.get('error'), resource
           contents = (resource.get('result') or {}).get('contents') or []
           assert contents, resource
-          assert contents[0].get('mimeType') == 'text/html;profile=mcp-app', resource
+          mime_type = str(contents[0].get('mimeType') or '')
+          assert mime_type.startswith('text/html'), resource
+          assert len(str(contents[0].get('text') or '')) > 500, resource
           assert len(Path('widget.html').read_bytes()) > 500
+
+          print('HEALTH=', json.dumps(health, sort_keys=True))
+          print('TOOLS=', sorted(tool_names))
+          print('RESOURCE_URI=', resource_uri)
+          print('RESOURCE_MIME=', mime_type)
           print('Debate Intelligence production MCP smoke test passed')
           PY

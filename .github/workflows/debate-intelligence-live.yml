@@ -34,11 +34,8 @@ jobs:
 
           python - <<'PY'
           import json
-          import os
-          import urllib.request
           from pathlib import Path
 
-          mcp_url = os.environ['MCP_URL']
           health = json.loads(Path('health.json').read_text())
           initialize = json.loads(Path('initialize.json').read_text())
           tools_payload = json.loads(Path('tools.json').read_text())
@@ -59,16 +56,27 @@ jobs:
           resource_uri = ((result.get('_meta') or {}).get('ui') or {}).get('resourceUri') or (result.get('_meta') or {}).get('openai/outputTemplate')
           assert isinstance(resource_uri, str) and resource_uri.startswith('ui://'), render
 
-          payload = json.dumps({
-              'jsonrpc': '2.0',
-              'id': 4,
-              'method': 'resources/read',
-              'params': {'uri': resource_uri},
-          }).encode('utf-8')
-          request = urllib.request.Request(mcp_url, data=payload, headers={'Content-Type': 'application/json'}, method='POST')
-          with urllib.request.urlopen(request, timeout=30) as response:
-              resource = json.loads(response.read().decode('utf-8'))
+          Path('resource-uri.txt').write_text(resource_uri, encoding='utf-8')
+          Path('tool-names.json').write_text(json.dumps(sorted(tool_names)), encoding='utf-8')
+          print('HEALTH=', json.dumps(health, sort_keys=True))
+          print('TOOLS=', sorted(tool_names))
+          print('RESOURCE_URI=', resource_uri)
+          PY
 
+          python - <<'PY' > resource-request.json
+          import json
+          from pathlib import Path
+          uri = Path('resource-uri.txt').read_text(encoding='utf-8').strip()
+          print(json.dumps({'jsonrpc':'2.0','id':4,'method':'resources/read','params':{'uri':uri}}))
+          PY
+
+          curl --fail --silent --show-error --location --max-time 30 --header 'Content-Type: application/json' --data-binary @resource-request.json "$MCP_URL" > resource.json
+
+          python - <<'PY'
+          import json
+          from pathlib import Path
+
+          resource = json.loads(Path('resource.json').read_text())
           assert not resource.get('error'), resource
           contents = (resource.get('result') or {}).get('contents') or []
           assert contents, resource
@@ -76,10 +84,6 @@ jobs:
           assert mime_type.startswith('text/html'), resource
           assert len(str(contents[0].get('text') or '')) > 500, resource
           assert len(Path('widget.html').read_bytes()) > 500
-
-          print('HEALTH=', json.dumps(health, sort_keys=True))
-          print('TOOLS=', sorted(tool_names))
-          print('RESOURCE_URI=', resource_uri)
           print('RESOURCE_MIME=', mime_type)
           print('Debate Intelligence production MCP smoke test passed')
           PY

@@ -67,7 +67,7 @@ export function LyricVideoForgeClient() {
   const [lyricsApproved, setLyricsApproved] = useState(false);
   const [transcriptText, setTranscriptText] = useState("");
   const [brief, setBrief] = useState("");
-  const [status, setStatus] = useState("Upload audio + character reference");
+  const [status, setStatus] = useState("Upload audio/video + character reference");
   const [creditCost, setCreditCost] = useState(1);
   const [modelLine, setModelLine] = useState("Agent: gpt-5-nano / Realtime: gpt-4o-transcribe / Word timing: whisper-1 / Images: gpt-image-1");
   const [isLoading, setIsLoading] = useState(false);
@@ -96,7 +96,7 @@ export function LyricVideoForgeClient() {
     form.set("audioPath", audioPath);
     form.set("visualDirection", visualDirection);
     form.set("lyricIssues", lyricIssues);
-    form.set("timingStatus", "Realtime-first transcription, whisper-1 word timestamp fallback, user-approved lyrics required before render");
+    form.set("timingStatus", "OpenAI word-timestamp transcription first, Groq whisper-large-v3 fallback, user-approved lyrics required before render");
     form.set("requestedAction", action);
     form.set("imageCount", String(imageCount));
     form.set("editCount", String(editCount));
@@ -114,7 +114,7 @@ export function LyricVideoForgeClient() {
     setIsLoading(true);
     setProgress(progressForAction[action]);
     setProgressLabel(progressLabels[action]);
-    setStatus(action === "transcribe" ? "Transcribing with OpenAI rap prompt..." : "Running Agent SDK production pass...");
+    setStatus(action === "transcribe" ? "Transcribing with OpenAI first; Groq fallback enabled..." : "Running Agent SDK production pass...");
     setAdEarning(null);
 
     try {
@@ -251,9 +251,9 @@ export function LyricVideoForgeClient() {
 
       <div className="bigoStrategyGrid">
         <label className="panel bigoStrategyStep">
-          <span>Audio upload required</span>
-          <input type="file" accept="audio/*,.mp3,.wav,.m4a" onChange={(event) => setAudioFile(event.target.files?.[0] || null)} />
-          <p>{audioFile ? audioFile.name : "Upload the song before transcription."}</p>
+          <span>Audio or video upload required</span>
+          <input type="file" accept="audio/*,video/mp4,.mp3,.wav,.m4a,.mp4" onChange={(event) => setAudioFile(event.target.files?.[0] || null)} />
+          <p>{audioFile ? audioFile.name : "Upload audio or MP4 video before transcription."}</p>
         </label>
         <label className="panel bigoStrategyStep">
           <span>Character reference required</span>

@@ -356,9 +356,9 @@ async function authorizeToolCall(name: string, request: Request | null | undefin
 }
 
 function getFileReference(args: any): ChatGptFileReference | null {
-  const direct = args?.audioFile || args?.file || args?.audio;
+  const direct = args?.mediaFile || args?.audioFile || args?.file || args?.audio;
   if (direct && typeof direct === "object") return direct as ChatGptFileReference;
-  const fromMeta = args?._meta?.audioFile || args?._meta?.file || args?._meta?.["openai/files"]?.[0];
+  const fromMeta = args?._meta?.mediaFile || args?._meta?.audioFile || args?._meta?.file || args?._meta?.["openai/files"]?.[0];
   if (fromMeta && typeof fromMeta === "object") return fromMeta as ChatGptFileReference;
   return null;
 }
@@ -368,7 +368,7 @@ function getFileDownloadUrl(file: ChatGptFileReference | null) {
 }
 
 function getFileName(file: ChatGptFileReference | null, args: any) {
-  return String(file?.file_name || file?.fileName || args?.audioFileName || "audio.mp3").trim() || "audio.mp3";
+  return String(file?.file_name || file?.fileName || args?.mediaFileName || args?.audioFileName || "media.mp4").trim() || "media.mp4";
 }
 
 function normalizeTimedWords(payload: any) {
@@ -473,7 +473,7 @@ async function buildTranscribeAudioOutput(args: any) {
   const base = buildToolOutputShape(LYRIC_VIDEO_FORGE_APP.toolNames.transcribeAudio, args);
   const file = getFileReference(args);
   const fileName = getFileName(file, args);
-  const model = String(args?.model || args?.sttModel || "groq-whisper-large-v3-turbo");
+  const model = String(args?.model || args?.sttModel || "openai-whisper-1");
   const timestamps = String(args?.timestamps || "word");
 
   try {
@@ -490,15 +490,33 @@ async function buildTranscribeAudioOutput(args: any) {
         content: [
           {
             type: "text",
-            text: "Forge can transcribe now, but this call did not include an audio file reference. Attach the MP3 to the transcribe_audio action.",
+            text: "Forge can transcribe audio or video media now, but this call did not include a ChatGPT file reference. Attach the MP3, WAV, M4A, or MP4 to the transcribe_audio action.",
           },
         ],
       };
     }
 
-    const payload = model.startsWith("groq-")
-      ? await callGroqTranscription({ audioBlob, fileName, model, timestamps, knownLyrics: args?.knownLyrics })
-      : await callOpenAiTranscription({ audioBlob, fileName, model, timestamps, knownLyrics: args?.knownLyrics });
+    let payload;
+    let transcriptSource = model;
+    try {
+      payload = model.startsWith("groq-")
+        ? await callGroqTranscription({ audioBlob, fileName, model, timestamps, knownLyrics: args?.knownLyrics })
+        : await callOpenAiTranscription({ audioBlob, fileName, model, timestamps, knownLyrics: args?.knownLyrics });
+    } catch (primaryError) {
+      if (!model.startsWith("groq-") && env.groqApiKey) {
+        const fallbackTranscriptModel = "groq-whisper-large-v3";
+        payload = await callGroqTranscription({
+          audioBlob,
+          fileName,
+          model: fallbackTranscriptModel,
+          timestamps,
+          knownLyrics: args?.knownLyrics,
+        });
+        transcriptSource = fallbackTranscriptModel;
+      } else {
+        throw primaryError;
+      }
+    }
     let timingPayload = payload;
     let rawTimingWords = normalizeTimedWords(timingPayload);
     let timingSource = model;
@@ -521,7 +539,7 @@ async function buildTranscribeAudioOutput(args: any) {
       text: transcriptText,
       words,
       segments,
-      transcriptSource: model,
+      transcriptSource,
       timingSource,
       alignmentCoverage: aligned.coverage,
       status: words.length ? "word-timestamps-ready" : segments.length ? "segment-timestamps-ready" : "text-only",
@@ -537,7 +555,7 @@ async function buildTranscribeAudioOutput(args: any) {
         timedLyricsJson: JSON.stringify(timedLyrics),
         wordCount: words.length,
         segmentCount: segments.length,
-        transcriptSource: model,
+        transcriptSource,
         timingSource,
         alignmentCoverage: aligned.coverage,
         nextStep: "Review and approve the timed transcript, then export ASS/SRT captions before rendering.",
@@ -664,7 +682,7 @@ export function getLyricVideoForgeTools() {
               "openai-gpt-4o-transcribe",
               "local-faster-whisper",
             ],
-            default: "groq-whisper-large-v3-turbo",
+            default: "openai-whisper-1",
           },
           timestamps: {
             type: "string",
@@ -689,11 +707,12 @@ export function getLyricVideoForgeTools() {
       name: LYRIC_VIDEO_FORGE_APP.toolNames.transcribeAudio,
       title: "Transcribe Audio",
       description:
-        "Use this when ChatGPT needs Forge to transcribe uploaded audio and return timed lyric data for review before rendering.",
+        "Use this when ChatGPT needs Forge to transcribe uploaded audio or video media (including MP4) and return timed word/segment data. OpenAI is the primary provider; Groq is the automatic fallback when configured.",
       inputSchema: {
         type: "object",
         properties: {
           audioFile: AUDIO_FILE_SCHEMA,
+          mediaFile: AUDIO_FILE_SCHEMA,
           audioFileName: { type: "string" },
           model: {
             type: "string",
@@ -716,7 +735,7 @@ export function getLyricVideoForgeTools() {
           knownLyrics: { type: "string" },
           knownIssues: { type: "string" },
         },
-        required: ["audioFile", "model", "timestamps"],
+        required: ["model", "timestamps"],
         additionalProperties: false,
       },
       outputSchema: TOOL_OUTPUT_SCHEMA,
@@ -724,7 +743,7 @@ export function getLyricVideoForgeTools() {
       annotations: { readOnlyHint: false, openWorldHint: false, destructiveHint: false, idempotentHint: true },
       _meta: {
         ...toolMetaWithResource(),
-        "openai/fileParams": ["audioFile"],
+        "openai/fileParams": ["audioFile", "mediaFile"],
       },
     },
     {

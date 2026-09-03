@@ -303,50 +303,98 @@ async function parseRequest(request: Request) {
 
 async function transcribeUploadedAudio(audioFile: File | null) {
   if (!audioFile) {
-    return { status: "missing-audio", detail: "Upload an audio file before transcription." };
+    return { status: "missing-media", detail: "Upload an audio or video file before transcription." };
   }
-  if (!env.codexApiKey) {
+
+  const runOpenAi = async () => {
+    if (!env.codexApiKey) throw new Error("OPENAI_API_KEY is not configured.");
+    const formData = new FormData();
+    formData.append("file", audioFile, audioFile.name || "media.mp4");
+    formData.append("model", wordTimestampFallbackModel);
+    formData.append("response_format", "verbose_json");
+    formData.append("prompt", rapTranscriptPrompt);
+    formData.append("timestamp_granularities[]", "word");
+    const response = await fetch("https://api.openai.com/v1/audio/transcriptions", {
+      method: "POST",
+      headers: { Authorization: `Bearer ${env.codexApiKey}` },
+      body: formData,
+      cache: "no-store",
+    });
+    const result = await response.json().catch(() => ({}));
+    if (!response.ok) throw new Error(result?.error?.message || "OpenAI transcription failed.");
+    return { provider: "openai", model: wordTimestampFallbackModel, result };
+  };
+
+  const runGroq = async () => {
+    if (!env.groqApiKey) throw new Error("GROQ_API_KEY is not configured.");
+    const formData = new FormData();
+    formData.append("file", audioFile, audioFile.name || "media.mp4");
+    formData.append("model", "whisper-large-v3");
+    formData.append("response_format", "verbose_json");
+    formData.append("prompt", rapTranscriptPrompt);
+    formData.append("timestamp_granularities[]", "word");
+    let response = await fetch("https://api.groq.com/openai/v1/audio/transcriptions", {
+      method: "POST",
+      headers: { Authorization: `Bearer ${env.groqApiKey}` },
+      body: formData,
+      cache: "no-store",
+    });
+    let result = await response.json().catch(() => ({}));
+    if (!response.ok) {
+      const retry = new FormData();
+      retry.append("file", audioFile, audioFile.name || "media.mp4");
+      retry.append("model", "whisper-large-v3");
+      retry.append("response_format", "verbose_json");
+      retry.append("prompt", rapTranscriptPrompt);
+      response = await fetch("https://api.groq.com/openai/v1/audio/transcriptions", {
+        method: "POST",
+        headers: { Authorization: `Bearer ${env.groqApiKey}` },
+        body: retry,
+        cache: "no-store",
+      });
+      result = await response.json().catch(() => ({}));
+    }
+    if (!response.ok) throw new Error(result?.error?.message || "Groq transcription failed.");
+    return { provider: "groq", model: "whisper-large-v3", result };
+  };
+
+  if (!env.codexApiKey && !env.groqApiKey) {
     return {
       status: "blocked-no-key",
-      detail: "OPENAI_API_KEY is required for hosted transcription.",
-      preferredRealtimeModel: realtimeTranscriptionModel,
-      fallbackWordTimestampModel: wordTimestampFallbackModel,
+      detail: "OPENAI_API_KEY or GROQ_API_KEY is required for hosted transcription.",
+      primaryModel: wordTimestampFallbackModel,
+      fallbackModel: "groq-whisper-large-v3",
       prompt: rapTranscriptPrompt,
     };
   }
 
-  const formData = new FormData();
-  formData.append("file", audioFile, audioFile.name || "audio.mp3");
-  formData.append("model", wordTimestampFallbackModel);
-  formData.append("response_format", "verbose_json");
-  formData.append("prompt", rapTranscriptPrompt);
-  formData.append("timestamp_granularities[]", "word");
-
-  const response = await fetch("https://api.openai.com/v1/audio/transcriptions", {
-    method: "POST",
-    headers: { Authorization: `Bearer ${env.codexApiKey}` },
-    body: formData,
-  });
-  const result = await response.json().catch(() => ({}));
-
-  if (!response.ok) {
+  try {
+    let output;
+    try {
+      output = await runOpenAi();
+    } catch (openAiError) {
+      if (!env.groqApiKey) throw openAiError;
+      output = await runGroq();
+    }
+    return {
+      status: "word-timestamps-ready",
+      primaryProvider: "openai",
+      usedProvider: output.provider,
+      usedModel: output.model,
+      fallbackProvider: "groq",
+      fallbackModel: "whisper-large-v3",
+      prompt: rapTranscriptPrompt,
+      transcript: output.result,
+    };
+  } catch (error) {
     return {
       status: "error",
-      detail: result?.error?.message || "OpenAI transcription failed.",
-      preferredRealtimeModel: realtimeTranscriptionModel,
-      fallbackWordTimestampModel: wordTimestampFallbackModel,
+      detail: error instanceof Error ? error.message : "Transcription failed.",
+      primaryProvider: "openai",
+      fallbackProvider: "groq",
       prompt: rapTranscriptPrompt,
     };
   }
-
-  return {
-    status: "word-timestamps-ready",
-    preferredRealtimeModel: realtimeTranscriptionModel,
-    usedModel: wordTimestampFallbackModel,
-    note: "Realtime transcription is preferred for live capture; this upload endpoint uses whisper-1 verbose_json word timestamps for karaoke alignment fallback.",
-    prompt: rapTranscriptPrompt,
-    transcript: result,
-  };
 }
 
 function imageGenerationPlan(payload: Awaited<ReturnType<typeof parseRequest>>["payload"], hasReference: boolean) {

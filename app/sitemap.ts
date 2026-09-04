@@ -26,6 +26,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { url: `${siteUrl}/tools`, lastModified, changeFrequency: "weekly", priority: 0.8 },
     { url: `${siteUrl}/tools/lyric-video-forge`, lastModified, changeFrequency: "weekly", priority: 0.84 },
     { url: `${siteUrl}/products`, lastModified, changeFrequency: "daily", priority: 0.96 },
+    { url: `${siteUrl}/games`, lastModified, changeFrequency: "weekly", priority: 0.97 },
     { url: `${siteUrl}/tools/think-for-me-mode`, lastModified, changeFrequency: "weekly", priority: 0.72 },
     { url: `${siteUrl}/commander`, lastModified, changeFrequency: "weekly", priority: 0.6 },
     { url: `${siteUrl}/master-agent`, lastModified, changeFrequency: "weekly", priority: 0.76 },

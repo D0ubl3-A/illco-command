@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 
 import { AppStoreClient, type AppStoreProduct, type HelloskipBlogPost } from "@/components/app-store-client";
+import { IntentGate } from "@/components/intent-gate";
 import {
   checkoutProductCategories,
   checkoutProductCategoryDetails,
@@ -315,6 +316,7 @@ export default function HomePage() {
 
   return (
     <>
+      <IntentGate />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
       <AppStoreClient
         products={storeProducts}

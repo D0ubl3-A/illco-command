@@ -1,0 +1,87 @@
+name: AutoTube Wisconsin source fetch
+
+on:
+  push:
+    branches:
+      - autotube/source-clips-20260904
+  workflow_dispatch:
+
+jobs:
+  fetch-source:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Resolve Fox media and download sheriff master
+        shell: python
+        run: |
+          import json, pathlib, re, subprocess, urllib.request
+
+          out = pathlib.Path("source")
+          out.mkdir(parents=True, exist_ok=True)
+          video_id = "6403823353112"
+          api = f"https://api.foxnews.com/v3/video-player/{video_id}?callback=uid_{video_id}"
+          req = urllib.request.Request(api, headers={"User-Agent":"Mozilla/5.0","Accept":"*/*"})
+          raw = urllib.request.urlopen(req, timeout=30).read().decode("utf-8", "replace")
+          m = re.match(r"^[^(]+\((.*)\)\s*;?\s*$", raw, re.S)
+          payload = m.group(1) if m else raw
+          data = json.loads(payload)
+
+          urls = []
+          def walk(x):
+              if isinstance(x, dict):
+                  for k,v in x.items():
+                      if k == "media-content":
+                          if isinstance(v, list):
+                              for item in v:
+                                  if isinstance(item, list):
+                                      for sub in item:
+                                          if isinstance(sub, dict):
+                                              u = (sub.get("@attributes") or {}).get("url")
+                                              if u: urls.append(u)
+                                  elif isinstance(item, dict):
+                                      u = (item.get("@attributes") or {}).get("url")
+                                      if u: urls.append(u)
+                      walk(v)
+              elif isinstance(x, list):
+                  for y in x: walk(y)
+          walk(data)
+          # Fallback: locate URL strings in JSON if Fox schema changes.
+          if not urls:
+              text = json.dumps(data)
+              urls.extend(re.findall(r'https?://[^"\\]+(?:m3u8|mp4)[^"\\]*', text))
+          if not urls:
+              raise SystemExit("No Fox media URL found")
+          # Prefer HLS/master or the largest direct media candidate.
+          media = next((u for u in urls if ".m3u8" in u), urls[0])
+          pathlib.Path("source/media_url.txt").write_text(media, encoding="utf-8")
+          print("Resolved media:", media[:240])
+
+          subprocess.run([
+              "ffmpeg","-y",
+              "-user_agent","Mozilla/5.0",
+              "-i",media,
+              "-map","0:v:0","-map","0:a:0?",
+              "-c:v","libx264","-preset","veryfast","-crf","22",
+              "-c:a","aac","-b:a","128k",
+              "-movflags","+faststart",
+              "source/master.mp4"
+          ], check=True)
+
+          subprocess.run([
+              "ffmpeg","-y","-i","source/master.mp4",
+              "-vf","fps=1/15,scale=480:-1,tile=5x8:padding=4:margin=4",
+              "-frames:v","1","source/contact_sheet.jpg"
+          ], check=True)
+
+          subprocess.run([
+              "ffprobe","-v","error","-show_entries","format=duration,size",
+              "-of","json","source/master.mp4"
+          ], check=True, stdout=open("source/probe.json","w"))
+
+      - name: Upload sheriff source
+        uses: actions/upload-artifact@v4
+        with:
+          name: wisconsin-sheriff-master
+          path: source/
+          if-no-files-found: error
+          retention-days: 1

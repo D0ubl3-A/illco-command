@@ -43,6 +43,7 @@ export async function GET(request: Request) {
       description:
         "ChatGPT Apps SDK MCP endpoint for AutoTube 4 rendering plus real OpenMontage reference-video ingest.",
       version: "5.3.0-autotube4-openmontage-worker",
+      endpoint: "/api/chatgpt/autotube/mcp",
       mcpUrl: `${origin}/api/chatgpt/autotube/mcp`,
       widgetUrl: `${origin}/api/chatgpt/autotube/widget`,
       renderUrl: `${origin}/api/autotube/render`,

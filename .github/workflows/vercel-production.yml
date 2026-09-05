@@ -100,6 +100,7 @@ jobs:
 
           python - <<'PY'
           import json
+          import os
           from pathlib import Path
 
           health = json.loads(Path('autotube-health.json').read_text(encoding='utf-8'))
@@ -107,8 +108,14 @@ jobs:
           tools_payload = json.loads(Path('autotube-tools.json').read_text(encoding='utf-8'))
           tool_names = {str(tool.get('name')) for tool in ((tools_payload.get('result') or {}).get('tools') or [])}
 
-          assert str(health.get('version') or '').startswith('5.1.0-autotube4'), health
+          assert str(health.get('version') or '').startswith('5.3.0-autotube4'), health
           assert health.get('endpoint') == '/api/chatgpt/autotube/mcp', health
+          assert health.get('mcpUrl') == os.environ['AUTOTUBE_MCP_URL'], health
+          assert health.get('widgetUrl') == os.environ['AUTOTUBE_WIDGET_URL'], health
+          runtime_health = health.get('health') or {}
+          assert runtime_health.get('standardVersion') == '4.0.0', runtime_health
+          assert runtime_health.get('styleEngineAvailable') is True, runtime_health
+          assert runtime_health.get('qualityGateAvailable') is True, runtime_health
           assert initialize.get('result'), initialize
           assert 'autotube_render_video' in tool_names, tool_names
           assert len(Path('site.html').read_bytes()) > 1_000

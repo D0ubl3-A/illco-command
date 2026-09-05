@@ -24,6 +24,10 @@ const MCP_PROTOCOL_VERSION = "2025-06-18";
 const APP_WIDGET_DOMAIN = "https://illcoai.tech";
 const MCP_WIDGET_MIME_TYPE = "text/html;profile=mcp-app";
 
+const AUTOTUBE_SECURITY_SCHEMES = [
+  { type: "oauth2", scopes: ["profile"] },
+];
+
 const WIDGET_META = {
   ui: {
     domain: APP_WIDGET_DOMAIN,
@@ -150,6 +154,7 @@ function toolDefinition() {
       "Create a complete prospect-specific outreach video. AutoTube generates narration on the server, submits full-HD composition to an off-device renderer, stores the MP4 durably, and returns mobile-safe preview and download links. Do not claim completion until render status is ready.",
     inputSchema: INPUT_SCHEMA,
     outputSchema: OUTPUT_SCHEMA,
+    securitySchemes: AUTOTUBE_SECURITY_SCHEMES,
     annotations: {
       readOnlyHint: false,
       destructiveHint: false,
@@ -158,6 +163,7 @@ function toolDefinition() {
     },
     _meta: {
       ...WIDGET_META,
+      securitySchemes: AUTOTUBE_SECURITY_SCHEMES,
       ui: { resourceUri: AUTOTUBE_WIDGET_URI, visibility: ["model", "app"] },
       "openai/toolInvocation/invoking": "Generating narration and starting the AutoTube render…",
       "openai/toolInvocation/invoked": "AutoTube render submitted. Tracking production status…",

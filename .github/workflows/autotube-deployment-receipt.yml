@@ -67,7 +67,7 @@ jobs:
                   ),
               )
               required = {
-                  "version": result["version"] == "5.1.0-autotube4",
+                  "version": str(result["version"] or "").startswith("5.3.0-autotube4"),
                   "standard": result["standardVersion"] == "4.0.0",
                   "style_engine": result["styleEngineAvailable"],
                   "quality_gate": result["qualityGateAvailable"],
@@ -140,7 +140,7 @@ jobs:
           - Narration configured: **${NARRATION_CONFIGURED:-false}**
           - Signed delivery configured: **${DELIVERY_CONFIGURED:-false}**
 
-          AutoTube production is verified only when the Site is published at \`illcoai.tech\` and its same-origin MCP reports AutoTube \`5.1.0-autotube4\`, standard \`4.0.0\`, an active style engine, and an active quality gate.
+          AutoTube production is verified only when the Site is published at \`illcoai.tech\` and its same-origin MCP reports AutoTube \`5.3.0-autotube4*\`, standard \`4.0.0\`, an active style engine, and an active quality gate.
           EOF
 
       - name: Post receipt to AutoTube integration issue

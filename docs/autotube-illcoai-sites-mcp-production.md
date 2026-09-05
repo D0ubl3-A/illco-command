@@ -97,7 +97,7 @@ Never place these values in client JavaScript, public Site content, MCP structur
 The deployment passes only when all of the following are true:
 
 - `https://illcoai.tech` loads.
-- The MCP GET response reports version `5.1.0-autotube4`.
+- The MCP GET response reports a version beginning with `5.3.0-autotube4`.
 - The health object reports standard version `4.0.0`.
 - `mcpUrl` equals `https://illcoai.tech/api/chatgpt/autotube/mcp`.
 - `widgetUrl` equals `https://illcoai.tech/api/chatgpt/autotube/widget`.

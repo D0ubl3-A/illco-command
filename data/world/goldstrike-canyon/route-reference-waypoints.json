@@ -1,0 +1,119 @@
+{
+  "schema_version": "1.0.0",
+  "region_id": "goldstrike_canyon_hot_springs",
+  "generated_at": "2026-09-06T06:53:00-07:00",
+  "horizontal_crs": "EPSG:4326",
+  "production_crs": "EPSG:32611",
+  "origin_anchor_id": "GS-A000",
+  "accuracy_policy": "Published waypoint coordinates may be used as feature-reference coordinates when the source description identifies the same real-world feature. Unknown source accuracy must remain null, and these records must not be represented as survey-exact geometry.",
+  "sources": {
+    "BLUUGNOME_MOTORCYCLE_CANYON": {
+      "authority": "BluuGnome.com",
+      "url": "https://bluugnome.com/cyn_route/lake-mead/lake-mead_motorcycle/lake-mead_motorcyle.aspx",
+      "datum": "WGS84",
+      "evidence_status": "SOURCE_CONFIRMED_SECONDARY",
+      "source_checked_at": "2026-09-06T06:53:00-07:00",
+      "notes": "Route page publishes WGS84 waypoints for the Goldstrike trailhead, a stair/rope obstacle, a boulder bypass, the Motorcycle/Goldstrike confluence, and Gold Strike Hot Springs."
+    },
+    "USHIKES_GOLDSTRIKE": {
+      "authority": "USA Hiking Database / USHikes",
+      "url": "https://www.ushikes.com/htm_hikes_goldstrike_canyon.htm",
+      "datum": "WGS84",
+      "evidence_status": "SOURCE_CONFIRMED_SECONDARY",
+      "source_checked_at": "2026-09-06T06:53:00-07:00",
+      "notes": "Route page publishes WGS84 coordinates for the trailhead and Colorado River endpoint."
+    }
+  },
+  "waypoints": [
+    {
+      "id": "GS-WP-TH",
+      "name": "published_goldstrike_trailhead",
+      "feature_type": "trailhead",
+      "latitude": 36.00992,
+      "longitude": -114.76887,
+      "utm_easting_m": 701077.08,
+      "utm_northing_m": 3987351.149,
+      "local_east_m": 516.564,
+      "local_north_m": 8.488,
+      "elevation_m_source": 487.68,
+      "horizontal_accuracy_m": null,
+      "source_id": "BLUUGNOME_MOTORCYCLE_CANYON",
+      "evidence_status": "SOURCE_CONFIRMED_SECONDARY"
+    },
+    {
+      "id": "GS-WP-STAIR",
+      "name": "goldstrike_stair_rope_obstacle",
+      "feature_type": "traversal_obstacle",
+      "latitude": 36.00132,
+      "longitude": -114.75523,
+      "utm_easting_m": 702328.545,
+      "utm_northing_m": 3986425.302,
+      "local_east_m": 1768.029,
+      "local_north_m": -917.359,
+      "elevation_m_source": 362.712,
+      "horizontal_accuracy_m": null,
+      "source_id": "BLUUGNOME_MOTORCYCLE_CANYON",
+      "evidence_status": "SOURCE_CONFIRMED_SECONDARY"
+    },
+    {
+      "id": "GS-WP-UPANDOVER",
+      "name": "goldstrike_boulder_bypass",
+      "feature_type": "boulder_obstacle",
+      "latitude": 36.00268,
+      "longitude": -114.75935,
+      "utm_easting_m": 701953.666,
+      "utm_northing_m": 3986567.632,
+      "local_east_m": 1393.15,
+      "local_north_m": -775.029,
+      "elevation_m_source": null,
+      "horizontal_accuracy_m": null,
+      "source_id": "BLUUGNOME_MOTORCYCLE_CANYON",
+      "evidence_status": "SOURCE_CONFIRMED_SECONDARY"
+    },
+    {
+      "id": "GS-WP-CONFLUENCE",
+      "name": "motorcycle_goldstrike_confluence",
+      "feature_type": "canyon_confluence",
+      "latitude": 36.00192,
+      "longitude": -114.75358,
+      "utm_easting_m": 702475.754,
+      "utm_northing_m": 3986495.296,
+      "local_east_m": 1915.238,
+      "local_north_m": -847.365,
+      "elevation_m_source": 345.948,
+      "horizontal_accuracy_m": null,
+      "source_id": "BLUUGNOME_MOTORCYCLE_CANYON",
+      "evidence_status": "SOURCE_CONFIRMED_SECONDARY"
+    },
+    {
+      "id": "GS-WP-HOTSPRINGS",
+      "name": "gold_strike_hot_springs_published_waypoint",
+      "feature_type": "hot_springs_area",
+      "latitude": 36.00311,
+      "longitude": -114.74994,
+      "utm_easting_m": 702800.84,
+      "utm_northing_m": 3986634.888,
+      "local_east_m": 2240.324,
+      "local_north_m": -707.773,
+      "elevation_m_source": 323.088,
+      "horizontal_accuracy_m": null,
+      "source_id": "BLUUGNOME_MOTORCYCLE_CANYON",
+      "evidence_status": "SOURCE_CONFIRMED_SECONDARY"
+    },
+    {
+      "id": "GS-WP-RIVER",
+      "name": "goldstrike_colorado_river_route_endpoint",
+      "feature_type": "river_route_endpoint",
+      "latitude": 36.0002777778,
+      "longitude": -114.7425,
+      "utm_easting_m": 703478.806,
+      "utm_northing_m": 3986336.194,
+      "local_east_m": 2918.29,
+      "local_north_m": -1006.467,
+      "elevation_m_source": null,
+      "horizontal_accuracy_m": null,
+      "source_id": "USHIKES_GOLDSTRIKE",
+      "evidence_status": "SOURCE_CONFIRMED_SECONDARY"
+    }
+  ]
+}

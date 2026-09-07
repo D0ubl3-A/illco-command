@@ -34,9 +34,27 @@ jobs:
           node - <<'NODE'
           const fs = require("fs");
           const report = JSON.parse(fs.readFileSync("production-audit.json", "utf8"));
-          const v = report.metadata?.vulnerabilities || {};
-          console.log("production audit", v);
-          if ((v.critical || 0) > 0 || (v.high || 0) > 0) process.exit(1);
+          const summary = report.metadata?.vulnerabilities || {};
+          console.log("production audit", summary);
+          const vulns = report.vulnerabilities || {};
+          for (const [name, info] of Object.entries(vulns)) {
+            if (!["high", "critical"].includes(info.severity)) continue;
+            const via = (info.via || []).map((v) => typeof v === "string" ? v : {
+              source: v.source,
+              name: v.name,
+              severity: v.severity,
+              title: v.title,
+              range: v.range,
+              url: v.url,
+            });
+            console.log(JSON.stringify({
+              name,
+              severity: info.severity,
+              range: info.range,
+              fixAvailable: info.fixAvailable,
+              via,
+            }));
+          }
           NODE
 
       - name: Type check

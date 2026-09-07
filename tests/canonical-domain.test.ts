@@ -5,6 +5,15 @@ import test from "node:test";
 
 import nextConfig from "../next.config";
 
+type RedirectRule = {
+  source: string;
+  destination: string;
+  permanent?: boolean;
+  has?: Array<{ type: string; value?: string }>;
+};
+
+const techSiteUrl = "https://illcoai.tech";
+
 const commercialRedirects: Record<string, string> = {
   "/local": "https://illcoai.com/services",
   "/henderson-ai-automation": "https://illcoai.com/services",
@@ -23,12 +32,17 @@ const commercialRedirects: Record<string, string> = {
   "/las-vegas/ai-quote-builder-for-contractors": "https://illcoai.com/services",
 };
 
-test("www redirects to the apex production domain", async () => {
-  const redirects = await nextConfig.redirects?.();
-  assert.ok(redirects, "Expected Next.js redirects to be configured.");
+async function configuredRedirects(): Promise<RedirectRule[]> {
+  const result = await nextConfig.redirects?.();
+  assert.ok(result, "Expected Next.js redirects to be configured.");
+  return result as RedirectRule[];
+}
 
-  const canonicalRedirect = redirects.find((redirect) =>
-    redirect.has?.some((condition) => condition.type === "host" && condition.value === "www.illcoai.tech"),
+test("www redirects to the apex production domain", async () => {
+  const redirects = await configuredRedirects();
+
+  const canonicalRedirect = redirects.find((entry) =>
+    entry.has?.some((condition) => condition.type === "host" && condition.value === "www.illcoai.tech"),
   );
 
   assert.ok(canonicalRedirect, "Expected a www host redirect.");
@@ -37,14 +51,13 @@ test("www redirects to the apex production domain", async () => {
 });
 
 test("commercial and local intent permanently redirects from .tech to .com", async () => {
-  const redirects = await nextConfig.redirects?.();
-  assert.ok(redirects, "Expected Next.js redirects to be configured.");
+  const redirects = await configuredRedirects();
 
   for (const [source, destination] of Object.entries(commercialRedirects)) {
-    const redirect = redirects.find((entry) => entry.source === source);
-    assert.ok(redirect, `Missing commercial redirect for ${source}`);
-    assert.equal(redirect.destination, destination, `Wrong owner for ${source}`);
-    assert.equal(redirect.permanent, true, `${source} must be permanent`);
+    const matchingRedirect = redirects.find((entry) => entry.source === source);
+    assert.ok(matchingRedirect, `Missing commercial redirect for ${source}`);
+    assert.equal(matchingRedirect.destination, destination, `Wrong owner for ${source}`);
+    assert.equal(matchingRedirect.permanent, true, `${source} must be permanent`);
   }
 });
 
@@ -53,7 +66,7 @@ test(".tech sitemap does not advertise redirected local commercial routes", () =
 
   for (const source of Object.keys(commercialRedirects)) {
     assert.equal(
-      sitemapSource.includes(`${siteUrl}${source}`),
+      sitemapSource.includes(`${techSiteUrl}${source}`),
       false,
       `Redirected local route remains in .tech sitemap: ${source}`,
     );

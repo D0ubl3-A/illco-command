@@ -139,3 +139,74 @@ jobs:
           assert len(Path('autotube-widget.html').read_bytes()) > 500
           print(f'illcoai.tech AutoTube MCP verification passed at {version}')
           PY
+
+          # Green-100 live crawl-control and domain-ownership gates.
+          curl --fail --silent --show-error --max-time 30 "$SITE_URL/robots.txt" > robots.txt
+          curl --fail --silent --show-error --max-time 30 "$SITE_URL/sitemap.xml" > sitemap.xml
+
+          python - <<'PY'
+          from pathlib import Path
+
+          robots = Path("robots.txt").read_text(encoding="utf-8").lower()
+          sitemap = Path("sitemap.xml").read_text(encoding="utf-8").lower()
+
+          assert "user-agent:" in robots, robots[:500]
+          assert "sitemap: https://illcoai.tech/sitemap.xml" in robots, robots[:1000]
+          assert "<urlset" in sitemap or "<sitemapindex" in sitemap, sitemap[:1000]
+
+          forbidden = [
+              "/local",
+              "/henderson-ai-automation",
+              "/henderson/ai-consulting",
+              "/henderson/ai-receptionist",
+              "/henderson/ai-automation",
+              "/henderson/web-design",
+              "/las-vegas/ai-agency",
+              "/las-vegas/ai-consulting",
+              "/las-vegas/ai-receptionist",
+              "/las-vegas/ai-automation",
+              "/las-vegas/small-business-automation",
+              "/las-vegas/ai-lead-generation",
+              "/las-vegas/ai-website-design",
+              "/las-vegas/missed-call-text-back",
+              "/las-vegas/ai-quote-builder-for-contractors",
+          ]
+          present = [path for path in forbidden if f"https://illcoai.tech{path}" in sitemap]
+          assert not present, f"Commercial/local .tech URLs remain in sitemap: {present}"
+          print("robots.txt and sitemap.xml Green-100 gates passed")
+          PY
+
+          check_redirect() {
+            source="$1"
+            expected="$2"
+            headers="$(mktemp)"
+            code="$(curl --silent --show-error --max-time 30 --output /dev/null --dump-header "$headers" --write-out '%{http_code}' "$SITE_URL$source")"
+            location="$(awk 'BEGIN{IGNORECASE=1} /^location:/ {sub(/^[^:]+:[[:space:]]*/, ""); sub(/\r$/, ""); print}' "$headers" | tail -n 1)"
+            rm -f "$headers"
+            if [[ "$code" != "301" && "$code" != "308" ]]; then
+              echo "Expected permanent redirect for $source, got HTTP $code"
+              exit 1
+            fi
+            if [[ "$location" != "$expected" ]]; then
+              echo "Wrong redirect owner for $source: $location (expected $expected)"
+              exit 1
+            fi
+          }
+
+          check_redirect "/local" "https://illcoai.com/services"
+          check_redirect "/henderson-ai-automation" "https://illcoai.com/services"
+          check_redirect "/henderson/ai-consulting" "https://illcoai.com/ai-consulting-henderson"
+          check_redirect "/henderson/ai-receptionist" "https://illcoai.com/services"
+          check_redirect "/henderson/ai-automation" "https://illcoai.com/services"
+          check_redirect "/henderson/web-design" "https://illcoai.com/services"
+          check_redirect "/las-vegas/ai-agency" "https://illcoai.com/ai-agency-las-vegas"
+          check_redirect "/las-vegas/ai-consulting" "https://illcoai.com/ai-agency-las-vegas"
+          check_redirect "/las-vegas/ai-receptionist" "https://illcoai.com/ai-receptionist-las-vegas"
+          check_redirect "/las-vegas/ai-automation" "https://illcoai.com/small-business-automation-las-vegas"
+          check_redirect "/las-vegas/small-business-automation" "https://illcoai.com/small-business-automation-las-vegas"
+          check_redirect "/las-vegas/ai-lead-generation" "https://illcoai.com/ai-lead-generation-las-vegas"
+          check_redirect "/las-vegas/ai-website-design" "https://illcoai.com/ai-website-design-las-vegas"
+          check_redirect "/las-vegas/missed-call-text-back" "https://illcoai.com/ai-receptionist-las-vegas"
+          check_redirect "/las-vegas/ai-quote-builder-for-contractors" "https://illcoai.com/services"
+
+          echo "Commercial/local domain ownership redirects passed"

@@ -24,8 +24,23 @@ jobs:
           node-version: 22
           cache: npm
 
-      - name: Generate patched lockfile
-        run: npm install next@16.3.4 --save-exact
+      - name: Prepare patched dependency policy
+        shell: bash
+        run: |
+          node - <<'NODE'
+          const fs = require("fs");
+          const pkg = JSON.parse(fs.readFileSync("package.json", "utf8"));
+          pkg.dependencies.next = "16.3.4";
+          pkg.overrides = {
+            ...(pkg.overrides || {}),
+            "postcss": "8.5.23",
+            "nanoid": "3.3.18",
+            "fast-uri": "3.1.7",
+            "ip-address": "10.7.0"
+          };
+          fs.writeFileSync("package.json", JSON.stringify(pkg, null, 2) + "\n");
+          NODE
+          npm install
 
       - name: Production dependency audit
         shell: bash
@@ -55,6 +70,7 @@ jobs:
               via,
             }));
           }
+          if ((summary.critical || 0) > 0 || (summary.high || 0) > 0) process.exit(1);
           NODE
 
       - name: Type check
@@ -69,7 +85,7 @@ jobs:
       - name: Upload upgrade evidence
         uses: actions/upload-artifact@v4
         with:
-          name: green100-next-16-3-4
+          name: green100-secure-deps
           path: |
             package.json
             package-lock.json

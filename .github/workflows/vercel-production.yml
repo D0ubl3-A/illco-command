@@ -101,6 +101,7 @@ jobs:
           python - <<'PY'
           import json
           import os
+          import re
           from pathlib import Path
 
           health = json.loads(Path('autotube-health.json').read_text(encoding='utf-8'))
@@ -108,17 +109,33 @@ jobs:
           tools_payload = json.loads(Path('autotube-tools.json').read_text(encoding='utf-8'))
           tool_names = {str(tool.get('name')) for tool in ((tools_payload.get('result') or {}).get('tools') or [])}
 
-          assert str(health.get('version') or '').startswith('5.3.0-autotube4'), health
+          version = str(health.get('version') or '')
+          match = re.fullmatch(r'(\d+)\.(\d+)\.(\d+)-autotube4(?:-sites)?', version)
+          assert match, health
+          assert tuple(map(int, match.groups())) >= (5, 5, 0), health
+
           assert health.get('endpoint') == '/api/chatgpt/autotube/mcp', health
           assert health.get('mcpUrl') == os.environ['AUTOTUBE_MCP_URL'], health
           assert health.get('widgetUrl') == os.environ['AUTOTUBE_WIDGET_URL'], health
+
           runtime_health = health.get('health') or {}
           assert runtime_health.get('standardVersion') == '4.0.0', runtime_health
           assert runtime_health.get('styleEngineAvailable') is True, runtime_health
           assert runtime_health.get('qualityGateAvailable') is True, runtime_health
+          assert runtime_health.get('renderServiceConfigured') is True, runtime_health
+          assert runtime_health.get('narrationProviderConfigured') is True, runtime_health
+          assert runtime_health.get('signedDeliveryConfigured') is True, runtime_health
+          assert runtime_health.get('storageConfigured') is True, runtime_health
+
           assert initialize.get('result'), initialize
-          assert 'autotube_render_video' in tool_names, tool_names
+          required_tools = {
+              'autotube_health_check',
+              'autotube_render_video',
+              'autotube_render_status',
+              'autotube_get_video',
+          }
+          assert required_tools.issubset(tool_names), tool_names
           assert len(Path('site.html').read_bytes()) > 1_000
           assert len(Path('autotube-widget.html').read_bytes()) > 500
-          print('illcoai.tech AutoTube MCP verification passed')
+          print(f'illcoai.tech AutoTube MCP verification passed at {version}')
           PY

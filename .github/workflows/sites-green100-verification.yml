@@ -48,7 +48,7 @@ jobs:
           curl --fail --silent --show-error --location --retry 5 --retry-delay 4 --max-time 30 "$SITE_URL/" > home.html
           curl --fail --silent --show-error --location --retry 5 --retry-delay 4 --max-time 30 "$SITE_URL/games" > games.html
           curl --fail --silent --show-error --location --retry 5 --retry-delay 4 --max-time 30 "$SITE_URL/gpt-6" > gpt6.html
-          curl --fail --silent --show-error --location --retry 5 --retry-delay 4 --max-time 30 "$SITE_URL/audit-proof" > proof.html
+          curl --fail --silent --show-error --location --retry 5 --retry-delay 4 --max-time 30 "$SITE_URL/verification" > proof.html
           curl --fail --silent --show-error --max-time 30 "$SITE_URL/robots.txt" > robots.txt
           curl --fail --silent --show-error --max-time 30 "$SITE_URL/sitemap.xml" > sitemap.xml
 

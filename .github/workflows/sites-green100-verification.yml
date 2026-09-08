@@ -1,0 +1,118 @@
+name: Sites Green-100 Verification
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+concurrency:
+  group: sites-green100-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  verify_source:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - name: Install
+        run: npm ci
+      - name: Type check
+        run: npx tsc --noEmit --pretty false
+      - name: Test
+        run: npm test
+      - name: Build Sites source bundle
+        run: npm run build
+
+  verify_live_green100:
+    if: github.event_name == 'push' || github.event_name == 'workflow_dispatch'
+    needs: verify_source
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    env:
+      SITE_URL: https://illcoai.tech
+    steps:
+      - name: Verify core live surfaces
+        shell: bash
+        run: |
+          set -euo pipefail
+          curl --fail --silent --show-error --location --retry 5 --retry-delay 4 --max-time 30 "$SITE_URL/" > home.html
+          curl --fail --silent --show-error --location --retry 5 --retry-delay 4 --max-time 30 "$SITE_URL/games" > games.html
+          curl --fail --silent --show-error --location --retry 5 --retry-delay 4 --max-time 30 "$SITE_URL/gpt-6" > gpt6.html
+          curl --fail --silent --show-error --location --retry 5 --retry-delay 4 --max-time 30 "$SITE_URL/audit-proof" > proof.html
+          curl --fail --silent --show-error --max-time 30 "$SITE_URL/robots.txt" > robots.txt
+          curl --fail --silent --show-error --max-time 30 "$SITE_URL/sitemap.xml" > sitemap.xml
+
+          python - <<'PY'
+          from pathlib import Path
+
+          home = Path('home.html').read_text(encoding='utf-8').lower()
+          games = Path('games.html').read_text(encoding='utf-8').lower()
+          gpt6 = Path('gpt6.html').read_text(encoding='utf-8').lower()
+          proof = Path('proof.html').read_text(encoding='utf-8').lower()
+          robots = Path('robots.txt').read_text(encoding='utf-8').lower()
+          sitemap = Path('sitemap.xml').read_text(encoding='utf-8').lower()
+
+          assert len(home) > 1000
+          assert 'illco games' in games
+          assert 'gpt-6' in gpt6
+          assert 'proof' in proof or 'verification' in proof
+          assert 'user-agent:' in robots
+          assert 'sitemap: https://illcoai.tech/sitemap.xml' in robots
+          assert '<urlset' in sitemap or '<sitemapindex' in sitemap
+
+          forbidden_sitemap_paths = [
+              '/local',
+              '/henderson-ai-automation',
+              '/henderson/ai-consulting',
+              '/henderson/ai-receptionist',
+              '/henderson/ai-automation',
+              '/henderson/web-design',
+              '/las-vegas/ai-agency',
+              '/las-vegas/ai-consulting',
+              '/las-vegas/ai-receptionist',
+              '/las-vegas/ai-automation',
+              '/las-vegas/small-business-automation',
+              '/las-vegas/ai-lead-generation',
+              '/las-vegas/ai-website-design',
+              '/las-vegas/missed-call-text-back',
+              '/las-vegas/ai-quote-builder-for-contractors',
+          ]
+          present = [p for p in forbidden_sitemap_paths if f'https://illcoai.tech{p}' in sitemap]
+          assert not present, f'Local/commercial .tech URLs remain in sitemap: {present}'
+
+          # Ownership policy: .tech is the controlled proof/product/game property.
+          # A partner-controlled .com link may exist as a referral, but CI must never
+          # require redirects, canonicals, or ownership claims on that partner domain.
+          print('Sites Green-100 core verification passed')
+          PY
+
+      - name: Verify local routes are not indexable on .tech
+        shell: bash
+        run: |
+          set -euo pipefail
+          for path in \
+            /las-vegas/ai-consulting \
+            /las-vegas/ai-agency \
+            /las-vegas/ai-automation \
+            /las-vegas/ai-receptionist \
+            /henderson/ai-consulting \
+            /henderson/ai-automation
+          do
+            html="$(curl --fail --silent --show-error --location --max-time 30 "$SITE_URL$path")"
+            lower="$(printf '%s' "$html" | tr '[:upper:]' '[:lower:]')"
+            if ! grep -Eq '<meta[^>]+name=["'"']robots["'"'][^>]+content=["'"'][^"'"']*noindex|<meta[^>]+content=["'"'][^"'"']*noindex[^"'"']*["'"'][^>]+name=["'"']robots["'"']' <<<"$lower"; then
+              echo "Expected noindex on $path"
+              exit 1
+            fi
+          done
+          echo "Local .tech routes correctly protected from indexing"

@@ -33,7 +33,10 @@ function makeFrame(pixel: (x: number, y: number) => RGB) {
 
 function waterScene(base: RGB, amplitude = 18, phase = 0) {
   return makeFrame((x, y) => {
-    if (y < 10) return [96, 104, 108];
+    // Warm, non-water shoreline/background above the lower-frame water ROI.
+    // Keeping this background explicitly non-blue prevents the fixture itself
+    // from simulating an open-sky scene.
+    if (y < 10) return [122, 96, 70];
     const ripple = ((y + phase) % 4 < 2 ? amplitude : -amplitude) + ((x + phase) % 9 === 0 ? 5 : 0);
     return [
       Math.max(0, Math.min(255, base[0] + ripple)),

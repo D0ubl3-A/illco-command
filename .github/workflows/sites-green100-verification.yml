@@ -33,7 +33,7 @@ jobs:
       - name: Build Sites source bundle
         run: npm run build
 
-  verify_live_green100:
+  verify_live_core:
     if: github.event_name == 'push' || github.event_name == 'workflow_dispatch'
     needs: verify_source
     runs-on: ubuntu-latest
@@ -41,7 +41,7 @@ jobs:
     env:
       SITE_URL: https://illcoai.tech
     steps:
-      - name: Verify core live surfaces
+      - name: Verify core surfaces, robots and sitemap
         shell: bash
         run: |
           set -euo pipefail
@@ -89,17 +89,22 @@ jobs:
           ]
           present = [p for p in forbidden_sitemap_paths if f'https://illcoai.tech{p}' in sitemap]
           assert not present, f'Local/commercial .tech URLs remain in sitemap: {present}'
-
-          # Ownership policy: .tech is the controlled proof/product/game property.
-          # A partner-controlled .com link may exist as a referral, but CI must never
-          # require redirects, canonicals, or ownership claims on that partner domain.
           print('Sites Green-100 core verification passed')
           PY
 
+  verify_live_local_indexability:
+    if: github.event_name == 'push' || github.event_name == 'workflow_dispatch'
+    needs: verify_source
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    env:
+      SITE_URL: https://illcoai.tech
+    steps:
       - name: Verify local routes are not indexable on .tech
         shell: bash
         run: |
           set -euo pipefail
+          failed=0
           for path in \
             /las-vegas/ai-consulting \
             /las-vegas/ai-agency \
@@ -112,7 +117,7 @@ jobs:
             lower="$(printf '%s' "$html" | tr '[:upper:]' '[:lower:]')"
             if ! grep -Eq '<meta[^>]+name=["'"']robots["'"'][^>]+content=["'"'][^"'"']*noindex|<meta[^>]+content=["'"'][^"'"']*noindex[^"'"']*["'"'][^>]+name=["'"']robots["'"']' <<<"$lower"; then
               echo "Expected noindex on $path"
-              exit 1
+              failed=1
             fi
           done
-          echo "Local .tech routes correctly protected from indexing"
+          exit "$failed"

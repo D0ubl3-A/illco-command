@@ -30,7 +30,12 @@ function colorDistance(data: Uint8ClampedArray, first: number, second: number) {
   ) / 3;
 }
 
-function analyzeFrame(data: Uint8ClampedArray, width: number, height: number, previousLuma?: Float32Array): FrameAnalysis {
+export function analyzeFrame(
+  data: Uint8ClampedArray,
+  width: number,
+  height: number,
+  previousLuma?: Float32Array,
+): FrameAnalysis {
   const pixelCount = width * height;
   const luma = new Float32Array(pixelCount);
   const roiStart = Math.max(1, Math.floor(height * 0.36));
@@ -176,7 +181,17 @@ function analyzeFrame(data: Uint8ClampedArray, width: number, height: number, pr
   const lacksSurfaceShape = broadness < 0.22 || longestRunRatio < 0.2;
   if (lacksSurfaceShape) confidence = Math.min(confidence, 0.28);
   if (coverage < 0.15) confidence = Math.min(confidence, 0.24);
-  if (averageTopGradient < 5 && averageGradient < 5 && averageMotion < 1) confidence -= 0.12;
+
+  // A large, nearly textureless, motionless plane is much more likely to be a wall,
+  // floor, screen, or painted surface than water. The first frame is intentionally
+  // conservative: real water can become eligible on subsequent frames once natural
+  // shimmer/camera parallax produces measurable temporal variation.
+  const likelyStaticFlatPlane =
+    coverage > 0.6 &&
+    averageTopGradient < 5 &&
+    averageGradient < 5 &&
+    averageMotion < 0.8;
+  if (likelyStaticFlatPlane) confidence = Math.min(confidence, 0.3);
 
   return { confidence: clamp(confidence), luma };
 }

@@ -104,20 +104,40 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          failed=0
-          for path in \
-            /las-vegas/ai-consulting \
-            /las-vegas/ai-agency \
-            /las-vegas/ai-automation \
-            /las-vegas/ai-receptionist \
-            /henderson/ai-consulting \
+          paths=(
+            /las-vegas/ai-consulting
+            /las-vegas/ai-agency
+            /las-vegas/ai-automation
+            /las-vegas/ai-receptionist
+            /henderson/ai-consulting
             /henderson/ai-automation
-          do
-            html="$(curl --fail --silent --show-error --location --max-time 30 "$SITE_URL$path")"
-            lower="$(printf '%s' "$html" | tr '[:upper:]' '[:lower:]')"
-            if ! grep -Eq '<meta[^>]+name=["'"']robots["'"'][^>]+content=["'"'][^"'"']*noindex|<meta[^>]+content=["'"'][^"'"']*noindex[^"'"']*["'"'][^>]+name=["'"']robots["'"']' <<<"$lower"; then
-              echo "Expected noindex on $path"
-              failed=1
-            fi
+          )
+          rm -f local-indexability.tsv
+          for path in "${paths[@]}"; do
+            file="$(printf '%s' "$path" | tr '/' '_' | sed 's/^_//').html"
+            curl --fail --silent --show-error --location --max-time 30 "$SITE_URL$path" > "$file"
+            printf '%s\t%s\n' "$path" "$file" >> local-indexability.tsv
           done
-          exit "$failed"
+
+          python - <<'PY'
+          from pathlib import Path
+          import re
+
+          failures = []
+          for row in Path('local-indexability.tsv').read_text(encoding='utf-8').splitlines():
+              path, file = row.split('\t', 1)
+              html = Path(file).read_text(encoding='utf-8', errors='ignore')
+              robots_meta = re.findall(r'<meta\b[^>]*>', html, flags=re.I)
+              has_noindex = any(
+                  re.search(r'name\s*=\s*["\']robots["\']', tag, flags=re.I)
+                  and re.search(r'content\s*=\s*["\'][^"\']*noindex', tag, flags=re.I)
+                  for tag in robots_meta
+              )
+              if not has_noindex:
+                  failures.append(path)
+
+          if failures:
+              raise SystemExit('Missing noindex on: ' + ', '.join(failures))
+
+          print('Local .tech routes correctly protected from indexing')
+          PY

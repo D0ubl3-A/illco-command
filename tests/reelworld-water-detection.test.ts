@@ -33,9 +33,6 @@ function makeFrame(pixel: (x: number, y: number) => RGB) {
 
 function waterScene(base: RGB, amplitude = 18, phase = 0) {
   return makeFrame((x, y) => {
-    // Warm, non-water shoreline/background above the lower-frame water ROI.
-    // Keeping this background explicitly non-blue prevents the fixture itself
-    // from simulating an open-sky scene.
     if (y < 10) return [122, 96, 70];
     const ripple = ((y + phase) % 4 < 2 ? amplitude : -amplitude) + ((x + phase) % 9 === 0 ? 5 : 0);
     return [
@@ -48,6 +45,22 @@ function waterScene(base: RGB, amplitude = 18, phase = 0) {
 
 function lumaOf(frame: Uint8ClampedArray) {
   return analyzeFrame(frame, WIDTH, HEIGHT).luma;
+}
+
+function reachesProductionLock(frames: Uint8ClampedArray[]) {
+  let ema = 0;
+  let stableFrames = 0;
+  let previousLuma: Float32Array | undefined;
+  for (const frame of frames) {
+    const analysis = analyzeFrame(frame, WIDTH, HEIGHT, previousLuma);
+    const rawScore = analysis.confidence * 100;
+    const alpha = rawScore > ema ? 0.34 : 0.2;
+    ema += (rawScore - ema) * alpha;
+    previousLuma = analysis.luma;
+    stableFrames = ema >= 46 ? stableFrames + 1 : 0;
+    if (stableFrames >= 3) return true;
+  }
+  return false;
 }
 
 const neutralPrevious = waterScene([128, 132, 136], 12, 0);
@@ -79,12 +92,7 @@ test("ReelWorld Water Scan classifies at least 9/10 deterministic benchmark scen
     const previousLuma = benchmark.previous ? lumaOf(benchmark.previous) : undefined;
     const confidence = analyzeFrame(benchmark.frame, WIDTH, HEIGHT, previousLuma).confidence;
     const predictedWater = confidence >= WATER_THRESHOLD;
-    return {
-      ...benchmark,
-      confidence,
-      predictedWater,
-      pass: predictedWater === benchmark.expectedWater,
-    };
+    return { ...benchmark, confidence, predictedWater, pass: predictedWater === benchmark.expectedWater };
   });
 
   const passed = results.filter((result) => result.pass).length;
@@ -92,9 +100,7 @@ test("ReelWorld Water Scan classifies at least 9/10 deterministic benchmark scen
   const falseNegatives = results.filter((result) => result.expectedWater && !result.predictedWater).length;
 
   for (const result of results) {
-    console.log(
-      `[water-scan] ${result.pass ? "PASS" : "FAIL"} ${result.name}: confidence=${result.confidence.toFixed(3)} expected=${result.expectedWater ? "water" : "non-water"}`,
-    );
+    console.log(`[water-scan] ${result.pass ? "PASS" : "FAIL"} ${result.name}: confidence=${result.confidence.toFixed(3)} expected=${result.expectedWater ? "water" : "non-water"}`);
   }
   console.log(`[water-scan] score=${passed}/10 falsePositives=${falsePositives} falseNegatives=${falseNegatives}`);
 
@@ -106,4 +112,16 @@ test("static flat-surface guard suppresses the known neutral-wall false positive
   const wall = makeFrame(() => [132, 132, 132]);
   const confidence = analyzeFrame(wall, WIDTH, HEIGHT).confidence;
   assert.ok(confidence <= 0.3, `Expected static wall confidence <=0.30; got ${confidence.toFixed(3)}`);
+});
+
+test("uniform flickering walls never acquire the production three-frame lock", () => {
+  const grayFrames = Array.from({ length: 14 }, (_, index) =>
+    makeFrame(() => (index % 2 === 0 ? [132, 132, 132] : [130, 130, 130])),
+  );
+  const blueFrames = Array.from({ length: 14 }, (_, index) =>
+    makeFrame(() => (index % 2 === 0 ? [54, 112, 178] : [52, 110, 176])),
+  );
+
+  assert.equal(reachesProductionLock(grayFrames), false, "Flickering gray wall must never lock as water");
+  assert.equal(reachesProductionLock(blueFrames), false, "Flickering blue wall must never lock as water");
 });

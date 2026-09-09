@@ -30,7 +30,12 @@ function colorDistance(data: Uint8ClampedArray, first: number, second: number) {
   ) / 3;
 }
 
-function analyzeFrame(data: Uint8ClampedArray, width: number, height: number, previousLuma?: Float32Array): FrameAnalysis {
+export function analyzeFrame(
+  data: Uint8ClampedArray,
+  width: number,
+  height: number,
+  previousLuma?: Float32Array,
+): FrameAnalysis {
   const pixelCount = width * height;
   const luma = new Float32Array(pixelCount);
   const roiStart = Math.max(1, Math.floor(height * 0.36));
@@ -53,6 +58,7 @@ function analyzeFrame(data: Uint8ClampedArray, width: number, height: number, pr
   let topBrightness = 0;
   let topGradient = 0;
   let motionTotal = 0;
+  let motionSquaredTotal = 0;
   let motionPixels = 0;
 
   for (let y = 0; y < height; y += 1) {
@@ -107,7 +113,9 @@ function analyzeFrame(data: Uint8ClampedArray, width: number, height: number, pr
       if (highSaturationGreen) vegetationWeight += depthWeight;
 
       if (previousLuma?.length === pixelCount) {
-        motionTotal += Math.abs(brightness - previousLuma[pixel]);
+        const motion = Math.abs(brightness - previousLuma[pixel]);
+        motionTotal += motion;
+        motionSquaredTotal += motion * motion;
         motionPixels += 1;
       }
 
@@ -139,6 +147,10 @@ function analyzeFrame(data: Uint8ClampedArray, width: number, height: number, pr
   const averageLowerBrightness = lowerBrightness / Math.max(1, lowerPixels);
   const averageTopBrightness = topBrightness / Math.max(1, topPixels);
   const averageMotion = motionTotal / Math.max(1, motionPixels);
+  const motionVariance = motionPixels > 0
+    ? Math.max(0, motionSquaredTotal / motionPixels - averageMotion * averageMotion)
+    : 0;
+  const motionStdDev = Math.sqrt(motionVariance);
 
   let broadRows = 0;
   let strongestRow = 0;
@@ -159,7 +171,7 @@ function analyzeFrame(data: Uint8ClampedArray, width: number, height: number, pr
     horizontalScore * 0.10 +
     smoothScore * 0.06;
 
-  const hasNaturalShimmer = averageMotion >= 1.4 && averageMotion <= 22;
+  const hasNaturalShimmer = averageMotion >= 1.4 && averageMotion <= 22 && motionStdDev >= 0.8;
   if (hasNaturalShimmer) confidence += 0.065;
   if (averageMotion > 42) confidence -= 0.14;
   if (averageGradient > 78) confidence -= 0.13;
@@ -176,7 +188,18 @@ function analyzeFrame(data: Uint8ClampedArray, width: number, height: number, pr
   const lacksSurfaceShape = broadness < 0.22 || longestRunRatio < 0.2;
   if (lacksSurfaceShape) confidence = Math.min(confidence, 0.28);
   if (coverage < 0.15) confidence = Math.min(confidence, 0.24);
-  if (averageTopGradient < 5 && averageGradient < 5 && averageMotion < 1) confidence -= 0.12;
+
+  // A large, nearly textureless plane is much more likely to be a wall, floor,
+  // screen, or painted surface than water. Uniform brightness flicker is not
+  // sufficient temporal evidence: real water must show spatially non-uniform
+  // shimmer/parallax before a flat plane can escape this conservative cap.
+  const hasSpatialTemporalVariation = motionPixels > 0 && motionStdDev >= 0.8;
+  const likelyStaticFlatPlane =
+    coverage > 0.6 &&
+    averageTopGradient < 5 &&
+    averageGradient < 5 &&
+    !hasSpatialTemporalVariation;
+  if (likelyStaticFlatPlane) confidence = Math.min(confidence, 0.3);
 
   return { confidence: clamp(confidence), luma };
 }

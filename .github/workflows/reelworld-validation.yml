@@ -1,0 +1,38 @@
+name: ReelWorld Production Validation
+
+on:
+  push:
+    branches:
+      - deploy/reelworld-go
+    paths:
+      - "app/apps/reelworld-go/**"
+      - "tests/reelworld-*.test.ts"
+      - ".github/workflows/reelworld-validation.yml"
+      - "package.json"
+      - "package-lock.json"
+  workflow_dispatch:
+
+concurrency:
+  group: reelworld-production-validation
+  cancel-in-progress: true
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Use Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+      - name: Install dependencies
+        run: npm ci
+      - name: Water Scan benchmark
+        run: npx tsx --test tests/reelworld-water-detection.test.ts
+      - name: Type check
+        run: npx tsc --noEmit --pretty false
+      - name: Production build
+        run: npm run build

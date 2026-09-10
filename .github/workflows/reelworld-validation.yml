@@ -6,6 +6,8 @@ on:
       - deploy/reelworld-go
     paths:
       - "app/apps/reelworld-go/**"
+      - "app/manifest.ts"
+      - "public/reelworld-go/**"
       - "tests/reelworld-*.test.ts"
       - ".github/workflows/reelworld-validation.yml"
       - "package.json"

@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from "next";
 
 import "./bobber-overrides.css";
 import { WaterDetectionUpgrade } from "./water-detection-upgrade";
+import { WaterScanCastGate } from "./water-scan-cast-gate";
 import { ReelWorldVsController } from "./vs-controller";
 
 export const metadata: Metadata = {
@@ -23,6 +24,7 @@ export default function ReelWorldLayout({ children }: Readonly<{ children: React
   return (
     <>
       <WaterDetectionUpgrade />
+      <WaterScanCastGate />
       {children}
       <ReelWorldVsController />
     </>

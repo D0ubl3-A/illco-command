@@ -10,6 +10,7 @@ on:
       - "public/reelworld-go/**"
       - "tests/reelworld-*.test.ts"
       - ".github/workflows/reelworld-validation.yml"
+      - "next.config.ts"
       - "package.json"
       - "package-lock.json"
   workflow_dispatch:
@@ -43,10 +44,35 @@ jobs:
         run: npx tsx --test tests/reelworld-water-detection.test.ts
       - name: Gameplay acceptance matrix
         run: npx tsx --test tests/reelworld-gameplay.test.ts
+      - name: PWA service-worker syntax
+        run: node --check public/reelworld-go/sw.js
       - name: Type check
         run: npx tsc --noEmit --pretty false
       - name: Production build
         run: npm run build
+      - name: Built route and PWA smoke
+        shell: bash
+        run: |
+          set -euo pipefail
+          npm run start -- -p 3010 > /tmp/reelworld-next.log 2>&1 &
+          SERVER_PID=$!
+          trap 'kill $SERVER_PID 2>/dev/null || true' EXIT
+          ok=0
+          for i in $(seq 1 30); do
+            if curl -fsS http://127.0.0.1:3010/apps/reelworld-go > /tmp/reelworld-app.html; then ok=1; break; fi
+            sleep 1
+          done
+          if [ "$ok" -ne 1 ]; then cat /tmp/reelworld-next.log; exit 1; fi
+          grep -qi "ReelWorld" /tmp/reelworld-app.html
+          curl -fsSL http://127.0.0.1:3010/play > /tmp/reelworld-play.html
+          grep -qi "ReelWorld" /tmp/reelworld-play.html
+          curl -fsSL http://127.0.0.1:3010/scan-benchmark > /tmp/reelworld-scan.html
+          grep -qi "Water Scan" /tmp/reelworld-scan.html
+          curl -fsS http://127.0.0.1:3010/manifest.webmanifest > /tmp/reelworld-manifest.json
+          grep -q '"start_url":"/play"' /tmp/reelworld-manifest.json
+          curl -fsSI http://127.0.0.1:3010/reelworld-go/sw.js > /tmp/reelworld-sw-headers.txt
+          grep -qi '^service-worker-allowed: /' /tmp/reelworld-sw-headers.txt
+          curl -fsS http://127.0.0.1:3010/reelworld-go/sw.js | grep -q 'reelworld-go-v5'
       - name: Persist verified lockfile fixes
         run: |
           if git diff --quiet -- package.json package-lock.json; then

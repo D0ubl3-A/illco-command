@@ -32,6 +32,8 @@ jobs:
           cache: npm
       - name: Install dependencies
         run: npm ci
+      - name: Production dependency audit
+        run: npm audit --omit=dev --audit-level=high
       - name: Water Scan benchmark
         run: npx tsx --test tests/reelworld-water-detection.test.ts
       - name: Gameplay acceptance matrix

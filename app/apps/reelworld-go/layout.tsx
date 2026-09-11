@@ -5,6 +5,7 @@ import { ReelWorldVsController } from "./vs-controller";
 import { ReelWorldPwaRegister } from "./pwa-register";
 import { ReelWorldPlatformFeedback } from "./platform-feedback";
 import { ReelWorldVsStorageBridge } from "./vs-storage-bridge";
+import { ReelWorldReleaseScope } from "./release-scope";
 
 export const metadata: Metadata = {
   title: "ReelWorld GO — Location-Based AR Fishing",
@@ -29,6 +30,7 @@ export default function ReelWorldLayout({ children }: Readonly<{ children: React
       <ReelWorldVsStorageBridge />
       {children}
       <ReelWorldVsController />
+      <ReelWorldReleaseScope />
     </>
   );
 }

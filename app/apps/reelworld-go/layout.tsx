@@ -2,6 +2,8 @@ import type { Metadata, Viewport } from "next";
 
 import "./bobber-overrides.css";
 import { ReelWorldVsController } from "./vs-controller";
+import { ReelWorldPwaRegister } from "./pwa-register";
+import { ReelWorldPlatformFeedback } from "./platform-feedback";
 
 export const metadata: Metadata = {
   title: "ReelWorld GO — Location-Based AR Fishing",
@@ -21,6 +23,8 @@ export const viewport: Viewport = {
 export default function ReelWorldLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
     <>
+      <ReelWorldPwaRegister />
+      <ReelWorldPlatformFeedback />
       {children}
       <ReelWorldVsController />
     </>

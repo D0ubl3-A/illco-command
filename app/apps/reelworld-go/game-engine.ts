@@ -114,7 +114,8 @@ export function constrainPointToWater(x: number, y: number, bounds: WaterBounds,
   const right = clamp(bounds.right - margin, left, 1);
   const top = clamp(bounds.top + margin, 0, 1);
   const bottom = clamp(bounds.bottom - margin, top, 1);
-  return { x: clamp(x, left, right), y: clamp(y, top, bottom) };
+  const quantize = (value: number) => Math.round(value * 1_000_000) / 1_000_000;
+  return { x: quantize(clamp(x, left, right)), y: quantize(clamp(y, top, bottom)) };
 }
 
 export function hookSetProbability(fishWeight: number, hookSize: number, motionStrength: number, source: "tap" | "motion") {

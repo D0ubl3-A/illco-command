@@ -76,9 +76,18 @@ export function analyzeFrame(data: Uint8ClampedArray, width: number, height: num
   const similarTopLowerBrightness=Math.abs(averageTopBrightness-averageLowerBrightness)<12;
   const likelyOpenSky=topBlueRatio>.47&&lowerBlueRatio>.42&&averageTopGradient<18&&averageGradient<24&&similarTopLowerBrightness;
   if(likelyOpenSky)confidence-=.55;
+  // Dark/green shoreline vegetation can satisfy some neutral/dark-water color rules after the
+  // 40x28 camera downsample. If very little of the frame has explicit blue/teal water evidence
+  // and only a partial region looks water-like, stay below the production lock threshold.
+  const weakColorPartialSurface=colorCoverage<.08&&coverage<.65;
+  if(weakColorPartialSurface)confidence=Math.min(confidence,.38);
   if(broadness<.22||longestRunRatio<.2)confidence=Math.min(confidence,.28);if(coverage<.15)confidence=Math.min(confidence,.24);
   const hasSpatialTemporalVariation=motionPixels>0&&motionStdDev>=.8;
-  const likelyStaticFlatPlane=coverage>.6&&averageTopGradient<5&&averageGradient<5&&!hasSpatialTemporalVariation;
+  // A truly flat wall/screen has little texture and little top-to-bottom luminance structure.
+  // Preserve the false-positive cap for those planes, while allowing low-gradient muddy water
+  // and puddles whose upper/lower luminance still differs meaningfully.
+  const topLowerBrightnessDelta=Math.abs(averageTopBrightness-averageLowerBrightness);
+  const likelyStaticFlatPlane=coverage>.6&&averageTopGradient<5&&averageGradient<5&&topLowerBrightnessDelta<4&&!hasSpatialTemporalVariation;
   if(likelyStaticFlatPlane)confidence=Math.min(confidence,.3);
   return {confidence:clamp(confidence),luma};
 }

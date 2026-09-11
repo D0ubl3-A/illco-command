@@ -69,7 +69,13 @@ export function analyzeFrame(data: Uint8ClampedArray, width: number, height: num
   const broadness=strongestRow*.54+(broadRows/roiRows)*.46;
   let confidence=coverage*.38+colorCoverage*.14+broadness*.20+longestRunRatio*.12+horizontalScore*.10+smoothScore*.06;
   const hasNaturalShimmer=averageMotion>=1.4&&averageMotion<=22&&motionStdDev>=.8;if(hasNaturalShimmer)confidence+=.065;if(averageMotion>42)confidence-=.14;if(averageGradient>78)confidence-=.13;if(vegetationRatio>.3&&averageGradient>28)confidence-=.2;
-  const likelyOpenSky=topBlueRatio>.47&&lowerBlueRatio>.42&&averageTopGradient<18&&averageGradient<24&&averageTopBrightness>=averageLowerBrightness-8;if(likelyOpenSky)confidence-=.55;
+  // Reject frames that are uniformly blue from top to bottom (typical open sky), but do not
+  // penalize a blue lake merely because sky is visible above it. Real water is commonly
+  // materially darker than the sky it reflects, so require similar top/lower luminance before
+  // applying the strong sky penalty.
+  const similarTopLowerBrightness=Math.abs(averageTopBrightness-averageLowerBrightness)<12;
+  const likelyOpenSky=topBlueRatio>.47&&lowerBlueRatio>.42&&averageTopGradient<18&&averageGradient<24&&similarTopLowerBrightness;
+  if(likelyOpenSky)confidence-=.55;
   if(broadness<.22||longestRunRatio<.2)confidence=Math.min(confidence,.28);if(coverage<.15)confidence=Math.min(confidence,.24);
   const hasSpatialTemporalVariation=motionPixels>0&&motionStdDev>=.8;
   const likelyStaticFlatPlane=coverage>.6&&averageTopGradient<5&&averageGradient<5&&!hasSpatialTemporalVariation;

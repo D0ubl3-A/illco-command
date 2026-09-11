@@ -1,13 +1,11 @@
 import type { Metadata, Viewport } from "next";
 
 import "./bobber-overrides.css";
-import { WaterDetectionUpgrade } from "./water-detection-upgrade";
-import { WaterScanCastGate } from "./water-scan-cast-gate";
 import { ReelWorldVsController } from "./vs-controller";
 
 export const metadata: Metadata = {
   title: "ReelWorld GO — Location-Based AR Fishing",
-  description: "Explore mapped water, scan real water with your camera, catch animated fish, challenge a friend in live VS fishing, visit gas-station bait shops, buy game permits, and avoid ranger citations.",
+  description: "Scan visible water with the camera, fish with line, drag, hook, stamina and retrieve mechanics, track catches, and challenge a friend in casual peer-to-peer VS fishing.",
   applicationName: "ReelWorld GO",
 };
 
@@ -23,8 +21,6 @@ export const viewport: Viewport = {
 export default function ReelWorldLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
     <>
-      <WaterDetectionUpgrade />
-      <WaterScanCastGate />
       {children}
       <ReelWorldVsController />
     </>

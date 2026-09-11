@@ -14,9 +14,30 @@ const nextConfig: NextConfig = {
         permanent: true,
       },
       {
+        source: "/play",
+        destination: "/apps/reelworld-go",
+        permanent: false,
+      },
+      {
+        source: "/scan-benchmark",
+        destination: "/apps/reelworld-go/scan-benchmark",
+        permanent: false,
+      },
+      {
         source: "/companions",
         destination: "/tools",
         permanent: true,
+      },
+    ];
+  },
+  async headers() {
+    return [
+      {
+        source: "/reelworld-go/sw.js",
+        headers: [
+          { key: "Service-Worker-Allowed", value: "/" },
+          { key: "Cache-Control", value: "no-cache, no-store, must-revalidate" },
+        ],
       },
     ];
   },

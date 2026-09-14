@@ -8,7 +8,6 @@ import {
   Bot,
   Boxes,
   BrainCircuit,
-  BriefcaseBusiness,
   ChevronDown,
   ExternalLink,
   Film,
@@ -23,6 +22,8 @@ import {
   Workflow,
   X,
 } from "lucide-react";
+
+import { BRAND } from "@/lib/brand";
 
 const googleOAuthHref = "/api/account/google/start?returnTo=/account" as const;
 
@@ -60,7 +61,6 @@ const desktopGroups: MenuGroup[] = [
       { href: "/tools/lyric-video-forge", label: "Lyric Video Forge", detail: "ChatGPT-ready creator tool", icon: Sparkles },
       { href: "/tools/think-for-me-mode", label: "Think For Me Mode", detail: "Execution and planning skill", icon: Rocket },
       { href: "/commander", label: "Commander", detail: "Legacy command workspace", icon: Bot },
-      { href: "/blog", label: "AI playbooks", detail: "Use cases and buying guides", icon: BriefcaseBusiness },
     ],
   },
   {
@@ -99,8 +99,8 @@ export function StoreNavigation() {
             <Bot className="h-5 w-5" />
           </span>
           <span className="min-w-0">
-            <span className="block truncate text-sm font-semibold leading-none tracking-[0.06em] text-white uppercase">ILLCO AI App Store</span>
-            <span className="mt-1 hidden truncate text-xs tracking-[0.04em] text-slate-400 sm:block">Launch-ready apps and systems</span>
+            <span className="block truncate text-sm font-semibold leading-none tracking-[0.06em] text-white uppercase">{BRAND.name} App Store</span>
+            <span className="mt-1 hidden truncate text-xs tracking-[0.04em] text-slate-400 sm:block">Practical apps and automation</span>
           </span>
         </Link>
 

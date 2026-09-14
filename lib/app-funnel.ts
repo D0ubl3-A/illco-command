@@ -4,6 +4,7 @@ import { getConfigurationStatus } from "@/lib/env";
 import { getMonetizationPlan, type MonetizationPlanEntry } from "@/lib/monetization";
 import { getProductModuleHref, isPublicProductLaunchHref } from "@/lib/product-routes";
 import { canDirectCheckoutPublicProduct } from "@/lib/public-checkout";
+import { BRAND } from "@/lib/brand";
 
 export type CustomerStatus = "working" | "tutorial" | "setup" | "soon";
 
@@ -27,6 +28,9 @@ export const planNames = {
 
 export function customerProductName(product: ProductRecord) {
   return product.displayName
+    .replace(/\biLLCo\s*AI\b/gi, BRAND.name)
+    .replace(/\biLLCoAI\b/gi, BRAND.name.replace(/\s+/g, ""))
+    .replace(/\bILLCO\b/g, BRAND.shortName.toUpperCase())
     .replace(/\bNo Mock Data\b/gi, "Production Edition")
     .replace(/\bMock\b/gi, "Production")
     .replace(/\bOffline\b/gi, "Cloud")
@@ -54,27 +58,44 @@ export type AppFunnelState = {
 };
 
 function titleFor(product: ProductRecord) {
-  if (product.id === "think-for-me-mode") return "AI operator mode for builders who need the machine to stop drifting and start shipping";
-  if (/youtube/i.test(product.displayName)) return "Creator publishing workflow";
-  if (/video|sora|voice|music|lyric|rap|song|radio|lipsync|mastering|visual/i.test(product.name)) return "AI media production tool";
-  if (/funnel|store|commerce|payments|shop|tshirt/i.test(product.name)) return "Revenue and commerce system";
-  if (/real-estate|realtor|airbnb/i.test(product.name)) return "Real estate operations tool";
-  if (/ops|bot|agent|flow|workspace|workstation|codex|tools|nexus/i.test(product.name)) return "Automation operations system";
-  if (/api|backend|webhook|gateway/i.test(product.name)) return "Backend automation layer";
-  return "ILLCO app workflow";
+  if (product.id === "think-for-me-mode") return "AI execution copilot for turning messy goals into verified next actions";
+  if (/youtube/i.test(product.displayName)) return "Audience growth and publishing workflow";
+  if (/video|sora|voice|music|lyric|rap|song|radio|lipsync|mastering|visual/i.test(product.name)) return "AI-assisted media production workflow";
+  if (/funnel|store|commerce|payments|shop|tshirt/i.test(product.name)) return "Conversion and revenue workflow";
+  if (/real-estate|realtor|airbnb/i.test(product.name)) return "Property and lead operations workflow";
+  if (/ops|bot|agent|flow|workspace|workstation|codex|tools|nexus/i.test(product.name)) return "AI operations and execution system";
+  if (/api|backend|webhook|gateway/i.test(product.name)) return "Connected backend automation layer";
+  return `${categoryLabels[product.category]} workflow built for practical results`;
 }
 
 function summaryFor(product: ProductRecord) {
+  const name = customerProductName(product);
+
   if (product.id === "think-for-me-mode") {
-    return "Think For Me Mode turns messy ideas, stuck builds, unclear next steps, Codex planning, CLI execution, Agents SDK decisions, and ElevenLabs narration checks into one guided operating system. It is built for people who want fewer blank screens, fewer loops, and a verified next move every time.";
+    return `${name} gives builders a structured path from unclear goals to concrete actions, tool-assisted execution, and verification so work keeps moving instead of looping.`;
   }
 
-  if (product.description) {
-    return product.description;
+  if (product.category === "media") {
+    return `${name} gives creators a focused production path for generating, refining, and delivering media without stitching together a pile of disconnected tools.`;
   }
 
-  const category = categoryLabels[product.category].toLowerCase();
-  return `${customerProductName(product)} is part of the ILLCO ${category} catalog inside one app. Use this page to review the customer-safe access path, proof state, and next best action.`;
+  if (product.category === "automation" || product.category === "command") {
+    return `${name} helps teams reduce repetitive work, standardize handoffs, and keep important tasks moving through a guided AI-assisted workflow.`;
+  }
+
+  if (product.category === "commerce") {
+    return `${name} is designed to shorten the path from customer interest to measurable action with practical commerce, conversion, and workflow tooling.`;
+  }
+
+  if (product.category === "realEstate") {
+    return `${name} helps property-focused teams organize lead response, follow-up, and repeatable operating tasks in one clearer workflow.`;
+  }
+
+  if (product.category === "backend") {
+    return `${name} provides the connective layer for moving data, events, and actions between systems with a more controlled automation path.`;
+  }
+
+  return `${name} is a ${BRAND.name} experimental workflow built to solve a specific job with a clear access path, visible proof state, and an actionable next step.`;
 }
 
 function proofLabelFor(productId: string) {

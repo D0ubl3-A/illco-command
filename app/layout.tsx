@@ -3,16 +3,17 @@ import type { Metadata, Viewport } from "next";
 import { StoreFooter } from "@/components/layout/footer";
 import { LeadRecoveryBanner } from "@/components/layout/lead-recovery-banner";
 import { StoreNavigation } from "@/components/layout/navigation";
+import { BRAND, SITE_URL } from "@/lib/brand";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://illcoai.tech"),
+  metadataBase: new URL(SITE_URL),
   title: {
-    default: "iLLCo AI App Store",
-    template: "%s | iLLCo AI",
+    default: `${BRAND.name} App Store`,
+    template: `%s | ${BRAND.name}`,
   },
-  description: "iLLCo AI builds working AI apps, business automation systems, creator tools, lead workflows, and managed custom builds from its public command center.",
-  applicationName: "iLLCo AI App Store",
+  description: BRAND.description,
+  applicationName: `${BRAND.name} App Store`,
   manifest: "/manifest.webmanifest",
   alternates: {
     canonical: "/",
@@ -22,29 +23,16 @@ export const metadata: Metadata = {
     shortcut: "/favicon.svg",
   },
   openGraph: {
-    title: "iLLCo AI App Store",
-    description: "Working AI apps, business automation systems, creator tools, lead workflows, and managed custom builds.",
-    url: "https://illcoai.tech",
-    siteName: "iLLCo AI",
-    images: [
-      {
-        url: "/media/illco-command-header-loop-poster.jpg",
-        width: 1200,
-        height: 630,
-        alt: "iLLCo AI app store preview",
-      },
-    ],
+    title: `${BRAND.name} App Store`,
+    description: BRAND.ogDescription,
+    url: SITE_URL,
+    siteName: BRAND.name,
     type: "website",
   },
   twitter: {
     card: "summary_large_image",
-    title: "iLLCo AI App Store",
-    description: "Working AI apps, automation systems, creator tools, lead workflows, and managed builds.",
-    images: ["/media/illco-command-header-loop-poster.jpg"],
-  },
-  other: {
-    "openai-domain-verification": "dv-KKOZCPog7smPE8hZQyGHaOJw",
-    "google-site-verification": "AMabPToUKnvo-XeqjVfqUa2OAuE0sJjet1TEdrwSM7I",
+    title: `${BRAND.name} App Store`,
+    description: BRAND.ogDescription,
   },
 };
 

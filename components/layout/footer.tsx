@@ -1,5 +1,7 @@
 import Link from "next/link";
-import { Bot, BrainCircuit, LogIn, MapPin, ShieldCheck, Sparkles } from "lucide-react";
+import { Bot, BrainCircuit, LogIn, ShieldCheck, Sparkles } from "lucide-react";
+
+import { BRAND } from "@/lib/brand";
 
 const googleOAuthHref = "/api/account/google/start?returnTo=/account" as const;
 
@@ -28,26 +30,22 @@ export function StoreFooter() {
               <Bot className="h-5 w-5" />
             </span>
             <div>
-              <div className="text-sm font-semibold tracking-[0.06em] text-white uppercase">iLLCo AI</div>
-              <div className="text-sm text-slate-400">Working AI apps, automation systems, creative engines, and custom builds.</div>
+              <div className="text-sm font-semibold tracking-[0.06em] text-white uppercase">{BRAND.name}</div>
+              <div className="text-sm text-slate-400">{BRAND.tagline}</div>
             </div>
           </div>
           <div className="flex flex-wrap gap-2">
             <Link href="/audit-proof" className="inline-flex items-center gap-2 rounded-[999px] border border-cyan-400/30 bg-cyan-400/10 px-3 py-1.5 text-xs font-semibold text-cyan-100 transition hover:bg-cyan-400/15">
               <ShieldCheck className="h-3.5 w-3.5" />
-              Public Proof Center
+              Proof Center
             </Link>
-            <span className="inline-flex items-center gap-2 rounded-[999px] border border-white/10 bg-white/[0.04] px-3 py-1.5 text-xs font-semibold text-slate-200">
-              <MapPin className="h-3.5 w-3.5 text-cyan-300" />
-              HQ: Henderson, NV · Regional: Portland, OR
-            </span>
             <span className="inline-flex items-center gap-2 rounded-[999px] border border-white/10 bg-white/[0.04] px-3 py-1.5 text-xs font-semibold text-slate-200">
               <LogIn className="h-3.5 w-3.5 text-cyan-300" />
               Account access
             </span>
             <span className="inline-flex items-center gap-2 rounded-[999px] border border-white/10 bg-white/[0.04] px-3 py-1.5 text-xs font-semibold text-slate-200">
               <Sparkles className="h-3.5 w-3.5 text-amber-300" />
-              ChatGPT tools
+              AI tools
             </span>
             <Link href="/brain" className="inline-flex items-center gap-2 rounded-[999px] border border-cyan-300/30 bg-cyan-300/10 px-3 py-1.5 text-xs font-semibold text-cyan-100 transition hover:bg-cyan-300/15">
               <BrainCircuit className="h-3.5 w-3.5" />
@@ -55,7 +53,7 @@ export function StoreFooter() {
             </Link>
           </div>
           <p className="max-w-2xl text-xs leading-5 text-slate-500">
-            Primary command center: illcoai.tech · Owned business property: illcoai.com. Product status and verification claims are governed by the public Proof Center.
+            {BRAND.name} is an independent experimental storefront using shared product and fulfillment infrastructure. Product status and verification claims are governed by the Proof Center.
           </p>
         </div>
 

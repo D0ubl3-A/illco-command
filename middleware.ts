@@ -1,13 +1,12 @@
 import { NextRequest, NextResponse } from "next/server";
 
 export function middleware(request: NextRequest) {
-  const host = request.headers.get("x-forwarded-host") ?? request.headers.get("host");
+  const { pathname } = request.nextUrl;
 
-  if (host?.toLowerCase().split(":")[0] === "www.illcoai.tech") {
+  if (pathname === "/blog" || pathname.startsWith("/blog/")) {
     const url = request.nextUrl.clone();
-    url.protocol = "https:";
-    url.hostname = "illcoai.tech";
-    url.port = "";
+    url.pathname = "/products";
+    url.search = "";
     return NextResponse.redirect(url, 308);
   }
 

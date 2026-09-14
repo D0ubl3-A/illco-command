@@ -105,7 +105,7 @@ export function IntentGate() {
 
       <div className={styles.shell}>
         <div className={styles.topline}>
-          <span className={styles.brand}>iLLCo AI</span>
+          <span className={styles.brand}>iLLCo-AI</span>
           <button className={styles.skip} type="button" onClick={dismiss}>
             Skip for now
           </button>

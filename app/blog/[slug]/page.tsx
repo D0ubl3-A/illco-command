@@ -4,6 +4,7 @@ import { notFound } from "next/navigation";
 import { type BlogPost, blogPosts, blogSiteUrl, headingId } from "@/lib/blog-posts";
 import { newsBlogPosts } from "@/lib/news-blog-posts";
 import { type VisualBlogPost, viralBlogPosts } from "@/lib/viral-blog-posts";
+import { SocialShare } from "@/components/social-share";
 
 type BlogArticlePageProps = { params: Promise<{ slug: string }> };
 
@@ -152,6 +153,8 @@ export default async function BlogArticlePage({ params }: BlogArticlePageProps) 
               {post.heroImage.caption ? <figcaption style={{ padding: "14px 18px", color: "#aab6c4", fontSize: "0.95rem" }}>{post.heroImage.caption}</figcaption> : null}
             </figure>
           ) : null}
+
+          <SocialShare title={post.title} url={canonical} label="Share this article" />
 
           <section className="blogIntentPanel" aria-label="Editorial strategy">
             <div><span>SERP intent</span><p>{post.serpIntent}</p></div>

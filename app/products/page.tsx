@@ -2,18 +2,19 @@ import type { Metadata } from "next";
 
 import { PricingPlansSection } from "@/components/pricing-plans-section";
 import { ProductsCatalogClient } from "@/components/products-catalog-client";
+import { SocialShare } from "@/components/social-share";
 import { products } from "@/lib/deployments";
 
 const siteUrl = "https://illcoai.tech";
 
 export const metadata: Metadata = {
-  title: "AI App Catalog and Pricing",
+  title: "iLLCo-AI App Catalog & Pricing | AI Tools and Automation",
   description: "Search the full ILLCO AI app catalog and compare subscription plans, add-ons, categories, access models, and launch paths.",
   alternates: {
     canonical: `${siteUrl}/products`,
   },
   openGraph: {
-    title: "AI App Catalog and Pricing | ILLCO AI",
+    title: "iLLCo-AI App Catalog & Pricing",
     description: "Search the full ILLCO AI app catalog and compare subscription plans, add-ons, categories, access models, and launch paths.",
     url: `${siteUrl}/products`,
     type: "website",
@@ -22,7 +23,7 @@ export const metadata: Metadata = {
         url: "/media/illco-command-header-loop-poster.jpg",
         width: 1200,
         height: 630,
-        alt: "ILLCO AI app catalog",
+        alt: "iLLCo-AI app catalog",
       },
     ],
   },
@@ -47,6 +48,7 @@ export default function ProductsPage() {
             <p className="mt-5 text-lg leading-8 text-slate-300">
               Compare products by subscription tier, category, stage, access path, and launch readiness. Core, Studio, Suite, and Enterprise pricing now applies across the catalog.
             </p>
+            <SocialShare title="iLLCo-AI Product Catalog" url={`${siteUrl}/products`} label="Share the iLLCo-AI product catalog" />
           </div>
         </div>
       </section>

@@ -1,0 +1,45 @@
+{
+  "section_id": "SS-02J-MARYLAND-PARKWAY-SAHARA-AVENUE",
+  "pipeline_result": "PARTIAL_PASS",
+  "tests": {
+    "passed": 12,
+    "total": 12,
+    "results": [
+      {"name":"section_identity_present","passed":true},
+      {"name":"all_sources_are_authoritative_public_agencies","passed":true},
+      {"name":"all_semantic_edges_have_source_refs","passed":true},
+      {"name":"all_semantic_source_refs_resolve","passed":true},
+      {"name":"road_context_names_both_intersection_roads","passed":true},
+      {"name":"tod_focus_area_is_source_backed","passed":true},
+      {"name":"temporary_construction_not_promoted_to_geometry","passed":true},
+      {"name":"coordinates_are_null_without_feature_response","passed":true},
+      {"name":"parcel_ids_are_empty_without_intersection_query","passed":true},
+      {"name":"terrain_samples_are_empty_without_3dep_capture","passed":true},
+      {"name":"building_assets_are_blocked_without_identity_join","passed":true},
+      {"name":"final_asset_release_is_blocked","passed":true}
+    ]
+  },
+  "errors": [],
+  "warnings": [
+    "The BRT project description and completion target are current project context and are not as-built geometry.",
+    "Clark County GIS services are registered, but exact coordinate, parcel and road feature responses were not captured in this cycle."
+  ],
+  "released": [
+    "section identity",
+    "road-name context",
+    "Sahara Avenue TOD priority-focus-area relationship",
+    "Maryland Parkway BRT project context",
+    "11 source-backed semantic edges"
+  ],
+  "blocked": [
+    "authoritative intersection coordinate",
+    "section polygon",
+    "complete parcel and right-of-way set",
+    "road centerlines and lane geometry",
+    "terrain samples",
+    "building footprints and identities",
+    "architecture",
+    "final visual and runtime assets"
+  ],
+  "next_section": "SS-02K-MARYLAND-PARKWAY-OAKey-BOULEVARD"
+}

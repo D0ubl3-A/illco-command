@@ -1,0 +1,17 @@
+{
+  "section_id": "SS-02J-MARYLAND-PARKWAY-SAHARA-AVENUE",
+  "edges": [
+    {"subject":"section:ss02j","predicate":"contains_road_context","object":"road:south_maryland_parkway","source_ref":"clark_transportation_service"},
+    {"subject":"section:ss02j","predicate":"contains_road_context","object":"road:east_sahara_avenue","source_ref":"clark_major_streets"},
+    {"subject":"focus_area:sahara_avenue","predicate":"part_of","object":"plan:maryland_parkway_tod","source_ref":"clark_tod_plan"},
+    {"subject":"plan:maryland_parkway_tod","predicate":"accepted_in","object":"date:2021-08","source_ref":"clark_tod_plan"},
+    {"subject":"project:maryland_parkway_brt","predicate":"uses_corridor","object":"road:south_maryland_parkway","source_ref":"city_brt_project"},
+    {"subject":"project:maryland_parkway_brt","predicate":"targets_completion","object":"date:2026-fall","source_ref":"city_brt_project"},
+    {"subject":"project:maryland_parkway_brt","predicate":"plans_feature","object":"feature:wider_sidewalks","source_ref":"city_brt_project"},
+    {"subject":"project:maryland_parkway_brt","predicate":"plans_feature","object":"feature:upgraded_crosswalks","source_ref":"city_brt_project"},
+    {"subject":"project:maryland_parkway_brt","predicate":"plans_feature","object":"feature:shared_bus_bike_lanes","source_ref":"city_brt_project"},
+    {"subject":"section:ss02j","predicate":"requires_parcel_query_from","object":"service:clark_assessor_map","source_ref":"clark_assessor_map"},
+    {"subject":"section:ss02j","predicate":"intersects_planning_context","object":"overlay:maryland_parkway","source_ref":"clark_design_overlay"}
+  ],
+  "release_boundary": "Semantic relationships only; no geometry is implied by these edges."
+}

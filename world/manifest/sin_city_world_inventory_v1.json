@@ -1,0 +1,20 @@
+{
+  "schema": "sin-city-world-inventory-v1",
+  "world_id": "SIN-CITY-WHOLE-MAP",
+  "inventory_status": "ESTABLISHED",
+  "coverage_contract": {
+    "nominal_width_km": 35,
+    "nominal_height_km": 35,
+    "grid_unit_km": 1,
+    "grid_slots": 1225,
+    "geographic_boundary_state": "BLOCKED",
+    "note": "Grid slots are denominator records only until the authoritative project boundary and CRS-aligned polygons are committed."
+  },
+  "unit_id_format": "TILE-R{row:02d}-C{col:02d}",
+  "acceptance_gates": ["coordinates","crs","terrain","roads","sidewalks","curbs","gutters","driveways","medians","signals","utilities","parcels","building_footprints","building_identities","roofs","architecture","materials","vegetation","parking","signs","lighting","props","traffic","npc_spawn_graph","audio","missions","interiors","lod","physics","navigation","validation","reproducibility","gameplay","qa","released"],
+  "gate_weights": {"evidence":0.2,"geometry":0.3,"visual":0.25,"runtime":0.15,"qa_release":0.1},
+  "registered_overlay_sections": ["SS-01","SS-02","SS-03","SS-04","SS-05","SS-06","SS-07","SS-08","SS-09","SS-10","SS-11","SS-12","SS-13","SS-14","SS-02I-MARYLAND-PARKWAY-DESERT-INN"],
+  "overlay_sections_advanced": 15,
+  "tile_gate_counts": {"registered":1225,"evidence_complete":0,"terrain_complete":0,"roads_complete":0,"buildings_complete":0,"runtime_complete":0,"released":0},
+  "progress": {"inventory_registration_percent":100.0,"overlay_evidence_advanced_count":15,"final_tile_release_percent":0.0,"overall_gate_weighted_percent":0.0,"note":"Overall final completion remains 0% because no 1 km tile has passed every release gate. Evidence overlay progress is reported separately."}
+}

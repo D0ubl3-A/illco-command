@@ -1,0 +1,15 @@
+{
+  "schema":"sin-city-reproducibility-manifest-v1",
+  "base_branch":"main",
+  "base_commit":"0fc4f8b143cfbafd501a4a0da72dc3c77d17378c",
+  "production_branch":"map/ss02i-desert-inn-inventory-20260803-1400",
+  "artifact_commits":{
+    "world_inventory":"d52eb8110e607e642a0c3b14ef9fdd556817f0fc",
+    "section_dossier":"e3e205c82e9d440393fc42f23bdc329e57988d60",
+    "semantic_graph":"b2b28bacbb64dde1cfb59a59712f9b65dcc4195e",
+    "validation_report":"5067032200df2e6c6c406cb96c49e07984a6a011",
+    "readme":"7b2ad61902e4c7583fec8a6ba24302643c2fd303"
+  },
+  "validation_contract":"10 deterministic fail-closed checks; unresolved geographic facts remain null or empty",
+  "promotion_rule":"No geometry or final visual asset may be promoted until coordinate, parcel, road-geometry, terrain and building-footprint gates pass."
+}

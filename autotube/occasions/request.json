@@ -1,0 +1,8 @@
+{
+  "project": "Occasions Banquet Hall narrated test",
+  "requested_at": "2026-08-02T15:31:00-07:00",
+  "tts_provider": "ElevenLabs",
+  "model": "eleven_multilingual_v2",
+  "output": "H.264 Baseline MP4 with AAC-LC",
+  "purpose": "Device and email attachment playback test"
+}

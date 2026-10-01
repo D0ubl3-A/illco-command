@@ -34,6 +34,15 @@ export async function GET(request: Request) {
     }
 
     const snapshot = await getLabelWorkspaceSnapshot(user);
+    if (!snapshot) {
+      return NextResponse.json({
+        ok: true,
+        authenticated: true,
+        databaseReady: true,
+        onboardingRequired: true,
+        onboardingUrl: "/label-command/onboarding",
+      });
+    }
     const operations = await getLabelOperationsSnapshot(user.id, snapshot.workspace.id);
 
     return NextResponse.json(

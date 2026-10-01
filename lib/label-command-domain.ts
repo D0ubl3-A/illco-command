@@ -18,11 +18,39 @@ export const labelReleaseStages = [
   "archived",
 ] as const;
 export const labelMemberRoles = ["owner", "admin", "manager", "artist", "producer", "songwriter", "marketing", "accountant", "viewer"] as const;
+export const labelAccountTypes = ["label_owner", "artist"] as const;
+export const LABEL_COMMAND_OWNER_PRICE_CENTS = 5000;
+export const LABEL_COMMAND_INCLUDED_SEATS = 2;
+export const LABEL_COMMAND_EXTRA_SEAT_PRICE_CENTS = 1200;
 
 export type LabelSourceStatus = (typeof labelSourceStatuses)[number];
 export type LabelReleaseType = (typeof labelReleaseTypes)[number];
 export type LabelReleaseStage = (typeof labelReleaseStages)[number];
 export type LabelMemberRole = (typeof labelMemberRoles)[number];
+export type LabelAccountType = (typeof labelAccountTypes)[number];
+
+export const createLabelAccountInputSchema = z
+  .object({
+    accountType: z.enum(labelAccountTypes),
+    displayName: z.string().trim().min(1).max(120),
+    labelName: z.string().trim().max(120).optional().default(""),
+    artistName: z.string().trim().max(120).optional().default(""),
+    genre: z.string().trim().max(120).optional().default(""),
+  })
+  .superRefine((value, context) => {
+    if (value.accountType === "label_owner" && !value.labelName) {
+      context.addIssue({ code: z.ZodIssueCode.custom, path: ["labelName"], message: "Label name is required." });
+    }
+    if (value.accountType === "artist" && !value.artistName) {
+      context.addIssue({ code: z.ZodIssueCode.custom, path: ["artistName"], message: "Artist name is required." });
+    }
+  });
+
+export function labelCommandSeatTotalCents(seats: number) {
+  const normalizedSeats = Math.max(1, Math.floor(seats));
+  return LABEL_COMMAND_OWNER_PRICE_CENTS +
+    Math.max(0, normalizedSeats - LABEL_COMMAND_INCLUDED_SEATS) * LABEL_COMMAND_EXTRA_SEAT_PRICE_CENTS;
+}
 
 const cleanText = (max: number) =>
   z

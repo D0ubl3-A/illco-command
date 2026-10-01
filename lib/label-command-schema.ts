@@ -33,6 +33,16 @@ async function createLabelCommandSchema() {
   }
 
   await sql`
+    CREATE TABLE IF NOT EXISTS illco_label_accounts (
+      user_id UUID PRIMARY KEY,
+      account_type TEXT NOT NULL,
+      display_name TEXT NOT NULL,
+      created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+      updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+    )
+  `;
+
+  await sql`
     CREATE TABLE IF NOT EXISTS illco_label_workspaces (
       id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
       owner_user_id UUID NOT NULL,
@@ -63,6 +73,7 @@ async function createLabelCommandSchema() {
     CREATE TABLE IF NOT EXISTS illco_label_artists (
       id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
       workspace_id UUID NOT NULL,
+      user_id UUID,
       name TEXT NOT NULL,
       genre TEXT NOT NULL DEFAULT '',
       status TEXT NOT NULL DEFAULT 'active',
@@ -73,6 +84,7 @@ async function createLabelCommandSchema() {
       archived_at TIMESTAMPTZ
     )
   `;
+  await sql`ALTER TABLE illco_label_artists ADD COLUMN IF NOT EXISTS user_id UUID`;
 
   await sql`
     CREATE TABLE IF NOT EXISTS illco_label_releases (
@@ -214,6 +226,7 @@ async function createLabelCommandSchema() {
     await sql`CREATE UNIQUE INDEX ASYNC IF NOT EXISTS idx_illco_label_workspaces_owner_slug ON illco_label_workspaces (owner_user_id, slug)`;
     await sql`CREATE INDEX ASYNC IF NOT EXISTS idx_illco_label_memberships_user ON illco_label_memberships (user_id, status)`;
     await sql`CREATE INDEX ASYNC IF NOT EXISTS idx_illco_label_artists_workspace ON illco_label_artists (workspace_id, created_at)`;
+    await sql`CREATE INDEX ASYNC IF NOT EXISTS idx_illco_label_artists_user ON illco_label_artists (user_id, workspace_id)`;
     await sql`CREATE INDEX ASYNC IF NOT EXISTS idx_illco_label_releases_workspace ON illco_label_releases (workspace_id, updated_at)`;
     await sql`CREATE INDEX ASYNC IF NOT EXISTS idx_illco_label_tracks_workspace ON illco_label_tracks (workspace_id, created_at)`;
     await sql`CREATE INDEX ASYNC IF NOT EXISTS idx_illco_label_integrations_workspace ON illco_label_integrations (workspace_id, provider)`;
@@ -225,6 +238,7 @@ async function createLabelCommandSchema() {
     await sql`CREATE UNIQUE INDEX IF NOT EXISTS idx_illco_label_workspaces_owner_slug ON illco_label_workspaces (owner_user_id, slug)`;
     await sql`CREATE INDEX IF NOT EXISTS idx_illco_label_memberships_user ON illco_label_memberships (user_id, status)`;
     await sql`CREATE INDEX IF NOT EXISTS idx_illco_label_artists_workspace ON illco_label_artists (workspace_id, created_at DESC) WHERE archived_at IS NULL`;
+    await sql`CREATE UNIQUE INDEX IF NOT EXISTS idx_illco_label_artists_user_workspace ON illco_label_artists (user_id, workspace_id) WHERE user_id IS NOT NULL AND archived_at IS NULL`;
     await sql`CREATE INDEX IF NOT EXISTS idx_illco_label_releases_workspace ON illco_label_releases (workspace_id, updated_at DESC) WHERE archived_at IS NULL`;
     await sql`CREATE INDEX IF NOT EXISTS idx_illco_label_tracks_workspace ON illco_label_tracks (workspace_id, created_at DESC) WHERE archived_at IS NULL`;
     await sql`CREATE UNIQUE INDEX IF NOT EXISTS idx_illco_label_integrations_workspace_provider ON illco_label_integrations (workspace_id, provider)`;

@@ -3,10 +3,12 @@ import "@/lib/server-only";
 import { getSql } from "@/lib/db";
 import {
   createArtistInputSchema,
+  createLabelAccountInputSchema,
   createReleaseInputSchema,
   normalizeLabelSlug,
   updateReleaseInputSchema,
   type LabelMemberRole,
+  type LabelAccountType,
   type LabelReleaseStage,
   type LabelReleaseType,
   type LabelSourceStatus,
@@ -22,6 +24,12 @@ export type LabelWorkspace = {
   role: LabelMemberRole;
   createdAt: string;
   updatedAt: string;
+};
+
+export type LabelAccount = {
+  userId: string;
+  accountType: LabelAccountType;
+  displayName: string;
 };
 
 export type LabelArtist = {
@@ -73,6 +81,12 @@ type ArtistRow = {
   updated_at: string;
 };
 
+type AccountRow = {
+  user_id: string;
+  account_type: LabelAccountType;
+  display_name: string;
+};
+
 type ReleaseRow = {
   id: string;
   workspace_id: string;
@@ -95,9 +109,88 @@ function toWorkspace(row: WorkspaceRow, userId: string): LabelWorkspace {
     name: row.name,
     slug: row.slug,
     timezone: row.timezone,
-    role: row.owner_user_id === userId ? "owner" : row.role || "viewer",
+    role: row.role || (row.owner_user_id === userId ? "owner" : "viewer"),
     createdAt: row.created_at,
     updatedAt: row.updated_at,
+  };
+}
+
+export async function getLabelAccount(userId: string): Promise<LabelAccount | null> {
+  await ensureLabelCommandSchema();
+  const sql = getSql();
+  const rows = (await sql`
+    SELECT user_id::text AS user_id, account_type, display_name
+    FROM illco_label_accounts
+    WHERE user_id = ${userId}::uuid
+    LIMIT 1
+  `) as AccountRow[];
+  const row = rows[0];
+  return row ? { userId: row.user_id, accountType: row.account_type, displayName: row.display_name } : null;
+}
+
+export async function createLabelAccount(user: UserAccount, rawInput: unknown) {
+  await ensureLabelCommandSchema();
+  const input = createLabelAccountInputSchema.parse(rawInput);
+  const existing = await getLabelAccount(user.id);
+  if (existing) throw new Error("This account has already completed Label Command onboarding.");
+
+  const sql = getSql();
+  const workspaceName = input.accountType === "label_owner" ? input.labelName : `${input.artistName} Music`;
+  const slug = `${normalizeLabelSlug(workspaceName)}-${user.id.replace(/-/g, "").slice(0, 6)}`.slice(0, 68);
+  const priorWorkspaceRows = (await sql`
+    SELECT id::text AS id, owner_user_id::text AS owner_user_id, name, slug, timezone,
+      created_at::text AS created_at, updated_at::text AS updated_at
+    FROM illco_label_workspaces
+    WHERE owner_user_id = ${user.id}::uuid
+    ORDER BY created_at ASC
+    LIMIT 1
+  `) as WorkspaceRow[];
+  const createdWorkspaceRows = priorWorkspaceRows[0] ? [] : (await sql`
+      INSERT INTO illco_label_workspaces (owner_user_id, name, slug)
+      VALUES (${user.id}::uuid, ${workspaceName}, ${slug})
+      RETURNING id::text AS id, owner_user_id::text AS owner_user_id, name, slug, timezone,
+        created_at::text AS created_at, updated_at::text AS updated_at
+    `) as WorkspaceRow[];
+  const workspace = priorWorkspaceRows[0] || createdWorkspaceRows[0];
+  if (!workspace?.id) throw new Error("Label workspace creation failed.");
+
+  const role: LabelMemberRole = input.accountType === "label_owner" ? "owner" : "artist";
+  const membershipRows = (await sql`
+    UPDATE illco_label_memberships
+    SET role = ${role}, status = 'active', accepted_at = COALESCE(accepted_at, NOW()), updated_at = NOW()
+    WHERE workspace_id = ${workspace.id}::uuid AND user_id = ${user.id}::uuid
+    RETURNING id::text AS id
+  `) as Array<{ id: string }>;
+  if (!membershipRows[0]) {
+    await sql`
+      INSERT INTO illco_label_memberships (workspace_id, user_id, role, status, accepted_at)
+      VALUES (${workspace.id}::uuid, ${user.id}::uuid, ${role}, 'active', NOW())
+    `;
+  }
+  await sql`
+    INSERT INTO illco_label_accounts (user_id, account_type, display_name)
+    VALUES (${user.id}::uuid, ${input.accountType}, ${input.displayName})
+  `;
+
+  if (input.accountType === "artist") {
+    await sql`
+      INSERT INTO illco_label_artists (workspace_id, user_id, name, genre, status, source_status, created_by)
+      VALUES (${workspace.id}::uuid, ${user.id}::uuid, ${input.artistName}, ${input.genre}, 'active', 'manual', ${user.id}::uuid)
+    `;
+  }
+
+  await audit({
+    workspaceId: workspace.id,
+    userId: user.id,
+    action: "account.onboarded",
+    entityType: "workspace",
+    entityId: workspace.id,
+    afterState: { accountType: input.accountType, role, name: workspace.name },
+  });
+
+  return {
+    account: { userId: user.id, accountType: input.accountType, displayName: input.displayName },
+    workspace: toWorkspace({ ...workspace, role }, user.id),
   };
 }
 
@@ -270,7 +363,7 @@ export async function requireWorkspaceAccess(userId: string, workspaceId: string
 }
 
 export async function listLabelArtists(userId: string, workspaceId: string) {
-  await requireWorkspaceAccess(userId, workspaceId);
+  const workspace = await requireWorkspaceAccess(userId, workspaceId);
   const sql = getSql();
   const rows = (await sql`
     SELECT
@@ -285,6 +378,7 @@ export async function listLabelArtists(userId: string, workspaceId: string) {
     FROM illco_label_artists
     WHERE workspace_id = ${workspaceId}::uuid
       AND archived_at IS NULL
+      AND (${workspace.role} <> 'artist' OR user_id = ${userId}::uuid)
     ORDER BY name ASC
   `) as ArtistRow[];
   return rows.map(toArtist);
@@ -326,7 +420,7 @@ export async function createLabelArtist(userId: string, workspaceId: string, raw
 }
 
 export async function listLabelReleases(userId: string, workspaceId: string) {
-  await requireWorkspaceAccess(userId, workspaceId);
+  const workspace = await requireWorkspaceAccess(userId, workspaceId);
   const sql = getSql();
   const rows = (await sql`
     SELECT
@@ -347,6 +441,7 @@ export async function listLabelReleases(userId: string, workspaceId: string) {
     LEFT JOIN illco_label_artists a ON a.id = r.artist_id
     WHERE r.workspace_id = ${workspaceId}::uuid
       AND r.archived_at IS NULL
+      AND (${workspace.role} <> 'artist' OR a.user_id = ${userId}::uuid)
     ORDER BY COALESCE(r.target_date, DATE '9999-12-31') ASC, r.updated_at DESC
   `) as ReleaseRow[];
   return rows.map(toRelease);
@@ -368,10 +463,28 @@ async function assertArtistBelongsToWorkspace(workspaceId: string, artistId: str
   }
 }
 
+async function requireArtistIdentity(userId: string, workspaceId: string, role: LabelMemberRole, artistId: string | null) {
+  if (role !== "artist") return artistId;
+  const sql = getSql();
+  const rows = (await sql`
+    SELECT id::text AS id
+    FROM illco_label_artists
+    WHERE workspace_id = ${workspaceId}::uuid
+      AND user_id = ${userId}::uuid
+      AND archived_at IS NULL
+    LIMIT 1
+  `) as Array<{ id: string }>;
+  const ownArtistId = rows[0]?.id;
+  if (!ownArtistId) throw new Error("Your artist account is not linked to an artist profile.");
+  if (artistId && artistId !== ownArtistId) throw new Error("Artist accounts can only manage their own catalog.");
+  return ownArtistId;
+}
+
 export async function createLabelRelease(userId: string, workspaceId: string, rawInput: unknown) {
-  await requireWorkspaceAccess(userId, workspaceId, ["owner", "admin", "manager", "artist"]);
+  const workspace = await requireWorkspaceAccess(userId, workspaceId, ["owner", "admin", "manager", "artist"]);
   const input = createReleaseInputSchema.parse(rawInput);
-  await assertArtistBelongsToWorkspace(workspaceId, input.artistId);
+  const artistId = await requireArtistIdentity(userId, workspaceId, workspace.role, input.artistId);
+  await assertArtistBelongsToWorkspace(workspaceId, artistId);
 
   const sql = getSql();
   const rows = (await sql`
@@ -389,7 +502,7 @@ export async function createLabelRelease(userId: string, workspaceId: string, ra
     )
     VALUES (
       ${workspaceId}::uuid,
-      ${input.artistId}::uuid,
+      ${artistId}::uuid,
       ${input.title},
       ${input.releaseType},
       ${input.stage},
@@ -433,8 +546,9 @@ export async function createLabelRelease(userId: string, workspaceId: string, ra
 }
 
 export async function updateLabelRelease(userId: string, workspaceId: string, releaseId: string, rawInput: unknown) {
-  await requireWorkspaceAccess(userId, workspaceId, ["owner", "admin", "manager", "artist"]);
+  const workspace = await requireWorkspaceAccess(userId, workspaceId, ["owner", "admin", "manager", "artist"]);
   const input = updateReleaseInputSchema.parse({ ...(rawInput as object), id: releaseId });
+  const selectedArtistId = await requireArtistIdentity(userId, workspaceId, workspace.role, input.artistId ?? null);
   if (input.artistId !== undefined) {
     await assertArtistBelongsToWorkspace(workspaceId, input.artistId);
   }
@@ -465,6 +579,9 @@ export async function updateLabelRelease(userId: string, workspaceId: string, re
 
   if (!beforeRows[0]) {
     throw new Error("Release not found.");
+  }
+  if (workspace.role === "artist" && beforeRows[0].artist_id !== selectedArtistId) {
+    throw new Error("Artist accounts can only manage their own catalog.");
   }
 
   const before = toRelease(beforeRows[0]);
@@ -544,6 +661,8 @@ export async function archiveLabelRelease(userId: string, workspaceId: string, r
 }
 
 export async function getLabelWorkspaceSnapshot(user: UserAccount) {
+  const account = await getLabelAccount(user.id);
+  if (!account) return null;
   const workspace = await getOrCreateLabelWorkspace(user);
   const [artists, releases] = await Promise.all([
     listLabelArtists(user.id, workspace.id),
@@ -551,6 +670,7 @@ export async function getLabelWorkspaceSnapshot(user: UserAccount) {
   ]);
 
   return {
+    account,
     workspace,
     artists,
     releases,

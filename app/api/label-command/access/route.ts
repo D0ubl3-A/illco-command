@@ -58,7 +58,7 @@ export async function POST(request: Request) {
   }
 
   if (!contentType.includes("application/json")) {
-    const response = NextResponse.redirect(new URL("/label-command?access=active", request.url), 303);
+    const response = NextResponse.redirect(new URL("/label-command/onboarding?access=active", request.url), 303);
     setLabelCommandAccessCookie(response, licenseKey, result);
     return response;
   }

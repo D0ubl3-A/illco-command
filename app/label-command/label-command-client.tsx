@@ -46,6 +46,8 @@ type WorkspacePayload = {
   detail?: string;
   error?: string;
   accountUrl?: string;
+  onboardingRequired?: boolean;
+  onboardingUrl?: string;
   workspace?: Workspace;
   artists?: Artist[];
   releases?: Release[];
@@ -153,6 +155,10 @@ export function LabelCommandClient() {
       if (!workspacePayload.authenticated) {
         setWorkspaceState("signed-out");
         setNotice("Sign in to create a private label workspace and save releases.");
+        return;
+      }
+      if (workspacePayload.onboardingRequired) {
+        window.location.assign(workspacePayload.onboardingUrl || "/label-command/onboarding");
         return;
       }
       if (!workspacePayload.ok || !workspacePayload.workspace) {

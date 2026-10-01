@@ -3,6 +3,8 @@ import test from "node:test";
 
 import {
   createReleaseInputSchema,
+  createLabelAccountInputSchema,
+  labelCommandSeatTotalCents,
   labelStageTitle,
   normalizeLabelSlug,
   updateReleaseInputSchema,
@@ -36,4 +38,23 @@ test("split validation requires an exact 100 percent total", () => {
 
 test("release stage titles are readable", () => {
   assert.equal(labelStageTitle("correction_required"), "Correction Required");
+});
+
+test("Label Command has distinct owner and artist accounts", () => {
+  assert.equal(createLabelAccountInputSchema.parse({
+    accountType: "label_owner", displayName: "A", labelName: "A Records",
+  }).accountType, "label_owner");
+  assert.equal(createLabelAccountInputSchema.parse({
+    accountType: "artist", displayName: "Nova", artistName: "Nova",
+  }).accountType, "artist");
+  assert.equal(createLabelAccountInputSchema.safeParse({
+    accountType: "artist", displayName: "Nova",
+  }).success, false);
+});
+
+test("team seats use add-on pricing instead of charging every member full price", () => {
+  assert.equal(labelCommandSeatTotalCents(1), 5000);
+  assert.equal(labelCommandSeatTotalCents(2), 5000);
+  assert.equal(labelCommandSeatTotalCents(3), 6200);
+  assert.equal(labelCommandSeatTotalCents(10), 14600);
 });

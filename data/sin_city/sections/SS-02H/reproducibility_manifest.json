@@ -1,0 +1,18 @@
+{
+  "section_id": "SS-02H-MARYLAND-ROCHELLE-CORRIDOR",
+  "base_branch": "main",
+  "base_commit": "0fc4f8b143cfbafd501a4a0da72dc3c77d17378c",
+  "branch": "map/ss02h-maryland-rochelle-20260803-1259",
+  "artifact_commits": {
+    "section_dossier.json": "156ff66f8d8241f882ca17bf3e7ad4a0193efbf7",
+    "validation_report.json": "31c27220eb3dc75ab3a6e5682344701ee91320a3",
+    "resolution_queue.json": "36de8f68960d48ae3ee22e210d350c5f53c9d625",
+    "README.md": "b9fddb9ea8056a5ef68ac92467a18ca9aa04ebb2"
+  },
+  "reproduction_contract": [
+    "Read source URLs from section_dossier.json.",
+    "Do not promote null geometry fields without preserving authoritative feature responses and CRS metadata.",
+    "Re-run all deterministic checks in validation_report.json after any change.",
+    "Generate final assets only when every required upstream geometry gate passes."
+  ]
+}

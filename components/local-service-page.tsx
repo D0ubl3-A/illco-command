@@ -17,7 +17,10 @@ export function LocalServicePage({ city, service, headline, intro, bullets, rela
     provider: {
       "@type": "Organization",
       name: "iLLCo AI",
-      url: "https://illcoai.tech",
+      // Commercial inquiries belong on the commercial domain; the technical domain
+      // remains a related property for product documentation and implementation proof.
+      url: "https://illcoai.com/",
+      sameAs: ["https://illcoai.tech/"],
     },
     areaServed: {
       "@type": "City",

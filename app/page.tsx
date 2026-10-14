@@ -142,7 +142,7 @@ export default function HomePage() {
   const jsonLd = {
     "@context": "https://schema.org",
     "@graph": [
-      { "@type": "Organization", "@id": `${siteUrl}/#organization`, name: "iLLCo AI", url: siteUrl },
+      { "@type": "Organization", "@id": `${siteUrl}/#organization`, name: "iLLCo AI", url: "https://illcoai.com", description: "AI automation, digital products and technical demonstrations from a Henderson, Nevada-headquartered company serving Las Vegas with a Portland, Oregon regional office.", address: { "@type": "PostalAddress", addressLocality: "Henderson", addressRegion: "NV", addressCountry: "US" } },
       { "@type": "WebSite", "@id": `${siteUrl}/#website`, url: siteUrl, name: "iLLCo AI App Store", publisher: { "@id": `${siteUrl}/#organization` } },
       { "@type": "ItemList", "@id": `${siteUrl}/#featured-apps`, name: "Featured iLLCo AI apps", itemListElement: storeProducts.slice(0, 12).map((product, index) => ({ "@type": "ListItem", position: index + 1, item: { "@type": "SoftwareApplication", name: product.title, applicationCategory: "BusinessApplication", operatingSystem: "Web", url: `${siteUrl}${product.appHref}` } })) },
     ],

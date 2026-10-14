@@ -1,0 +1,230 @@
+--- a/index.html
++++ b/index.html
+@@ -9,9 +9,30 @@
+     <meta name="apple-mobile-web-app-capable" content="yes" />
+     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+     <link rel="icon" href="./icons/reelworld-icon.svg" />
+     <link rel="apple-touch-icon" href="./icons/reelworld-192.png" />
+-    <meta name="description" content="ReelWorld GO — location-based AR fishing." />
++    <meta name="description" content="Play ReelWorld GO, a free-to-start mobile fishing adventure with GPS water discovery, camera fishing, regional species, fish fights, trophy collections and tackle progression." />
++    <meta name="robots" content="index,follow,max-image-preview:large" />
++    <link rel="canonical" href="https://reelworld.illcoai.tech/play" />
++    <meta property="og:type" content="website" />
++    <meta property="og:site_name" content="ReelWorld GO" />
++    <meta property="og:title" content="ReelWorld GO | Mobile Fishing Adventure" />
++    <meta property="og:description" content="Explore mapped lakes, cast your line, fight fish, collect trophies and discover region-based species in ReelWorld GO." />
++    <meta property="og:url" content="https://reelworld.illcoai.tech/play" />
++    <meta name="twitter:card" content="summary" />
++    <script type="application/ld+json">
++      {
++        "@context": "https://schema.org",
++        "@type": "VideoGame",
++        "name": "ReelWorld GO",
++        "url": "https://reelworld.illcoai.tech/play",
++        "description": "A mobile location-based fishing adventure with GPS map discovery, camera water scanning, fishing fights, and trophy progression.",
++        "genre": ["Fishing", "Simulation", "Adventure"],
++        "gamePlatform": ["Web browser", "Mobile web"],
++        "inLanguage": "en",
++        "publisher": { "@type": "Organization", "name": "iLLCo Games" }
++      }
++    </script>
+     <title>ReelWorld GO</title>
+   </head>
+   <body>
+     <div id="root"></div>
+--- a/src/App.tsx
++++ b/src/App.tsx
+@@ -7,8 +7,9 @@
+ import { useGeolocation } from './hooks/useGeolocation';
+ import { usePerformanceMode } from './hooks/usePerformanceMode';
+ import { RODS } from './data/fish';
+ import { closestFeature, distanceMeters, pointInWater } from './lib/geo';
++import { regionalRosterForWater } from './lib/regionEcology';
+ import { loadNearbyWorld } from './lib/overpass';
+ import { advanceQuest, claimChallenge, claimQuest, refreshAchievements, refreshChallenges, setQuestProgress } from './lib/progression';
+ import { loadPlayer, resetPlayer, savePlayer } from './lib/storage';
+ import type { BaitId, LicenseTier, MapFeature, PlayerSettings, PlayerState, RodId, Screen, TicketRecord, WaterType } from './types';
+@@ -83,10 +84,11 @@
+   }, [position.lat.toFixed(2), position.lon.toFixed(2)]);
+ 
+   const waterFeatures = useMemo(() => features.filter((feature) => feature.kind === 'water'), [features]);
+   const nearestWater = closestFeature(position, waterFeatures, 'water');
+-  const mapWaterReady = pointInWater(position, waterFeatures) || (nearestWater?.distance ?? Infinity) < 140;
++  const mapWaterReady = status === 'live' && (position.accuracy ?? Infinity) <= 150 && (pointInWater(position, waterFeatures) || (nearestWater?.distance ?? Infinity) < 140);
+   const currentWaterType: WaterType = mapWaterReady ? nearestWater?.feature.waterType ?? 'any' : 'any';
++  const regionalRoster = mapWaterReady ? regionalRosterForWater(nearestWater?.feature) : null;
+   const shopDistance = shop ? distanceMeters(position, { lat: shop.center[1], lon: shop.center[0] }) : Infinity;
+ 
+   const rangerCheck = useCallback((reason = 'Fishing without an active in-game license') => {
+     const fine = reason.includes('Unsafe') ? 180 : reason.includes('restricted') ? 220 : 75;
+@@ -181,9 +183,9 @@
+     <div className={`app-shell ${player.settings.reducedMotion ? 'reduced-motion' : ''} ${performance.lowPower ? 'performance-lite' : 'performance-full'}`}>
+       <TopHud player={player} gps={status === 'live' ? 'LIVE' : status === 'denied' ? 'GPS OFF' : 'DEMO'} />
+       <Suspense fallback={<div className="screen loading-screen">Loading ReelWorld…</div>}>
+         {screen === 'map' && <MapScreen position={position} features={features} loading={worldLoading} error={worldError} performance={performance} onFish={() => setScreen('fish')} onShop={setShop} />}
+-        {screen === 'fish' && <CameraFishing position={position} waterType={currentWaterType} mapWaterReady={mapWaterReady} player={player} performance={performance} onPlayer={(update) => updatePlayer((current) => updateSpeciesQuest(update(current)))} onRangerCheck={rangerCheck} />}
++        {screen === 'fish' && <CameraFishing position={position} waterType={currentWaterType} mapWaterReady={mapWaterReady} regionalRoster={regionalRoster} player={player} performance={performance} onPlayer={(update) => updatePlayer((current) => updateSpeciesQuest(update(current)))} onRangerCheck={rangerCheck} />}
+         {screen === 'bag' && <InventoryPanel player={player} onSelectBait={(activeBait) => updatePlayer((current) => ({ ...current, activeBait }))} onSelectRod={(activeRod) => updatePlayer((current) => ({ ...current, activeRod }))} />}
+         {screen === 'license' && <LicensePanel player={player} onBuy={buyLicense} onPay={payTicket} />}
+         {screen === 'profile' && <ProfilePanel player={player} onClaimQuest={handleClaimQuest} onClaimChallenge={handleClaimChallenge} onSettings={setSettings} onReset={handleReset} />}
+       </Suspense>
+--- a/src/data/fish.ts
++++ b/src/data/fish.ts
+@@ -44,9 +44,20 @@
+   if (roll < legendary + rare + uncommon) return 'uncommon';
+   return 'common';
+ }
+ 
+-export function pickFish(activeBait: BaitId, waterType: WaterType = 'any', level = 1): FishSpecies {
++export function pickFish(activeBait: BaitId, waterType: WaterType = 'any', level = 1, allowedSpeciesIds?: readonly string[]): FishSpecies {
++  if (allowedSpeciesIds && allowedSpeciesIds.length > 0) {
++    const eligible = FISH.filter((fish) => allowedSpeciesIds.includes(fish.id) && (fish.water.includes(waterType) || fish.water.includes('any') || waterType === 'any'));
++    // A configured region must never silently spawn an incompatible fish.
++    if (!eligible.length) throw new Error('Regional fish roster has no matching species');
++    const weights = { common: .64, uncommon: .27, rare: .083, legendary: .007 } as const;
++    const weighted = eligible.map((fish) => ({fish, weight: weights[fish.rarity] * (fish.preferredBait.includes(activeBait) ? 2.5 : 1)}));
++    const total = weighted.reduce((sum, entry) => sum + entry.weight, 0);
++    let roll = Math.random() * total;
++    for (const item of weighted) { roll -= item.weight; if (roll <= 0) return item.fish; }
++    return eligible[eligible.length - 1];
++  }
+   const bait = BAIT.find((item) => item.id === activeBait);
+   const baitBonus = bait?.presentation === 'lure' ? .6 : bait?.id === 'minnows' || bait?.id === 'shrimp' ? .25 : 0;
+   const levelBonus = Math.min(1.2, Math.max(0, level - 1) * .035);
+   const targetRarity = rarityRoll(baitBonus + levelBonus);
+--- a/src/components/CameraFishing.tsx
++++ b/src/components/CameraFishing.tsx
+@@ -2,8 +2,9 @@
+ import { Camera, CheckCircle2, Fish as FishIcon, RotateCcw, ShieldAlert, Waves } from 'lucide-react';
+ import FishSpriteCanvas from './FishSpriteCanvas';
+ import SplashSpriteCanvas from './SplashSpriteCanvas';
+ import { BAIT, pickFish, RODS, rollWeight } from '../data/fish';
++import type { RegionalRoster } from '../lib/regionEcology';
+ import { advanceChallenge, advanceQuest, levelForXp, setChallengeProgress } from '../lib/progression';
+ import { useGameAudio } from '../hooks/useGameAudio';
+ import type { PerformanceProfile } from '../hooks/usePerformanceMode';
+ import type { CatchRecord, Coordinates, FishSpecies, PlayerState, WaterType } from '../types';
+@@ -13,8 +14,9 @@
+ interface Props {
+   position: Coordinates;
+   waterType: WaterType;
+   mapWaterReady: boolean;
++  regionalRoster: RegionalRoster | null;
+   player: PlayerState;
+   performance: PerformanceProfile;
+   onPlayer: (update: (player: PlayerState) => PlayerState) => void;
+   onRangerCheck: (reason?: string) => void;
+@@ -47,9 +49,9 @@
+   }
+   return Math.min(1, (waterish / count) * .64 + (smooth / count) * .2 + (horizontal / count) * .16);
+ }
+ 
+-export default function CameraFishing({ position, waterType, mapWaterReady, player, performance: profile, onPlayer, onRangerCheck }: Props) {
++export default function CameraFishing({ position, waterType, mapWaterReady, regionalRoster, player, performance: profile, onPlayer, onRangerCheck }: Props) {
+   const video = useRef<HTMLVideoElement>(null);
+   const scratch = useRef<HTMLCanvasElement>(null);
+   const streamRef = useRef<MediaStream | null>(null);
+   const timers = useRef<number[]>([]);
+@@ -270,9 +272,9 @@
+       return;
+     }
+     if (!hasLicense && Math.random() < .22) onRangerCheck('Fishing without an active in-game license');
+ 
+-    const encounter = pickFish(current.activeBait, waterType, current.level);
++    const encounter = pickFish(current.activeBait, waterType, current.level, regionalRoster?.speciesIds);
+     setFish(encounter);
+     setResult(null);
+     fightLive.current = { tension: 48, progress: 0 };
+     setFightHud({ tension: 48, progress: 0 });
+@@ -307,9 +309,9 @@
+         vibrate([45, 35, 85]);
+         timers.current.push(window.setTimeout(() => loseFish('Too slow—the fish stole the bait.'), 2350));
+       }, biteDelay));
+     }, 720));
+-  }, [allowed, clearTimers, hasLicense, loseFish, onPlayer, onRangerCheck, tone, vibrate, waterType]);
++  }, [allowed, clearTimers, hasLicense, loseFish, onPlayer, onRangerCheck, tone, vibrate, waterType, regionalRoster]);
+ 
+   const hook = useCallback(() => {
+     if (phase !== 'bite' || !fish) return;
+     clearTimers();
+@@ -366,9 +368,9 @@
+         {cameraState === 'denied'
+           ? <><Camera size={18} />Camera blocked — mapped water still works.</>
+           : <><Waves size={18} /><span>Water scan</span><div className="confidence"><i style={{ width: `${Math.round(confidence * 100)}%` }} /></div><strong>{Math.round(confidence * 100)}%</strong></>}
+       </div>
+-      <div className={`zone-pill ${allowed ? 'ready' : ''}`}>{allowed ? <CheckCircle2 size={17} /> : <ShieldAlert size={17} />}{mapWaterReady ? `${waterType.toUpperCase()} WATER NEARBY` : allowed ? 'CAMERA WATER VERIFIED' : 'WATER NOT VERIFIED'}</div>
++      <div className={`zone-pill ${allowed ? 'ready' : ''}`}>{allowed ? <CheckCircle2 size={17} /> : <ShieldAlert size={17} />}{regionalRoster ? `${regionalRoster.name.toUpperCase()} · REGIONAL ROSTER` : mapWaterReady ? `${waterType.toUpperCase()} WATER NEARBY · SIMULATED SPECIES` : allowed ? 'CAMERA WATER VERIFIED · SIMULATED SPECIES' : 'WATER NOT VERIFIED'}</div>
+       <section className="fight-panel glass">
+         <div className="fight-summary"><div><span className="eyebrow">{rod.name.toUpperCase()}</span><p>{message}</p></div>{fish && phase !== 'idle' && <span className={`rarity ${fish.rarity}`}><FishIcon size={15} />{fish.rarity}</span>}</div>
+         {phase === 'fighting' && (
+           <>
+--- /dev/null
++++ b/src/lib/regionEcology.ts
+@@ -0,0 +1,44 @@
++import type { MapFeature } from '../types';
++
++/**
++ * Source-grounded regional gameplay roster. This is deliberately a small,
++ * explicit allowlist; do not infer fish presence from GPS latitude alone.
++ * Reference data is NOT live wildlife telemetry and does NOT grant fishing rights.
++ */
++export interface RegionalRoster {
++  id: 'lake-mead' | 'lake-havasu';
++  name: string;
++  speciesIds: readonly string[];
++  source: string;
++  checkedOn: string;
++}
++
++export const REGIONAL_ROSTERS: readonly RegionalRoster[] = [
++  {
++    id: 'lake-mead',
++    name: 'Lake Mead',
++    speciesIds: ['bluegill', 'crappie', 'largemouth', 'catfish'],
++    source: 'https://www.ndow.org/waters/lake-mead/',
++    checkedOn: '2026-10-14'
++  },
++  {
++    id: 'lake-havasu',
++    name: 'Lake Havasu',
++    speciesIds: ['bluegill', 'crappie', 'largemouth', 'catfish'],
++    source: 'https://www.golakehavasu.com/things-to-do/outdoor-adventures/fishing/',
++    checkedOn: '2026-10-14'
++  }
++] as const;
++
++function normalizeWaterName(name: string): string {
++  return name.toLowerCase().normalize('NFKD').replace(/[\u0300-\u036f]/g, '')
++    .replace(/[^a-z0-9 ]/g, ' ').replace(/\s+/g, ' ').trim();
++}
++
++export function regionalRosterForWater(feature: MapFeature | null | undefined): RegionalRoster | null {
++  if (!feature || feature.kind !== 'water') return null;
++  const name = normalizeWaterName(feature.name);
++  if (name === 'lake mead' || name === 'mead reservoir') return REGIONAL_ROSTERS[0];
++  if (name === 'lake havasu' || name === 'havasu lake') return REGIONAL_ROSTERS[1];
++  return null;
++}
+--- /dev/null
++++ b/tests/regionEcology.test.mjs
+@@ -0,0 +1,20 @@
++import assert from 'node:assert/strict';
++import { regionalRosterForWater, REGIONAL_ROSTERS } from '../src/lib/regionEcology.ts';
++import { pickFish } from '../src/data/fish.ts';
++const f = (name) => ({ kind: 'water', name });
++assert.equal(regionalRosterForWater(f('Lake Mead'))?.id, 'lake-mead');
++assert.equal(regionalRosterForWater(f('Lake Havasu'))?.id, 'lake-havasu');
++assert.equal(regionalRosterForWater(f('Lake Michigan')), null);
++assert.equal(regionalRosterForWater(f('Havasu City')), null);
++assert.equal(regionalRosterForWater({kind:'bait-shop',name:'Lake Mead'}), null);
++for (const region of REGIONAL_ROSTERS) {
++  for (let i = 0; i < 2500; i++) {
++    const fish = pickFish('worms','lake',1,region.speciesIds);
++    assert.ok(region.speciesIds.includes(fish.id), `Out-of-region fish ${fish.id} in ${region.name}`);
++    assert.notEqual(fish.id, 'golden');
++    assert.notEqual(fish.id, 'pike');
++    assert.notEqual(fish.id, 'sturgeon');
++  }
++}
++assert.throws(() => pickFish('worms','lake',1,['not-a-fish']), /no matching species/);
++console.log('ReelWorld regional ecology tests passed');

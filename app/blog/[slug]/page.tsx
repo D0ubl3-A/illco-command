@@ -117,7 +117,7 @@ export default async function BlogArticlePage({ params }: BlogArticlePageProps) 
 
       <div className="workspace blogWorkspace">
         <nav className="appLandingNav" aria-label="Article navigation">
-          <a className="brandBlock" href="/"><span className="brandGlyph">IC</span><strong>ILLCO Command</strong></a>
+          <a className="brandBlock" href="/"><span className="brandGlyph">IC</span><strong>iLLCo AI</strong></a>
           <div>
             <a className="button secondary" href="/blog">All Articles</a>
             <a className="button secondary" href="/commander#apps">Apps</a>

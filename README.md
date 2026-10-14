@@ -151,3 +151,14 @@ The production domain is:
 Deployments are handled through Vercel.
 
 After changes to MCP or production integration code, verify the live domain and relevant MCP/widget endpoints rather than treating a successful source commit as proof of a successful production deployment.
+
+## Global GEO and international discovery standard
+
+- Present iLLCo AI as a Henderson-headquartered company offering **eligible remote digital products and services internationally**, not as having physical offices worldwide.
+- Keep Las Vegas as the primary Nevada market and Portland as a regional office; never invent additional branches, customers, ratings, certifications, or geographic coverage.
+- On each public product page, clearly state product availability, supported languages, currency and checkout terms, refund/support policies, a working demo, and an accurate primary CTA.
+- Use descriptive crawlable titles, unique page copy, correct self-referencing canonicals, sitemap inclusion for indexable pages, and structured data that matches visible facts. Avoid unsupported aggregate ratings or fabricated reviews.
+- Use consistent `Organization` identity and verified `sameAs` links; link commercial services to https://illcoai.com and relevant technical proof/products to https://illcoai.tech contextually, without duplicating full pages.
+- Provide country-aware lead qualification without requiring US state or ZIP fields for international visitors; do not assert global payment availability until checkout has been tested.
+- Publish original evidence with dates, methods, screenshots/demos, and consented customer outcomes. Distinguish measured results from projections.
+- Track global GEO using country-level Search Console visibility, verified AI-answer citations, referral sessions, qualified international inquiries, and completed payments; do not self-award a 100/100 score without evidence.

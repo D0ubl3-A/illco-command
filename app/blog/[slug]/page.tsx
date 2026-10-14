@@ -56,8 +56,8 @@ export async function generateMetadata({ params }: BlogArticlePageProps): Promis
       type: "article",
       publishedTime: post.publishedAt,
       modifiedTime: post.updatedAt,
-      authors: ["ILLCO AI"],
-      images: [{ url: socialImage, width: 1200, height: 630, alt: `${post.title} - ILLCO AI` }],
+      authors: ["iLLCo AI"],
+      images: [{ url: socialImage, width: 1200, height: 630, alt: `${post.title} - iLLCo AI` }],
     },
     twitter: {
       card: "summary_large_image",
@@ -83,8 +83,8 @@ export default async function BlogArticlePage({ params }: BlogArticlePageProps) 
     description: post.description,
     datePublished: post.publishedAt,
     dateModified: post.updatedAt,
-    author: { "@type": "Organization", name: "ILLCO AI", url: blogSiteUrl },
-    publisher: { "@type": "Organization", name: "ILLCO AI", url: blogSiteUrl },
+    author: { "@type": "Organization", name: "iLLCo AI", url: blogSiteUrl },
+    publisher: { "@type": "Organization", name: "iLLCo AI", url: blogSiteUrl },
     mainEntityOfPage: canonical,
     image: socialImage,
     keywords: [post.primaryKeyword, ...post.secondaryKeywords].join(", "),
@@ -94,7 +94,7 @@ export default async function BlogArticlePage({ params }: BlogArticlePageProps) 
     "@context": "https://schema.org",
     "@type": "BreadcrumbList",
     itemListElement: [
-      { "@type": "ListItem", position: 1, name: "ILLCO AI", item: blogSiteUrl },
+      { "@type": "ListItem", position: 1, name: "iLLCo AI", item: blogSiteUrl },
       { "@type": "ListItem", position: 2, name: "Blog", item: `${blogSiteUrl}/blog` },
       { "@type": "ListItem", position: 3, name: post.title, item: canonical },
     ],
@@ -227,7 +227,7 @@ export default async function BlogArticlePage({ params }: BlogArticlePageProps) 
         </article>
 
         <section className="panel blogArticleList" aria-labelledby="related-guides">
-          <div className="panelHeader"><div><h2 id="related-guides">Related Guides</h2><p>Continue through the ILLCO AI news and automation library.</p></div></div>
+          <div className="panelHeader"><div><h2 id="related-guides">Related Guides</h2><p>Continue through the iLLCo AI news and automation library.</p></div></div>
           <div className="blogCardGrid">
             {relatedPosts.map((related) => (
               <a className="blogPostCard" href={`/blog/${related.slug}`} key={related.slug}>

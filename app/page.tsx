@@ -142,9 +142,9 @@ export default function HomePage() {
   const jsonLd = {
     "@context": "https://schema.org",
     "@graph": [
-      { "@type": "Organization", "@id": `${siteUrl}/#organization`, name: "ILLCO AI", url: siteUrl },
-      { "@type": "WebSite", "@id": `${siteUrl}/#website`, url: siteUrl, name: "ILLCO AI App Store", publisher: { "@id": `${siteUrl}/#organization` } },
-      { "@type": "ItemList", "@id": `${siteUrl}/#featured-apps`, name: "Featured ILLCO AI apps", itemListElement: storeProducts.slice(0, 12).map((product, index) => ({ "@type": "ListItem", position: index + 1, item: { "@type": "SoftwareApplication", name: product.title, applicationCategory: "BusinessApplication", operatingSystem: "Web", url: `${siteUrl}${product.appHref}` } })) },
+      { "@type": "Organization", "@id": `${siteUrl}/#organization`, name: "iLLCo AI", url: siteUrl },
+      { "@type": "WebSite", "@id": `${siteUrl}/#website`, url: siteUrl, name: "iLLCo AI App Store", publisher: { "@id": `${siteUrl}/#organization` } },
+      { "@type": "ItemList", "@id": `${siteUrl}/#featured-apps`, name: "Featured iLLCo AI apps", itemListElement: storeProducts.slice(0, 12).map((product, index) => ({ "@type": "ListItem", position: index + 1, item: { "@type": "SoftwareApplication", name: product.title, applicationCategory: "BusinessApplication", operatingSystem: "Web", url: `${siteUrl}${product.appHref}` } })) },
     ],
   };
   return (

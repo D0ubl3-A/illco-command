@@ -2,6 +2,17 @@
 
 Production app for [illcoai.tech](https://illcoai.tech): the iLLCo AI product catalog, app landing pages, account access, paid unlockables, proof sections, customer-facing product surfaces, and the iLLCo Home Agent command layer.
 
+## Company identity and domain roles
+
+- **Brand:** iLLCo AI (use this spelling in public-facing references).
+- **Headquarters:** Henderson, Nevada, USA.
+- **Primary Nevada service market:** Las Vegas and the surrounding Las Vegas Valley, including Henderson.
+- **Regional office:** Portland, Oregon, USA.
+- **Commercial website:** https://illcoai.com — consulting, business automation, local services, qualification, and sales.
+- **Technical/product website:** https://illcoai.tech — products, demos, research, implementation documentation, and verification records.
+
+Each website should use its own appropriate page-level canonical URLs. Do not globally canonicalize the commercial website to the technical website or vice versa. Local-business listings and customer reviews must describe actual eligible business operations and genuine experiences.
+
 ## Stack
 
 - Next.js 16

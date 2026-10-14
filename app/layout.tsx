@@ -14,9 +14,6 @@ export const metadata: Metadata = {
   description: "iLLCo AI builds working AI apps, business automation systems, creator tools, lead workflows, and managed custom builds from its public command center.",
   applicationName: "iLLCo AI App Store",
   manifest: "/manifest.webmanifest",
-  alternates: {
-    canonical: "/",
-  },
   icons: {
     icon: "/icon.svg",
     shortcut: "/favicon.svg",

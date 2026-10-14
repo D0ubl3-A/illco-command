@@ -13,6 +13,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
   const staticRoutes: MetadataRoute.Sitemap = [
     { url: siteUrl, changeFrequency: "daily", priority: 1 },
     { url: `${siteUrl}/audit-proof`, changeFrequency: "weekly", priority: 0.99 },
+    { url: `${siteUrl}/global`, changeFrequency: "monthly", priority: 0.91 },
     { url: `${siteUrl}/blog/henderson-ai-automation-guide`, lastModified: new Date("2026-08-13"), changeFrequency: "monthly", priority: 0.92 },
     { url: `${siteUrl}/lead-rescue`, changeFrequency: "weekly", priority: 0.99 },
     { url: `${siteUrl}/youtube-rank-revival`, changeFrequency: "weekly", priority: 0.98 },

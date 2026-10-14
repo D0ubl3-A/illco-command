@@ -8,14 +8,14 @@ import { products } from "@/lib/deployments";
 const siteUrl = "https://illcoai.tech";
 
 export const metadata: Metadata = {
-  title: "iLLCo-AI App Catalog & Pricing | AI Tools and Automation",
-  description: "Search the full ILLCO AI app catalog and compare subscription plans, add-ons, categories, access models, and launch paths.",
+  title: "iLLCo AI App Catalog & Pricing | AI Tools and Automation",
+  description: "Search the full iLLCo AI app catalog and compare subscription plans, add-ons, categories, access models, and launch paths.",
   alternates: {
     canonical: `${siteUrl}/products`,
   },
   openGraph: {
-    title: "iLLCo-AI App Catalog & Pricing",
-    description: "Search the full ILLCO AI app catalog and compare subscription plans, add-ons, categories, access models, and launch paths.",
+    title: "iLLCo AI App Catalog & Pricing",
+    description: "Search the full iLLCo AI app catalog and compare subscription plans, add-ons, categories, access models, and launch paths.",
     url: `${siteUrl}/products`,
     type: "website",
     images: [
@@ -23,14 +23,14 @@ export const metadata: Metadata = {
         url: "/media/illco-command-header-loop-poster.jpg",
         width: 1200,
         height: 630,
-        alt: "iLLCo-AI app catalog",
+        alt: "iLLCo AI app catalog",
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "AI App Catalog and Pricing | ILLCO AI",
-    description: "Search the full ILLCO AI app catalog and compare subscription plans, add-ons, categories, access models, and launch paths.",
+    title: "AI App Catalog and Pricing | iLLCo AI",
+    description: "Search the full iLLCo AI app catalog and compare subscription plans, add-ons, categories, access models, and launch paths.",
     images: ["/media/illco-command-header-loop-poster.jpg"],
   },
 };
@@ -48,7 +48,7 @@ export default function ProductsPage() {
             <p className="mt-5 text-lg leading-8 text-slate-300">
               Compare products by subscription tier, category, stage, access path, and launch readiness. Core, Studio, Suite, and Enterprise pricing now applies across the catalog.
             </p>
-            <SocialShare title="iLLCo-AI Product Catalog" url={`${siteUrl}/products`} label="Share the iLLCo-AI product catalog" />
+            <SocialShare title="iLLCo AI Product Catalog" url={`${siteUrl}/products`} label="Share the iLLCo AI product catalog" />
           </div>
         </div>
       </section>

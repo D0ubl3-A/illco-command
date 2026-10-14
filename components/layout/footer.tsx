@@ -7,6 +7,7 @@ const footerLinks = [
   { href: googleOAuthHref, label: "Login" },
   { href: "/products", label: "Apps" },
   { href: "/audit-proof", label: "Proof Center" },
+  { href: "/global", label: "Global Services" },
   { href: "/brain", label: "Brain OS" },
   { href: "/commander", label: "Commander" },
   { href: "/tools/lyric-video-forge", label: "ChatGPT" },
@@ -55,7 +56,7 @@ export function StoreFooter() {
             </Link>
           </div>
           <p className="max-w-2xl text-xs leading-5 text-slate-500">
-            Primary command center: illcoai.tech · Owned business property: illcoai.com. Product status and verification claims are governed by the public Proof Center.
+            Technical products and demonstrations:{" "}<a href="https://illcoai.tech/" className="underline underline-offset-2 hover:text-white">illcoai.tech</a>. Commercial services and project inquiries:{" "}<a href="https://illcoai.com/" className="underline underline-offset-2 hover:text-white">illcoai.com</a>. Product status and verification claims are governed by the public Proof Center.
           </p>
         </div>
 

@@ -74,17 +74,17 @@ const helloskipBlogPosts = [
 ] satisfies HelloskipBlogPost[];
 
 export const metadata: Metadata = {
-  title: "ILLCO AI App Store | Working AI Apps and Automation Systems",
-  description: "The ILLCO catalog is now an AI app store: production tools, launchable workflows, creative engines, lead systems, sales assistants, and custom builds in one checkout-ready marketplace.",
+  title: "iLLCo AI App Store | Working AI Apps and Automation Systems",
+  description: "The iLLCo AI catalog is an AI app store: production tools, launchable workflows, creative engines, lead systems, sales assistants, and custom builds in one checkout-ready marketplace.",
   alternates: { canonical: siteUrl },
   openGraph: {
-    title: "ILLCO AI App Store | Working AI Apps and Automation Systems",
+    title: "iLLCo AI App Store | Working AI Apps and Automation Systems",
     description: "Production tools, launchable workflows, creative engines, lead systems, sales assistants, and custom builds in one checkout-ready marketplace.",
     url: siteUrl,
-    images: [{ url: "/media/illco-command-header-loop-poster.jpg", width: 1200, height: 630, alt: "ILLCO AI app store" }],
+    images: [{ url: "/media/illco-command-header-loop-poster.jpg", width: 1200, height: 630, alt: "iLLCo AI app store" }],
     type: "website",
   },
-  twitter: { card: "summary_large_image", title: "ILLCO AI App Store", description: "Working AI apps, automation systems, creative tools, growth products, and managed builds.", images: ["/media/illco-command-header-loop-poster.jpg"] },
+  twitter: { card: "summary_large_image", title: "iLLCo AI App Store", description: "Working AI apps, automation systems, creative tools, growth products, and managed builds.", images: ["/media/illco-command-header-loop-poster.jpg"] },
 };
 
 function googleStartHref(returnTo: string) { const params = new URLSearchParams(); params.set("returnTo", returnTo); return `/api/account/google/start?${params.toString()}`; }

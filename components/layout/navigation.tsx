@@ -99,7 +99,7 @@ export function StoreNavigation() {
             <Bot className="h-5 w-5" />
           </span>
           <span className="min-w-0">
-            <span className="block truncate text-sm font-semibold leading-none tracking-[0.06em] text-white uppercase">ILLCO AI App Store</span>
+            <span className="block truncate text-sm font-semibold leading-none tracking-[0.06em] text-white">iLLCo AI App Store</span>
             <span className="mt-1 hidden truncate text-xs tracking-[0.04em] text-slate-400 sm:block">Launch-ready apps and systems</span>
           </span>
         </Link>

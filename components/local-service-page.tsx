@@ -16,8 +16,38 @@ export function LocalServicePage({ city, service, headline, intro, bullets, rela
     name: `${service} in ${city}`,
     provider: {
       "@type": "Organization",
+      "@id": "https://illcoai.com/#organization",
       name: "iLLCo AI",
-      url: "https://illcoai.tech",
+      url: "https://illcoai.com",
+      sameAs: ["https://illcoai.tech"],
+      address: {
+        "@type": "PostalAddress",
+        addressLocality: "Henderson",
+        addressRegion: "NV",
+        addressCountry: "US",
+      },
+      location: [
+        {
+          "@type": "Place",
+          name: "Headquarters",
+          address: {
+            "@type": "PostalAddress",
+            addressLocality: "Henderson",
+            addressRegion: "NV",
+            addressCountry: "US",
+          },
+        },
+        {
+          "@type": "Place",
+          name: "Regional office",
+          address: {
+            "@type": "PostalAddress",
+            addressLocality: "Portland",
+            addressRegion: "OR",
+            addressCountry: "US",
+          },
+        },
+      ],
     },
     areaServed: {
       "@type": "City",

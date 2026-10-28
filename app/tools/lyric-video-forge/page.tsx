@@ -2,30 +2,34 @@ import type { Metadata } from "next";
 
 import { LyricVideoForgeClient } from "@/components/lyric-video-forge-client";
 
+const pageTitle = "Lyric Video Forge — AI Lyric Timing & Video Workflow";
+const pageDescription =
+  "Plan lyric videos with iLLCo AI: review song transcription, time captions, prepare ASS subtitles, choose reference visuals, and check export quality. Explore the separate MP4 renderer.";
+
 export const metadata: Metadata = {
-  title: "Lyric Video Forge",
-  description:
-    "OpenAI Agent SDK powered ILLCO workflow for turning songs, artist locks, transcript timing, ASS subtitle rules, and render QC into production-ready lyric video runs.",
+  title: pageTitle,
+  description: pageDescription,
+  alternates: {
+    canonical: "https://illcoai.tech/tools/lyric-video-forge",
+  },
   openGraph: {
-    title: "Lyric Video Forge | ILLCO AI",
-    description:
-      "OpenAI Agent SDK powered ILLCO workflow for turning songs, artist locks, transcript timing, ASS subtitle rules, and render QC into production-ready lyric video runs.",
-    url: "/tools/lyric-video-forge",
+    title: pageTitle,
+    description: pageDescription,
+    url: "https://illcoai.tech/tools/lyric-video-forge",
     type: "website",
     images: [
       {
         url: "/images/lyric-video-forge-credits.png",
         width: 1600,
         height: 900,
-        alt: "Lyric Video Forge product thumbnail",
+        alt: "Lyric Video Forge caption and timing workflow preview",
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "Lyric Video Forge | ILLCO AI",
-    description:
-      "OpenAI Agent SDK powered ILLCO workflow for turning songs, artist locks, transcript timing, ASS subtitle rules, and render QC into production-ready lyric video runs.",
+    title: pageTitle,
+    description: pageDescription,
     images: ["/images/lyric-video-forge-credits.png"],
   },
 };
@@ -51,7 +55,7 @@ export default function LyricVideoForgePage() {
         <section className="panel bigoStrategyHero">
           <div>
             <span className="readinessPill ready">Agent SDK workflow</span>
-            <h1>Lyric Video Forge</h1>
+            <h1>Lyric Video Forge: AI Lyric Video Timing Workflow</h1>
             <p>
               Build ILLCO-ready lyric video runs from uploaded audio, uploaded character references, Realtime-first transcription, user-approved lyrics, selected image counts, dissolve visuals, readable ASS subtitles, strict rhyme coloring, and FFmpeg QC notes.
             </p>
@@ -85,6 +89,26 @@ export default function LyricVideoForgePage() {
             <h2>Generate Images + Dissolve</h2>
             <p>The selected image count controls credit use. Generated stills are dissolved together instead of hard-cut.</p>
           </article>
+        </section>
+
+        <section className="panel bigoStrategyStep" aria-labelledby="lyric-video-choices">
+          <h2 id="lyric-video-choices">Choose the lyric-video workflow that matches your release</h2>
+          <p>
+            This tool supports the production-planning workflow: transcribing a song, checking the
+            actual words, preparing and timing ASS captions, choosing approved visuals, and reviewing
+            render requirements. Review lyrics and timing before releasing a video.
+          </p>
+          <p>
+            Need a downloadable MP4 rather than a production brief? The separate Lyric Video Forge
+            product listing describes the current browser renderer, supported resolution, pricing,
+            input files, and limitations. Check those terms before purchasing.
+          </p>
+          <a
+            className="button primary"
+            href="https://illcoai.tech/products/lyric-video-forge"
+          >
+            Review current lyric-video MP4 renderer and pricing
+          </a>
         </section>
 
         <LyricVideoForgeClient />

@@ -46,6 +46,17 @@ The protected render service is responsible for:
 - FFprobe verification;
 - storage of completed MP4 artifacts.
 
+## OpenMontage capability bridge
+
+The renderer container pins and installs OpenMontage. AutoTube exposes its tool and skill catalog through these MCP bridge tools:
+
+- `openmontage_list_tools` — filter and page through registered tools, including availability and linked skill names.
+- `openmontage_get_tool` — read one tool's input/output schemas, dependencies, status, cost estimate behavior, and side effects.
+- `openmontage_execute_tool` — run a named tool only when its dependencies are available. Paid tools require an approved cost; unpriced API tools are blocked. Declared external side effects require an explicit confirmation flag.
+- `openmontage_list_skills` and `openmontage_read_skill` — find and read text-based skill, pipeline, and reference files under OpenMontage's skill directories.
+
+The MCP bridge uses a small set of generic entry points instead of advertising hundreds of tool schemas in every `tools/list` response. The catalog returns each tool's real schema; the model should inspect the tool and read its referenced skill before execution. Skill files are returned as project content and must not override system or user instructions. OpenMontage is AGPL-3.0; preserve its license and source notices and satisfy the license's source-availability requirements when distributing the integrated renderer.
+
 The external renderer must never be exposed directly to ChatGPT or browser clients. Requests go through the `illcoai.tech` MCP/server routes.
 
 ## @Sites deployment rule
@@ -103,6 +114,11 @@ The deployment passes only when all of the following are true:
 - `widgetUrl` equals `https://illcoai.tech/api/chatgpt/autotube/widget`.
 - MCP `initialize` succeeds.
 - MCP `tools/list` includes `autotube_health_check` and `autotube_render_video`.
+- MCP `tools/list` includes all five `openmontage_*` bridge tools.
+- `openmontage_list_tools` returns a paged catalog, and `openmontage_list_skills` returns a non-empty file list.
+- `openmontage_get_tool` returns a real schema for a known tool; unavailable tools are listed as unavailable and cannot execute.
+- `openmontage_read_skill` reads only files beneath the OpenMontage skill roots.
+- Paid/unpriced API execution and side-effecting execution follow the bridge's approval gates.
 - The style engine and quality gate are active.
 - The widget route returns a usable MCP App document.
 - Unsupported animations return structured blockers.

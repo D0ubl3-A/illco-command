@@ -7,6 +7,8 @@ import {
 } from "@/lib/autotube/access";
 import {
   AUTOTUBE_OPENMONTAGE_TOOL_NAME,
+  openMontageBridgeToolDefinitions,
+  openMontageBridgeToolOutput,
   openMontageToolDefinition,
   openMontageToolOutput,
   openMontageWorkerHealth,
@@ -27,13 +29,17 @@ function originFrom(request: Request) {
 
 function withOpenMontageTool(result: any) {
   if (Array.isArray(result?.result?.tools)) {
-    const exists = result.result.tools.some(
-      (tool: any) => String(tool?.name || "") === AUTOTUBE_OPENMONTAGE_TOOL_NAME,
-    );
-    if (!exists) result.result.tools.push(openMontageToolDefinition());
+    const names = new Set(result.result.tools.map((tool: any) => String(tool?.name || "")));
+    for (const tool of [openMontageToolDefinition(), ...openMontageBridgeToolDefinitions()]) {
+      if (!names.has(tool.name)) result.result.tools.push(tool);
+    }
   }
   return result;
 }
+
+const OPENMONTAGE_BRIDGE_TOOL_NAMES = new Set(
+  openMontageBridgeToolDefinitions().map((tool: any) => String(tool.name)),
+);
 
 export async function GET(request: Request) {
   const origin = originFrom(request);
@@ -41,8 +47,8 @@ export async function GET(request: Request) {
     {
       name: "illco-autotube-production",
       description:
-        "ChatGPT Apps SDK MCP endpoint for AutoTube 4 rendering plus real OpenMontage reference-video ingest.",
-      version: "5.3.0-autotube4-openmontage-worker",
+        "ChatGPT Apps SDK MCP endpoint for AutoTube 4 rendering, OpenMontage media ingest, tools, and skill resources.",
+      version: "5.3.0-autotube4-openmontage-tools-skills",
       endpoint: "/api/chatgpt/autotube/mcp",
       mcpUrl: `${origin}/api/chatgpt/autotube/mcp`,
       widgetUrl: `${origin}/api/chatgpt/autotube/widget`,
@@ -58,6 +64,11 @@ export async function GET(request: Request) {
       health: {
         ...autoTubeHealthV4(),
         openMontage: openMontageWorkerHealth(),
+        openMontageBridge: {
+          enabled: true,
+          tools: openMontageBridgeToolDefinitions().map((tool: any) => tool.name),
+          operations: ["list-tools", "inspect-tool-schema", "execute-available-tool", "list-skills", "read-skill-file"],
+        },
       },
     },
     { headers: { "Cache-Control": "no-store" } },
@@ -92,14 +103,25 @@ export async function POST(request: Request) {
     );
   }
 
+  if (method === "tools/call" && OPENMONTAGE_BRIDGE_TOOL_NAMES.has(toolName)) {
+    return Response.json(
+      {
+        jsonrpc: "2.0",
+        id: body?.id ?? null,
+        result: await openMontageBridgeToolOutput(toolName, body?.params?.arguments || {}),
+      },
+      { headers: { "Cache-Control": "no-store" } },
+    );
+  }
+
   const result = await handleAutoTubeRpcV4(body, originFrom(request));
   if (result === null) return new Response(null, { status: 202 });
 
   if (method === "tools/list") withOpenMontageTool(result);
   if (method === "initialize" && result?.result) {
-    result.result.instructions = `${String(result.result.instructions || "")} Use ${AUTOTUBE_OPENMONTAGE_TOOL_NAME} when a user supplies a permitted reference video that should be downloaded and analyzed before clipping or rendering.`.trim();
+    result.result.instructions = `${String(result.result.instructions || "")} Use ${AUTOTUBE_OPENMONTAGE_TOOL_NAME} for permitted reference-video ingest. For OpenMontage capabilities, first call openmontage_list_tools, inspect the selected tool with openmontage_get_tool, and read its associated skills using openmontage_list_skills/openmontage_read_skill before execution. The bridge exposes tools installed in the worker; unavailable tools remain blocked. Obtain explicit user approval for paid or side-effecting operations.`.trim();
     if (result.result.serverInfo) {
-      result.result.serverInfo.version = "5.3.0-autotube4-openmontage-worker";
+      result.result.serverInfo.version = "5.3.0-autotube4-openmontage-tools-skills";
     }
   }
 

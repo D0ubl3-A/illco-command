@@ -18,17 +18,32 @@ $guide = Join-Path $root "SPECS_2027_BUILD_HANDOFF.md"
 try { Set-Clipboard -Value (Get-Content $guide -Raw); Write-Host "Build handoff copied to clipboard." }
 catch { Write-Host "Clipboard unavailable; open SPECS_2027_BUILD_HANDOFF.md manually." }
 $node = Get-Command node -ErrorAction SilentlyContinue
-$npx = Get-Command npx -ErrorAction SilentlyContinue
-if ($node -and $npx) {
+$npm = Get-Command npm -ErrorAction SilentlyContinue
+if ($node -and $npm) {
   Write-Host "Node detected: $(& node --version)"
+  Write-Host "npm detected: $(& npm --version)"
   $tests = @(Get-ChildItem -Path (Join-Path $root "src") -Filter "*.test.ts" -ErrorAction SilentlyContinue)
   if ($tests.Count -gt 0) {
     $answer = Read-Host "Run portable TypeScript tests (may download tsx)? [y/N]"
     if ($answer -eq "y") {
-      & npx --yes tsx --test ($tests | ForEach-Object { $_.FullName })
-      if ($LASTEXITCODE -ne 0) { Write-Warning "Portable tests failed. Fix before integration." }
+      Write-Host "Running tests through npm exec (not npx, which may be intercepted by another installation)..."
+      $testPaths = @($tests | ForEach-Object { $_.FullName })
+      try {
+        & npm exec --yes --package=tsx -- tsx --test @testPaths
+        if ($LASTEXITCODE -eq 0) {
+          Write-Host "Portable TypeScript tests passed." -ForegroundColor Green
+        } else {
+          Write-Warning "Portable tests did not complete successfully (exit code $LASTEXITCODE). Check errors above; this may be tooling or a test failure."
+        }
+      } catch {
+        Write-Warning "Unable to execute portable tests: $($_.Exception.Message)"
+      }
     }
+  } else {
+    Write-Host "No TypeScript test files found in src; skipping tests."
   }
+} else {
+  Write-Warning "Node.js and/or npm not available; skipping portable tests."
 }
 $paths = @(
   "$env:LOCALAPPDATA\\Programs\\Lens Studio\\Lens Studio.exe",

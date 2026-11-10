@@ -67,9 +67,10 @@ export function summarizeCheckoutSession(session: StripeCheckoutSession, fallbac
   const checkoutStatus = session.status || "open";
   const paymentStatus = session.payment_status || "unpaid";
   const checkoutComplete =
-    session.mode === "subscription"
-      ? checkoutStatus === "complete" && (paymentStatus === "paid" || paymentStatus === "no_payment_required")
-      : paymentStatus === "paid";
+    checkoutStatus === "complete" &&
+    (session.mode === "subscription"
+      ? paymentStatus === "paid" || paymentStatus === "no_payment_required"
+      : paymentStatus === "paid");
   const launchHref = product ? getProductModuleHref(product.id) : "/";
 
   return {
@@ -93,6 +94,9 @@ async function persistCheckoutSummary(session: StripeCheckoutSession, fallbackPr
   if (!hasDatabase()) return;
 
   const summary = summarizeCheckoutSession(session, fallbackProductId);
+  // Never persist an uncompleted or unpaid checkout as a completed purchase.
+  // Stripe's signed completed-payment webhook remains the fulfillment authority.
+  if (!summary.checkoutComplete) return;
   await completeCheckoutSession({
     stripeSessionId: session.id,
     stripeCustomerId: summary.customerId,

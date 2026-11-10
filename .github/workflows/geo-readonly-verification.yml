@@ -1,6 +1,9 @@
 name: Read-only production GEO evidence
 
 on:
+  pull_request:
+    branches:
+      - main
   workflow_dispatch:
   schedule:
     - cron: "13 9 * * 1"
@@ -33,7 +36,12 @@ jobs:
         run: node --test tests/geo-live-probe.test.mjs
 
       - name: Probe production without logins, payments or writes
-        run: node scripts/verify-live-geo.mjs --out=artifacts/geo-live.json
+        run: |
+          if [ "$GITHUB_EVENT_NAME" = "pull_request" ]; then
+            node scripts/verify-live-geo.mjs --out=artifacts/geo-live.json --report-only
+          else
+            node scripts/verify-live-geo.mjs --out=artifacts/geo-live.json
+          fi
 
       - name: Save evidence even when a public check fails
         if: always()

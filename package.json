@@ -6,7 +6,7 @@
     "dev": "next dev",
     "build": "next build --webpack",
     "start": "next start",
-    "test": "node --import tsx --test tests/*.test.ts",
+    "test": "node --import tsx --test tests/*.test.ts tests/*.test.mjs",
     "audit:health": "tsx scripts/audit-project-health.ts",
     "audit:sources": "tsx scripts/audit-project-sources.ts",
     "readiness:ledger": "tsx scripts/write-readiness-ledger.ts",
@@ -21,7 +21,8 @@
     "images:products": "tsx scripts/generate-product-images.ts",
     "tutorial:record": "tsx scripts/record-tutorial-videos.ts",
     "tutorial:upload": "tsx scripts/upload-tutorial-videos.ts",
-    "groq:env": "tsx scripts/sync-groq-env.ts"
+    "groq:env": "tsx scripts/sync-groq-env.ts",
+    "audit:geo-live": "node scripts/verify-live-geo.mjs --out=artifacts/geo-live.json --report-only"
   },
   "dependencies": {
     "@aws/aurora-dsql-node-postgres-connector": "^0.1.9",

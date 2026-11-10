@@ -117,3 +117,22 @@ test("missing purchase persistence fails the webhook so Stripe can retry", async
   );
   assert.doesNotThrow(() => requirePurchasePersistence(true));
 });
+
+test("one-time purchases require both a completed checkout and confirmed payment", async () => {
+  const { summarizeCheckoutSession } = await import("../lib/checkout-success");
+  const makeSummary = (status: string, payment_status: string) =>
+    summarizeCheckoutSession({
+      id: "cs_test_payment_guard",
+      mode: "payment",
+      customer: "cus_test_payment_guard",
+      client_reference_id: "lyric-video-forge",
+      metadata: { productId: "lyric-video-forge", planId: "core" },
+      status,
+      payment_status,
+    } as never);
+
+  assert.equal(makeSummary("open", "paid").checkoutComplete, false);
+  assert.equal(makeSummary("complete", "unpaid").checkoutComplete, false);
+  assert.equal(makeSummary("complete", "no_payment_required").checkoutComplete, false);
+  assert.equal(makeSummary("complete", "paid").checkoutComplete, true);
+});

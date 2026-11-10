@@ -1,0 +1,45 @@
+name: Read-only production GEO evidence
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "13 9 * * 1"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: geo-readonly-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  public-verification:
+    name: Check canonical redirects, product paths and public metadata
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+
+    steps:
+      - name: Checkout source
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+
+      - name: Test non-network audit rules
+        run: node --test tests/geo-live-probe.test.mjs
+
+      - name: Probe production without logins, payments or writes
+        run: node scripts/verify-live-geo.mjs --out=artifacts/geo-live.json
+
+      - name: Save evidence even when a public check fails
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: geo-production-evidence
+          path: artifacts/geo-live.json
+          if-no-files-found: warn
+          retention-days: 30
